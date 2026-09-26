@@ -27,6 +27,7 @@ Every Linear issue MUST have these fields set. Do NOT create issues with missing
 - `estimate`: Use the team's estimation scale. On update, `null` clears it; omitting leaves it unchanged.
 - `labels`: At minimum one label categorizing the issue type. **MUST be from the fetched label list — NEVER invent labels.**
 - **`labels` replaces the entire set** — any existing label absent from the array is removed. Omit the field to leave labels untouched. This is the opposite of how relations behave.
+- **For an incremental change, use `addLabels` / `removeLabels`** (update only) instead of resending the set. Neither combines with `labels` or with a team change.
 
 ## Assignee
 
@@ -46,9 +47,7 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 
 **Relations are append-only.** Passing `blocks` adds to what is already there; omitting it removes nothing. To break a relation, name it explicitly in `removeBlocks`, `removeBlockedBy`, or `removeRelatedTo`. Clear a parent with `parentId: null`.
 
-**Relations are invisible to every read path.** `save_issue` does not echo them, and neither `get_issue` nor `list_issues` returns them — so a relation write cannot be confirmed through the MCP server at all. Re-fetching shows only that `updatedAt` advanced, which proves the write was accepted, not that the edge exists.
-
-An accepted write is not a verified edge. Report a dependency graph as **written, not verified**, and say which it is. Never describe it as confirmed, and never imply a check that is not available — only the Linear UI shows the edges.
+**Relations are read only through `get_issue` with `includeRelations: true`**, which returns `blocks`, `blockedBy`, `relatedTo`, and `duplicateOf`. `save_issue` does not echo them and `list_issues` does not return them. Verify a relation write by re-fetching each issue that way, and report the graph as verified only once the edges read back.
 
 ## Create vs. Update
 
@@ -56,11 +55,7 @@ An accepted write is not a verified edge. Report a dependency graph as **written
 - `title` and `team` are required on create.
 - `project`, `cycle`, `assignee`, `dueDate`, and `parentId` accept `null` to remove the current value.
 
-**Editing a description: use `patch`, not a rewritten `description`.** `patch` applies a list of ops — `replace`, `insert_before`, `insert_after`, `prepend`, `append`, `replace_range` — against the current content, atomically and in order. Only valid on update, and it takes the place of `description` rather than accompanying it.
-
-Every anchor string must match the current content **exactly once**, and one failing op aborts the whole save, so nothing lands half-applied. Resending a full description to change two lines risks silently dropping whatever was edited since it was fetched.
-
-**Anchor against the NORMALISED content, not against what you sent.** Linear rewrites markdown on write — see `linear-description-structure` — so an anchor copied from your own earlier draft can fail to match while the same anchor copied from a fresh fetch succeeds. Fetch first, then anchor.
+Editing an existing description: `patch` per `linear-description-structure`.
 
 ## Structural vs. Descriptive
 

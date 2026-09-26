@@ -42,7 +42,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
 
 1. **Resolve the target.**
    - Accept a Linear project, project slice, multiple issues, one issue, or URL.
-   - Compose with `linear-pickup` for any of them — do not re-implement its preparation logic.
+   - Load `linear-pickup` for any of them — do not re-implement its preparation logic.
    - If the prompt can mean more than one scope, ask one focused question immediately.
 
 2. **Explore before implementation.**
@@ -67,7 +67,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Move picked-up issues to `In Progress` per `linear-state-transitions`.
    - Use `git-branch` before implementation unless intentionally continuing a branch.
    - Apply `agent-conventions` to every implementation, direct or delegated — pickup work lands in existing repos and must read as though the repo's own authors wrote it.
-   - Implement directly and/or dispatch agents with focused prompts, each carrying the `agent-conventions` block with concrete pattern-reference files.
+   - Implement directly and/or dispatch agents with focused prompts, each carrying the `agent-conventions` block with concrete pattern-reference files. **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
    - Keep branches current with known merges at convenient checkpoints.
    - Run local verification equivalent to the PR/MR pipeline.
 

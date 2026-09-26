@@ -6,7 +6,6 @@ references:
   - ../references/reconcile-state.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issue-states.md
-  - ../references/linear/linear-pickup-execution.md
   - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
   - ../references/open-artifact.md
@@ -20,15 +19,11 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-State meanings, transition rules, and dependency resolution semantics: `linear-issue-states`.
-
 Per `linear-issue-philosophy`, records go stale — rank on what the user knows now, not only on what Linear shows. Where a timestamp suggests the record predates the user's latest work, surface the gap instead of ranking on it silently.
 
 ## Project Discovery (IMPORTANT)
 
-**DO NOT use `list_projects` or `get_project`** — these tools have complexity limits and lookup issues.
-
-**ALWAYS use `list_issues` with the `project` parameter** to fetch issues directly:
+Fetch a project's issues with `list_issues` and the `project` parameter; `list_projects` and `get_project` give the project list and the project record (deadlines, milestones, priority).
 
 ```
 project parameter accepts:
@@ -63,12 +58,12 @@ If no project was specified, ask the user:
 
 ### Step 3: Issue Analysis (within a project)
 
-1. **Fetch all issues** using `list_issues` with `project` parameter.
+1. **Fetch all issues** using `list_issues` with `project` parameter, then each open issue's relations with `get_issue` and `includeRelations: true` — `list_issues` does not return `blockedBy` / `blocks`.
 2. **Separate issues by status:**
-   - **Active work:** status "In Review" or "In Progress" — these are already being worked on. Note: "In Review" means the work is essentially complete, so dependent issues CAN proceed.
+   - **Active work:** status "In Review" or "In Progress" — these are already being worked on.
    - **Actionable:** status "Backlog" or "Todo" and all `blockedBy` issues are either "Done" or "In Review".
    - **Blocked:** status "Backlog" or "Todo" but has `blockedBy` issues in "Todo" or "In Progress" (not yet ready).
-   - **Completed:** status "Done" or "Cancelled" — exclude from recommendations.
+   - **Completed:** status "Done" or "Canceled" — exclude from recommendations.
 3. **For each actionable issue, check:**
    - **Prerequisites met?** — are all `blockedBy` issues either "Done" or "In Review"? If blocked by "Todo" or "In Progress", the issue is not yet actionable.
    - **Is it a blocker?** — does this issue block other issues? Blockers should be prioritized.
@@ -86,7 +81,7 @@ Ask the user:
 
 - **"What would you like to work on?"**
   - **Continue active work** — pick an issue that's already "In Review" or "In Progress" (ongoing work)
-  - **Pick a new issue** — start a fresh issue from "Backlog" or "Todo" (note: "In Review" blockers are considered complete, so dependents CAN be picked)
+  - **Pick a new issue** — start a fresh issue from "Backlog" or "Todo"
   - **Let me decide** — recommend based on what's most urgent
 
 If the user chooses to continue active work:
@@ -98,8 +93,7 @@ If the user chooses to continue active work:
 If the user chooses to pick a new issue:
 
 1. Focus on "Ready to Pick Up" issues from Step 3.
-2. Remember: issues blocked by "In Review" are actionable — "In Review" means the work is essentially complete.
-3. Apply the dependency-aware ranking from Step 3.
+2. Apply the dependency-aware ranking from Step 3.
 
 If the user lets you decide:
 
@@ -130,7 +124,7 @@ Once the user agrees on the selection:
    - `backlog → in progress` or `todo → in progress` for the immediate task.
 2. **Wait for explicit approval** before making any changes.
 3. **Apply status changes** using parallel tool calls where possible.
-4. **Execution handoff** — if the user wants the selected work picked up immediately, follow `linear-pickup-execution` and hand off to `linear-pickup` for specific issues or `agent-pickup` for a project slice/multiple issues.
+4. **Execution handoff** — if the user wants the selected work picked up immediately, Load `linear-pickup` for specific issues or `agent-pickup` for a project slice or multiple issues.
 
 ## Recommendation Format
 
@@ -159,9 +153,9 @@ Once the user agrees on the selection:
 ## Key Rules
 
 - **Never move issues without user approval.** Draft and present the transitions before writing; apply only after approval.
-- **Prerequisites are hard constraints for "Todo" and "In Progress" blockers** — but "In Review" blockers are considered complete. Issues blocked by "In Review" work CAN be picked up.
+- **Prerequisites are hard constraints** — blocker resolution per `linear-issue-states`.
 - **Blockers first** — issues that unblock other work take priority over isolated tasks.
-- **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section. When picking a new issue, these are NOT blockers since "In Review" means essentially complete.
+- **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section.
 - **Ask, don't assume** — if the user's availability or focus area is unclear, ask before recommending.
 - **Respect user overrides** — if the user wants to pick something different from the recommendation, accept it.
 - **Recommendation is not execution** — only hand off to pickup skills when the user asks to start work.

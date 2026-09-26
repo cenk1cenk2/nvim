@@ -47,15 +47,17 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
 
 - **Mode** (coordination model):
   - **`team` (default)** — every agent in the layer is dispatched **named**, so the lead can message it mid-run and it can answer. The lead orchestrates and stays in the loop between layers.
-  - **`fire-and-forget`** — agents are dispatched **unnamed** and blocking; their reports come back as tool results. Use when the layer needs no lead involvement mid-flight.
+  - **`fire-and-forget`** — agents are dispatched **unnamed**, with no mid-run steering; the lead only collects their reports. Use when the layer needs no lead involvement mid-flight.
 
-  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `agent-delegate-harness-<provider>`.
+  In both modes **a layer is a barrier held by collecting every agent's completion** — never by the dispatch returning.
+
+  **Note:** mode does not control permissions — the permission context is the session's, per `agent-delegate`.
 - **Review cadence** (when `code-review-changes` runs):
   - **`per-layer` (default)** — review after each layer merges, before the next launches. Catches integration issues layer by layer.
   - **`per-task`** — implementer + reviewer pair for every task. Strictest. Use for risky refactors.
   - **`final-only`** — one review at the end against the run baseline. Fastest.
 
-The DAG subsumes the degenerate shapes:
+The DAG covers the flat shapes too, each with its natural cadence:
 - All-parallel: one layer with N tasks + final-only cadence.
 - All-sequential: N layers of 1 task + per-task cadence.
 - Mixed DAGs (most real work): 2–4 layers of 1–4 tasks each + per-layer cadence.
@@ -69,7 +71,7 @@ Detect both axes from the user's wording before leaving plan mode.
 | User wording | Resolved mode |
 |--------------|---------------|
 | nothing specified, "team", "with approval", "supervised", "lead orchestrates" | `team` (default) |
-| "fire and forget", "anonymous", "bypass permissions", "fire", "fire-and-forget", "autonomous" | `fire-and-forget` |
+| "fire and forget", "anonymous", "no lead involvement", "fire", "fire-and-forget", "autonomous" | `fire-and-forget` |
 
 **Review cadence:**
 
@@ -92,21 +94,11 @@ Follow the `agent-plan-split` reference steps 1–4: understand the goal, discov
 - Verification commands: `project-tooling`.
 - Project conventions, discovered and agreed before any dispatch: `agent-conventions`.
 - Plan quality criteria, including the optional `depends_on` field on tasks: `agent-write-plans`.
-- Task splits aligned with Linear issue boundaries when the user supplies issues or a project: `linear-chunk-issues`.
+- When the input is Linear — issues or a project — load `linear-pickup`; task splits align with issue boundaries per `linear-chunk-issues`, and state moves follow `linear-state-transitions`.
 
 ### Step 5 — Build the schedule
 
-Follow the `agent-plan-split` reference's "Task dependencies" section:
-
-- Read each task's `depends_on`. Compute the layer for each task: `layer(task) = max(layer(dep) for dep in depends_on) + 1`, or `0` if `depends_on` is empty.
-- Group tasks by layer. Within each layer, verify no two tasks write to the same file. If overlap exists, flag it to the user — propose promoting one task to a later layer, splitting the overlap into a new task, or merging the two conflicting tasks. Do NOT auto-resolve.
-- Output the schedule as a layer-by-layer table:
-
-  | Layer | Task | Depends on | Files (write) |
-  |-------|------|-----------|---------------|
-  | 0 | task-a | — | src/foo.ts |
-  | 0 | task-b | — | src/bar.ts |
-  | 1 | task-c | task-a | src/foo-test.ts |
+Build the layer schedule per `agent-plan-split` step 6 — the layer formula, the within-layer collision check (flagged to the user, never auto-resolved), and the layer-by-layer table.
 
 ### Step 6 — Present the schedule
 
@@ -118,14 +110,11 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 ### Step 7 — Decide agent count per layer
 
-- Number of agents in a layer = number of tasks in that layer.
-- One agent per task, always. A later layer's task SHOULD go to the same named agent that did its dependency while that agent is still reachable — one turn per task, context and worktree already in place — but never two tasks in one prompt.
-- Tier is per task, shown in the schedule, resolved by loading `agent-harness`.
-- 2–4 tasks per layer is the sweet spot. If a layer has >4 tasks, consider whether any should be merged; if a layer has 1 task, that's fine (sequential point in the DAG).
+Per `agent-plan-split` step 7 — one agent per task, a later layer's task steered to the named agent that did its dependency while it is still reachable, and a tier per task resolved by loading `agent-harness`.
 
 ### Step 8 — Launch the first layer
 
-> **Fetch `agent-delegate-harness-<provider>` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+> **Fetch `agent-delegate-harness-<provider>` before the first dispatch.** A missed read is silent, and whether blocking exists, how a finished agent's report arrives, and whether the prompt needs a delivery instruction are exactly what varies.
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
@@ -136,21 +125,17 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 - Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
-  - A `name` — that is what makes a teammate addressable for mid-run steering and for its own report. There is no team-creation step and no team parameter.
-  - No permission-mode parameter — it is ignored; teammates run under the session's own posture.
-  - The delivery line from `agent-delegate-harness-<provider>` in the prompt, naming the recipient — **a named agent's plain text reaches nobody**, so without it the report is lost and the layer cannot close.
-  - A general-purpose subagent.
-
-  **A named teammate does not block, whatever `run_in_background` says.** The layer barrier is held by collection: the layer closes when every teammate has delivered, not when the dispatch returns. Want the barrier enforced by the dispatch itself, use fire-and-forget.
+  - A name — that is what makes a teammate addressable for mid-run steering and for its own report. There is no team-creation step and no team parameter.
+  - A delivery instruction naming the recipient, only where `agent-delegate-harness-<provider>` says the runtime needs one — without it there, the report is lost and the layer cannot close.
+  - A general-purpose agent type.
 
 **Fire-and-forget mode:**
 
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
-  - No `name` — an unnamed agent returns its report as the tool result, which is what makes the barrier hold.
-  - No permission-mode parameter — it is ignored; agents run under the session's posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agent-delegate-harness-<provider>`.
-  - A general-purpose subagent.
+  - No name.
+  - Where the runtime offers blocking dispatch, block explicitly, so the dispatch itself holds the barrier; otherwise the barrier is held by collection, as in team mode.
+  - A general-purpose agent type.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
 
@@ -162,25 +147,17 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 ### Step 9 — Collect layer results
 
-- Blocking dispatch (`run_in_background: false` on every agent) — this turn pauses until every agent in the layer returns. **If results did not arrive as tool results, the dispatch was not actually blocking** — check the flag before concluding an agent failed.
-- Review each agent's result. Handle statuses (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED) per the standard conventions.
+- **The layer closes when every agent's completion has been collected**, per `agent-delegate`. A pending agent is still running — never pre-empt it, and never read its silence as a failure.
+- Review each agent's result. Handle statuses (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED) per `agent-delegate`.
 - If any task fails or is BLOCKED: **finish the in-flight layer, then halt before the next layer.** Surface all failures to the user in the same turn, with a consolidated summary. Wait for user guidance — do not retry or auto-advance.
 
 ### Step 10 — Merge this layer's worktrees
 
-Follow the `agent-merge-review` reference "Merge worktrees (per-layer)" section:
-
-- Merge each layer worktree's branch back to the active branch sequentially.
-- On merge conflicts: present to user, wait for resolution decision, do NOT auto-resolve.
-- Remove each worktree per `agent-worktrees`. Surface failures; do not force-remove silently.
+Per `agent-merge-review` step 1: merge sequentially, conflicts go to the user, worktrees removed without silent force.
 
 ### Step 11 — Review this layer
 
-- If cadence is `per-layer`: run `code-review-changes` against the **layer baseline** (recorded before this layer's launch). This catches integration issues between parallel tasks within the layer.
-- If cadence is `per-task`: the per-task reviewer already ran during step 8; no separate layer review.
-- If cadence is `final-only`: skip layer review; review happens only at end of run.
-
-Present findings. If the reviewer flags issues, fix them (directly or via a corrective agent) before proceeding.
+Per `agent-merge-review` step 2, against the **layer baseline** recorded before this layer's launch; the resolved cadence decides whether a layer review runs.
 
 ### Step 12 — Pause for user guidance
 
@@ -195,16 +172,11 @@ Present findings. If the reviewer flags issues, fix them (directly or via a corr
 
 ### Step 14 — Final review, verification, handoff
 
-Follow the `agent-merge-review` reference steps 2–4:
-
-- **Final review.** Run `code-review-changes` against the **run-level baseline** (recorded in step 8 for layer 0). This catches cross-layer integration issues regardless of cadence choice.
-- **Final verification.** Run the full verification command set from the planning phase. Read the output. Confirm with evidence.
-- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per `agent-completion`. Commits go through `git-commit`, which owns message style and issue trailers.
+Per `agent-merge-review` steps 2–4 — the end-of-run review against the **run-level baseline** recorded in step 8, final verification with evidence, and the completion handoff.
 
 ### Step 15 — Shutdown (team mode only)
 
-- Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
-- Wait for shutdown confirmations.
+- Send each teammate a shutdown request through the runtime's messaging channel, per `agent-delegate-harness-<provider>`, and wait for the confirmations.
 - Ensure every agent worktree tied to this team has been removed.
 - Confirm every teammate is stopped — collect before you reap, per `agent-delegate`.
 
@@ -245,16 +217,7 @@ Do NOT modify files outside your write scope. Other agents in this layer:
 
 ## Conventions — match the house style
 
-FIRST, before writing anything: read [nearest sibling files] and [closest existing implementation of the same kind], and follow them. Extend the existing pattern rather than introducing a new one.
-
-[Filled-in block from the `agent-conventions` reference — naming, formatting, errors, imports, tests, architecture]
-
-Idiom above binds regardless of how novel the task is. For shape (decomposition, abstractions, signatures): mirror [analogous implementation] where one exists; where the task has no analogue, design it against the codebase's architecture and state in your report what you chose and why.
-
-- Comments: match the surrounding density — [none | why-only]. Never restate what the code does. No banners, no narration, no added docstrings, no TODOs.
-- Scope: modify only your write scope. No refactors, renames, reformatting, or dependency changes outside the task. A convention you dislike is still the convention — flag it, don't fix it.
-
-Before reporting, self-check your diff against [reference file]: if it reads as though someone outside this codebase wrote it, fix it. New functionality may look new; it may not look foreign.
+[The filled-in prompt block from `agent-conventions`, verbatim.]
 
 ## Accumulated Guidance
 
@@ -278,8 +241,6 @@ State which files you used as your pattern reference, and anything you had to in
 ```
 ## Coordination
 
-- Check the shared task list after completing each task for new work.
-- Mark tasks as completed via TaskUpdate when done.
 - Send a message to the lead if you are blocked or need a decision.
 ```
 
@@ -287,9 +248,9 @@ State which files you used as your pattern reference, and anything you had to in
 
 For each task in a layer (still parallel across tasks within the layer):
 
-1. Dispatch implementer. Wait.
+1. Dispatch implementer. Collect its completion.
 2. Handle implementer status. If DONE, get git diff since task started.
-3. Dispatch reviewer with the diff + task spec. Wait.
+3. Dispatch reviewer with the diff + task spec. Collect its completion.
 4. If reviewer finds issues: dispatch a fresh implementer with the original prompt + `## Issues to Fix` section. Re-review after the fix. Repeat until APPROVED.
 5. Run verification commands after the layer's per-task loops all pass.
 
@@ -320,12 +281,7 @@ Report: APPROVED or list specific issues to fix.
 
 ## Model Selection
 
-See the `agent-harness` skill for tier definitions, per-provider model lists, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
-
-- **Concrete model depends on the provider** — load the `agent-harness` skill to resolve it (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
-- **Other providers:** if the mapping is unknown, ask the user.
-- **Explicit model names from the user** override tiers — use verbatim.
-- **Mismatched choices:** ask before dispatching.
+A tier per agent, including review subagents under per-task cadence, per `agent-delegate` Model Selection.
 
 ## The Run Board
 
@@ -343,7 +299,7 @@ Between layers, show where the run actually is - brief, current state only:
 
 **Reap each layer's agents before launching the next.** A DAG run accumulates agents fastest of anything here, and a layer boundary is exactly where stale ones do damage: an unreaped agent from layer N can still be writing while layer N+1 starts, and two concurrent writers on one file clobber each other silently. Worktree cleanup is not the same as agent cleanup — do both.
 
-Reap an agent when it delivered and its layer merged, when it went idle and you took its task back, when its task was superseded or dropped from the plan, or when you are re-dispatching it after a failed review — **reap before the re-dispatch**, never alongside it. Completion does not self-clean: finished agents linger in the runtime's task list, indistinguishable from live ones, which makes the layer's real state unreadable.
+Reap an agent when it delivered and its layer merged, when its task was superseded or dropped from the plan, or when you are re-dispatching it after a failed review — **reap before the re-dispatch**, never alongside it — collecting first, per `agent-delegate` Reaping.
 
 At the end of the run, and at every layer boundary, enumerate what is still alive and confirm each is stopped or *deliberately* still running with a stated reason.
 
@@ -353,7 +309,7 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 - **DAG is the default model.** All-parallel and all-sequential are just degenerate shapes of a DAG — write plans with `depends_on` so the scheduler works correctly.
 - **Non-overlapping within a layer is non-negotiable.** Two agents in the same layer writing the same file = garbage output. Fix the split before launch.
 - **Per-layer merge is mandatory when layers have dependencies.** Layer N+1 must branch from the post-layer-N state to see earlier work.
-- **Team mode is the default.** Opt into fire-and-forget explicitly. Permission bubbling is safer than bypass.
+- **Team mode is the default.** Opt into fire-and-forget explicitly.
 - **Per-layer review is the default.** Opt into per-task (stricter) or final-only (faster) explicitly.
 - **Finish-layer-halt on failure.** Never auto-advance past a failed layer without user guidance.
 - **Accumulated guidance compounds.** User feedback between layers folds into every subsequent agent prompt.
@@ -379,4 +335,4 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 
 - **`agent-delegate`** — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
 - **`code-review-changes`** — invoked per-layer (default cadence) and at end-of-run for integration review.
-- **`agent-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).
+- **`agent-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional).

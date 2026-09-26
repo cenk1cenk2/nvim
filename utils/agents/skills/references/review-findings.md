@@ -2,6 +2,20 @@
 
 Shared conventions for presenting code review findings across review skills.
 
+## What to Look For
+
+The shared core categories for any code review — a branch audit, a quick pass, or an autonomous PR/MR review:
+
+- **Silent failures** — errors caught and ignored, missing error propagation, fallback values hiding problems.
+- **Logic errors** — off-by-one, wrong operator, inverted conditions, race conditions, missing null/undefined checks.
+- **Security** — injection, auth bypass, secret exposure, unsanitized input at boundaries.
+- **Edge cases** — empty input, large data, concurrent access, failure paths.
+- **Error handling** — swallowed errors, missing rollback.
+- **Inconsistency** — new code deviating from existing codebase patterns without reason. Read the surrounding codebase before flagging — the deviation may be intentional.
+- **Unnecessary complexity** — over-engineering, premature abstraction, dead code.
+
+Each consuming skill adds its own categories on top of this core where its mode calls for them — intent-versus-implementation, naming and clarity, comment noise, missing tests, cross-PR/MR consistency, and the like.
+
 ## Grouping
 
 Group findings by **logical domain or system** — not by severity or file path. Use `###` headings to name each domain.

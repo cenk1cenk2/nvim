@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: linear-triage Work through every Linear issue sitting in triage, recommending project, priority, team, and refinements interactively. A Linear workspace skill must be active first. Use on "triage the issues", "process the triage queue". Not for planning a cycle, or for choosing a single next task.
+description: linear-triage Work through every Linear issue sitting in triage, recommending project, priority, team, and refinements interactively. Use on "triage the issues", "process the triage queue". Not for planning a cycle, or for choosing a single next task.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
@@ -54,7 +54,7 @@ Present a recommendation covering:
 
 1. **Summary** — restate what the issue is about in one sentence.
 2. **Project** — recommend an existing project if one fits. If no project fits, say so — not every issue needs a project. Never force a project assignment.
-3. **Priority** — recommend a priority (0=None, 1=Urgent, 2=High, 3=Normal, 4=Low) with brief reasoning.
+3. **Priority** — recommend a priority (0=None, 1=Urgent, 2=High, 3=Medium, 4=Low) with brief reasoning.
 4. **Labels** — recommend labels from the fetched label list if the issue has none or if current labels seem wrong.
 5. **Team** — confirm team assignment. Flag if the issue seems like it belongs to a different team.
 6. **Target state** — recommend `backlog` as the default. Recommend `todo` if the issue is urgent or the user wants it in the current cycle.
@@ -68,7 +68,7 @@ Present a recommendation covering:
 ### K-123: Fix authentication timeout on mobile
 
 - **Project:** Authentication Overhaul (fits the scope)
-- **Priority:** 3 (Normal) — not blocking other work
+- **Priority:** 3 (Medium) — not blocking other work
 - **Labels:** bug
 - **Team:** Platform (current, looks correct)
 - **State:** backlog

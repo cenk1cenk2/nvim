@@ -97,5 +97,5 @@ When this skill is invoked from or alongside another skill session, add an appen
 
 ## Related Skills
 
-- **`obsidian-note`** — for creating structured reference notes. Auto-invoke when the content is better suited as a permanent reference note rather than a temporary todo.
+- **`obsidian-note`** — for creating structured reference notes. Suggest it when the content is better suited as a permanent reference note rather than a temporary todo; do not auto-invoke.
 - **`obsidian-triage`** — for processing and organizing accumulated todo notes. Do not auto-invoke.

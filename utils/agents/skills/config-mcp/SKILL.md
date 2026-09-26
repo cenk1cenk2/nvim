@@ -8,6 +8,8 @@ references:
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
+  - ../references/mcp-tool-naming.md
+  - ../references/harness/harness-connectors.md
 argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 ---
 
@@ -15,15 +17,23 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 
 Posture: `present-first`.
 
-**Target: the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s.
+**Target: the MCP catalog under `~/.config/nvim/utils/agents/mcp/`** — three files, picked by which profiles should see the server. The hyprpilot launcher config that wires them into a launch is `config-hyprpilot`'s.
 
-> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is the catalog and whatever else the request is actually about. A server's own facts belong to its manual, not here. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
+Target discovery and the self-edit gate per `config-targets`.
 
 ## Context
 
-The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/agents/mcp/servers.json`. Per-profile `mcps` arrays wholesale-replace the global default.
+The captain runs **hyprpilot** as the agent host. The launcher config (`~/.config/hyprpilot/config.yaml`, YAML) loads catalogs through `mcps:` lists inside `$match`ed `patches:` entries:
 
-This skill edits the catalog file `~/.config/nvim/utils/agents/mcp/servers.json`. Its top-level key is `mcpServers` — the standard shape Claude Code / Codex / every MCP client uses. Each server entry follows one of two transport patterns:
+| File | Loaded for | Holds |
+|---|---|---|
+| `servers.json` | every profile (`personal/*` and `work/*`) | servers shared by both estates |
+| `personal.json` | `personal/*` | the kilic / personal servers (`*-kilic`, `gitlab`, …) |
+| `work.json` | `work/*` | the Laravel / work servers (`*-laravel`, …) |
+
+A `mcps:` entry is either `- file: <path>` or an inline server map. A profile's own `mcps` list wholesale-replaces the shared one for that profile. Which files load where is a patch edit, and `config-hyprpilot`'s.
+
+Each catalog file's top-level key is `mcpServers` — the standard shape Claude Code / Codex / every MCP client uses. Each server entry follows one of two transport patterns:
 
 **HTTP (preferred):**
 
@@ -60,17 +70,11 @@ This skill edits the catalog file `~/.config/nvim/utils/agents/mcp/servers.json`
 
 **Environment variables** use `${VAR_NAME}` syntax and are resolved at runtime. Secrets MUST use env var references, never hardcoded values. The convention for env var names is `NVIM_<SERVICE>` (e.g., `NVIM_GITHUB`, `NVIM_GITLAB`).
 
-> **The catalog file is shared with other clients.** `~/.config/nvim/utils/agents/mcp/servers.json` is consumed by hyprpilot and may be referenced from other MCP clients too. `${VAR}` syntax works in hyprpilot, Claude Code, and Codex; for OpenCode (`{env:VAR}` style), keep a one-shot conversion at hand: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' servers.json`. Do NOT mix syntaxes inside a single file.
+> **The catalog files are shared with other clients.** They are consumed by hyprpilot and may be referenced from other MCP clients too. `${VAR}` syntax works in hyprpilot, Claude Code, and Codex; for OpenCode (`{env:VAR}` style), keep a one-shot conversion at hand: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' <file>.json`. Do NOT mix syntaxes inside a single file.
 
 ## Server Naming
 
-**Server keys MUST use kebab-case with `-` only.** Do NOT use `/` (does not parse correctly through some MCP hubs — gets flattened inconsistently in the tool prefix) and avoid `_` for word separation inside keys. For multi-workspace services, follow the `<service>-<workspace>` convention:
-
-- `linear-kilic`, `linear-laravel`
-- `grafana-kilic`, `grafana-laravel`
-- `argocd-kilic`, `slack-kilic`, `spacelift-laravel`
-
-A clean kebab-case server key produces a clean, addressable tool prefix downstream (`mcp__<server>__<tool>`).
+Server keys follow `mcp-tool-naming` — kebab-case, `<service>-<workspace>` for multi-workspace services — so the tool prefix downstream stays clean and addressable.
 
 ## Hyprpilot Permission Extension
 
@@ -80,12 +84,12 @@ The `hyprpilot` namespace key on each server entry is hyprpilot's typed extensio
 |---|---|---|---|
 | `includeTools` | unset | visibility | Allow-list. Unset means no allow-list; `[]` means deny all. |
 | `excludeTools` | `[]` | visibility | Deny-list. Exclude beats include. |
-| `autoAcceptTools` | inherited | approval | Auto-resolves as "allow" through `PermissionController::decide` lane 2. |
+| `autoAcceptTools` | inherited | approval | Auto-resolves as "allow" (the `PermissionController::decide` lane is **Unverified** against the installed version). |
 | `autoRejectTools` | inherited | approval | Auto-resolves as "deny". Short-circuits before accept; reject beats accept. |
 
 **Visibility decides whether the tool exists for the agent; approval decides whether calling it prompts.** An excluded tool is never surfaced, so it cannot be called at all — a stronger guarantee than rejecting it, which only refuses the call after the model has already chosen to make it. Use `excludeTools` for anything the agent should never reach; reserve `autoRejectTools` for tools that must stay visible but always gate.
 
-**The approval pair is inherited, the visibility pair is not.** A server with no `autoAcceptTools` override falls back to the `mcp` block's default of `['*']` and auto-accepts everything it exposes.
+**The approval pair is inherited, the visibility pair is not.** A server with no `autoAcceptTools` override falls back to the `mcp:` block's default of `['*']` and auto-accepts everything it exposes.
 
 **House pattern:** every existing entry that restricts anything uses `excludeTools` plus an explicit `autoAcceptTools` list plus an empty `autoRejectTools`. Match it.
 
@@ -97,29 +101,33 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 - **Command execution belongs in `Bash`.** A server tool that runs arbitrary commands or mutates the captain's environment goes in `excludeTools` — `Bash` is where execution is visible and permission-prompted. `tmux` is the worked example: `execute-command`, `kill-*` and `split-pane` are excluded outright.
 - **A tool policy is not an approval gate.** Auto-accepting a server's reads says nothing about whether reaching into what it reads is the captain's call. Where such a gate exists it is behavioural and lives in that server's own skill, which the permission lane cannot enforce.
 - **No `git` MCP.** Local git is the raw `git` CLI via `Bash`. If a user asks to add a git server, raise the trade-off (extra surface area; the commands are already reachable through Bash) before doing so.
-- **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot-skills`, or `hyprpilot-harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `[mcp]` block in `~/.config/hyprpilot/config.yaml`:
+- **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot-skills`, or `hyprpilot-harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `mcp:` block in `~/.config/hyprpilot/config.yaml`:
   - `hyprpilot` (`mcp serve`) — general tools (`open`). On by default.
-  - `hyprpilot-skills` (`mcp skills`) — skills as `hyprpilot://skills/<slug>` resources plus `mcp__hyprpilot-skills__list_skills` / `read_skill` / `list_skill_references` / `read_skill_references`. On by default, and additionally gated on the resolved `[[mcp.skills.dirs]]` catalog being non-empty. Each root is watched (per-root `watch`, seeded true in `defaults.toml`) so skill edits announce themselves without a tool call.
+  - `hyprpilot-skills` (`mcp skills`) — skills as `hyprpilot://skills/<slug>` resources plus `hyprpilot-skills__list_skills` / `read_skill` / `list_skill_references` / `read_skill_references`. On by default, and additionally gated on the resolved `mcp.skills.dirs` list being non-empty. Each root is watched (per-root `watch`, seeded true in `defaults.toml`) so skill edits announce themselves without a tool call.
   - `hyprpilot-harness` (`mcp harness`) — `list_profiles` / `spawn` / `session_*` for driving other agent sessions, plus session resources under `hyprpilot://sessions/`. **Off unless `mcp.harness.enabled` says otherwise**, since `spawn` runs a profile's `command` as this user.
 
-  `mcp.enabled: false` is the master gate over all three; each also takes its own `enabled` / `name` / `autoAcceptTools` / `autoRejectTools`. Per-server tool policy **overrides** the `[mcp]`-level globs rather than merging with them — so enabling the harness without its own `autoAcceptTools` inherits `["*"]` and auto-approves `spawn`.
+  `hyprpilot-nvim` is not injected by hyprpilot and does not belong in a catalog either: the Neovim launcher (`lua/ck/plugins/sidekick-nvim.lua`) passes it as an inline `mcps` entry through `--with-config`.
 
-  `mcp.harness` carries four more knobs, all scoping what a spawned agent may reach:
+  `mcp.enabled: false` is the master gate over all three; each also takes its own `enabled` / `name` / `autoAcceptTools` / `autoRejectTools`. Per-server tool policy **overrides** the `mcp:`-level globs rather than merging with them — so enabling the harness without its own `autoAcceptTools` inherits `["*"]` and auto-approves `spawn`.
+
+  `mcp.harness` carries more knobs, all scoping what a spawned agent may reach. Keys seeded in `defaults.toml` are written the way the seed writes them — snake_case:
 
   | Key | Default | Effect |
   |-----|---------|--------|
-  | `maxDepth` | `1` | How deep spawning nests. A session at the cap gets **no harness injected** and its `spawn` is refused, so the lead delegates and the delegate works. Raising it reopens the next level with nothing else to change. |
-  | `includeProfiles` / `excludeProfiles` | unset | Globs scoping which profiles *this* launcher may delegate to. They AND with each profile's own `[profiles.harness]` opt-in, so a glob can never promote a profile that never opted in. Exclude beats include. |
-  | `mcp` | unset | An `[mcp]`-shaped overlay every delegate receives, folded **per leaf** over the delegate's own resolved block — a key you set wins, a key you leave unset inherits. This is what narrows a delegate's MCP reach. |
-  | `notifyOnComplete` | `true` | The Claude channel push when a turn ends. Noise control only; an unregistered channel is dropped silently either way. |
+  | `max_depth` | `1` | How deep spawning nests. A session at the cap gets **no harness injected** and its `spawn` is refused, so the lead delegates and the delegate works. Raising it reopens the next level with nothing else to change. |
+  | `max_sessions` | `64` | Finished sessions retained per sidecar before the oldest are evicted with their transcripts. `0` retains all. |
+  | `max_live_sessions` | `0` | Sessions allowed to run at once before `spawn` is refused. `0` allows any number. |
+  | `notify_on_complete` | `true` | The Claude channel push when a turn ends. Noise control only; an unregistered channel is dropped silently either way. |
+  | `includeProfiles` / `excludeProfiles` | unset | Globs scoping which profiles *this* launcher may delegate to. They AND with each profile's own `harness:` opt-in, so a glob can never promote a profile that never opted in. Exclude beats include. |
+  | `mcp` | unset | An `mcp:`-shaped overlay every delegate receives, folded **per leaf** over the delegate's own resolved block — a key you set wins, a key you leave unset inherits. This is what narrows a delegate's MCP reach. |
 
-  **Write a seeded key the way the seed writes it.** Both casings parse, but patches merge by key string before anything is typed — so writing `maxDepth` / `maxSessions` / `notifyOnComplete` in the other spelling reaches serde as a duplicate field and fails config load.
+  **Write a seeded key the way the seed writes it.** Both casings parse, but patches merge by key string before anything is typed — so writing `maxDepth` against the seeded `max_depth` reaches serde as a duplicate field and fails config load. The seed spelling is read from the local clone (v3.20.0-2), behind the installed 3.22.0 — **Unverified** against the installed version; check `defaults.toml` at the matching tag.
 
 ## Process
 
 ### Add
 
-1. **Identify the server.** If the user provides a name or URL, use it. Otherwise, ask. Pick a kebab-case server key (no `/`, prefer `-` over `_` inside the key) — see "Server Naming" above.
+1. **Identify the server.** If the user provides a name or URL, use it. Otherwise, ask. Pick the server key per `mcp-tool-naming`, and the catalog file by which profiles should see it (see Context).
 2. **Research the server.**
    - Search the web for the official MCP server (prefer servers published by the service provider themselves, e.g., `mcp.linear.app`, `api.githubcopilot.com/mcp`).
    - Check the official MCP server registry and the service's own documentation.
@@ -150,20 +158,20 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
    - Explain each field briefly.
    - Wait for user approval.
 8. **Apply the configuration.**
-   - Read `servers.json`, add the new entry under `mcpServers`, and write the file.
+   - Read the chosen catalog file, add the new entry under `mcpServers`, and write the file.
    - Validate that the resulting JSON is well-formed.
    - Remind the captain that the MCP catalog is read once per launch. There is no daemon and no reload command — hyprpilot resolves the config, projects it onto the vendor CLI, and `exec()`s into it. A catalog edit reaches an agent on the **next** `hyprpilot <profile>`; a session already running keeps the catalog it launched with.
 
 ### Remove
 
-1. Read `servers.json` and list available servers if no specific server is named.
+1. Read the three catalog files and list available servers if no specific server is named.
 2. Confirm with the user which server to remove.
 3. Remove the entry and write the file.
 4. Remind the captain that the removal applies to the next launched session — a session already running keeps the catalog it launched with.
 
 ### Modify
 
-1. Read `servers.json` and show the current configuration for the target server.
+1. Find the catalog file holding the target server and show its current configuration.
 2. Ask the user what they want to change (or apply the change they described).
 3. If the change involves new variables or auth, follow the prompting steps from the Add flow.
 4. If the user asks to change `hyprpilot.autoAcceptTools` or `autoRejectTools`, prompt for those specifically. Otherwise, do not re-prompt for tool approvals unless relevant to the modification.
@@ -181,7 +189,7 @@ Before presenting any edit, run the `current-state-only` check: no compat entrie
 - **Prefer official servers.** First-party MCP servers from service providers are more reliable and feature-complete.
 - **Prefer HTTP transport.** Remote HTTP endpoints avoid local dependency management.
 - **Prefer `bunx` for stdio.** When stdio is needed, use `bunx -y package@latest` as the command pattern (matching existing entries). Fall back to `npx -y` or `uvx` based on the package ecosystem.
-- **Validate JSON.** Always ensure `servers.json` remains valid after edits.
+- **Validate JSON.** Always ensure every catalog file you touched remains valid after edits.
 - **Preserve existing structure.** Do not reformat or reorder unrelated entries when adding/modifying a server.
 - **Ask, don't assume.** When multiple options exist (auth method, transport, permission globs), present them to the user.
 - **Hyprpilot is relaunch-to-reconfigure.** Config is read once at launch and projected onto the vendor CLI; there is no daemon to restart and no runtime toggle. Edits apply to the next launched session.

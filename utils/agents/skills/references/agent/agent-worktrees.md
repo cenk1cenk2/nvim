@@ -9,18 +9,18 @@
 | A skill creating one itself | `wt switch --create` | whatever `wt` computes; never override it |
 | The runtime's own isolation flag | the harness | harness-controlled — verify the path it returns |
 
-For a harness-created worktree, and for the fallback form, the location is the active runtime's agent-worktrees directory per `provider-paths` (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). Never scatter agent worktrees elsewhere in the filesystem.
+For a harness-created worktree, and for the fallback form, the location is the active runtime's agent-worktrees directory per `provider-paths`. Never scatter agent worktrees elsewhere in the filesystem.
 
 ## Worktree isolation follows the SESSION's repo, not the task's repo
 
-**`isolation: worktree` creates a worktree of the repository the session is running in — the cwd project — NOT the repository the delegated task targets.** In a multi-repo workspace those are frequently different, and then the agent lands in a worktree where **its target files do not exist**.
+**The runtime's worktree-isolation flag creates a worktree of the repository the session is running in — the cwd project — NOT the repository the delegated task targets.** In a multi-repo workspace those are frequently different, and then the agent lands in a worktree where **its target files do not exist**.
 
-Concretely: a session running in `<repo-a>` delegates an edit that lives in `<repo-b>` and passes `isolation: worktree`. The agent is handed `<repo-a>/.claude/worktrees/agent-<id>/`, where none of its target paths exist. A careful agent reports the mismatch; a careless one edits the wrong tree or creates files that do not belong.
+Concretely: a session running in `<repo-a>` delegates an edit that lives in `<repo-b>` with worktree isolation on. The agent is handed a worktree of `<repo-a>`, where none of its target paths exist. A careful agent reports the mismatch; a careless one edits the wrong tree or creates files that do not belong.
 
-**So, before passing `isolation: worktree`:**
+**So, before turning worktree isolation on:**
 
 - **Confirm the task's repo IS the session's repo.** If it is not, do NOT rely on the flag.
-- **For a cross-repo task, create the worktree yourself in the TARGET repo** per Creating a Worktree Yourself below, and pass its absolute path in the prompt under a `## Workspace` section telling the agent to `cd` there first. Dispatch without `isolation`.
+- **For a cross-repo task, create the worktree yourself in the TARGET repo** per Creating a Worktree Yourself below, and pass its absolute path in the prompt under a `## Workspace` section telling the agent to `cd` there first. Dispatch without isolation.
 - **Say which repo the work belongs to in the prompt**, explicitly. An agent that knows the target repo can recover from a wrong worktree; one that assumes will edit the wrong tree or create files that do not belong.
 - **Verify after dispatch** where the branch and commit actually landed — check the target repo's `git worktree list` and `git branch`, not the agent's own account of it.
 
@@ -102,7 +102,7 @@ On removal failure (uncommitted changes, for example), surface the error to the 
 
 ## Gitignore
 
-Ensure the worktrees directory is in the project's `.gitignore` — `wt`'s configured path, `.agents/worktrees/`, or `.claude/worktrees/` on Claude Code, whichever applies. If not, the worktrees will pollute `git status`. This is a user-level concern — the skill should NOT modify `.gitignore` automatically, but MAY warn the user if the worktrees directory is not gitignored when a worktree is first created.
+Ensure the worktrees directory is in the project's `.gitignore` — `wt`'s configured path, or the runtime's agent-worktrees directory per `provider-paths`, whichever applies. If not, the worktrees will pollute `git status`. This is a user-level concern — the skill should NOT modify `.gitignore` automatically, but MAY warn the user if the worktrees directory is not gitignored when a worktree is first created.
 
 ## Key Rule
 

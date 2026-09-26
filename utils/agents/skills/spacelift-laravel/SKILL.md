@@ -1,6 +1,6 @@
 ---
 name: spacelift-laravel
-description: spacelift-laravel Auto-invoked on Spacelift context - Spacelift URLs, stack names, or run references. Initialises the Spacelift session for that workspace.
+description: spacelift-laravel Auto-invoked on Spacelift context - Spacelift URLs, stack names, or run references. Initialises the Spacelift session for that workspace. Not for infrastructure outside the Laravel workspace.
 ---
 
 ## Spacelift Workspace: Laravel
@@ -17,7 +17,7 @@ description: spacelift-laravel Auto-invoked on Spacelift context - Spacelift URL
 
 - **Spacelift MCP:** `spacelift-laravel` — ALWAYS use `spacelift-laravel__*` tools.
 - **Common read operations:** `list_stacks`, `list_stack_runs`, `get_stack_run`, `get_stack_run_logs`, `get_stack_run_changes`, `list_resources`, `list_spaces`, `list_policies`, `list_modules`.
-- **Write operations:** `trigger_stack_run`, `confirm_stack_run`, `discard_stack_run` — always confirm with user before executing.
+- **Write operations:** `trigger_stack_run` — always confirm with user before executing. `confirm_stack_run` and `discard_stack_run` are not registered on this server; approving or discarding a run happens in the Spacelift UI.
 - **Cross-reference style:** Reference stack names and run IDs when discussing Spacelift operations.
 
 ## After Initialization

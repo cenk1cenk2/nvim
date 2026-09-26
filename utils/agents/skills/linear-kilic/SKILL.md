@@ -1,21 +1,14 @@
 ---
 name: linear-kilic
-description: linear-kilic Auto-invoked on kilic-dev context - K-xxx issue ids, kilic-dev workspace URLs, or a gitlab.kilic.dev repo. Initialises the Linear session for that workspace, with GitLab as its SCM.
+description: linear-kilic Auto-invoked on kilic-dev context - K-xxx issue ids, kilic-dev workspace URLs, or a gitlab.kilic.dev repo. Initialises the Linear session for that workspace, with GitLab as its SCM. Not for Laravel-workspace work or CLOUD-xxx ids.
 references:
+  - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md
 ---
 
 ## Session Initialization
 
-**FIRST ACTION** when this skill is invoked:
-
-1. Call `linear-kilic__get_user` with `query: "me"` to identify the current user.
-2. Note the user's **team(s)** from the response — this is your default team for issue creation.
-3. Store the user ID for assigning issues.
-4. Call `linear-kilic__list_issue_labels` to fetch **all available labels** for the workspace.
-   - Store the label list for the session.
-   - **NEVER fabricate or guess label names** — only use labels that exist in this list.
-   - If no label fits the issue, ASK the user which label to use rather than inventing one.
+**FIRST ACTION** when this skill is invoked: initialise the session against `linear-kilic` per `linear-prerequisite`.
 
 ## Workspace Context
 
@@ -30,6 +23,6 @@ references:
 
 Once context is established, proceed with the user's request.
 
-**Issue-creation invariant:** every `linear-kilic__save_issue` call — including ad-hoc creates made WITHOUT the `linear-issue-create` skill — MUST send an explicit `state`. The Linear API defaults to `Triage`, which is WRONG. Default to `state: "Backlog"`; set `Triage` ONLY when the user explicitly asks for it. Required issue fields per `linear-mandatory-fields`.
+**Issue-creation invariant:** every `linear-kilic__save_issue` call — including ad-hoc creates made WITHOUT the `linear-issue-create` skill — sends an explicit `state` and the required fields per `linear-mandatory-fields`.
 
 If the user wants to create issues, follow the `linear-issue-create` skill workflow.

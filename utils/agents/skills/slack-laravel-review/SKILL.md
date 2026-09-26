@@ -115,7 +115,7 @@ Posture: `present-first`.
 
 7. **Post to Slack.**
    - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.
-   - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C0B0XMD0HS4` (`#cloud-infra-pr`).
+   - Use the connector's `slack_send_message` to post to channel `C0B0XMD0HS4` (`#cloud-infra-pr`).
    - **One message per PR/MR** — when posting multiple, send each as its own separate message (one `slack_send_message` call per PR).
 
 ## Composing with Other Skills

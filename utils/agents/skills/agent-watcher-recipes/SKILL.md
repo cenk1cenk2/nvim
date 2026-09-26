@@ -5,13 +5,11 @@ references:
   - ../references/agent/agent-watchers.md
 ---
 
-# Agent Watcher Recipes
+## Agent Watcher Recipes
 
-Concrete signals per domain, and the checks that poll them. Read the entry for the thing you are about to watch; skip the rest.
+Concrete signals per domain, and the checks that poll them. Read the entry for the thing you are about to watch; skip the rest. Discipline, cadence, the language rule, the announce tables and the audit live in `agent-watchers`.
 
-Checks are python unless the condition is a single-condition one-liner, per the language rule in `agent-watchers`.
-
-Discipline, cadence, the announce tables and the audit live in `agent-watchers`.
+**Where `agent-background`'s `watch.py` has a named condition for the domain — `github-pr`, `gitlab-mr`, `github-action`, `gitlab-ci`, `spacelift-run`, `spacelift-module`, the `*-tag` and `*-review` conditions — that is the watcher.** The checks below are for the inline fallback on a runtime with no tree on disk, and for domains `watch.py` has no condition for.
 
 ## What to arm, by what just happened
 
@@ -150,8 +148,9 @@ does not track and will never wake you for. **It is external state, and every de
 watcher armed before the session is reported as running.** One turn, one directory, one watcher: a follow-up
 turn on the same session is a new condition, not the same one continuing.
 
-The shell-visible proxy is the turn's completion marker, and the check is two conditions over the exact
-per-turn path the call returned:
+The shell-visible proxy is the turn's completion marker. The payload is `hyprpilot-delegate`'s own turn
+waiter, which that skill carries — it is loaded whenever such a session exists. Where the script is
+unavailable, the check is two conditions over the exact per-turn path the call returned:
 
 ```python
 import os
@@ -169,7 +168,7 @@ the call that started this turn and is never reconstructed by hand.
 On wake the marker tells you the turn **ended**, never that it succeeded and never what it produced. Do the
 authoritative status read and the result collection over MCP on the main loop, then reap the watcher —
 reaping the session deletes the directory the loop tests, so a survivor fires on the cleanup and reports a
-finish that never happened. Session surface, tools and views per `hyprpilot-sessions`.
+finish that never happened.
 
 ### Chaining — the wake that arms the next wake
 
@@ -254,9 +253,7 @@ the shell says it in less:
 curl -fsS -o /dev/null "$URL"
 ```
 
-The same goes for a bare file test or one string compared to one field. Anything past that — a JSON
-response parsed, several fields weighed, a collection walked, a path built — is python, per the language
-rule in `agent-watchers`.
+The same goes for a bare file test or one string compared to one field.
 
 **Adapt to what this environment actually has.** Do not reach for a CLI because it appeared in an
 example — check what is installed, or fall back to the API over `curl`, or to a filesystem signal.
@@ -266,12 +263,5 @@ and silence looks exactly like "still running". Match every terminal state, or b
 enough that exhaustion tells you something.
 
 **Verify the field paths against one real response before arming.** A parser that errors — a wrong field
-path, a shape that changed — makes the loop exit early and report a settle that never happened. Where a
-single field out of a single response is genuinely all you need, `jq` in a bash one-liner is fine; the
-moment a second field or a branch appears, it is python.
-
-**Never hold the ids in a shell array.** `${array[@]}` can expand to nothing inside a background-exec
-facility, and a loop over an empty list examines nothing and then reports success — the watcher fires on
-the first cycle, on a condition that never held. Hold the collection in python, where it is a value
-rather than a word the shell re-splits.
+path, a shape that changed — makes the loop exit early and report a settle that never happened.
 

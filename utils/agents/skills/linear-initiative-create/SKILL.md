@@ -1,12 +1,13 @@
 ---
 name: linear-initiative-create
-description: linear-initiative-create Create a Linear initiative with its description and goals, pulling in orphan projects that belong under it. A Linear workspace skill must be active first. Use on "create an initiative", "group these projects". Not for revising one that exists, or for posting its status.
+description: linear-initiative-create Create a Linear initiative with its description and goals, pulling in orphan projects that belong under it. Use on "create an initiative", "group these projects". Not for revising one that exists, or for posting its status.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-description-structure.md
   - ../references/output-diff.md
+  - ../references/linear/linear-absolute-approval.md
   - ../references/identifier-legibility.md
 ---
 
@@ -18,6 +19,8 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
+
+> **Absolute approval required per `linear-absolute-approval`.** The initiative and each project link need explicit approval for that specific change; an upfront blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_initiative` / `save_project` before the user approves the drafted change.
 
 ## Process
 
@@ -40,7 +43,7 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 - **`owner`** — Set to the current user.
 - **`status`** — Default to `Planned`. Ask the user if they want `Active` instead.
 - **`targetDate`** — Discuss with the user. Set if they have a timeline, otherwise skip.
-- **`parentInitiative`** — Ask the user if this belongs under an existing initiative. List current initiatives if needed.
+- **`parentInitiatives`** — Ask the user if this belongs under an existing initiative. List current initiatives if needed.
 
 ## Description Structure
 

@@ -45,7 +45,7 @@ On/off mechanics per `mode-toggle`.
 - **On:** `/plan-companion`, "spawn an architect", "have an agent hold the design", "keep the plan honest while I build".
 - **Off:** the user says the companion is no longer needed, or the plan is fully implemented **and the user confirms**. Never off on your own judgment.
 - **Survives disengage:** every plan-file revision already applied, and every open design question the companion raised that you have not resolved. Both must be written into the plan file before standing down.
-- Layers under any other posture, and **does not enter plan mode** — you are implementing, not planning. It is the design layer beside the build, not a return to planning.
+- Layers under any other posture. A coordinator or bulldozer run keeps its own dispatch discipline; the companion is the design layer beside the build, not a return to planning.
 
 ## The Split, in planning terms
 
@@ -104,6 +104,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
    - **The plan file's absolute path**, and the instruction to **re-read it before every answer that quotes it** — you tick tasks and apply revisions to that file, so the copy it read at spawn goes stale within a few turns. Per `agent-companion` it labels each claim observed or reported.
    - **Which tasks are done**, so it does not re-derive completed state.
    - **`agent-write-plans`** as the standard every revision it drafts must meet — concrete files, steps, verification, pattern references, and no placeholders.
+   - **The assumed surface**, declared per `agent-target-capability` — the skills and tools it can reach, named rather than inlined.
    - **The never list** above, above all that it stops rather than redesigns when direction breaks.
    - **The deviation report shape**, so it can ask for a missing fourth line rather than guessing.
 
@@ -111,7 +112,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 
 5. **Collect, present, release.** Revisions come back as edits to named tasks; present them chunked per `output-diff` before they land in the plan file.
 
-6. **Report the companion every turn**, and retire it only on the user's word — both per `agent-companion`. The final collection goes into the plan file: open questions, what it would tell the next implementer, and which decisions turned out to be load-bearing. That file is what survives the session.
+6. **Report the companion every turn**, shaped per `report-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection goes into the plan file: open questions, what it would tell the next implementer, and which decisions turned out to be load-bearing. That file is what survives the session.
 
 ## Verification Is the Done Signal
 

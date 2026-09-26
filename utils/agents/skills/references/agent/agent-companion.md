@@ -96,9 +96,10 @@ config tweak and is not.
 
 ## Spawn — named, backgrounded, once per scope
 
-> **Fetch `agent-delegate-harness-<provider>` before the spawn.** The naming parameter, the background
-> default, the message channel, the lead's own address, and the verbatim delivery line all differ per
-> runtime — and a named agent never told how to deliver writes its report into the void.
+> **Fetch `agent-delegate-harness-<provider>` before the spawn.** The naming parameter, whether dispatch
+> is detached, the message channel, the lead's own address, and whether the brief needs a delivery
+> instruction all differ per runtime — and where one is needed, an agent never given it writes its report
+> into the void.
 
 - **Named and backgrounded is the only shape.** The name is the address you steer through; without it
   the agent is a one-shot. Detached is what keeps you free while it investigates.
@@ -115,8 +116,8 @@ config tweak and is not.
 - Spawn ceilings per `agent-delegate-harness-<provider>`; a refused spawn is not retried — it is a
   question to the user about which companion to retire.
 
-**It has fewer tools than you do.** A companion reaches skills and MCP servers, so point it at those by
-name and never inline what it can load. But a detached subagent typically **cannot dispatch its own
+**It has fewer tools than you do.** A companion is an aware target per `agent-target-capability`, so
+point it at skills and MCP servers by name and never inline what it can load. But a detached subagent typically **cannot dispatch its own
 agents and cannot look up who else exists** — the harness reference lists what survives. So every
 address it needs must be written into the brief, and any fan-out it wants is yours to run.
 
@@ -138,7 +139,7 @@ Self-contained per `agent-delegate`, and carrying all of:
 - **The gate** — propose changes back to you rather than applying them, until you say the user approved.
 - **The report contract** — the ledger below, plus what it proposes and what it needs decided. Terse
   prose otherwise, and never a status object.
-- **The delivery line**, verbatim from the harness reference.
+- **The delivery instruction**, verbatim from the harness reference, where it says the runtime needs one.
 
 ## Steering
 
@@ -192,8 +193,9 @@ Talking to a companion is free and gates nothing. **What gates is the durable re
 - **A preapproval does not raise the companion's permissions.** It runs under the session's own posture,
   so a write that would prompt you still prompts. Delegating the write moves the work, not the gate.
 
-**Report one roster row per companion, every turn the section is open**, per `agent-roster`: name,
-scope, tier, state, and whether anything it sent is uncollected. One row — not a status report.
+**Report one roster row per companion, every turn the section is open**, per `agent-roster`, inside
+your per-turn report shaped per `report-status`: name, scope, tier, state, and whether anything it
+sent is uncollected. One row — not a status report of its own.
 
 ## Retirement is the user's call
 

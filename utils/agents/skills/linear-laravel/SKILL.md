@@ -1,21 +1,14 @@
 ---
 name: linear-laravel
-description: linear-laravel Auto-invoked on Laravel context - CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM.
+description: linear-laravel Auto-invoked on Laravel context - CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM. Not for kilic-dev work or K-xxx ids.
 references:
+  - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md
 ---
 
 ## Session Initialization
 
-**FIRST ACTION** when this skill is invoked:
-
-1. Call `linear-laravel__get_user` with `query: "me"` to identify the current user.
-2. Note the user's **team(s)** from the response — this is your default team for issue creation.
-3. Store the user ID for assigning issues.
-4. Call `linear-laravel__list_issue_labels` to fetch **all available labels** for the workspace.
-   - Store the label list for the session.
-   - **NEVER fabricate or guess label names** — only use labels that exist in this list.
-   - If no label fits the issue, ASK the user which label to use rather than inventing one.
+**FIRST ACTION** when this skill is invoked: initialise the session against `linear-laravel` per `linear-prerequisite`.
 
 ## Default Team
 

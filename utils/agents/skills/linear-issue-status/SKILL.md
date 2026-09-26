@@ -8,6 +8,7 @@ references:
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issue-states.md
   - ../references/linear/linear-state-transitions.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
 ---
@@ -43,11 +44,10 @@ This skill changes issue status only. It is meant to compose verbally and situat
      - "done", "complete", "merged", "shipped" → `Done`.
      - "cancel", "drop", "won't do", "not needed" → `Canceled`.
    - If the status is only inferred from situation, apply monotonic workflow transitions (`In Progress`, `In Review`, `Done`) when evidence is clear; otherwise ask.
-   - Never set `Triage`.
+   - Set `Triage` only when the user explicitly asks for it.
 
 3. **Apply guardrails.**
-   - Respect the never-downgrade rule by default.
-   - If the user explicitly asks for a downgrade, explain the rule and ask for confirmation before writing.
+   - Never downgrade. If the user asks for a lower state, explain the rule and leave the state as is.
    - `Canceled` is terminal: require explicit user wording or confirmation.
    - Skip terminal issues already `Done` or `Canceled` unless the user explicitly requests a supported change.
 

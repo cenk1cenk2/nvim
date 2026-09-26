@@ -20,7 +20,7 @@ Posture: `present-first`.
 
 **Target: `CLAUDE.md` / `AGENTS.md` in the repository being worked on.** The repo's Obsidian note is a separate artifact that `obsidian-repository` owns.
 
-> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is the repository's own guidance file. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
+Target discovery and the self-edit gate per `config-targets`.
 
 ## Purpose
 

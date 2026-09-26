@@ -1,6 +1,6 @@
 ---
 name: linear-structure-agent
-description: linear-structure-agent Shape Linear work for agent execution and keep it honest while implementing it - one repo, one PR, one concern per issue, issuesets hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. Structuring and picking work up are one mentality. Use on "structure this for agents", "shape this as an issueset". Not for plain issue or project CRUD.
+description: linear-structure-agent Shape Linear work for agent execution and keep it honest while implementing it - one repo, one PR, one concern per issue, issuesets hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. Use on "structure this for agents", "shape this as an issueset". Not for plain issue or project CRUD.
 argumentHint: '[project or issue] [what it does]'
 references:
   - ../references/long-running-work.md
@@ -75,9 +75,7 @@ Then pick:
 
 ## Issuesets
 
-An **issueset** is a parent issue plus the sub-issues nested under it — the pattern for one change landing in several repositories. It exists because keeping N near-identical descriptions in sync is a losing job — one drifts, and the agent working that repo implements the stale version.
-
-Nest with `parentId`. Never describe the hierarchy in prose; Linear shows it natively.
+An issueset is the pattern for one change landing in several repositories. It exists because keeping N near-identical descriptions in sync is a losing job — one drifts, and the agent working that repo implements the stale version.
 
 ### The parent carries everything
 
@@ -88,8 +86,6 @@ The parent issue holds the real description — the one a reader or agent actual
 - Conventions, constraints, what must not break.
 - Acceptance criteria and verification commands.
 - The repository inventory, with any known per-repo difference.
-
-The parent is a container, not work. It is not picked up, it produces no PR of its own, and it closes when its sub-issues do.
 
 ### The sub-issue carries only the delta
 

@@ -3,7 +3,7 @@ name: sourcebot-discovery
 description: sourcebot-discovery Organization-wide repository and code discovery with Sourcebot - build an evidence-backed repo shortlist before provider-specific SCM calls, then escalate to GitLab or GitHub for live state. Load when the target repository is unknown or the search spans repositories. Not for authoritative SCM metadata, or for local git.
 ---
 
-# Sourcebot Repository Discovery
+## Sourcebot Repository Discovery
 
 Use Sourcebot when available for fast organization-wide repository and code discovery before provider-specific SCM calls.
 
@@ -42,13 +42,6 @@ For `gitlab.kilic.dev` work where the exact project path is unknown:
    to GitLab MCP project paths like `group/project`.
 5. Verify live GitLab state with GitLab MCP before creating branches,
    reading MRs/pipelines, or writing anything.
-
-## `ask_codebase` Does Not Work
-
-**`sourcebot-kilic__ask_codebase` is non-functional — never call it**, not even
-when the question is broad and several targeted searches look inefficient. Answer
-broad questions with the grep/glob/symbol flow above; it costs more calls and
-returns evidence you can cite.
 
 ## Output Expectations
 

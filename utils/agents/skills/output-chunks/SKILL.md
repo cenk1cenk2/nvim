@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[optional: what to walk through]'
 references:
   - ../references/mode-toggle.md
+  - ../references/output-diff.md
 ---
 
 ## Output Chunks — Decision-at-a-Time Presentation

@@ -10,7 +10,7 @@ references:
 
 ## Alerting
 
-Alerts are **`PrometheusRule` CRs evaluated by the Mimir Ruler**, not Grafana-managed alerts. Grafana's own alerting API holds nothing, and Grafana OnCall is not installed — do not reach for either. Datasource inventory: `grafana-kilic-datasources`. For writing and validating the expressions themselves, load the `grafana-kilic-read` skill.
+Alerts are **`PrometheusRule` CRs evaluated by the Mimir Ruler**, not Grafana-managed alerts — datasource inventory, and why the Grafana alerting API and OnCall are unavailable: `grafana-kilic-datasources`. For writing and validating the expressions themselves, load the `grafana-kilic-read` skill.
 
 Two repositories are involved and both usually change together:
 

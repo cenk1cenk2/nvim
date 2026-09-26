@@ -1,6 +1,6 @@
 ---
 name: agent-background
-description: agent-background Arm a background wait-loop that polls an external condition - a PR/MR merging, a CI or deploy run, a human approval - and re-invokes the session once when it is met, instead of sleeping or asking to be pinged. Use when work must wait on something outside this session. Not for polling subagent work you started, which the harness reports on its own, or for self-paced repetition.
+description: agent-background Arm a background wait-loop that polls an external condition - a PR/MR merging, a CI or deploy run, a human approval - and re-invokes the session once it holds, instead of sleeping or asking to be pinged. Use when work must wait on something outside this session. Not for subagent work you started, which the harness reports on its own, or self-paced repetition.
 scripts:
   # Relative to this skill's own directory: resolve against the `bundleDir` the
   # skill metadata carries, never a hardcoded absolute path, because the tree
@@ -8,6 +8,7 @@ scripts:
   - ./scripts/watch.py
 references:
   - ../references/long-running-work.md
+  - ../references/reconcile-state.md
   - ../references/identifier-legibility.md
   - ../references/agent/agent-watchers.md
   - ../references/harness/agent-background-harness-claude.md
@@ -15,7 +16,7 @@ references:
   - ../references/harness/agent-background-harness-opencode.md
 ---
 
-> **Fetch `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
+> **Fetch `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on a runtime where nothing does, the whole pattern below is silently void. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
 
 ## ABSOLUTE — Arming Is the First Action of the Turn
 
@@ -81,11 +82,7 @@ Bash is the exception, not the alternative — see below for the one case it fit
 >
 > Backgrounding within the shell — `&`, `nohup`, `disown`, `setsid` — hands the process to the OS. **The runtime never learns it exists, so it will never wake you.** The loop runs, polls correctly, writes its output, exits into silence, and nothing happens. You have created a log file, not a watcher.
 >
-> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named per `agent-background-harness-<provider>`), set **on the invocation**, not from anything inside the command string.
->
-> **Symptom to recognise, because it is easy to miss for a long time:** you find yourself re-reading a watcher's log or output file each turn to check whether it fired. **If you are polling the watcher, the watcher is not waking you.** Same for reporting "watchers armed" and then continuing to inspect their state by hand — that is a detached process, and every turn spent checking it is the cost this skill exists to remove. Re-arm through the runtime facility.
->
-> Corollary: `ps` cannot tell you whether a running watcher will wake you — a detached loop and a runtime-managed one look identical in a process list. Judge by **how it was launched**, not by whether the process is alive.
+> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named per `agent-background-harness-<provider>`), set **on the invocation**, not from anything inside the command string. What counts as a wake — and the two look-alikes, a live process and a watcher's log — is `agent-watchers`.
 
 ### Bash is the exception, and it is a narrow one
 
@@ -99,13 +96,7 @@ done
 echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 ```
 
-Step outside that and python is the answer, for three reasons that are failure modes rather than preferences:
-
-- **Shell arrays do not survive every background-exec facility.** A `${array[@]}` that expands correctly in an interactive shell can arrive **empty** inside a runtime's background launcher, and a loop over an empty list examines nothing and then reports success — the watcher fires on the first cycle, on a condition that never held, and reads exactly like a fast win. A python list is a value in the program, not a word the shell re-splits, so nothing can flatten it.
-- **Quoting kills the arming, not the wake.** A payload carrying nested quotes, JSON, or a regex dies at the shell's parser, and that failure arrives as an *unarmed* watcher — indistinguishable from a quiet one. Python holds the same text as a string literal or reads it from a file.
-- **Paths.** `os.path.join` composes a path; string concatenation in a shell produces `//` and silently misses a file that is there.
-
-The test is what the check does, not how long it looks. A one-line `jq` filter over a JSON response is already parsing, and belongs in python.
+Step outside that and python is the answer, per the language rule in `agent-watchers` — and for paths too: `os.path.join` composes one, where string concatenation in a shell produces `//` and silently misses a file that is there.
 
 Everything else is unchanged: the same cap, the same cadence, the same one-condition-one-watcher discipline, the same launch through the runtime's own facility.
 
@@ -167,7 +158,7 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 
 **Pick the mechanism by HOW MANY wakes you need, before anything else.** One wake and repeated wakes are different facilities on every runtime, and choosing wrong fails silently in one direction only: **a one-wake facility given a repeating job still runs, still polls correctly, still writes every line — and delivers them all in a single wake at exit, or none at all if it is stopped first.** The loop looks armed and its log fills up, while nothing reaches you at the moment it would have mattered. Measured: a background loop printing 14 status transitions delivered all 14 at exit, and a sibling stopped before exit delivered nothing. So a watcher that prints anything you mean to act on *while it runs* needs the per-occurrence facility, not a bounded loop.
 
-**Which mechanisms exist, and what they are called, is a runtime property.** `agent-background-harness-<provider>` is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps. Read it before arming.
+**Which mechanisms exist, and what they are called, is a runtime property.** `agent-background-harness-<provider>` is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps.
 
 Two runtime differences big enough to change the plan, not just the syntax:
 
@@ -179,7 +170,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 ## Process
 
 1. **Confirm it's external state.** Work dispatched through the runtime's **own** subagent or workflow mechanism is not — it re-invokes you on completion where the runtime supports it, so do not poll it. **Everything else is external, including another server's agent process.** A separate vendor agent session started over MCP runs outside your runtime's knowledge and pushes nothing to you, so it is watched exactly like a CI run or a merge; treating it as dispatched work is how it finishes into silence.
-2. **Pick a shell-reachable signal**, per the discipline, cadence table, per-domain examples, and check recipes in `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
+2. **Pick a shell-reachable signal**, per `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. For the domain's concrete signal and check, Load `agent-watcher-recipes`. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes, and take the tight end.** 10 s for a machine signal, 30 s for a human action, held throughout a long job rather than one check near its expected finish — an early failure should wake you early. The only floors are how fast the state can plausibly move and a remote API's documented rate limit; band-by-signal table in `agent-watchers`, where a tighter cadence also buys a proportionally bigger cap.
 5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle** and did not exit non-zero on the spot; anything less means you detached instead of arming, and nothing will wake you. Note that id, announce the watch in one plain sentence, and record its ledger row per `agent-watchers`, which owns that split, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
@@ -197,13 +188,11 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 
 ## Caveats
 
-- **Foreground sleeping may be blocked or capped** depending on the runtime — never chain short foreground sleeps to fake a wait. See the harness reference for what this runtime allows.
-- **A background loop cannot call MCP tools**, in any language. Poll a shell-visible proxy; keep the MCP/authoritative confirmation on the main loop.
+- **Foreground sleeping may be blocked or capped** depending on the runtime — never chain short foreground sleeps to fake a wait. What this runtime allows is in `agent-background-harness-<provider>`.
 - **Task-notifications are NOT user input.** A background-completion event is not approval or consent — never treat it as the user answering a pending question.
 - **A watcher may not appear in the runtime's task list** even while running. Track the handle the launch returned, and stop it through the mechanism the harness reference names.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
-- **Persistence:** background shells survive across turns until they exit or you stop them; you're re-invoked on exit. Size cap × cadence to a sane ceiling (e.g. 180 × 15 s ≈ 45 min) and re-arm past it.
-- **Compaction does not preserve watchers.** The background task id, the loop's script body, and anything it wrote to the scratchpad are session/scratchpad state — a compaction summary drops them and they do not transfer to another agent. Anything armed for longer than a checkpoint must be recorded in durable text (chat + the `plan-compact` anchor), so a resumed agent re-materializes the script and re-arms the watch instead of losing it. Never rely on a background handle or a scratchpad path outliving a compaction.
+- **Compaction does not preserve watchers**, and neither does a scratchpad path — record them durably per step 5.
 
 ## Fallback
 

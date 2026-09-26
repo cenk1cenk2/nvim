@@ -73,6 +73,10 @@ Load only what the current task needs — one call can load several tools.
 | `slack_update_canvas`             | Update an existing canvas.                          |
 | `slack_add_reaction`              | Add an emoji reaction to a message.                 |
 | `slack_get_reactions`             | Get the reactions on a message.                     |
+| `slack_list_channel_members`      | List the members of a channel or group DM.          |
+| `slack_search_emojis`             | Search the workspace's custom emojis by name.       |
+| `slack_read_file`                 | Read a shared file's content by file ID.            |
+| `slack_create_conversation`       | Create a channel, DM, or group DM.                  |
 
 See the `slack` reference for the workspace routing table and the mapping between these and the `slack-kilic` tool names.
 

@@ -17,9 +17,9 @@ Never hand back a bare identifier: issues, MRs and PRs carry their title and a m
 
 Review workflow and tone per `scm-review-workflow`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`. Finding format and severity tags per `review-findings`.
 
-This skill performs an autonomous code review on a GitLab merge request using native inline discussion threads. It does NOT draft findings for user approval — it reviews the code and posts annotations and a summary directly.
+This skill performs an autonomous code review on a GitLab merge request using diff-positioned draft notes published as one batch. It does NOT draft findings for user approval — it reviews the code and posts annotations and a summary directly.
 
-> **HARD RULE: All findings MUST be posted as inline diff-positioned discussions via `gitlab__mr_discussions` — NEVER as general MR notes without diff position.** The only non-positioned note this skill posts is the summary. Every finding with a file location goes through the discussion API with a diff position. No exceptions.
+> **HARD RULE: All findings MUST be staged as diff-positioned draft notes via `gitlab__create_draft_note`, then published together in a single `gitlab__bulk_publish_draft_notes` call — NEVER posted live one at a time, and NEVER as general MR notes without diff position.** The only non-positioned note this skill posts is the summary, via `gitlab__create_merge_request_note`. Every finding with a file location goes through the draft-note API with a diff position, and nothing reaches the author until the batch publishes. No exceptions.
 
 ## Platform specifics
 
@@ -27,16 +27,16 @@ This skill performs an autonomous code review on a GitLab merge request using na
 - **Identify the MR:** if the user provides a GitLab MR URL or number, use it directly. Otherwise detect from the current branch: `git status` for the branch, extract the project path from the remote URL, then `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`. If no open MR is found, inform the user and stop. Read MR metadata via `gitlab__get_merge_request`.
 - **Detect previous reviews:** read existing MR notes via `gitlab__get_merge_request_notes` to find prior summary comments carrying the marker above.
 - **Diff tool:** full MR diff via `gitlab__get_merge_request_diffs`. Use the same tool to fetch a reference MR's diff for cross-MR consistency checks.
-- **Resolve previous threads:** read existing MR discussions via `gitlab__mr_discussions`; reply via `gitlab__mr_discussions`. When a thread is fixed, post the `Fixed in <short-sha>.` reply **and resolve the thread**.
-- **Summary comment:** post a top-level note on the MR via `gitlab__mr_discussions` (without diff position — general comment).
+- **Resolve previous threads:** read existing MR discussions via `gitlab__mr_discussions` (read-only); reply inside each thread via `gitlab__create_merge_request_discussion_note` (`discussion_id` + `body`), then resolve it via `gitlab__resolve_merge_request_thread` (`discussion_id`, `resolved: true`). When a thread is fixed, post the `Fixed in <short-sha>.` reply **and resolve the thread**.
+- **Summary comment:** post a top-level note on the MR via `gitlab__create_merge_request_note` (no `position` — general comment).
 
 ### Post inline annotations
 
-Create a discussion thread for each finding via `gitlab__mr_discussions` (diff-positioned draft-note/discussion annotations).
+Stage one draft note per finding via `gitlab__create_draft_note` (diff-positioned, see below) — this only stages it, nothing is visible to the author yet. Once every finding for this run is staged, publish them all together in a single `gitlab__bulk_publish_draft_notes` call. This is GitLab's equivalent of GitHub's create-pending-review-then-submit: the author gets one notification for the whole review instead of one per comment.
 
 **Diff-position targeting:**
 
-Each discussion MUST be positioned on a specific line in the MR diff using the position object:
+Pass this as the `position` object on `gitlab__create_draft_note`:
 
 - `position_type` — `text` for code comments.
 - `new_path` — file path in the new version (for additions or unchanged lines).
@@ -67,7 +67,7 @@ Rules:
 - Use suggestions for: bug fixes, missing null checks, naming improvements, simple refactors.
 - Do NOT use suggestions for: questions, architectural concerns, or findings where multiple valid fixes exist — use a plain comment instead.
 - For multi-line replacements, use the offset syntax: `suggestion:-2+0` to include 2 lines above the commented line in the replacement range.
-- One suggestion per comment. If a fix spans non-contiguous lines, use separate discussion threads.
+- One suggestion per comment. If a fix spans non-contiguous lines, use separate draft notes.
 
 **Comment body format:** follow "Inline Comment Body" in the `review-findings` reference.
 

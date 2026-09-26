@@ -45,5 +45,5 @@ Additional tools beyond the obsidian reference:
 
 ## Related Skills
 
-- **`obsidian-repository`** — for documenting repository-specific knowledge in the Repositories vault folder. Auto-invoke when the note topic is about a development repository.
-- **`obsidian-todo`** — for quick capture of tasks and thoughts. Auto-invoke when the user wants a quick note rather than a structured reference note.
+- **`obsidian-repository`** — for documenting repository-specific knowledge in the Repositories vault folder. Suggest it when the note topic is about a development repository; do not auto-invoke.
+- **`obsidian-todo`** — for quick capture of tasks and thoughts. Suggest it when the user wants a quick note rather than a structured reference note; do not auto-invoke.

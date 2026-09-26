@@ -20,7 +20,7 @@ Pasting a skill body into a prompt forks it: the skill gets fixed next week, you
 
 ## Process
 
-1. **Confirm the target is aware.** Per the `agent-target-capability` reference. Ask if unstated; do not assume from the artifact type alone.
+1. **Confirm the target is aware**, axis by axis. Ask if unstated; do not assume from the artifact type alone.
 2. **Verify what exists.** Resolve skill slugs with `list_skills` and server names against the active tool list. A pointer to a skill dropped by the current profile is worse than no pointer.
 3. **Open with the declaration line.** State the assumed surface so a wrong assumption surfaces immediately.
 4. **Write pointers for anything covered by a skill, reference, or repo file.**

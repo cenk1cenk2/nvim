@@ -1,6 +1,6 @@
 # hyprpilot Agent Sessions — surface, completion signals, limits
 
-Facts about sessions started through the **`hyprpilot-harness`** MCP server. Shared between the hyprpilot-facing skills; not part of the `harness-<provider>-*` family, which covers the mechanics of whichever runtime *you* are running under.
+Facts about sessions started through the **`hyprpilot-harness`** MCP server; `hyprpilot-delegate` owns the procedure. Not part of the `<consumer>-harness-<provider>` family, which covers the mechanics of whichever runtime *you* are running under.
 
 **A hyprpilot session is NOT an in-harness subagent, and the two do not mix.** The `agent-*` skills (`agent-delegate`, `agent-background`, `agent-coordinator`, `agent-bulldozer`) are about subagents your own runtime dispatches and tracks — it re-invokes you when they finish, so you do not poll them. A hyprpilot session is a separate OS process running a different vendor CLI, owned by an MCP sidecar, with its own transcript on disk. **Your runtime does not track it and will not wake you for it.**
 
@@ -119,7 +119,7 @@ If you are on it:
     └── 2/ …
 ```
 
-Three consequences worth holding, because each retires a trap that used to need a workaround:
+Three consequences worth holding:
 
 - **Reading turn 1 cannot reach turn 2.** A turn's output is a whole file rather than a byte range of a shared one, so no boundary has to be guessed and no offset arithmetic is involved.
 - **"`stderr` is non-empty" means THIS turn wrote it.** Nothing from an earlier turn can appear there.
@@ -255,14 +255,14 @@ Reading `/result` costs what the answer costs. Everything else has a price, and 
 | Progress while it runs | filtered tail of the turn's `turns.jsonl` | One small event per step |
 | The raw stream | `/transcript`, `session_read`, or `wait: true` | Up to 60 kB, untrimmable |
 
-**`jq` on disk is the tool for anything the views do not cover** — "every tool it called", "just the errors", "how many files it read". Its advantage is structural: it filters **before** the bytes reach your context, which no resource read and no `session_read` can do. That is why it survives the resource surface rather than being replaced by it.
+**`jq` on disk is the tool for anything the views do not cover** — "every tool it called", "just the errors", "how many files it read". Its advantage is structural: it filters **before** the bytes reach your context, which no resource read and no `session_read` can do.
 
 ```sh
 jq -r 'select(.type=="tool_use") | .part.tool' "$T" | sort | uniq -c   # what did it actually do
 jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 ```
 
-**What `jq` no longer has to do is find the answer.** `/result` performs the per-vendor extraction, the turn scoping, and the error precedence — correctly, and without a shell. Hand-rolling those is how a multi-line answer gets truncated to its last line and how a billing error gets reported as "returned nothing".
+**`jq` does not have to find the answer.** `/result` performs the per-vendor extraction, the turn scoping, and the error precedence — correctly, and without a shell. Hand-rolling those is how a multi-line answer gets truncated to its last line and how a billing error gets reported as "returned nothing".
 
 **`session_read` is situational, not forbidden.** Reach for it when you want the event stream itself, when the run was small enough that the difference does not matter, when you need the vendor's raw shape to diagnose something, or when no shell is available. The rule is *know which one you are paying for*.
 

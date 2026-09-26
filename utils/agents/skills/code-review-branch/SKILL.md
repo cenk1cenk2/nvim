@@ -36,13 +36,9 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Browse the full codebase freely — read surrounding files, check call sites, trace dependencies. The diff alone is never enough.
    - For each logical group of changes, evaluate against the established intent:
      - **Does this achieve what was agreed?** — missing requirements, incomplete implementation.
-     - **Correctness** — logic errors, off-by-one, race conditions, null handling.
-     - **Security** — injection, auth bypass, secret exposure, OWASP top 10.
-     - **Edge cases** — what happens with empty input, large data, concurrent access, failure paths.
-     - **Error handling** — silent failures, swallowed errors, missing rollback.
+     - The shared categories per `review-findings`'s "What to Look For" — logic errors, security (OWASP top 10 is the bar here), edge cases, error handling, unnecessary complexity.
      - **Consistency** — does the new code match the patterns, conventions, and style of the existing codebase? If deviations are found, ask the user why before flagging as an issue. Accept the deviation when a logical explanation is given.
      - **Naming and clarity** — does the code communicate intent?
-     - **Unnecessary complexity** — over-engineering, premature abstraction.
 
 4. **Clarify Ambiguities:**
    - Before presenting final findings, ask the user about anything unclear — consistency deviations, unusual patterns, unexpected choices.

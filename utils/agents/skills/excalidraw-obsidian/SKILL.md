@@ -44,7 +44,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
 
 3. **Load MCP format.** Call `excalidraw__read_me` once if not already loaded this conversation.
 
-4. **Render.** Prepend a `cameraUpdate` sized to the diagram and pass the elements to `excalidraw__create_view` unchanged.
+4. **Render** per `excalidraw-mcp-preview`. Prepend a `cameraUpdate` sized to the diagram and pass the elements to `excalidraw__create_view` unchanged.
 
 5. **Show the user.** The preview lets the user see the current state of their drawing in chat.
 

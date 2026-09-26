@@ -1,15 +1,15 @@
 ---
 name: hyprpilot-nvim
-description: 'hyprpilot-nvim Auto-invoked the moment the editor MCP server is present, before any symbol search or navigation. Work through the running Neovim - LSP navigation instead of grepping, diagnostics, formatting, and driving the windows. Not for changing file contents: the server reads and navigates only.'
+description: 'hyprpilot-nvim Auto-invoked the moment the editor MCP server is present, before any symbol search or navigation. Work through the running Neovim - LSP navigation instead of grepping, diagnostics, formatting, and driving the windows. Not for writing file contents: rename and format are the only edits the server makes.'
 ---
 
 ## Context
 
 The `hyprpilot-nvim` server exposes the captain's **live** Neovim over MCP: their buffers with unsaved changes, their attached language servers, their windows and cursor. It is not a second copy of the filesystem — a read through it sees what they see right now.
 
-The server is read-and-navigate. It cannot change file contents; use the normal editing tools for that, and reach for these when the question is *where is this symbol*, *what is broken*, or *show the captain something*.
+The server reads and navigates. It writes no arbitrary content — use the normal editing tools for that. Three calls do act on state: `lsp_rename` and `editor_format` change buffers, and `plugin_neotest_run` starts a test run in the captain's editor. Reach for the rest when the question is *where is this symbol*, *what is broken*, or *show the captain something*.
 
-Tools come in two families plus `healthcheck`:
+Tools come in three families plus `healthcheck` and `reload_dynamic_tools`, which re-discovers the Lua-registered tools and refreshes the tool list:
 
 | Family | Tools |
 |--------|-------|

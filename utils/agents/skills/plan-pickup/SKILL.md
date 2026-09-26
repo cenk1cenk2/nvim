@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[plan file path or name]'
 references:
   - ../references/long-running-work.md
+  - ../references/reconcile-state.md
   - ../references/harness/provider-paths.md
 ---
 

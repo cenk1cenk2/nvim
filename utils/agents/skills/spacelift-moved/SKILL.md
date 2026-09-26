@@ -5,7 +5,7 @@ references:
   - ../references/scm/scm-detect.md
   - ../references/present-first.md
   - ../references/scm/scm-github.md
-  - ../references/scm/spacelift-github.md
+  - ../references/spacelift-github.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
 argumentHint: '[PR, branch, commit, or Actions link]'

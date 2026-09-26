@@ -22,4 +22,4 @@ Draft-and-post workflow per `scm-comment-poster`. Present the comment per `outpu
 ## Platform specifics
 
 - **Find the MR** (when not given): `git status` for the branch, extract the project path from the remote, then `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`.
-- **Post the comment:** `gitlab__mr_discussions` with the project path, MR IID, and comment body.
+- **Post the comment:** `gitlab__create_merge_request_note` with the project path, MR IID, and comment body.

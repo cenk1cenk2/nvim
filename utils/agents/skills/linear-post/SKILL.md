@@ -26,7 +26,7 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 | Scope | Members | Prior updates | Post with |
 |---|---|---|---|
-| Project | `list_issues` with the `project` parameter — never `get_project` / `list_projects`, they hit complexity limits | `get_status_updates` on the project | `save_status_update` |
+| Project | `get_project`, then `list_issues` with the `project` parameter | `get_status_updates` on the project | `save_status_update` |
 | Initiative | `get_initiative` with `includeProjects: true`, then `get_status_updates` with `type: "project"` per project | `get_status_updates` with `type: "initiative"` and the initiative id | `save_status_update` with `type: "initiative"` and the initiative id |
 
 ## Altitude

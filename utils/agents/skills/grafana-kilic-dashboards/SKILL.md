@@ -28,7 +28,7 @@ The JSON is mounted as a ConfigMap and referenced by a `GrafanaDashboard` CR (`g
 
 Adding a dashboard means three edits, not one: the JSON, its CR, and a `configMapGenerator` entry with `disableNameSuffixHash: true`.
 
-**Grafana is GitOps-owned.** Never edit a dashboard through the Grafana API or UI, and avoid the write-capable MCP tools entirely. Reads are how you verify; writes would be overwritten and would hide the source of truth.
+**Grafana is GitOps-owned.** Never edit a dashboard through the Grafana API or UI, and avoid the write-capable MCP tools entirely. Reads are how you verify.
 
 ## ABSOLUTE — Establish What the Frame Contains Before Touching a Link
 

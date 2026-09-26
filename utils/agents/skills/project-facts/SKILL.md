@@ -37,6 +37,7 @@ Run the script against the repository root; `--json` for a machine-readable repo
 The listing is the set of gates, not their execution order - it does not read GitLab `stages:` or job dependencies.
 
 ```
+root:     /absolute/path/to/repo
 runner:   task  (Taskfile.yml)
 commands: format, lint, test, build
 ci:       .gitlab-ci.yml

@@ -31,12 +31,12 @@ When you resume work after time has passed — or the user jumps back in after w
 | Scope | Members | Depth |
 |---|---|---|
 | Project | `list_issues` with the `project` parameter | wide and shallow — statuses and titles by bucket, plus a comment skim of the 5-10 most recently updated |
-| Issue group | `get_issue` on the parent, then its sub-issues | the parent description in full, each child's status and title, comments on the children that actually moved |
+| Issueset | `get_issue` on the parent, then its sub-issues | the parent description in full, each child's status and title, comments on the children that actually moved |
 | Single issue | `get_issue` | deep — every comment, every relation followed, plus a brief pulse of its project if it has one |
 
 - **The narrower the scope, the deeper the read.** A project sweep that reads every comment is a waste; a single-issue read that skips them is useless.
-- **Resolve the scope first and name which one you resolved.** An id carrying sub-issues is an issue group — say so and read the children too.
-- **Never use `get_project` or `list_projects`** — they hit complexity limits. Project name, description, status, initiative, and milestone come from the issues' `project` field.
+- **Resolve the scope first and name which one you resolved.** An id carrying sub-issues is an issueset per `linear-issuesets` — say so and read the children too.
+- **The project record** — description, status, initiatives, milestones, documents — comes from `get_project`, with `includeMilestones` / `includeResources` when those matter.
 - **Status-update history is a project-scope step only.** An issue has none.
 
 ## Process
@@ -53,7 +53,7 @@ Parse the project, parent issue, or issue id/URL. Fetch the members per the Scop
 
 ### Step 3: Read the members at the scope's depth
 
-**Project and issue group** — group members by `statusType`:
+**Project and issueset** — group members by `statusType`:
 
 - **In Progress** — actively being worked on.
 - **In Review** — open MR/PR, waiting for merge.
@@ -67,7 +67,7 @@ Report counts plus a brief list of titles per bucket, and flag:
 - "In Review" issues with no recent comment activity — possible forgotten merges or stuck reviews.
 - "Todo" issues whose blockers are already Done — newly actionable.
 
-Then skim comment streams on the recently active members — the 5-10 most recently `updatedAt` for a project, the children that moved for a group. Look for decisions or pivots not reflected in descriptions, blockers surfaced, questions awaiting response, and external dependencies mentioned. Do not read every comment on every issue.
+Then skim comment streams on the recently active members — the 5-10 most recently `updatedAt` for a project, the children that moved for an issueset. Look for decisions or pivots not reflected in descriptions, blockers surfaced, questions awaiting response, and external dependencies mentioned. Do not read every comment on every issue.
 
 **Single issue** — fetch all comments with `list_comments` and check each one's `createdAt` / `updatedAt`. If the most recent comment is significantly older than the current session, the conversation may have moved past what Linear records — ask. Scan for:
 
@@ -80,7 +80,7 @@ Summarize what matters; skip acknowledgements and auto-generated noise.
 
 ### Step 4: Follow relations
 
-Fetch `blockedBy`, `blocks`, `relatedTo`, parent, and sub-issues for the issues in scope — every relation for a single issue, the cross-scope ones for a project or group.
+Fetch `blockedBy`, `blocks`, `relatedTo` with `get_issue` and `includeRelations: true` (`list_issues` does not return them), plus parent and sub-issues, for the issues in scope — every relation for a single issue, the cross-scope ones for a project or issueset.
 
 For each related issue: read its description and comments, check whether its status moved since you last looked, identify deviations that affect the scope, and flag anything **newly unblocked**. Pay special attention to `blockedBy` — a blocker that completed or was cancelled may make the work actionable in a different way.
 
@@ -89,7 +89,7 @@ For a single issue that belongs to a project, add a brief project pulse: how man
 ### Step 5: Present the reconciliation report
 
 ```
-## Revisit: <project | issue group | issue> — <name>
+## Revisit: <project | issueset | issue> — <name>
 
 ### Snapshot
 - Status: <active/paused/etc, or the issue's own status>
@@ -100,7 +100,7 @@ For a single issue that belongs to a project, add a brief project pulse: how man
 ### Description Changes
 - [Deviations from prior understanding, or "No changes detected."]
 
-### Status Buckets                                                [project and issue group]
+### Status Buckets                                                [project and issueset]
 - **In Progress:** <issue-id> — <title> (<updated N days ago>). [Flag if stale.]
 - **In Review:** ...
 - **Todo:** ...

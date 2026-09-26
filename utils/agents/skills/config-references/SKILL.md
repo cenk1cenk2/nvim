@@ -9,16 +9,18 @@ references:
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/scm/commit-push-scoped.md
+  - ../references/mcp-tool-naming.md
+  - ../references/harness/harness-connectors.md
 argumentHint: '[create|update|review] [reference-name] [context]'
 ---
 
 ## Reference Management
 
-Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
+Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`; ask before committing unless the request already blessed the push.
 
 **Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits.
 
-> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is whichever reference already claims the topic. Search for it and name it back before writing a line. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
+Target discovery and the self-edit gate per `config-targets`.
 
 ## Reference Directory Structure
 
@@ -32,7 +34,7 @@ References live in two locations under `~/.config/nvim/utils/agents/skills/`:
 ```
 references/
 ├── agent/        # dispatch, worktrees, conventions, watchers, completion
-├── excalidraw/   # drawing conversion, elements, templates
+├── excalidraw/   # elements, templates, MCP preview
 ├── harness/      # per-runtime mechanics, connectors, provider paths
 ├── kilic/        # this operator's own infra and observability specifics
 ├── linear/       # workspace, issue, project, document conventions
@@ -40,11 +42,11 @@ references/
 └── *.md          # cross-cutting conventions that belong to no family
 ```
 
-**The rule: a folder once a family reaches four files. Everything else stays at the root.** Do not force a file into a folder to tidy the listing — `output-diff`, `present-first`, `plan-mode`, `mode-toggle`, `current-state-only` and their kin are cited from every family, so a folder would misfile them. A one-off service reference with no siblings (`obsidian`, `tmux`) also stays at the root until a family grows around it.
+**The rule: a folder once a family reaches three files. Everything else stays at the root.** Do not force a file into a folder to tidy the listing — `output-diff`, `present-first`, `plan-mode`, `mode-toggle`, `current-state-only` and their kin are cited from every family, so a folder would misfile them. A one-off service reference with no siblings (`obsidian`, `tmux`) also stays at the root until a family grows around it.
 
-When a root-level family reaches its fourth file, create the folder, move all four, and update every declaring skill's path in the same change.
+When a root-level family reaches its third file, create the folder, move all three, and update every declaring skill's path in the same change.
 
-**The folder is part of the declared path:** `../references/scm/commit-style.md`, `../references/linear/linear-prerequisite.md`. Bodies are unaffected — they cite by name, never by path.
+**The folder is part of the declared path**, which is relative to the declaring skill's directory: `../references/scm/commit-style.md` for a family file, `../references/<file>.md` at the root, `./references/<file>.md` for a single-consumer file (absolute base `~/.config/nvim/utils/agents/skills/`). Bodies are unaffected — they cite by name, never by path.
 
 ## Reference Format
 
@@ -64,32 +66,11 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 ## How References Resolve
 
-**A skill's `references:` array is a manifest, not a payload.** `read_skill { slug }` returns the body plus one manifest row per declared reference — `path`, `name`, `size`, `modified`, `created`, and the reference's own frontmatter. **The bodies do not come with it.** The reader fetches the ones it needs with `read_skill_references { references: [path] }`, addressed by canonical absolute path.
+Loading mechanics — manifest rows, fetch by path, `bundle: true`, the loaded-path set — belong to the `hyprpilot-skills` skill. What matters when authoring:
 
-**So declaring a reference costs a manifest row, roughly 150 bytes, not the file.** A body averages 4,619 bytes. So an extra declaration is nearly free, and the expensive mistake is a **large multi-topic file**, because a step that needs one section of it pays for all of them. Splitting pays whenever a step uses less than about 97% of a file — in practice, always.
-
-`output-diff` is declared by 57 skills and `scm-detect` by 31, so a reader that keeps a loaded-path set pays for each once per session. Path identity is what makes that mechanical: `git-commit`'s `output-diff` and `git-push`'s `output-diff` are the same path, so they de-duplicate on sight. There are no name collisions and no shadowing.
-
-Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the manifest: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared.
-
-`read_skill { slug, bundle: true }` returns every body inline, delimited by a YAML block naming each file and its declared path, under a banner naming the skill and the count. Reach for it on the first load of an unfamiliar skill, not as a habit:
-
-```
----
-skill_references:
-  skill: git-commit
-  count: 2
----
-
----
-reference:
-  name: commit-style
-  path: ../references/scm/commit-style.md
----
-<file body>
-```
-
-A file that fails to read yields the same block with `status: not-found`, **in its declared position** — that marker is the only signal a path is wrong, so check for it after editing a reference or a consumer's frontmatter.
+- **A declaration costs a manifest row, not the file.** The expensive mistake is a **large multi-topic reference**: a step that needs one section fetches all of it. Split whenever a step would use only part of a file.
+- **Path identity de-duplicates.** Every consumer declaring the same file resolves to the same canonical path, so a reader holding it pays once per session. There are no name collisions and no shadowing.
+- **A path that does not resolve fails silently.** Declared paths resolve relative to the skill's own directory; a typo is simply absent from the manifest and the skill runs without the convention. In a `bundle: true` read the file appears as a `status: not-found` block in its declared position — check for it after editing a reference or a consumer's frontmatter.
 
 ## Process
 
@@ -145,25 +126,9 @@ The family prefix stays in the filename even inside its folder. `scm/scm-github.
 
 ## A Reference Is Not a Pointer
 
-**Cite a reference by NAME, never by path.** A body names it inline where used (`per \`output-diff\``) with no load instruction — the reader resolves that name against the manifest `read_skill` just handed it. A path in prose is machine detail that breaks the moment the file moves. **Skills do not arrive at all** — a body needing another skill writes `Load \`agent-harness\`.` plus its trigger. `config-skills` owns that form.
+How a body cites references and other skills — by name inline, never a path or a summary, a name only through a manifest the reader holds, another skill as "Load `X`" — is `config-skills`'s; Load it when a consumer's call site changes.
 
-Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill just adds a hop and a fetch.
-
-**A name resolves only against a manifest the reader already holds.** Citing `output-diff` works because the consuming skill declared it. Citing a reference your skill does not declare gives the reader a name and no path — `read_skill_references` refuses anything no manifest published.
-
-So a convention owned by another skill is reached by loading that skill. `agent-harness` is the worked example: the per-harness mechanics belong to `agent-delegate` and `agent-background`, so it routes the reader to those skills rather than naming their references.
-
-## Consumers Name It, Never Summarise It
-
-**The reader can fetch the reference the moment it needs it.** A call site that explains what the reference contains pays for the same content twice, and the summary rots the moment the reference changes while the reader cannot tell which is current.
-
-- **`<thing> per \`x\`.`** That is the base form. Not "per the `x` reference", not "read `x` to learn how", not a sentence describing what `x` covers.
-- **Fold in *when* it applies, when that is not obvious** — `Before the first dispatch, mechanics per \`agent-delegate\`.` A trigger is what lets the reader check whether this run needs it, so it earns its clause. What the reference *contains* never does.
-- **Add at most ONE further clause**, and only for a deviation this run needs.
-- **Name it once per consuming file.** A second mention of the same reference is drift waiting to happen.
-- **A declared reference gets no inline summary at all** — it cannot fail to load. Only a path-read reference earns a one-line summary, because that read genuinely may not happen.
-
-When a consumer's call site grows past a line, the content belongs in the reference, not at the call site.
+Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill just adds a hop and a fetch. A convention owned by another skill is reached by loading that skill, not by naming its references. When a consumer's call site grows past a line, the content belongs in the reference.
 
 ## Do Not Declare What a Composed Skill Brings
 
@@ -187,7 +152,7 @@ Situational content — needed only on some runs, only under one runtime, only f
 | | Reference | Skill |
 |---|---|---|
 | Arrives | a manifest row always; the body when fetched | only when loaded by name |
-| Cost | ~150 bytes declared, the body only if fetched | a catalog entry (~798 bytes) in **every** session |
+| Cost | a manifest row declared, the body only if fetched | a catalog entry in **every** session |
 | Discoverable | via its consumers' manifests | yes, listed in the catalog |
 | Missed how | the reader has the path and skips the fetch | the agent never chooses to load it |
 
@@ -196,6 +161,13 @@ Situational content — needed only on some runs, only under one runtime, only f
 **Make it a skill when it is a workflow the user invokes**, or when it must be discoverable by an agent that has loaded none of its consumers. Not merely because it is conditional.
 
 **The test:** if it is a *convention* that some runs need, it is a reference. If it is a *procedure someone invokes*, it is a skill.
+
+Do NOT extract:
+
+- Content with a single consumer — put it in `<skill>/references/` if it is genuinely bulky, otherwise inline. A single-consumer file in the shared directory is mislabelled.
+- Skill-specific workflow steps, descriptions, or examples — unique per skill.
+- Short inline rules that would lose their context when separated.
+- Anything extracted purely to make a SKILL.md shorter — extraction moves tokens, it does not remove them.
 
 ## Giving a Reference a Skill Twin — the mode pair
 
@@ -208,7 +180,9 @@ Situational content — needed only on some runs, only under one runtime, only f
 
 **Same name on both halves**, so the reader who sees `per \`present-first\`` and the user who types `/present-first` land on the same subject.
 
-`present-first` is the worked example: a 1,562-byte reference declared by 53 skills, against a 1,371-byte skill that changes its state and nothing else. `caveman` is the same shape for voice, and both lean on `mode-toggle` for the on/off mechanics.
+`present-first` is the worked example: a reference declared by every writing skill, and a small skill that changes its state and nothing else, leaning on `mode-toggle` for the on/off mechanics.
+
+**`caveman` is the deliberate exception.** It has no reference half: `AGENTS.md` §I step 4 force-loads the skill in every session, so it carries its rules inline.
 
 ### Structuring the skill half
 
@@ -241,21 +215,17 @@ Body, in order:
 
 - **Never restate the posture in the skill.** Both halves are in context whenever the skill loads, so a copy is the same content paid twice and rots the moment the reference changes.
 - **The reference must state what survives the mode being off.** Turning a mode off never lifts a destructive-action gate or a stricter rule a skill sets for itself, and that belongs with the rules, not with the toggle.
-- **Pick the tier from who may flip it.** `caveman` is manual because only the user changes voice; `present-first` is model-invocable because a skill's own flow may legitimately turn its gate off.
+- **Pick the tier from who may flip it.** `present-first` is model-invocable because a skill's own flow may legitimately turn its gate off; a mode only the user may change is manual.
 - **Not every reference wants a twin.** Only add one when there is a real state the user changes. A convention that simply always applies stays a lone reference.
 
 ## Split a Reference When Part of It Is Conditional
 
-A reference is paid for on **every** load by **every** consumer. When a chunk of it is only needed on some runs, that chunk is taxing all the others.
+A step that fetches a reference pays for all of it. When a chunk is only needed on some runs, split it so each step fetches only what it uses. Two shapes to look for when a reference grows past a few hundred lines:
 
-Two shapes to look for when a reference grows past a few hundred lines:
-
-- **A per-domain catalogue.** Signals, recipes, provider quirks, worked examples — a reader needs the one entry matching what they are doing and none of the rest. Split it out and reach it by **path-read** with the absolute path, so it loads only when that branch is taken. `agent-watchers` keeps the discipline, the cadence table and the audit; `agent-watcher-recipes` holds the per-domain signals and shell checks.
+- **A per-domain catalogue.** Signals, recipes, provider quirks, worked examples — a reader needs the one entry matching what they are doing and none of the rest. Split it into its own file, declared by every consumer like any conditional family. When the catalogue is something invoked for one entry at a time, it can be a skill instead: `agent-watcher-recipes` is a skill holding the per-domain signals and checks, declaring `agent-watchers`, which keeps the discipline, cadence and audit.
 - **Runtime-specific content in a file that claims to be agnostic.** A parameter table, a tool name, a default — it belongs in the `<consumer>-harness-<provider>` file, and leaving it in the shared one is both waste and a contradiction of the shared file's own rule.
 
-**Splitting is not the same as extracting for reuse.** Extraction shares content between consumers and moves tokens without removing them. This split *removes* tokens from most loads, because the new file is path-read rather than declared. Only conditional content qualifies — anything every consumer needs on every run stays put, however long it is.
-
-**When the split lands, the stub must carry the absolute path**, since a missed path-read is silent: the run simply proceeds without the recipes and nobody is told.
+**Splitting is not the same as extracting for reuse.** Extraction shares content between consumers; this split removes tokens from the runs that do not take the branch. Only conditional content qualifies — anything every consumer needs on every run stays put, however long it is.
 
 ## Per-Harness References
 
@@ -280,23 +250,13 @@ Rules:
 - **Version-mark claims and flag what you could not confirm.** Runtime behavior changes between releases — an unmarked claim rots invisibly, and a guessed one is worse than an absent one. Write `Unverified` in place rather than asserting.
 - **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.
 
-## MCP Tool Name Convention
+## MCP Tool Names
 
-**ABSOLUTE — the harness-provided integration outranks the standalone server.** Where the running harness supplies an integration for a service (on Claude Code, `mcp__claude_ai_<Connector>__*`), references must present it as the one that is used, with the standalone MCP server as the stated fallback — not the other way round. A reference that tabulates only the standalone server's tools reads as an instruction to use it; when a harness connector exists for that service, pair the table with the mapping and point at `harness-connectors`. See `slack.md` for the shape.
-
-When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Catalog server keys use `-` only, and `/` is never valid in one. Hyprpilot's injected servers (`hyprpilot`, `hyprpilot-skills`, `hyprpilot-nvim`, `hyprpilot-harness`) follow the same rule, each spelled exactly like its own skill. Do NOT bake in a transport prefix (`mcp__...`) — the runtime resolves the prefix at call time. Hyprpilot wires every MCP server directly (no aggregator hub), so the bare server name is the only thing that matters in references.
-
-**Tabulate only what a server actually registers.** Several expose less than their vendor documents — a read-only flag, disabled write tools, a capability the catalog entry withholds. Load that server's same-named skill before listing its tools, and list only the surface it names; a tool the server does not register is an instruction that cannot execute. Where no server covers the job, name the CLI instead — local git is always raw `git` via `Bash`, so a `git__*` tool never appears in a reference.
-
-**The server's own manual owns its conventions.** Read/write splits, approval gates, per-tool traps: name the skill or reference that carries them and stop there. A reference restating another server's surface is a second copy to keep in sync.
-
-## Committing Changes
-
-After applying reference edits and any consumer frontmatter updates, hand off per `commit-push-scoped` — stage only the touched files, then compose with `git-commit` (scope `agents`, e.g. `feat(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
+Servers and tools are named per `mcp-tool-naming`. Where a harness connector exists for the service, a reference presents it as the one used, with the standalone server as the stated fallback, per `harness-connectors`.
 
 ## Key Principles
 
-- References are **bundled whenever their skill loads** — keep them focused on one topic and ruthlessly short, because every consumer pays their full length on every load.
+- A reference is **fetched whole** whenever a step needs it — keep it focused on one topic and ruthlessly short, because every fetch pays its full length.
 - A reference should be **self-contained** — readable without loading other references.
 - **No frontmatter** — only skills have YAML frontmatter.
 - **No workflow steps** — references contain conventions and patterns, not process instructions.

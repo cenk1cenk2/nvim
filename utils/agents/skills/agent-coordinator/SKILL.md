@@ -33,7 +33,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, and self-contained prompt structure per `agent-delegate`; load the `agent-harness` skill to resolve tiers.
+Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, permissions, collection, reaping, and self-contained prompt structure per `agent-delegate`; load `agent-harness` to resolve tiers.
 
 ## Toggle
 
@@ -41,8 +41,8 @@ On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-coordinator`, "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator".
 - **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the coordinated scope completing.
-- **A park signal RAMPS EVERYTHING DOWN TO ZERO, unasked.** A router accumulates agents and watchers faster than a worker does, so parking is when they all come down — gradually, not in one cut: **arm nothing new**, let whatever still serves the park target finish (in coordinator mode the pending report IS the product, so an agent still writing one is never killed for tidiness), **collect** each report before reaping that agent, retire each watcher as its signal lands, kill outright anything no longer serving the target, **verify zero with a process check**, and report that **nothing remains armed**. **Do not wait to be told a second time.** See the `mode-toggle` reference's *Parking* section.
-- **Survives disengage:** the state file only. **Spawned agents and armed watchers do NOT survive a park** — they are collected and torn down as part of it, and nothing is re-armed on resume until the mode is re-engaged by name.
+- **A park signal ramps everything down to zero, unasked**, per `mode-toggle` Parking. In coordinator mode the pending report IS the product, so an agent still writing one serves the park target.
+- **Survives disengage:** the state file only. Spawned agents and armed watchers are collected and torn down by the park.
 
 ## Context
 
@@ -97,9 +97,9 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
-**Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
+**Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent. Permissions, diagnosis by the artifact, and steering a quiet agent per `agent-delegate`.
 
-**Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `agent-delegate-harness-<provider>`.
+**Match the dispatch mode to the runtime's delivery**, per `agent-delegate` Dispatch Mode. Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product, and where the runtime's detached delivery is unreliable the agent writes its findings to a file. When collection fails, follow the collection ladder in `agent-delegate`, including its two-failed-attempts rule.
 
 ## The Roster and the Watch Board — what you are holding
 
@@ -111,11 +111,9 @@ Report both whenever you dispatch, whenever one returns, and before any teardown
 
 > **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
-Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun and not a bookkeeping cycle.
+Yours are **routing** wakes, per the posture table in `agent-watchers`. What routing adds on top of it:
 
-- **Every external wait gets one, one per independent condition.** An in-context poll loop spends your context on checks a background loop does for free — the exact resource this posture exists to protect.
-- **On wake: re-verify authoritatively, then decide what gets dispatched next.** The wake produces a routing decision; the work it triggers goes out.
-- **Never poll work the harness already tracks.** Subagents and workflows *this runtime* dispatched report their own completion where it supports that. **The exemption ends there** — an agent process owned by another MCP server is external state and gets a watcher like anything else.
+- **An in-context poll loop spends your context** on checks a background loop does for free — the exact resource this posture exists to protect.
 - **Delegate the expensive verification the wake calls for.** If confirming what happened means reading logs or a wide diff, that is a dispatch, not something you read yourself.
 
 ## Process
@@ -123,9 +121,9 @@ Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun
 1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. **The split is by unit** — one agent per PR, worktree, repo or issue — and every unit in the plan carries its own tier with the signal that picked it. Present once; then run.
 2. **Orient minimally.** Enough to write good prompts — repo layout, the task runner, the entry points. A couple of bounded commands, not a reading session. Anything deeper is itself a delegation.
 3. **Dispatch with the return contract.** Prompts are self-contained (agents lack your conversation) but point at skills and tools — subagents in this harness are **aware** targets per `agent-target-capability`. Disjoint file scopes; worktrees for parallel writers per `agent-worktrees`. **Fan out per unit**, in the prep, spawn and response phases of `agent-fan-out`: units that share files go to the agent already holding that context, one turn at a time, and get sequenced only when none is reachable — batching them into a single prompt serialises the work and hides which unit failed.
-4. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition — including any agent session running under another MCP server, which nothing here re-invokes you for. Agents and workflows this runtime dispatched are never polled; they re-invoke you on completion.
+4. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition, per `agent-watchers` — including any agent session running under another MCP server.
 5. **Verify cheaply, never blindly.** An agent's summary describes intent. Confirm with a bounded check — `git diff --stat`, the specific file's diff, the test exit code. If honest verification would be expensive, dispatch `agent-review` instead of reading it yourself.
-5b. **Reap what you spawned — but only when completely done with it.** A router accumulates agents and watchers faster than a worker does, so stale entries corrupt the map you are holding until you cannot tell what is genuinely in flight. **Reaping is terminal, though: it destroys the agent's report.** An idle agent is a candidate for **collection**, not reaping — collect, confirm you have what you need, *then* reap. Never kill one because it went quiet or because you are unsure it finished; that converts a recoverable report into a permanent loss, and in coordinator mode the report *is* the product. Safe to reap: delivered and closed, answer obtained and verified elsewhere, superseded, demonstrably stale, or about to be replaced (**reap before re-dispatching**, since two writers on one target clobber each other). Completion does not self-clean — finished agents and exited background tasks linger in the runtime's task list. Before reporting a phase done, enumerate what you spawned and confirm each is stopped or *deliberately* still running with a stated reason.
+5b. **Reap what you spawned — but only when completely done with it**, collecting first, per `agent-delegate` Reaping. A router accumulates agents and watchers faster than a worker does, so stale entries corrupt the map you are holding; run the reap checkpoint before reporting a phase done.
 6. **Record state, then let it go.** Write the outcome to the state file in one or two lines and stop carrying the detail. The file is the memory; your context is the workbench.
 7. **Report terse each turn, in the `report-status` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay.
 8. **Take over only on the exception list.** Otherwise re-dispatch with a sharper prompt.
@@ -147,18 +145,15 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 - **`agent-plan`** — hand it the whole multi-task run when the work has real dependencies; it owns the DAG, the layer merges, and review cadence.
 - **`agent-delegate`** — single dispatch, tier selection.
 - **`agent-review`** — second eyes on a plan, a DAG ordering, or a diff you refuse to read yourself.
-- **`agent-background`** — every external wait; see the `agent-watchers` reference for what to watch, cadence, and recipes. Yours are routing wakes: re-verify, then decide what gets dispatched next.
+- **`agent-background`** — every external wait.
 - **`agent-pickup`** — Linear-scoped orchestration; coordinator posture layers over it.
 - **`plan-compact`** — when your context fills anyway, compact to the state file rather than letting the run die.
 
 ### Bulldozer is Opt-In Only
 
-**`agent-bulldozer` is NOT part of coordinator mode.** The two are orthogonal — coordinator decides who does the work, bulldozer decides never to idle — and they combine well, but only when the user explicitly asks for both.
+**`agent-bulldozer` is NOT part of coordinator mode.** The two are orthogonal — coordinator decides who does the work, bulldozer decides never to idle — and they layer independently per `mode-toggle`, engaged only on the user's explicit signal (`/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer`). Without it, run the default rhythm: dispatch, verify, report, wait for the user.
 
-- Engage it **only** on an explicit additional signal: `/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer` invocation.
-- **Never self-engage it.** Coordinating is not a licence to push. Without that signal, run the default rhythm: dispatch, verify, report, wait for the user.
 - When both are engaged, bulldozer owns the momentum rules and its own Boundaries and situational holds bind unchanged; coordinator still owns the routing and the return contract.
-- Toggles are independent per `mode-toggle`: stopping bulldozer ends the push and leaves coordinator posture in place, and stopping coordinator leaves any bulldozer push running.
 
 ## Example
 

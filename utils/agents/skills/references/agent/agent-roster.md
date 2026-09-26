@@ -28,29 +28,10 @@ returns, and before any teardown:
 
 ## Collect, then reap
 
-Collection and reaping are separate acts, and the order is not negotiable.
-
-1. **Collect** — read the answer out of wherever the runtime put it (a returned tool result, a
-   transcript, a file the agent wrote). Per-runtime extraction lives in the active
-   `agent-delegate-harness-<provider>` reference.
-2. **Verify** it answers the brief. A report that restates the brief without evidence is not an answer.
-3. **Then reap.**
-
-Safe to reap: delivered and collected, answer obtained another way and verified, superseded,
-demonstrably stale, or about to be replaced.
-
-**Never reap because an agent went quiet.** Silence is not a verdict — steer it first (ask for what it
-has so far, then name the delivery mechanism), and only conclude anything after that fails twice. At
-that point take the work in-house rather than dispatching a seventh time.
-
-## Diagnose by the artifact, never the notification
-
-- **Work present, no report** — delivery failed, not the work. Verify the artifact and move on; do not
-  re-run.
-- **No artifact** — proves nothing on its own. Most agents write once at the end, so "nothing on disk"
-  cannot distinguish an agent that never started from one that is about to finish.
-- **A silent verification agent is not a pass.** An unfinished check is an open question, and reporting
-  it as clear is how an unverified change reaches production.
+Collect, verify the answer against the brief, then reap — in that order, per `agent-delegate`: its
+collection ladder (including the two-failed-attempts rule), its diagnosis by the artifact, and its
+Reaping section. The roster's job is to make the order visible: a row whose **Report** is not
+`collected` is never reaped.
 
 ## Report it every turn a dispatch is live
 

@@ -34,27 +34,11 @@ Then pick the family: `mimir-<cluster>` for metrics, `loki-<cluster>` for logs, 
 
 This skill resolves targets and sets expectations. It does not teach query construction — the label model, the two-tier Loki split, and the recording rules live in `grafana-kilic-read`, and getting them wrong returns zero rows without erroring.
 
-## What This Stack Does Not Have
-
-Discovered by these failing, so do not spend calls rediscovering them:
-
-- **Grafana-managed alert rules.** `alerting_manage_rules` with `operation: list` returns null. Alerting is Mimir Ruler rules from the `monitoring-ruler` repo — `grafana-kilic-alerts` owns that.
-- **Grafana OnCall.** Every OnCall and IRM tool fails resolving the OnCall URL with a 404 from the settings API.
-- **Loki logs on `core`.** That datasource is healthy and empty. Empty is a real answer, not an outage.
-
 ## Never Write Through This Server
 
 Dashboards, folders and alert rules are **GitOps-owned** — they reach Grafana only through ArgoCD from their repositories. A change written through the API is unowned, will be reverted, and hides where the truth lives.
 
 Use the server's read tools freely to verify. For anything that changes what Grafana shows, edit the owning repository through the skill in the routing table above.
-
-## Expect the Endpoints to Misbehave
-
-Covered fully in `grafana-kilic-datasources`, but the three that most often cause a wrong conclusion:
-
-- **Loki metadata endpoints 502 intermittently** while queries work. Retry once before reporting a problem.
-- **`check_datasources_health` flaps** — a timeout is the Grafana proxy, not the datasource. Prove state with a query.
-- **Empty is not broken.**
 
 ## Key Principles
 

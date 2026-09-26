@@ -33,7 +33,7 @@ needs the rule.
 | `config-references` | the reference file whose topic covers the convention; a new reference when none fits |
 | `config-repository` | `CLAUDE.md` / `AGENTS.md` in the repository being worked on |
 | `config-agents` | `~/.config/nvim/utils/agents/AGENTS.md` |
-| `config-mcp` | the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json` |
+| `config-mcp` | the MCP catalog under `~/.config/nvim/utils/agents/mcp/` — `servers.json` (shared), `personal.json`, `work.json` |
 | `config-hyprpilot` | the launcher config at `~/.dotfiles/hyprpilot/.config/hyprpilot/config.yaml` |
 
 For `config-skills` and `config-references` the target is whichever file's own description or topic

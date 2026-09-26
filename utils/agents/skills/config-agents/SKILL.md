@@ -21,16 +21,16 @@ Posture: `present-first`.
 
 `~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session.
 
-> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is `AGENTS.md` and whatever skills own the behaviour alongside it. A rule a skill already governs belongs in that skill, not here. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
+Target discovery and the self-edit gate per `config-targets`.
 
-It is injected by an **unscoped root `[[patches]]` entry** in `~/.config/hyprpilot/config.yaml` — a `system_prompt: [{ file: ... }]` overlay with no `$match`, so it folds onto whichever profile resolves. Individual profiles do NOT declare it. Changing which file is loaded is a patch edit, not a per-profile edit.
+It is injected by an **unscoped entry in the root `patches:` list** of `~/.config/hyprpilot/config.yaml` — a `system_prompt: [{ file: ... }]` overlay with no `$match`, so it folds onto whichever profile resolves. Individual profiles do NOT declare it. Changing which file is loaded is a patch edit, not a per-profile edit.
 
 ## Process
 
 1. **Read the current AGENTS.md.** Understand the full structure, existing sections, and conventions before proposing any changes.
 2. **Understand the request.** Determine what needs to change. Ask the user if the intent is ambiguous.
 3. **Check for conflicts.** Verify that the proposed change does not contradict existing rules elsewhere in the document. AGENTS.md has a Rule Priority section — ensure new rules fit within or update that hierarchy.
-4. **Check skill ownership before growing the file.** If a skill already governs the behaviour, edit that skill through `config-skills` and leave AGENTS.md a pointer plus the rule that loads it. §III's `hyprpilot-nvim` entry is the shape: the server's presence triggers the skill, and the whole editor-tool playbook lives there rather than in every session's context window. Only rules with no owning skill — or the load rules themselves — belong in this document.
+4. **Check skill ownership before growing the file.** If a skill already governs the behaviour, edit that skill through `config-skills` and leave AGENTS.md a pointer plus the rule that loads it. §I step 5's `hyprpilot-nvim` load rule is the shape: the server's presence triggers the skill, and the whole editor-tool playbook lives there rather than in every session's context window. Only rules with no owning skill — or the load rules themselves — belong in this document.
 5. **Draft the changes.** Present the exact additions, modifications, or removals per `output-diff`, with surrounding context so the user can see where changes fit. Keep real private specifics out of the guidelines and their examples per `redact-private-data`.
 6. **Validate.** Run the `current-state-only` check — no deprecation notes, no record of what a rule replaced. Then conciseness: AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
 7. **Iterate.** Refine based on user feedback until approved.

@@ -1,6 +1,6 @@
 ---
 name: agent-supervisor
-description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest. Implementation always goes elsewhere. Use on "supervise this", "be the PM on this", "keep the project honest". Not for building anything yourself, a single dispatch, or a pickup that implements.'
+description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest. Use on "supervise this", "be the PM on this", "keep the project honest". Not for building anything yourself, a single dispatch, or a pickup that implements.'
 disableModelInvocation: true
 argumentHint: '[project, scope, or tracker target to supervise]'
 references:
@@ -66,7 +66,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 
 - **Investigation.** The real state of the work — tracker, repo, branches, pipelines, PRs/MRs, conversation history.
 - **Research.** Docs, prior art, options and trade-offs — enough to inform a decision, never enough to start building it.
-- **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, issueset structure, stale descriptions.
+- **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, issueset structure per `linear-issuesets`, stale descriptions.
 - **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Presented before they land, unless preapproved; then apply and report.
 - **Verification of claims.** Somebody reports done; you check the artifact.
 - **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.
@@ -95,7 +95,7 @@ Recording is the supervisor's product. Route it by shape rather than piling ever
 
 ## Implementation Goes Through agent-coordinator
 
-**Absolute.** When the work turns into building something — the user says "just fix it", "go implement it", or the reconciliation surfaces a change that must be made — do NOT pick it up yourself and do NOT fan out implementation agents from this posture. Load `agent-coordinator` (as defined in `load-skills`), hand it the scope, and supervise around it.
+**Absolute.** When the work turns into building something — the user says "just fix it", "go implement it", or the reconciliation surfaces a change that must be made — do NOT pick it up yourself and do NOT fan out implementation agents from this posture. Load `agent-coordinator`, hand it the scope, and supervise around it.
 
 The handoff carries:
 
@@ -117,14 +117,14 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 
 ## The Roster and the Watch Board — what you are holding
 
-Two ledgers, both reported every turn a supervision scope is open. Agents per `agent-roster` — including that reaping an uncollected agent destroys its report, and that idle is not done. Watchers per `agent-watchers` — the armed and ended tables, and what to arm for each kind of wait.
+Two ledgers, both reported every turn a supervision scope is open: agents per `agent-roster`, watchers per `agent-watchers`.
 
 For a supervisor these are not housekeeping: an unaccounted watcher or a stranded agent report **is** a gap in the record, which is the one thing this posture exists to prevent.
 
 ## Process
 
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
-2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, one agent per independent question or repo rather than one agent given the whole sweep list, fanned out per `agent-fan-out`, each with its own proposed tier, tiers resolved by loading the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
+2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, one agent per independent question or repo rather than one agent given the whole sweep list, fanned out per `agent-fan-out`, each with its own proposed tier, tiers resolved by loading `agent-harness`; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
 4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full audit of a project or an issue tree, compose `linear-reconcile` rather than re-implementing it.
 5. **Arm a watcher for every open condition — supervision is event-driven.** See below.
@@ -137,17 +137,13 @@ For a supervisor these are not housekeeping: an unaccounted watcher or a strande
 
 **A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
 
-What to arm for what — merge gates, pipelines, Terraform and Pulumi plans and applies, deploy convergence, tracker reconciliation — plus the cadence table, the ledger tables, and the check recipes, all per `agent-watchers`. `agent-background` owns the arming mechanics.
+Discipline, cadence and the ledger tables per `agent-watchers`; `agent-background` owns the arming mechanics.
 
-Yours are **awareness** watchers: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the very same watchers so it never idles, and from `agent-coordinator`, whose wake is a dispatch decision.
+Yours are **awareness** watchers, per the posture table in `agent-watchers`: the wake is a reconciliation cycle that corrects the record and reports — it never pushes work forward that the user did not ask for.
 
 The trigger is broader than the tracker: anything you would otherwise "check back on later" or ask the user to tell you about — a build, a job, an approval, another team's change, a window opening — is a watcher.
 
-Supervisor-specific rules on top of the reference's discipline:
-
-- **Arm it when the condition opens, not when you next remember it.** The gap between "MR opened" and "did it merge?" is exactly where the tracker goes stale.
-- **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
-- **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
+Supervisor-specific rule on top of the reference's discipline: **on wake, reconcile the tracker per `linear-state-transitions`**, report, then arm the follow-on if the next condition is now open (merged, so watch the deploy).
 
 > **Fetch `agent-background-harness-<provider>` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
@@ -168,9 +164,9 @@ Supervisor-specific rules on top of the reference's discipline:
 - **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
 - **`agent-delegate`** — read-only investigation and research fan-out.
 - **`agent-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
-- **`agent-background`** — every open condition, armed the moment it opens. The mechanics of arming, waking, and reaping live there; the duty to arm lives here.
+- **`agent-background`** — every open condition, armed the moment it opens.
 - **`plan-hard`** — when the open question is design, not status.
-- **`agent-bulldozer`** — opt-in only, never self-engaged. Supervising is not a licence to push.
+- **`agent-bulldozer`** — opt-in only, per `mode-toggle`.
 
 ## Example
 

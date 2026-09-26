@@ -1,6 +1,6 @@
 # Linear-Aligned Task Chunking
 
-When the user provides Linear issues or a project as input to an agent workflow, align task splits with issue boundaries. This ensures each agent's commits can reference the correct Linear issue via commit trailers.
+When the user provides Linear issues or a project as input to an agent workflow, align task splits with issue boundaries. This ensures each agent's commits and PR/MR can link the correct Linear issue. Every closing vs contributing keyword below is chosen per `commit-trailers-linear`, for the platform the PR/MR lives on.
 
 ## Detection
 
@@ -9,10 +9,10 @@ Check the user's input for Linear context:
 | Signal | Source | Action |
 |--------|--------|--------|
 | Issue IDs (`K-xxx`, `CLOUD-xxx`) | Direct mention, URLs, branch name. | Fetch each issue via the appropriate Linear MCP tool. |
-| Project URL or name | User provides a Linear project. | Fetch project via `linear_*__get_project`, then list its issues via `linear_*__list_issues` (filter by project). |
+| Project URL or name | User provides a Linear project. | Fetch the project with the workspace server's `get_project`, then its issues with `list_issues` filtered by project. |
 | Multiple issues | User lists several issue IDs or URLs. | Fetch all issues. |
 
-Use the `linear-prerequisite` reference deduction rules to determine the workspace (`linear-kilic` vs `linear-laravel`).
+Workspace per `linear-prerequisite`.
 
 If no Linear context is detected, skip this reference entirely.
 
@@ -32,8 +32,8 @@ Map each Linear issue to exactly one agent task. This is the cleanest path — e
 When a single issue is too large for one agent:
 
 - Split into multiple tasks but assign the same issue ID to all of them.
-- Each task's commits use `refs <ID>` (contributing, not closing).
-- The final task's last commit uses `closes <ID>` only if all work for that issue is complete.
+- Each task uses a contributing keyword for `<ID>`, not a closing one.
+- The final task uses `closes <ID>` only if all work for that issue is complete.
 - Note in the task split table which tasks share an issue.
 
 ### Multiple issues → one task (small issues)
@@ -56,15 +56,14 @@ When the user provides a Linear project instead of individual issues:
 
 ## Agent Prompt Addition
 
-Add a `## Linear Issue` section to each agent's prompt:
+Add a `## Linear Issue` section to each agent's prompt, filling `<contributing-keyword>` with the platform's word:
 
 ```
 ## Linear Issue
 
 This task implements Linear issue <ID>: "<issue title>".
-- Use `refs <ID>` in commit trailers for partial progress.
 - Use `closes <ID>` in the final commit and PR/MR description when this is the single/final deliverable that fully resolves the issue.
-- Do NOT use `#` prefix — write `refs K-219`, not `refs #K-219`.
+- For partial progress, use `<contributing-keyword> <ID>`.
 ```
 
 For tasks with multiple issues:
@@ -76,7 +75,7 @@ This task covers multiple Linear issues:
 - <ID-1>: "<title-1>"
 - <ID-2>: "<title-2>"
 
-Commit per issue where possible. Use `refs <ID>` for partial progress, `closes <ID>` only when this task or PR/MR fully resolves that issue.
+Commit per issue where possible. Use `closes <ID>` only when this task or PR/MR fully resolves that issue; otherwise `<contributing-keyword> <ID>`.
 ```
 
 ## Task Split Table
@@ -95,4 +94,4 @@ During the completion handoff (agent-completion reference):
 
 - If all issues are resolved, each commit should already have the correct trailers from the agents.
 - If the orchestrator creates a final combined commit instead, include trailers for all issues.
-- When creating a PR/MR, include Linear trailers in the description: `closes <ID>` for issues fully resolved by that PR/MR, and `refs <ID>` for partial or related work.
+- When creating a PR/MR, include Linear trailers in the description: `closes <ID>` for issues fully resolved by that PR/MR, and the platform's contributing keyword for partial or related work.

@@ -47,7 +47,7 @@ Tier → model tables live in the **`agent-delegate`** file for each runtime.
 
 Headlines per runtime:
 
-- **Claude Code** — built-in `Agent` tool; `haiku`/`sonnet`/`opus`/`fable`. Background by default, results arrive as a completion notification, permissions are **inherited from the session** (the dispatch `mode` parameter is deprecated and ignored), background agents run with a reduced built-in tool set, and concurrency/nesting/session caps apply.
+- **Claude Code** — built-in `Agent` tool; `haiku`/`sonnet`/`opus`/`fable`. Every dispatch runs in the background and the report arrives as a completion notification in a later turn; effort and tools come from the agent type's definition, not the dispatch; permissions are **inherited from the session**; concurrency/nesting/session caps apply.
 - **OpenCode** — `task` tool; `kilic/*` models. Blocking dispatch, no timeout parameter, short shell timeout that bounds every wait.
 - **Codex / OpenAI** — `gpt-*` role models. **Background work does not wake the caller** — poll or block, in dispatch and in waiting alike.
 - **Other providers** (Google, mixed, custom) — the user declares the mapping; ask, then persist to memory if stable. Add a `<consumer>-harness-<provider>` reference once the behavior is known, declared by every consumer in that family.
@@ -60,6 +60,6 @@ Headlines per runtime:
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.
 - **Ambiguous wording → confirm.** If the user's wording is vague ("better" relative to what?), present the inferred tier with reasoning and confirm before dispatching.
 - **A tier belongs to a task, not to a run.** Choose one per unit of work and state it with the signal behind it before dispatching. A generic user preference ("cheap agents please") is weighed per unit, not stamped across a fan-out; only a tier the user named FOR that task is fixed.
-- **In-harness: resolve, do not discover.** The runtime's tier-to-model table is in its `agent-delegate-harness-<provider>` reference — you already know which agent suits the task, so propose it. Discovery is a separate-session concern: a hyprpilot session's available profiles and models are runtime state, listed with `list_profiles` before any tier is proposed.
+- **In-harness: resolve, do not discover.** The runtime's tier-to-model table is in its `agent-delegate-harness-<provider>` reference — you already know which agent suits the task, so propose it. Discovery is a separate-session concern: a hyprpilot session's available profiles and models are runtime state, listed with `hyprpilot-harness__list_profiles` before any tier is proposed.
 - **Version claims decay.** The references carry version markers and explicit "unverified" flags. When behavior contradicts a reference, verify against the running build's own tool schemas and docs, then fix the reference — do not special-case the runtime inside a skill body.
 - **Keep in sync.** Model lists mirror `~/.config/hyprpilot/config.yaml` and `~/.config/opencode/opencode.jsonc`. When those profiles change, update the per-harness references.

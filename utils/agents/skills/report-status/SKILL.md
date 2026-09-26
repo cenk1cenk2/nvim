@@ -6,6 +6,8 @@ argumentHint: '[on|off]'
 references:
   - ../references/report-status.md
   - ../references/mode-toggle.md
+  - ../references/identifier-legibility.md
+  - ../references/output-diff.md
 ---
 
 ## Status Report On Demand

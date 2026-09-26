@@ -130,9 +130,7 @@ The dedicated skills hardcode this. Here you establish it with the user, and it 
 
 ## Related Skills
 
-- **`linear-companion`**, **`git-companion`**, **`plan-companion`** — the three domains with dedicated skills. Route to them rather than defining those domains by hand.
-- **`agent-supervisor`** — the same job held in your own context. The fallback when condition 0 fails, and the right pick when the judgment is what you want in front of you.
-- **`agent-delegate`** — one task, one agent, reaped on return. What a failed condition 3 usually wants.
-- **`agent-background`** — arms every watcher a companion depends on, and the answer when the request is really a wait.
-- **`agent-coordinator`**, **`agent-plan`** — where the building goes, beside the companion rather than inside it.
+The routing targets are in the rejection table above. Beyond those:
+
+- **`agent-plan`** — multi-task building with dependencies, beside the companion rather than inside it.
 - **`config-skills`** — for authoring the dedicated skill once a domain proves recurrent.

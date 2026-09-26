@@ -1,6 +1,6 @@
 ---
 name: config-hyprpilot
-description: config-hyprpilot Edit or review the hyprpilot launcher config - profiles, agents, patches, and the in-tree MCP/skills block - deriving the schema from hyprpilot's own source. Use on "add a profile", "change the default model", "why did that profile resolve that way", "which skills does this profile see". Not for the MCP server catalog, skill files, agent guidelines, or repo knowledge bases.
+description: config-hyprpilot Edit or review the hyprpilot launcher config - profiles, agents, patches, the in-tree MCP/skills block - reading the schema from source. Use on "add a profile", "change the default model", "why did that profile resolve that way", "which skills does this profile see". Not for the MCP server catalog, skill files, agent guidelines, or repo knowledge bases.
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
@@ -20,7 +20,7 @@ Posture: `present-first`.
 so `~/.config/hyprpilot/config.yaml` is a symlink to it; edit the dotfiles path, which is the one git
 tracks.
 
-> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is the launcher config. Editing this file needs the captain naming it **and** blessing the change — except for the schema carve-out below, where drift against the installed binary is repaired in place.
+Target discovery and the self-edit gate per `config-targets`, including its schema carve-out for this skill.
 
 ## What This Config Is
 

@@ -7,6 +7,7 @@ references:
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear/linear-state-transitions.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
 ---
@@ -35,14 +36,11 @@ The current conversation context holds the most recent version of the issue's in
    - Strip all filler — no greetings, no "just wanted to note", no restating the issue.
 
 3. **Post the comment:**
-   - Present the drafted comment per `output-diff`, then write it with the Linear MCP `save_comment` tool from the appropriate workspace.
+   - Present the drafted comment per `output-diff`, then write it with the Linear MCP `save_comment` tool from the appropriate workspace. Markdown normaliser traps per `linear-description-structure`.
 
 4. **Transition to `Done` (when applicable):**
-   - If the comment is a delivery / close-out note AND either the user explicitly says to close/mark the issue done or the linked merged MR/PR contains a Linear closing keyword for the issue, apply the post-merge trigger per `linear-state-transitions`: call `save_issue` with `state: "Done"`, respecting the never-downgrade guard.
-   - A merged MR/PR that only has `refs K-xxx` does NOT trigger `Done`; `refs` is partial or related work until the user or a closing trailer says otherwise.
+   - If the comment is a delivery / close-out note AND either the user explicitly says to close/mark the issue done or the linked merged MR/PR contains a Linear closing keyword for the issue, apply the post-merge `Done` trigger per `linear-state-transitions`.
    - Detect "delivery / close-out" from the comment shape: it announces the MR merge, links the merged MR/PR, or the user prompt says "close K-xxx", "mark K-xxx done", "K-xxx is merged". A plain findings / research comment does NOT trigger this.
-   - Report one line: `Linear state: moved K-xxx → Done.` Skip silently when the issue is already `Done` / `Canceled`.
-   - User opts out for the turn by saying "don't move the Linear state" or "leave the state alone".
 
 ## Comment Style
 

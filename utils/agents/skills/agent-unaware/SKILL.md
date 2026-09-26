@@ -21,14 +21,14 @@ So the artifact carries the **content itself** and the **exact method**. Where a
 
 ## Process
 
-1. **Establish what it actually has.** Per the `agent-target-capability` reference, per axis: shell, network, repo, write authority. Ask the user; unknown counts as unavailable.
+1. **Establish what it actually has**, per axis: shell, network, repo, write authority. Ask the user; unknown counts as unavailable.
 2. **List every pointer your draft wants to use** — skills, MCP tools, references, internal paths, prior conversation. Each one becomes an inlining task.
 3. **Translate each pointer to content** using the table below. Inline only the slice that applies to this task — never dump a whole reference.
 4. **Replace intent with exact method.** Concrete commands, exact file paths, expected output. Where you would say "handle the errors appropriately", name the errors.
 5. **Restate every decision made in conversation.** No "as discussed", no "the approach we picked".
 6. **Give runnable verification** — the exact command and what passing output looks like. If the target cannot run anything, say so and give a review checklist instead.
 7. **Define the blocked path.** It cannot consult anything, so state plainly: report what is missing and stop, do not invent. Say where the output goes and in what format; when a program parses it, per `agent-parsed-answer`.
-8. **Redact.** Sweep for private specifics per the reference before presenting.
+8. **Redact.** Sweep for private specifics before presenting.
 9. **Present the draft**, iterate, then write.
 
 ## Pointer Translation

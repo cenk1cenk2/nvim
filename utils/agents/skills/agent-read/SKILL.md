@@ -1,6 +1,6 @@
 ---
 name: agent-read
-description: agent-read Re-ground the session from scratch - sweep timestamps to find what changed since your context formed, re-read the central guidelines, re-list the skill catalog, reload the voice, redo session initialization. Use first after a context compaction, after drifting from the guidelines, or when they changed mid-session. Not for normal work or a one-off file read.
+description: agent-read Re-ground the session from scratch - sweep timestamps for what changed, re-read the central guidelines, re-list the catalog, re-fetch every skill and reference that changed, redo session initialization. Use first after a context compaction, after drifting from the guidelines, or when guidance you hold changed on disk. Not for normal work or a one-off file read.
 disableModelInvocation: true
 ---
 
@@ -40,10 +40,18 @@ Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut i
 4. **Rediscover the skills.** Call `list_skills` again and re-cache the catalog — it is the source of truth for what exists this session, and skills may have been added, edited, or reloaded. Note each skill's `description` and invocation tier for routing.
 
    **Read the `modified` stamp on every entry.** The catalog carries `size`, `modified` and `created` per skill, and `list_skill_references { slug }` carries the same per reference — so the server answers "what is new" without a shell, and it covers skill directories outside this repo and whatever the active profile filters in. Cross-check it against what you already loaded: a path whose `modified` moved since you read it is stale and must be fetched again, per `hyprpilot-skills`.
-5. **Reload the caveman voice.** Call `read_skill { slug: "caveman" }` and re-apply it (level: full) as the default communication style, per `AGENTS.md` §I step 5. Read it live; don't answer from memory.
-6. **Re-consult memory and the repo note** as at session start (§I steps 1 and 3), when the runtime provides them.
-7. **Re-ground behavior.** Reconcile what you were doing against the freshly-read guidelines. If you had deviated, correct course now. If `AGENTS.md` changed, work out what changed that affects the current task.
-8. **Report** in one or two lines: re-grounded — **name what was new and when it changed**, and any course-correction you are making. "Nothing moved since <time>" is a real and useful answer; a report that cannot say either way means the sweep was skipped.
+
+   **Re-fetch everything that moved.** A rescan rebuilds the sidecar's catalog, never your context — a skill or reference you read earlier is a snapshot taken before the edit, and it stays authoritative-looking while being wrong.
+   - Re-read each changed skill with `read_skill { slug }`; the returned body is authoritative and the earlier copy is void.
+   - Drop each changed reference path from your loaded-path set and re-fetch it with `read_skill_references`. The set is keyed on path, so a body that changed under the same path is exactly what it cannot notice on its own.
+   - Re-read an attached `hyprpilot://skills/<slug>` resource rather than trusting it — it reads as current and carries no fetch time.
+   - When the catalogue's shape moved (a skill added, renamed, or deleted), route against the new names.
+   - Skip nothing because "the edit was small" — you cannot tell from context which copy you hold.
+5. **Reload the caveman voice.** Call `read_skill { slug: "caveman" }` and re-apply it (level: full) as the default communication style, per `AGENTS.md` §I step 4. Read it live; don't answer from memory.
+6. **Reload each connected server's same-named skill** per `AGENTS.md` §I step 5, live.
+7. **Re-consult memory and the repo note** as at session start (§I steps 1 and 2), when the runtime provides them.
+8. **Re-ground behavior.** Reconcile what you were doing against the freshly-read guidelines. If you had deviated, correct course now. If `AGENTS.md` changed, work out what changed that affects the current task.
+9. **Report** in one or two lines: re-grounded — **name what was new and when it changed**, and any course-correction you are making. "Nothing moved since <time>" is a real and useful answer; a report that cannot say either way means the sweep was skipped.
 
 ## When to Use
 
@@ -55,6 +63,8 @@ Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut i
 
 Not for normal work, and not a substitute for reading a specific file you need — this is a full re-initialization.
 
+**Reading only.** This never edits skill files and never touches the skills sidecar, which rescans on its own. If an escalation ever does call for a restart, it stops at the **`hyprpilot-skills`** sidecar and names it explicitly — restarting `hyprpilot-harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
+
 ## Example
 
 **User:** `/agent-read` (after editing `AGENTS.md`)
@@ -62,8 +72,8 @@ Not for normal work, and not a substitute for reading a specific file you need �
 1. Sweep mtimes — `AGENTS.md` is stamped four minutes ago, `references/open-artifact.md` an hour ago, everything else older. Two files to look at hardest.
 2. Read `~/.config/nvim/utils/agents/AGENTS.md` in full — spot the new/changed rules.
 3. Re-read the current directory's `CLAUDE.md` / `AGENTS.md`.
-4. `list_skills` — re-cache; `modified` shows `git-commit` changed since you loaded it, so that path is stale.
-5. `read_skill { slug: "caveman" }` — re-apply full.
+4. `list_skills` — re-cache; `modified` shows `git-commit` changed since you loaded it, so re-read it.
+5. `read_skill { slug: "caveman" }` — re-apply full; re-read the same-named skill of each connected server.
 6. Reconcile the current task against the fresh guidelines.
 7. Report: "Re-grounded. AGENTS.md gained rule X four minutes ago; `git-commit` changed since I loaded it and I have re-read it; adjusting the current flow to match."
 

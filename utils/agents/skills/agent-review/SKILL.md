@@ -44,7 +44,7 @@ Four typed templates, each with a different checklist. The skill picks the right
 
 ## Model Tier
 
-**Pick the tier from what the review actually demands — there is no blanket default.** A cheap model can grep, cite, and check a claim against a file; it cannot weigh a trade-off, spot the missing dependency in a DAG, or build the strongest counter-argument. Under-tiering a judgment review produces a confident `APPROVED` that means nothing — worse than no review, because it gets trusted. Load the `agent-harness` skill to resolve the concrete model for the active runtime.
+**Pick the tier from what the review actually demands — there is no blanket default.** A cheap model can grep, cite, and check a claim against a file; it cannot weigh a trade-off, spot the missing dependency in a DAG, or build the strongest counter-argument. Under-tiering a judgment review produces a confident `APPROVED` that means nothing — worse than no review, because it gets trusted.
 
 Starting points by artifact type:
 
@@ -66,7 +66,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
 | "default", "balanced" | `default` |
 | Explicit model name (e.g., `opus`, `sonnet`) | Use verbatim — do not remap |
 
-**Mismatch check:** if the user picks a tier the artifact will defeat — `cheap` for `freeform` or for a large coupled plan — say so before dispatching; likewise flag `smart` for plain `facts` grep work as overspend. See the `agent-delegate` reference's Mismatched Choice section.
+**Mismatch check:** if the user picks a tier the artifact will defeat — `cheap` for `freeform` or for a large coupled plan — say so before dispatching; likewise flag `smart` for plain `facts` grep work as overspend. Ask on mismatch per `agent-delegate`.
 
 ## Process
 
@@ -82,16 +82,12 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - Resolve the tier per artifact from what that review demands (see Model Tier; user override wins; mismatch check if needed).
 
 3. **Dispatch in parallel.** Single message, one subagent dispatch per artifact. Parameters:
-   - An exploration (read-only) subagent.
-   - `description` — short summary, e.g., `"Fact-check auth claims"`.
-   - `prompt` — the self-contained review prompt.
-   - `model` — resolved tier.
-   - No worktree isolation (not needed).
-   - No permission-mode parameter — it is deprecated and ignored on current Claude Code; reviewers are read-only and run under the session's own posture.
-   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
-   - When dispatching named, append to every review prompt: *your plain text is not visible to the lead — deliver the completed review with one `SendMessage` call to `"main"`.*
+   - **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent. Parameters per that reference.
+   - An exploration (read-only) subagent, with a short description (e.g., `"Fact-check auth claims"`), the self-contained review prompt, and the resolved tier.
+   - No worktree isolation (not needed), and no permission setting — reviewers are read-only and run under the session's own posture.
+   - **Make sure the verdict can arrive.** A reviewer's verdict *is* its entire deliverable. Collect it however the runtime delivers a finished agent's report — blocking where the runtime offers it, a completion in a later turn where it does not — and add a delivery instruction to the review prompt only where the harness reference says the runtime needs one.
 
-4. **Collect verdicts.** A reviewer that goes quiet or reports itself idle has **not** failed and has **not** returned an empty verdict — it has most likely answered where you cannot see it. Steer it per the harness reference's ladder (ask for what it has, then name the delivery mechanism) before considering it failed, and never substitute your own judgement for a verdict that has not arrived.
+4. **Collect every verdict before relaying.** A reviewer that goes quiet or reports itself idle has **not** failed and has **not** returned an empty verdict — it has most likely answered where you cannot see it. Steer it per `agent-delegate` and the harness reference's ladder before considering it failed, and never substitute your own judgement for a verdict that has not arrived.
 
 5. **Relay to the user.** Present results as labeled sections per artifact — no cross-artifact merging. See the Output Format section below.
 
@@ -198,10 +194,10 @@ No merging across artifacts — each review keeps its own context.
 
 ## Key Principles
 
-- **Reap the reviewer once its verdict is in.** A review agent's whole product is its report, so the moment you have the verdict — or have obtained the judgement another way, or the artifact under review has changed and the review is moot — stop it. Completion does not self-clean: a finished reviewer lingers in the runtime's task list looking identical to a live one. Reap before re-dispatching a reviewer on a revised artifact, so an old verdict cannot arrive after the new one and be mistaken for it.
+- **Reap the reviewer once its verdict is in**, per `agent-delegate` Reaping — including before re-dispatching a reviewer on a revised artifact, so an old verdict cannot arrive after the new one and be mistaken for it.
 - **Tier by demand, not by habit.** Mechanical verification goes cheap; judgment work does not. A cheap reviewer on a nuanced artifact returns a verdict it was never able to reach.
 - **One reviewer per artifact.** No ensemble. If the user wants multiple reviewers on the same artifact, they invoke the skill multiple times.
-- **Parallel fan-out over artifacts.** Multiple artifacts = single message, multiple subagent dispatches, blocking.
+- **Parallel fan-out over artifacts.** Multiple artifacts = single message, one subagent dispatch per artifact.
 - **Read-only.** Reviewers never modify files. An exploration subagent enforces the read-only disposition.
 - **Structured output.** The `VERDICT` / `FINDINGS` shape is machine-parseable so `plan-hard` can extract FAILs for its correction loop.
 - **Don't auto-apply suggestions.** The reviewer suggests; the user (or the inviting skill) decides what to do.
@@ -209,6 +205,6 @@ No merging across artifacts — each review keeps its own context.
 
 ## Related Skills
 
-- **`agent-delegate`** — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
-- **`agent-plan`** — multi-task DAG execution. `agent-review` can sanity-check the DAG before launching.
-- **`plan-hard`** — auto-invokes `agent-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.
+- **`agent-delegate`** — running a task rather than reviewing an artifact.
+- **`agent-plan`** — its DAG is a `dag` artifact to review before launch.
+- **`plan-hard`** — invokes a `facts` review to fact-check self-answered claims.

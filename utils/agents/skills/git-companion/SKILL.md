@@ -66,7 +66,7 @@ The test is `agent-companion`'s: do you already hold the finished text and the e
 - **Review-thread triage** — which open threads are real change requests, which are questions you can answer in a sentence, which are already addressed by a later push and just need resolving.
 - **CI diagnosis** — read the failing job, find the actual cause, and hand back the fix as a concrete instruction. It diagnoses; you apply.
 - **Conflict and rebase calls** — whether an MR needs a rebase, against what, and whether a sibling MR is about to conflict with it.
-- **Description drift** — the branch moved on and the description no longer describes it. It drafts the correction, subject to the linking-surface carve-out below.
+- **Description drift** — the branch moved on and the description no longer describes it. It drafts the correction, subject to the linking-surface carve-out below and to whether the work should link its issue at all, per `scm-linear-follow-up`.
 - **Staleness** — an MR nobody has touched in weeks, a branch whose work landed elsewhere, a draft that should be undrafted or closed.
 - **The status question** — "what is the state of my MRs", answered against the platform rather than against your memory of it.
 
@@ -106,12 +106,13 @@ Watchers per `agent-companion` — you arm them, never the companion. Its half i
    - **The skills it works through** — the platform's read, review, and description skills (`gitlab-mr-read` / `gitlab-mr-review` / `gitlab-mr-create` / `gitlab-mr-comment` / `gitlab-ci-fix`, or the `github-pr-*` equivalents). Name only the platform's own set; the other platform's skills are noise in its context. Several are manual-only, and being named here is what authorises them — say so, or the companion declines to load them and fails silently.
    - **The never list** above, verbatim — above all that it never merges, never pushes, and never edits a linking surface.
    - **The re-read rule** from `agent-companion`: it re-reads the MRs before asserting their state, and labels every claim observed or reported, quoting what it read. An MR's state changes without anyone telling it.
+   - **The assumed surface**, declared per `agent-target-capability` — the skills and tools it can reach, named rather than inlined.
 
 4. **Report to it as work lands**, per `agent-companion`'s steering rules: you pushed, a pipeline went green or red, a reviewer commented, an MR merged, you made a fix it suggested and it did or did not work. A wake burst that resolves one chain — a merge and the rebase it unblocked — is the causal group that shares a message.
 
 5. **Collect, present, release.** Its answers come back as a per-MR ledger — the shape below. Present anything that writes to the platform chunked per `output-diff`.
 
-6. **Report the companion and its watchers every turn**, per `agent-companion` and `agent-watchers`, and retire it only on the user's word. Before it goes, get its final read of the merge order and record it wherever the section's work lives — the tracker issue, the plan file — because the graph is the thing you cannot rebuild from the MRs alone.
+6. **Report the companion and its watchers every turn**, shaped per `report-status`, per `agent-companion` and `agent-watchers` otherwise, and retire it only on the user's word. Before it goes, get its final read of the merge order and record it wherever the section's work lives — the tracker issue, the plan file — because the graph is the thing you cannot rebuild from the MRs alone.
 
 ## The MR Ledger
 

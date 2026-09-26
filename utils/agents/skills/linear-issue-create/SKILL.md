@@ -1,6 +1,6 @@
 ---
 name: linear-issue-create
-description: linear-issue-create Create Linear issues with the analysis and research behind them, always setting the state explicitly rather than letting it fall into triage. A Linear workspace skill must be active first. Use on "create an issue", "file a bug", "open a ticket". Not for editing an existing issue, commenting on one, or preparing one for work.
+description: linear-issue-create Create Linear issues with the analysis and research behind them, always setting the state explicitly rather than letting it fall into triage. Use on "create an issue", "file a bug", "open a ticket". Not for editing an existing issue, commenting on one, or preparing one for work.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
@@ -30,7 +30,6 @@ Team, state, labels, estimate, priority, and relations per `linear-mandatory-fie
 
 Additional rules for issue creation:
 
-- Always assign issues to the current user.
 - When creating multiple related issues, batch create them in a single response using parallel tool calls.
 - Use project names directly when creating issues — Linear MCP will resolve them, unless prompted to specifically search for it.
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.

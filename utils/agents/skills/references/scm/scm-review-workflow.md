@@ -41,14 +41,7 @@ Apply the review methodology from `code-review-branch` and `code-review-changes`
 - **Read surrounding code** — the diff alone is never enough. Trace call sites, check types, read related files.
 - **Work through the diff methodically** — reason through each change in sequence rather than skimming.
 - **Cross-PR/MR consistency** — if the user provides a reference PR/MR (URL or number), fetch its diff via the platform's diff tool and compare both for structural consistency: same variable ordering, same formatting patterns, same parameter additions/removals across analogous files. Flag deviations as `**nit:**` inline annotations on the specific lines that diverge.
-- **What to look for:**
-  - **Silent failures** — errors caught and ignored, missing error propagation, fallback values hiding problems.
-  - **Logic errors** — off-by-one, wrong operator, inverted conditions, missing null/undefined checks.
-  - **Security** — injection, auth bypass, secret exposure, unsanitized input at boundaries.
-  - **Edge cases** — empty input, large data, concurrent access, failure paths.
-  - **Error handling** — swallowed errors, missing rollback.
-  - **Inconsistency** — new code deviating from existing codebase patterns or from a reference PR/MR when provided.
-  - **Unnecessary complexity** — over-engineering, premature abstraction, dead code.
+- **What to look for:** the shared categories per `review-findings`'s "What to Look For" — silent failures, logic errors, security, edge cases, error handling, inconsistency (including drift from a reference PR/MR when provided), unnecessary complexity.
 - **No noise** — only flag real issues. Silence means approval.
 - **Be specific** — concrete problem and fix, not vague suggestions.
 

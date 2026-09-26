@@ -7,7 +7,7 @@ Runtime mechanics for the `agent-background` skill on Claude Code: how to wait o
 | Need | Mechanism | Notes |
 |------|-----------|-------|
 | Wake once when a condition holds | `Bash` with **`run_in_background: true`** and a command that exits when satisfied | The default watcher. Exit delivers a task-notification that re-invokes the session. |
-| One notification per occurrence | `Monitor` | Each stdout line becomes an event. `persistent: true` for session-length watches; otherwise `timeout_ms` (default 300000, max 3600000). Also accepts a `ws` WebSocket source. |
+| One notification per occurrence | `Monitor` | Each stdout line becomes an event. `timeout_ms` defaults to 300000 and is capped at 1800000; at expiry it is killed with one notice, so a long watch sets the maximum and re-arms on each expiry (v2.1.283, which has no `persistent` parameter). Also accepts a `ws` WebSocket source. |
 | No bash-reachable signal | `ScheduleWakeup` (dynamic `/loop`) | Deferred re-invocation; delay clamped to 60–3600 s. |
 | Genuinely recurring cadence | `CronCreate` / the `/schedule` skill | Outlives the session. Never for a one-shot wait. |
 | Work you dispatched yourself | **nothing — do not poll** | `Agent` and `Workflow` completion re-invokes the session automatically. Scoped to those two: an agent process owned by an MCP server is not dispatched work and needs a watcher like any other external condition. |
@@ -22,29 +22,7 @@ Confirm the launch returned a **task id**. If it did not, you detached instead o
 
 ## Loop shape
 
-Python by default, per the language rule in `agent-watchers`:
-
-```python
-python3 -c '
-import json, os, subprocess, sys, time
-for i in range(1, N + 1):
-    if <check>:
-        print(f"RESULT: met after {i} cycle(s)")
-        sys.exit(0)
-    time.sleep(<cadence-seconds>)
-print("RESULT: not met after N cycles")   # backstop — report and re-arm
-'
-```
-
-Bash only for a single-condition one-liner with no arrays, no JSON parsing and no multi-line payload:
-
-```bash
-for i in $(seq 1 N); do
-  if <check>; then echo "RESULT: met after ${i} cycle(s)"; exit 0; fi
-  sleep <cadence-seconds>
-done
-echo "RESULT: not met after N cycles"
-```
+The loop itself is runtime-agnostic, in the language `agent-watchers` sets; this runtime adds nothing to it beyond the launch parameter above.
 
 Monitor's own guidance applies when you use it instead: every pipe stage must flush per line (`grep --line-buffered`, `awk` + `fflush()`), poll remote APIs no faster than ~30 s, and the filter must match failure signatures as well as success — a monitor that greps only the happy path stays silent through a crashloop.
 
@@ -113,7 +91,7 @@ Rules that bite on this pattern:
 
 ## Persistence and compaction
 
-Background shells survive across turns until they exit or are stopped, and the session is re-invoked on exit. Size `cap × cadence` to a sane ceiling (e.g. 45 × 60 s ≈ 45 min) and re-arm past it.
+Background shells survive across turns until they exit or are stopped, and the session is re-invoked on exit. Size `cap × cadence` to a sane ceiling (e.g. 180 × 15 s ≈ 45 min) and re-arm past it.
 
 **Compaction drops the task id, the loop's script body, and anything in the scratchpad.** Anything armed for longer than a checkpoint must be recorded in durable text — chat, and the `plan-compact` anchor — so a resumed agent can re-materialize the script and re-arm rather than lose the watch.
 
@@ -121,6 +99,3 @@ Background shells survive across turns until they exit or are stopped, and the s
 
 - **Command strings are parsed by zsh, inside an `eval`.** `Bash` and `Monitor` hand the command to `zsh -c '… eval …'`, so a nested `\"` inside an embedded PromQL selector, JSON body, or regex fails as `(eval):1: parse error near …` and the task exits 1 on the spot. Put the text in a file and make the command `cat <path>`.
 - **Task-notifications are not user input.** A completion event is never approval, consent, or an answer to a pending question.
-- **A background loop cannot call MCP tools**, in any language. Poll a shell-visible proxy and keep the authoritative MCP check on the main loop.
-- **`ps` proves nothing.** A detached loop and a runtime-managed one look identical in a process list — judge by how it was launched.
-- **If you are re-reading a watcher's log each turn, it is not waking you.** That is the detached-process symptom; re-arm through the tool parameter.

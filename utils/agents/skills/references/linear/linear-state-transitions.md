@@ -16,24 +16,26 @@ post-merge comment). The issue itself does not drive state — the
 
 | Trigger | Target state | Applied by |
 |---|---|---|
-| User picks up an issue (`linear-pickup`, `linear-next-task`, `linear-triage` promote) | `In Progress` | the pickup skill itself (already wired). |
+| User picks up an issue (`linear-pickup`, `linear-next-task`, `linear-triage` promote) | `In Progress` | the pickup skill itself. |
 | A worker is dispatched for a Linear-linked task (`agent-delegate`, `agent-plan`) | `In Progress` | the dispatch skill before launching the agent. |
 | User or workflow explicitly updates status (`linear-issue-status`) | requested state | `linear-issue-status`, respecting never-downgrade and terminal-state guards. |
-| An MR/PR is created that references the issue (`refs K-xxx` / `closes K-xxx` in commit trailers or MR body) | `In Review` | `gitlab-mr-create` / `github-pr-create` after successful MR/PR create. |
-| A merged MR/PR contains a Linear closing keyword for the issue (`closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`, etc.) | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR, or `linear-project-match` when reconciling merged work. |
-| A merged MR/PR only references the issue with `refs K-xxx` | *no automatic Done transition* | `refs` means related or partial work; user decides whether remaining scope is complete. |
+| An MR/PR is created that links the issue (a contributing or closing keyword, or the id in its title or branch) | `In Review` | `gitlab-mr-create` / `github-pr-create` after successful MR/PR create. |
+| A merged MR/PR carries a Linear closing keyword for the issue | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR, or `linear-project-match` when reconciling merged work. |
+| A merged MR/PR only links the issue with a contributing keyword | *no automatic Done transition* | a contributing keyword means related or partial work; user decides whether remaining scope is complete. |
 | An MR/PR is closed without merging | *no change* | never auto-advance on close — user decides whether to cancel the issue. |
 
 ## Closing vs reference semantics
 
-`refs K-xxx` and bare issue mentions are link signals only. They can
+Contributing keywords and bare issue mentions are link signals only. They can
 advance an issue to `In Review` when an MR/PR opens, but they MUST NOT
 drive a `Done` transition when the MR/PR merges.
 
-`closes K-xxx` and equivalent closing keywords are close signals. When
-an MR/PR mentions multiple Linear IDs, apply `Done` only to IDs linked
-by a closing keyword; keep `refs` IDs out of the `Done` transition
-unless the user explicitly says to close them.
+Closing keywords are close signals. When an MR/PR mentions multiple
+Linear IDs, apply `Done` only to IDs linked by a closing keyword; keep
+contributing IDs out of the `Done` transition unless the user
+explicitly says to close them.
+
+Both keyword lists, per platform, are `commit-trailers-linear`.
 
 ## Never-downgrade invariant
 
@@ -65,14 +67,10 @@ The rank order is: `backlog`/`unstarted` < `In Progress` < `In Review`
 
 When a skill processes a branch / MR / PR rather than a single issue,
 it extracts Linear ids from the MR/PR title and body, the branch name,
-and commit messages:
+and — on GitHub only — commit messages:
 
-- **Trailer syntax:** match both reference and closing trailers
-  case-insensitively, stopping at newline. Reference trailers include
-  `refs K-xxx` / `references K-xxx`. Closing trailers include
-  `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`,
-  `implements K-xxx`, and the other closing keywords from
-  `commit-trailers`.
+- **Trailer syntax:** match contributing and closing keywords
+  case-insensitively, stopping at newline, using the platform's lists.
 - **A keyword applies to EVERY id in its comma/`and`-separated run,
   not just the first.** `Closes K-879, K-881` closes *both*. Parse the
   run to end-of-line and tag every id in it with that keyword's kind.
@@ -80,18 +78,19 @@ and commit messages:
   classified as bare mentions, which silently skips their `Done`
   transition — the MR merges, one issue closes, the others sit open
   looking like the automation is broken.
-- **MR/PR body:** the `closes K-xxx` / `refs K-xxx` trailer at the
+- **MR/PR body:** the keyword trailer at the
   bottom, or a `K-xxx` mentioned inline (less reliable — only
   mentioned at the top near the summary is treated as a trigger id).
 - **MR/PR title:** ids there are a real Linear linking surface — parse
   them too, e.g. `fix(scope): subject (K-879, K-881)`. Treat a bare
   title id as a *link*, not a close signal; the closing kind still
   comes from the description trailer.
-- **Commit messages are NOT a Linear linking surface.** Linear cannot
-  link via commit messages (see `commit-trailers-linear`). Ids found only in
-  commits may still help *discover* which issues a branch touches, but
-  never treat a commit-only id as evidence Linear will close it — if it
-  is not in the MR/PR title or description, Linear does not know.
+- **Commit messages link on GitHub only.** On GitLab, Linear never
+  links via commit messages — a commit-only id there is a discovery hint
+  for which issues a branch touches, never evidence Linear will move or
+  close it. On GitHub, a keyword before the id in a commit message links
+  and moves the issue when the workspace has commit linking enabled; a
+  bare id in a commit still does not.
 - **Regex target:** `/(?:^|\s)(K|CLOUD)-\d+/i` — match the team
   prefixes the current workspace supports. Check `linear-prerequisite`
   for the active workspace's id prefix.
@@ -131,14 +130,5 @@ Per-session / persistent opt-out is out of scope — one-turn only.
 
 ## Workspace prerequisite
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before
-> calling `save_issue`.**
->
-> Auto-invoke the matching workspace skill when the trigger surfaces
-> an issue id:
->
-> - **kilic-dev workspace** (K-xxx): `linear-kilic`
-> - **Laravel workspace** (CLOUD-xxx): `linear-laravel`
->
-> Route through the workspace's own `save_issue` tool name — they
-> use the same API but different MCP server prefixes.
+The workspace skill for the surfaced issue id must be active before
+`save_issue`, per `linear-prerequisite`.

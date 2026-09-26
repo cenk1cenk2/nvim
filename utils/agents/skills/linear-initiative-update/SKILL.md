@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-update
-description: linear-initiative-update Revise a Linear initiative's description and review whether its projects still belong to it. A Linear workspace skill must be active first. Use on "update the initiative", "revise the initiative description". Not for creating one, or for posting its status.
+description: linear-initiative-update Revise a Linear initiative's description and review whether its projects still belong to it. Use on "update the initiative", "revise the initiative description". Not for creating one, or for posting its status.
 argumentHint: '[initiative name or ID]'
 references:
   - ../references/reconcile-state.md
@@ -9,6 +9,7 @@ references:
   - ../references/linear/linear-description-structure.md
   - ../references/output-diff.md
   - ../references/linear/linear-absolute-approval.md
+  - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---
 
@@ -25,9 +26,7 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 
 ## Core Principle
 
-> **THE CONVERSATION IS MORE RECENT THAN THE INITIATIVE.**
->
-> Initiative descriptions carry timestamps. The user's session knowledge and the current conversation context hold the most recent understanding of the initiative's intent. When the initiative's content is stale relative to the conversation, **treat the conversation as the source of truth** and update the initiative to match — always confirming with the user before applying.
+> **THE CONVERSATION IS MORE RECENT THAN THE INITIATIVE.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy` — the initiative is the record here. Update it to match the conversation, always confirming with the user before applying.
 
 ## Process
 
@@ -42,19 +41,18 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
    - **Orphan candidates** — identify projects with no initiative that now fit the updated goals. Present them and ask the user which to link.
    - **Better fits** — if a linked project would fit better under a different initiative, suggest the move.
 7. **Apply approved changes:**
-   - Update the initiative using `save_initiative` with the initiative `id`.
+   - Update the initiative using `save_initiative` with the initiative `id`, editing the description as a `patch`.
    - For project linking/unlinking, use `save_project` with `addInitiatives` or `removeInitiatives`.
 8. **Present results** and wait for user direction.
 
 ## Description Structure
 
-Initiative description format per `linear-description-structure`.
+Initiative description format, and `patch` editing of an existing one, per `linear-description-structure`.
 
 Preserve sections that haven't changed. Only update what deviated.
 
 ## Key Rules
 
 - **Never modify without explicit, per-change user approval** — per `linear-absolute-approval`; no blessing/autopilot shortcut applies.
-- **Conversation context wins over stale initiative content.**
 - **Always review project alignment** — this is not optional, it is a core part of the update workflow.
 - **Be specific when flagging misalignment** — explain why a project no longer fits or why an orphan project does fit, referencing the updated goals.

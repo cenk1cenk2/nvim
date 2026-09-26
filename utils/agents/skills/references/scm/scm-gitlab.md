@@ -53,15 +53,31 @@ permissions, or writes.
 | `gitlab__get_merge_request` | Read MR details (title, description, state, approvals). |
 | `gitlab__get_merge_request_diffs` | Get the full MR diff. |
 | `gitlab__get_merge_request_approval_state` | Check approval status. |
-| `gitlab__mr_discussions` | List or create MR discussion threads (for review comments). |
+| `gitlab__mr_discussions` | List discussion threads (read-only — it has no body/position parameters, so it cannot create or reply). |
 | `gitlab__list_merge_request_versions` | List MR diff versions. |
 | `gitlab__get_merge_request_version` | Get a specific MR diff version. |
 | `gitlab__create_merge_request` | Open an MR. Takes `squash`, `remove_source_branch`, `draft`, `labels`, reviewers. |
 | `gitlab__update_merge_request` | Change title, description, target, or draft state. |
 | `gitlab__merge_merge_request` | Merge an open MR. |
 | `gitlab__approve_merge_request` | Approve an MR. |
-| `gitlab__create_merge_request_note` | Comment on an MR. |
-| `gitlab__create_merge_request_thread` | Open a review thread on a diff line. |
+| `gitlab__create_merge_request_note` | Post a general, non-positioned comment on an MR. |
+| `gitlab__create_merge_request_thread` | Open a new diff-positioned review thread immediately (posts live — see Draft Notes for a batched review). |
+| `gitlab__create_merge_request_discussion_note` | Reply inside an existing thread, given its `discussion_id`. |
+| `gitlab__resolve_merge_request_thread` | Resolve (or reopen) a thread, given its `discussion_id`. |
+
+### Review / Draft Notes
+
+A draft note stages a diff-positioned or general comment without notifying anyone; publishing is a separate, explicit step. This is the batching mechanism for an autonomous review that posts many findings as one submission instead of one live comment per finding.
+
+| Tool | Purpose |
+|------|---------|
+| `gitlab__create_draft_note` | Stage a draft note. Takes `body` and, for a diff-positioned comment, `position` (`position_type`, `new_path`/`old_path`, `new_line`/`old_line`, `base_sha`/`head_sha`/`start_sha` from the MR diff metadata). `in_reply_to_discussion_id` stages a draft reply to an existing thread. |
+| `gitlab__list_draft_notes` | List staged, unpublished draft notes on an MR. |
+| `gitlab__get_draft_note` | Read one draft note. |
+| `gitlab__update_draft_note` | Edit a staged draft note before publishing. |
+| `gitlab__delete_draft_note` | Discard a staged draft note without publishing it. |
+| `gitlab__publish_draft_note` | Publish one draft note immediately. |
+| `gitlab__bulk_publish_draft_notes` | Publish every staged draft note on the MR in one call — the batch submission. Optional `note` posts a summary alongside, and `reviewer_state` (`requested_changes` / `reviewed`) sets the reviewer state (GitLab 19.2+; does not record a formal approval). |
 
 ### Issues
 

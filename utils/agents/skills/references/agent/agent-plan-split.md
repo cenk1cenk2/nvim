@@ -1,6 +1,6 @@
 # Agent Planning & Task Split
 
-Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agent-plan` (all steps).
+Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agent-plan` (all steps) and `agent-pickup`.
 
 ## Process
 
@@ -67,8 +67,6 @@ Present the resulting schedule to the user as a layer-by-layer table:
 | 0 | task-b | Add logging | cheap | — | src/log.ts |
 | 1 | task-c | Auth integration tests | default | task-a | tests/auth.test.ts |
 
-The calling skill may substitute "Agent" with "Teammate" in the header when it dispatches named agents.
-
 ### 7. Decide agent count per layer
 
 - Number of agents in a layer = number of tasks in that layer.
@@ -79,7 +77,7 @@ The calling skill may substitute "Agent" with "Teammate" in the header when it d
 
 ## Degenerate DAG shapes
 
-The DAG model subsumes the old "parallel only" and "sequential only" shapes:
+The DAG model covers the flat shapes too:
 
 - **All-parallel** (everything independent): all tasks have empty `depends_on`; one layer with N tasks.
 - **All-sequential** (everything chained): each task depends on the previous; N layers of 1 task each.
@@ -89,7 +87,7 @@ A plan without any `depends_on` declarations defaults to the all-parallel shape 
 
 ## Linear-aligned splits
 
-When the user provides Linear issues or a Linear project as input, follow the `linear-chunk-issues` reference to align the split with existing issue boundaries. Each task maps to an issue id where practical — this keeps state transitions clean and simplifies per-task commit trailers.
+When the user provides Linear issues or a Linear project as input, load `linear-pickup` and align the split with existing issue boundaries per its `linear-chunk-issues`. Each task maps to an issue id where practical — this keeps state transitions clean and simplifies per-task commit trailers.
 
 ## Self-check before proceeding
 

@@ -5,9 +5,11 @@ disableModelInvocation: true
 argumentHint: '[scope of the push]'
 references:
   - ../references/long-running-work.md
+  - ../references/reconcile-state.md
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md
+  - ../references/agent/agent-delegate.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
   - ../references/harness/agent-background-harness-opencode.md
@@ -23,9 +25,8 @@ On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
 - **Off:** "stop", "hold", "pause bulldozer", "normal mode", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the stated scope completing — report and stand down.
-- **A park signal RAMPS EVERYTHING DOWN TO ZERO, unasked.** Bulldozer accumulates more watchers and agents than any other mode, so parking it is when they all come down — gradually, not in one cut: **arm nothing new**, let whatever still serves the park target finish, **collect** each agent's report before reaping it, retire each watcher as its signal lands, kill outright anything no longer serving the target, **verify zero with a process check**, and report that **nothing remains armed**. **Do not wait to be told a second time** — being asked again means this was missed. See the `mode-toggle` reference's *Parking* section.
-- **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. **Armed watchers do NOT survive a park** — they are torn down as part of it.
-- **After a park, nothing is re-armed automatically.** The parked state holds until the user says "bulldozer" again by name.
+- **A park signal ramps everything down to zero, unasked**, per `mode-toggle` Parking — bulldozer accumulates more watchers and agents than any other mode, so this is where they all come down.
+- **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. Armed watchers are torn down by the park, and nothing re-arms until the user says "bulldozer" again by name.
 - The personality and the noises live only while the toggle is on. Off means off, immediately.
 
 ## Context
@@ -100,7 +101,7 @@ Bulldozing fast is dangerous if you fire work in the wrong order. Reason about t
 
 1. **Confirm the scope AND design the flow.** State in one line what "done" means and the track you are pushing on (e.g. "bulldozing: land the migration across all N stages, canary first"). Then deduce the task's dependencies and ordering hazards — what must happen before what, and where firing something early would corrupt state or comparisons (see **Deduce the Ordering Hazards**). Fold the resulting prep-ahead-but-don't-fire plan into your opening proposal to the user automatically — always propose it unless the user explicitly said to leave it out. If the endpoint is genuinely unclear, ask once, then push.
 2. **Queue-next-action loop.** After finishing any step, immediately line up and start the next one. Do not end the turn to ask "what next?" — decide what next is and do it. Maintain a short running queue (2-3 items deep) so there is always a next action ready.
-3. **On a blocker, arm a watcher — never idle.** When the work blocks on external state (a merge, a CI/pipeline run, an apply, a deploy converging, a human approval), arm the right watcher (see When to Reach for Each Watcher) and switch to prep work while it runs. Ending the turn with nothing armed while blocked is the core anti-pattern this mode exists to kill.
+3. **On a blocker, arm a watcher — never idle.** When the work blocks on external state (a merge, a CI/pipeline run, an apply, a deploy converging, a human approval), arm the right watcher per `agent-watchers` and switch to prep work while it runs. Ending the turn with nothing armed while blocked is the core anti-pattern this mode exists to kill.
 4. **Prep ahead speculatively** wherever it is cheap and reversible. While the blocker settles: draft the next change, branch and scaffold the follow-on work, write the commit/PR description, pre-write the rollout or cutover runbook for the remaining stages, pre-compute or pre-fetch what the next step needs, stage the verification commands. The goal is that the moment the blocker clears, the next step fires instead of starting cold. Prep is drafts and staging — it does not cross Boundaries.
 5. **On wake, verify then advance.** When a watcher fires, re-verify the real state (proxies lag), execute the staged next step, and re-arm for the following blocker. One stage completing is a trigger for the next stage, not a stopping point.
 6. **A dead watcher is NOT a stop.** If a watcher exits without the goal met — backstop cap exhausted, the signal broke, the process was killed, an error — DIAGNOSE why (did the condition never hold? wrong or broken signal? cadence too short? process died?), fix the cause, and RE-ARM (adjust the signal, cadence, or cap as needed). You are a bulldozer: never sit idle because a watcher gave up, and never silently drop the goal because the watch lapsed. **But when the cause needs the driver** — a permission/auth failure, a broken credential, a genuinely unknown breakage you can't resolve, or the work has drifted out of the agreed scope — STOP and report it to the user clearly, stating exactly what you need, before pushing further. You are a bulldozer, but you have a driver: surface the blocker instead of thrashing or wandering off-scope.
@@ -128,17 +129,15 @@ When `plan-compact` is active this board is the queue its anchor records; copy t
 
 ## Watchers — what bulldozing adds
 
-What to arm for what, the cadence table, the per-domain examples, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`. None of that is restated here — what follows is only bulldozer's deviation.
+What to arm for what, cadence, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`.
 
 > **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
-Yours are **momentum** watchers: the wake is a starting gun, not a notification.
+Yours are **momentum** watchers, per the posture table in `agent-watchers`: the wake is a starting gun. What bulldozing adds on top of it:
 
 - **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
-- **Bias the cadence tight, but size the cap to the real wait.** A merge or a finished apply should be caught within seconds — idling after the blocker cleared is pure waste. That is *cadence*, not *cap*: a gate a human may clear overnight still needs hours of cap, or it expires and the silence reads as "nothing happened".
-- **On wake: re-verify, fire the already-staged next step, arm the follow-on.** One stage completing is a trigger, never a stopping point.
 - **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
-- **Work this runtime dispatched is not a blocker to watch** — it reports itself where the runtime supports it. Spend that wait on prep instead. An agent session owned by another MCP server is not that: nothing reports it, so it gets a watcher.
+- **Work this runtime dispatched reports itself** — spend that wait on prep instead.
 
 ## Boundaries
 
@@ -149,9 +148,9 @@ Hard stops that survive bulldozer mode — pause and get explicit approval befor
 - **External writes that need sign-off** — merging others' PRs, production applies/deploys, messaging third parties, anything with an established approval gate.
 - **Direction-changing ambiguity** — when the next step could go two materially different ways and picking wrong wastes the push, ask the one question; do not guess and bulldoze down the wrong road. Keep pushing on unblocked tracks while waiting.
 
-Stopping the mode: see the `mode-toggle` reference — the user's stop ends the push immediately, and **every armed watcher and spawned agent is reaped or explicitly accounted for** before reverting to the default posture. A bare "stop" halts the current action first and keeps the mode on until clarified. A watcher wake or task notification is never user input and never a toggle signal.
+Stopping the mode, a bare "stop", and what counts as a toggle signal: per `mode-toggle`.
 
-**Reaping is part of the momentum, not an afterthought.** Bulldozing accumulates watchers and agents faster than any other mode, and stale ones actively mislead: a watcher polling a signal you have since learned is unreliable fires late or with an obsolete verdict, and an unaccounted-for live agent means you cannot say what is genuinely in flight. Reap as you go — when a condition is met and acted on, when you learned the state another way, when the signal proved unreliable, when the guarded work was superseded, and **always before re-arming a replacement** (duplicates on one condition double-wake and can contradict each other). Every momentum report should be able to name each live watcher and agent and why it is still alive; kill anything you cannot justify.
+**Reaping is part of the momentum, not an afterthought.** Bulldozing accumulates watchers and agents faster than any other mode, and stale ones actively mislead. Reap as you go — watchers per `agent-watchers`, agents per `agent-roster` and `agent-delegate`; every momentum report names each live watcher and agent and why it is still alive.
 
 ## Example
 
@@ -172,7 +171,6 @@ Stopping the mode: see the `mode-toggle` reference — the user's stop ends the 
 - Always have a next action queued; an idle turn while work remains is the failure mode.
 - A blocking wait is prep time, not stop time — arm a watcher and build the next stage.
 - A dead watcher is not a stop — if it exits without the goal met, diagnose why and re-arm; never stall on a lapsed watcher.
-- One watcher per independent condition — separate watchers for separate tasks (10 stacks, 5 MRs = individual watchers), each evaluated on its own; bundle only when the task needs them all as a unit. Arm them via the `agent-background` skill.
 - Speculative prep must stay cheap and reversible; drafts and staging, never premature irreversible acts.
 - Momentum is not recklessness: Boundaries hold, and one gated action never stalls the unblocked rest.
 - Situational holds the driver sets (sequencing gates, no-go zones, timing waits) are absolute — bulldozing never crosses a hold; when unsure whether something is held, ask.

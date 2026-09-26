@@ -1,6 +1,6 @@
 # Linear Prerequisite
 
-What must be true before any Linear tool call: the workspace skill is active, and the parent parameter is spelled the way that particular tool spells it.
+What must be true before any Linear tool call: the workspace skill is active and its session initialised, and the parent parameter is spelled the way that particular tool spells it.
 
 ## Workspace
 
@@ -8,8 +8,22 @@ A Linear workspace skill **MUST** be active before any Linear issue/project/init
 
 If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 
-- **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill
-- **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill
+- **kilic-dev workspace:** Load `linear-kilic`.
+- **Laravel workspace:** Load `linear-laravel`.
+
+**One workspace per session.** Never load both `linear-kilic` and `linear-laravel`; once one is active, use it for the whole session. Switching workspace means dismissing the other first, and only when the user explicitly switches.
+
+## Session Initialization
+
+The workspace skill's **first action**, against that workspace's own server:
+
+1. Call `get_user` with `query: "me"` to identify the current user.
+2. Note the user's **team(s)** from the response — the default team for issue creation.
+3. Store the user ID for assigning issues.
+4. Call `list_issue_labels` to fetch **all available labels** for the workspace.
+   - Store the label list for the session.
+   - **NEVER fabricate or guess label names** — only use labels that exist in this list.
+   - If no label fits the issue, ASK the user which label to use rather than inventing one.
 
 ## Deduction Rules
 
@@ -37,7 +51,5 @@ If a full Linear URL is provided, deduce the workspace from the URL directly.
 | `save_document` | `issue`, `project`, `initiative`, `cycle`, `team` | bare, **no** `Id` suffix |
 
 Both take `id` to update an existing object instead of creating one, and both accept identifiers (`INFFND-528`) as well as UUIDs where the schema says so.
-
-**`save_document` takes a `patch` array** — `append`, `prepend`, `replace`, `insert_before`, `insert_after`, `replace_range` — applied atomically against current content. Use it instead of `content` when changing part of a document: resending a whole long document to append a section risks clobbering concurrent edits and costs the entire body twice. Each anchor string must match exactly once.
 
 **Verify the parameter against the tool's own schema before the first write of a session.** The names are not derivable from the tool name, and the failure is a validation error that identifies nothing.

@@ -1,6 +1,6 @@
 ---
 name: clipboard-copy
-description: clipboard-copy Copy a companion skill's drafted output to the clipboard instead of executing it, skipping the usual confirmation. Use on "cbcp", "copy to clipboard" alongside another skill. Not usable on its own.
+description: clipboard-copy Copy a companion skill's drafted output to the clipboard instead of executing it, skipping the usual confirmation. Use on "cbcp", "copy to clipboard" alongside another skill. Not for use on its own, with no drafting skill in the same request.
 disableModelInvocation: true
 ---
 

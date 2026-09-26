@@ -1,6 +1,6 @@
 ---
 name: agent-labrat
-description: agent-labrat Hand work off to the offsite agent over a Slack thread - a one-off task, a tracker issue or project, or an investigation rooted in an alert thread. Writes the brief, optionally picks the vendor and model, and watches the thread so progress returns as events. Use on "hand this to labrat", "give this to the offsite agent". Not for in-harness subagents or an ordinary Slack post.
+description: agent-labrat Hand work off to the offsite agent over a Slack thread - a one-off task, a tracker issue or project, or an investigation rooted in an alert thread. Writes the brief, optionally names the runtime and model, and watches the thread. Use on "hand this to labrat", "give this to the offsite agent". Not for in-harness subagents or an ordinary Slack post.
 disableModelInvocation: true
 argumentHint: '[task, issue/project, or Slack thread] [optional: vendor and model]'
 references:
@@ -13,6 +13,9 @@ references:
   - ../references/agent/agent-watchers.md
   - ../references/redact-private-data.md
   - ../references/linear/linear-prerequisite.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 ## Handing Work to labrat
@@ -43,7 +46,6 @@ Brief it the way you brief a local subagent — **it is simply more capable, bec
 - **It clones repositories itself.** Give it a repo name or URL; it fetches from GitLab/GitHub on its side. Never paste file contents you expect it to edit, and never assume your working tree is its working tree.
 - **It runs the toolchain.** Builds, tests, terraform plans, migrations — on its host, against its own credentials.
 - **It opens MRs/PRs end to end.** Branch, commit, push, open the MR, react to pipeline results. The MR link comes back in the thread as the deliverable.
-- **It delegates onwards** to Claude Code, Codex, or OpenCode, and spawns its own subagents — so a brief written once survives being handed down.
 
 What that changes about the brief: name the **repo, branch policy, and what artifact you expect back** (an MR link, a plan output, a verdict), then let it do the retrieval. What it cannot have is your conversation, your uncommitted working tree, or anything only reachable from this machine.
 
@@ -93,7 +95,7 @@ Name the branch point explicitly when there is one: *investigate first, and only
 - **Point at references too** when a convention lives in one — it can load a skill's references the same way.
 - **Verify the slug exists before naming it.** Resolve it against `hyprpilot-skills__list_skills`; the catalog is profile-filtered, so a slug present for you may be absent for it. A pointer to a skill it cannot load is worse than no pointer.
 - **Do not paraphrase a skill you could name.** A paraphrase forks on the day you write it. If you find yourself explaining a process that already has a slug, replace the explanation with the slug.
-- **Freshness is automatic.** The skill roots are watched, so an edit reaches the session without a tool call; what a change means for what the agent already holds is `hyprpilot-reload`. Note escalation stops at restarting the **`hyprpilot-skills`** sidecar, never the gateway. Name that server explicitly: there are three, and restarting `hyprpilot-harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
+- **Freshness is automatic.** The skill roots are watched, so an edit reaches the session without a tool call; re-reading what the agent already holds, and the one safe restart, are `agent-read`.
 
 ## Its background work is prompt-driven — just ask for it
 
@@ -167,7 +169,7 @@ Thread commands (Slack blocks native slash commands inside threads, so Hermes ac
 | `!queue` | Queue another instruction while it is busy. |
 | `!stop` | Stop the current run. |
 | `!approve` / `!deny` | Answer an approval prompt when buttons are not usable. |
-| `!goal <text>` | Set a standing goal it keeps working toward across turns (observed in use — e.g. "delegate opus sessions until you rule it out"). |
+| `!goal <text>` | Set a standing goal it keeps working toward across turns (e.g. "delegate opus sessions until you rule it out"). |
 
 ## Where to post
 
@@ -287,7 +289,7 @@ When they do ask, arm for what the chosen mode needs: **every reply** when steer
 
 The thread is the only signal, and thread replies are reachable only through Slack MCP — **bash cannot call MCP**. So:
 
-- **Preferred:** a deferred-wakeup loop (self-paced `/loop`) that re-invokes the session on an interval, where you read the thread through the active Slack integration on the main loop and diff against the last `ts` you processed.
+- **Preferred:** the runtime's deferred-wakeup facility, per `agent-background-harness-<provider>` — it re-invokes the session on an interval, and you read the thread through the active Slack integration on the main loop and diff against the last `ts` you processed. Fetch that reference before arming; where the runtime has no such facility, use the shell proxy below.
 - **If a Slack token is reachable from the shell**, a background loop polling `conversations.replies` for a new reply is a valid shell-visible proxy. **Write it in python** — the check is a JSON response diffed against the last `ts` you processed, which is a program rather than a test, and the language rule in `agent-watchers` puts that in `python3 -c`. Still do the authoritative read over MCP on wake.
 - **Cadence:** minutes, not seconds. An offsite agent's turn takes as long as real work takes, and Slack rate limits punish tight polling.
 
@@ -329,12 +331,12 @@ The only verification you owe first is the cheap sanity kind — enough that you
 When the terminal report lands:
 
 1. **Verify from the artifact it cited, not from its restatement.** If it says "CI plan is clean", open that job's output and find the line. A capable agent summarising honestly and a capable agent summarising optimistically produce identical-looking messages.
-2. **Expect credential asymmetry, and treat it as information.** Its host is not your host: it may be blocked where CI is not (here, Vault returned 403 for its delegate while the pipeline had full auth). An agent that says "I could not reach X, but Y covers it" is doing exactly what the brief asked; an agent that quietly works around it is the failure mode.
+2. **Expect credential asymmetry, and treat it as information.** Its host is not your host: it may be blocked where CI is not (a secrets store refusing its delegate while the pipeline has full auth). An agent that says "I could not reach X, but Y covers it" is doing exactly what the brief asked; an agent that quietly works around it is the failure mode.
 3. **Reap the watcher** — the run is over.
 4. **Report the verdict with its evidence**, and leave the decision the user reserved (merging, applying, deploying) with them.
 5. **A "nothing to fix" verdict is a successful outcome of an investigate-then-fix flow**, not a wasted run. The branch point existed precisely so the fix phase could be skipped.
 
-**It evolves between runs.** Hermes writes its own skills and memory from experience — it created a reusable skill for this task shape mid-run. So its behaviour is not fixed: something it needed spelled out last week may already be internalised, and a brief that over-explains is wasted twice.
+**It evolves between runs.** Hermes writes its own skills and memory from experience, so its behaviour is not fixed: something it needed spelled out last week may already be internalised, and a brief that over-explains is wasted twice.
 
 ## Boundaries
 
@@ -387,7 +389,7 @@ When the terminal report lands:
 
 - Update it **during** the run, not as a retrospective — the detail is exact while the thread is open and vague an hour later.
 - Record the mechanism, not the anecdote: "state the invariant or it optimises for finishing" travels; "the opnsense bump went fine" does not.
-- Follow `config-skills` for the edit itself. The roots are watched, so re-read what you already hold — `hyprpilot-reload`.
+- Follow `config-skills` for the edit itself; it covers re-reading what you already hold.
 
 ## Related Skills
 

@@ -73,7 +73,7 @@ facility, and a loop over an empty list examines nothing and then reports succes
 that never held, indistinguishable from a fast one. Quoting is the second: a payload carrying nested quotes,
 JSON, or a regex dies at the shell's parser, and that arrives as an *unarmed* watcher rather than a bad wake.
 Judge by what the check does, not by how long it looks — a one-line `jq` filter over a JSON response is
-already parsing. Arming mechanics per `agent-background`, check shapes per `agent-watcher-recipes`.
+already parsing. Arming mechanics per `agent-background`.
 
 ## Fire on the actionable transition, not only the terminal state
 
@@ -143,7 +143,7 @@ another, and *move the issue to Done* to the third.
 
 ## What to arm, and how to check it
 
-Per-domain signals — merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation — and the shell recipes that poll them, live in `agent-watcher-recipes`. **Read the entry for the domain you are about to watch before arming**, since a signal chosen from memory is how a watcher ends up polling something that never changes.
+**Load `agent-watcher-recipes` before arming, and read its entry for the domain you are about to watch** — the per-domain signals and the checks that poll them. A signal chosen from memory is how a watcher ends up polling something that never changes.
 
 **Waiting on a reviewer arms `gitlab-mr-review` or `github-pr-review`.** `gitlab-mr` and `github-pr` fire only when the MR or PR reaches a terminal state, so they stay silent through every comment, resolution and approval. On the review wake, re-read the threads and route them through the covering fix skill — `gitlab-mr-fix` or `github-pr-fix`.
 

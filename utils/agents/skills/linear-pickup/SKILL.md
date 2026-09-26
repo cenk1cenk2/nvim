@@ -13,6 +13,7 @@ references:
   - ../references/linear/linear-scm-discovery.md
   - ../references/linear/linear-chunk-issues.md
   - ../references/linear/linear-state-transitions.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/output-diff.md
   - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
@@ -33,7 +34,7 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 Scope resolution, early questions, issue selection, state updates, and handoff to `agent-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
 
-Load `linear-structure-agent` before implementation — picking up is one of its two modes; it owns the shape and record rules throughout, whether or not this tree was shaped with it.
+Load `linear-structure-agent` before implementation — picking up is one of its two modes.
 
 ## Purpose
 
@@ -44,12 +45,11 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 | Scope | Members | Resolve it with |
 |---|---|---|
 | Project or slice | the issues the slice selects | `list_issues` with the `project` parameter, plus `list_documents` filtered by project |
-| Issue group | the parent's sub-issues | `get_issue` on the parent, then its sub-issues |
+| Issueset | the parent's sub-issues | `get_issue` on the parent, then its sub-issues |
 | Issue(s) | the ids or URLs given | `get_issue` per id |
 
-- **Resolve the scope first and name which one you resolved.** An id carrying sub-issues is an issue group — the parent frames the work and the children are the execution set.
+- **Resolve the scope first and name which one you resolved.** An id carrying sub-issues is an issueset per `linear-issuesets` — the parent frames the work and the children are the execution set.
 - **If the slice is ambiguous, ask one focused question before continuing.**
-- **Never use `get_project` or `list_projects`** — they hit complexity limits.
 
 ## Process
 
@@ -92,7 +92,7 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 ## Output Shape
 
 ```markdown
-## Pickup: <project | issue group | issue(s)> — <name>
+## Pickup: <project | issueset | issue(s)> — <name>
 
 ### Selected Scope
 - <issue-id>: <title> — <why included, status/readiness>

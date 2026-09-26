@@ -16,6 +16,7 @@ references:
   - ../references/linear/linear-issuesets.md
   - ../references/linear/linear-absolute-approval.md
   - ../references/linear/linear-state-transitions.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-roster.md
   - ../references/agent/agent-watchers.md
@@ -100,12 +101,13 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
    - **The status-update absolute** from above, stated in the brief rather than assumed.
    - **The re-read rule** from `agent-companion`: it re-reads the issues before asserting any state, and labels every claim observed or reported, quoting what it read. A tracker answer from memory is the one thing that makes a PM worse than no PM.
    - State transitions follow `linear-state-transitions` — name it so the PM never downgrades a state.
+   - **The assumed surface**, declared per `agent-target-capability` — the skills and tools it can reach, named rather than inlined.
 
 4. **Report to it as work lands**, per `agent-companion`'s steering rules. In Linear terms that is: an MR merged, a piece of work finished, a deviation from what the issue said, a blocker, or a question about what is next.
 
 5. **Collect, present, release.** Its proposals come back as a change ledger; present them chunked per `output-diff`, and on approval tell the PM to apply.
 
-6. **Report the PM every turn the section is open**, and retire it only on the user's word — both per `agent-companion`. The final collection is written into Linear before the agent goes, because Linear is what survives the session.
+6. **Report the PM every turn the section is open**, shaped per `report-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection is written into Linear before the agent goes, because Linear is what survives the session.
 
 ## Example
 

@@ -27,7 +27,7 @@ The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools a
 
 Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN. When the captain named a workload rather than a cluster, or a spelling needs settling, read the server's context-listing tool — a blessed read over an estate-scoped kubeconfig, so the set comes back small and every entry is reachable.
 
-Query the resolved context through the server and name it in the answer, so a wrong resolution shows. A `kubectl` command against a context you resolved rather than were given waits for the captain to confirm it.
+Naming and confirming the resolved context: `kubernetes`.
 
 ## Process
 

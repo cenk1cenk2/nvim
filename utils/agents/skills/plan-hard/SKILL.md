@@ -1,6 +1,6 @@
 ---
 name: plan-hard
-description: plan-hard Interview-driven plan mode - walks the design tree one decision at a time, self-answers what the codebase can answer, and recommends the rest. Auto mode plans the whole thing without an interview and without plan mode, reviews its own draft, and stands down. The default whenever plan mode is entered. Use on "plan hard", "interview me", "plan with yourself", "auto". Not for loading an existing plan, or writing one for another session.
+description: plan-hard Interview-driven plan mode - walks the design tree one decision at a time, self-answers from the codebase, recommends the rest. Auto mode plans it whole with no interview or plan mode, reviews its own draft, stands down. Use on "plan hard", "interview me", "plan with yourself", "auto". Not for loading an existing plan, or a handoff for another session.
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

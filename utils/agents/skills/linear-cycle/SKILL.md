@@ -159,17 +159,13 @@ Present the cycle plan to the user in a clear format, in logical chunks per `out
 For each issue in the approved plan:
 
 1. **Set the cycle** — explicitly set the cycle to the target cycle number using the `cycle` field on `save_issue`.
-2. **Set the state** — minimum `todo`, transitions per `linear-issue-states`. Rules:
-   - If current state is `triage` or `backlog` → change to `todo`.
-   - If current state is `todo`, `in progress`, or any state beyond `todo` → **do not change the state**. Preserve the current state.
-   - **NEVER downgrade** an issue's state (e.g., never move `in progress` back to `todo`).
+2. **Set the state** per the cycle-planning rule in `linear-issue-states`.
 3. Use parallel tool calls to batch updates where possible.
 4. Report results as changes are applied.
 
 ## Key Rules
 
 - **Never apply changes without user approval.**
-- **Never change issue state downward** — only promote `triage`/`backlog` to `todo`. Everything else stays as-is.
 - **Always explicitly set the cycle number** — do not rely on defaults or implicit assignment.
 - **Respect dependency order** — if issue A blocks issue B, both can be in the cycle but A should be prioritized.
 - **Be realistic about capacity** — use historical data, not optimistic estimates. It is better to under-commit and over-deliver.

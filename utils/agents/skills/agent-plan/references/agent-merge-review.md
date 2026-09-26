@@ -18,8 +18,6 @@ Agents in the completed layer ran in isolated worktrees, each on its own branch.
 
 **Why per-layer?** Layer N+1's agents branch their worktrees from the *post-layer-N* state. They must see the merged output of earlier layers. End-of-run batch merging would break dependency semantics.
 
-See the `agent-worktrees` reference for the worktree location rule, naming, and verification requirements.
-
 ### 2. Review (per-layer and/or end-of-run)
 
 **Per-layer review** (runs after step 1 for each layer, if cadence is `per-layer`):

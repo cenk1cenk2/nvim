@@ -24,6 +24,10 @@ This inverts the whole skill. On a runtime that wakes you, arming a watcher and 
 3. **If you must background it, schedule your own poll** in the same turn plan — never end the turn expecting a wake.
 4. **Re-verify on poll.** As everywhere, a proxy signal firing does not mean the downstream state converged.
 
+## Reading an MCP resource
+
+> **Unverified.** Whether Codex exposes MCP resource reads to the agent at all, and under which tool name and parameters, is unconfirmed. Where it does not, a hyprpilot session's answer is read through `session_read` or `jq` on the transcript file instead of the `/result` resource.
+
 ## Detached agent sessions on another MCP server
 
 A session started over MCP — a hyprpilot session above all — is doubly unobserved here: the server pushes nothing, and this runtime wakes you for nothing. **There is no armable watcher, so the arming step resolves to one of two explicit branches, chosen and named before the session is reported as running:**

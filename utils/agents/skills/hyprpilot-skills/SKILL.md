@@ -11,7 +11,7 @@ Mechanics of how skills reach you. Whether to route a task through a skill at al
 
 | Server | Carries | Its manual |
 |---|---|---|
-| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references` | this skill |
+| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, and `reload` for a root `list_skills` reports degraded or off | this skill |
 | `hyprpilot` | general tools — `open` (URL, file, or directory in the OS default handler) | none yet |
 | `hyprpilot-nvim` | the captain's live Neovim — buffers, LSP, diagnostics | `hyprpilot-nvim`, eager at startup |
 | `hyprpilot-harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
@@ -27,7 +27,8 @@ Skills are exposed as resources: `hyprpilot://skills` is the catalogue index in 
 - `read_skill { slug, bundle: true }` — body plus every reference body. Worth it on the first load of an unfamiliar skill; wasteful once you hold the shared conventions.
 - `list_skill_references { slug }` — the manifest alone, no bodies and no skill body.
 - `read_skill_references { references: [path] }` — the bodies you actually want. See below.
-The roots are WATCHED, so an edit on disk is rescanned and announced without anything asked of you. What a change means for what you already hold is `hyprpilot-reload`.
+
+The roots are WATCHED, so an edit on disk is rescanned and announced without anything asked of you. When a change lands on something you already hold, Load `agent-read` to re-read it.
 
 A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slug>}` mention, a palette pick, or auto-injection. Do not re-read it.
 
@@ -61,13 +62,13 @@ A skill's metadata block is its whole frontmatter minus the three keys another f
 
 This is what makes the shared corpus free after first use. `output-diff` is declared by 57 skills and `scm-detect` by 31 — under this rule a session pays for each of them once instead of dozens of times. Path identity is exactly what makes it mechanical rather than a judgement call: two citations either resolve to the same path or they do not.
 
-The set survives everything except the file itself changing, which `modified` tells you about. Because the roots are watched, that happens without you asking — so a change notification for a skill you hold is a signal to re-check the manifest, not noise.
+The set survives everything except the file itself changing, which `modified` tells you about; drop that path from the set and re-fetch it, per the re-read above.
 
 ## Conditional Families — Declare All, Fetch One
 
 **When several references cover the same slot and only one applies per session, declare every one of them and fetch only the live one.** The per-runtime harness files are the canonical case: a skill declares `agent-delegate-harness-claude`, `-codex`, and `-opencode`, and fetches whichever matches the runtime it is actually on.
 
-This costs three manifest rows — roughly 450 bytes — and one body. Under a model where bodies rode along it would have cost three bodies, which is why such content used to be pushed out into separate skills; it no longer needs to be. **A reference beats a skill for this job**: the manifest hands you the path, so the fetch is mechanical, whereas loading a skill is a choice the agent can simply forget to make.
+This costs three manifest rows — roughly 450 bytes — and one body. **A reference beats a skill for this job**: the manifest hands you the path, so the fetch is mechanical, whereas loading a skill is a choice the agent can simply forget to make.
 
 The pattern generalises to any mutually exclusive set — one platform of several, one provider of several, one workspace of several.
 

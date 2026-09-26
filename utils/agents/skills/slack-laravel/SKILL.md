@@ -1,13 +1,14 @@
 ---
 name: slack-laravel
-description: slack-laravel Auto-invoked on work Slack context - Laravel workspace URLs, org channels, or Laravel GitHub repos. Initialises the Slack session for that workspace.
+description: slack-laravel Auto-invoked on work Slack context - Laravel workspace URLs, org channels, or Laravel GitHub repos. Initialises the Slack session for that workspace. Not for personal kilic Slack context.
 references:
   - ../references/harness/harness-connectors.md
+  - ../references/slack.md
 ---
 
 ## Slack Workspace: Laravel
 
-> **The workspace decides the integration.** Laravel is reachable **only** through the claude.ai Slack connector — the catalog holds no standalone server for it, and `slack-kilic__*` reaches a different workspace entirely. Connector inventory per `harness-connectors`.
+> **ABSOLUTE — Laravel routes through the claude.ai Slack connector only; the catalog holds no standalone server for it.** Workspace routing per `slack`.
 
 ## Workspace Context
 
@@ -37,7 +38,7 @@ ToolSearch({ query: "+Slack send message" })
 - Has powerful **search** capabilities (not available in kilic workspace).
 - Has **canvas** support for document creation.
 - Has **message scheduling** and **draft** support.
-- Has `slack_add_reaction` — emoji reactions are supported (connector tool `mcp__claude_ai_Slack__slack_add_reaction`).
+- Has `slack_add_reaction` — emoji reactions are supported.
 
 ## After Initialization
 

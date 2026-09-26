@@ -1,6 +1,6 @@
 ---
 name: linear-document
-description: linear-document Attach a document capturing this task's findings to a Linear issue or project, one document per concern. A workspace skill must be active first. Use on "attach a document", "write this up in Linear". Not for editing descriptions or fields, for a short comment, or for creating a project.
+description: linear-document Attach a document capturing this task's findings to a Linear issue or project, one document per concern. Use on "attach a document", "write this up in Linear". Not for editing descriptions or fields, for a short comment, or for creating a project.
 references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
@@ -24,17 +24,17 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 
 This skill packages the **current task's details** — findings, an investigation, decisions, references — into one or more Linear documents attached to the relevant issue or project via `save_document`. A document is durable, structured context, distinct from a short discussion comment or the issue's own description.
 
-`save_document` attaches to exactly one parent: `issue` (e.g. `LIN-123`) or `project` (also `initiative` / `cycle` / `team` if the user asks). **Scope determines the parent, at the tightest level that covers it:** detail specific to one issue attaches to that issue; context shared across an issueset attaches to its **parent issue**; context shared project-wide attaches to the **project**.
+`save_document` attaches to exactly one parent: `issue` (e.g. `LIN-123`) or `project` (also `initiative` / `cycle` / `team` if the user asks).
 
 ## Process
 
-1. **Resolve the target.** Get the issue or project from the user's URL/ID, or infer it from the current task and confirm. Pick the parent at the tightest scope that covers the content: specific to one issue → that issue; shared across an issueset → its parent issue; project-wide → the project.
+1. **Resolve the target.** Get the issue or project from the user's URL/ID, or infer it from the current task and confirm. Pick the parent at the tightest scope that covers the content, per `linear-issuesets`.
 
 2. **Scope the content — one document or several.** Decide whether the material is a single coherent topic or several distinct concerns. **Separate investigations, findings, or topics become separate documents** — each with its own title and target — never one blob. Present the proposed split (titles + targets) before drafting.
 
 3. **Check for existing documents.** `list_documents` (filter by `projectId`, or read the issue's attached docs) and skim for one that already covers this concern. If found, update it per `linear-document-handling` instead of creating a duplicate.
 
-4. **Draft each document.** Title + Markdown content capturing the task detail for that scope, self-contained: purpose/scope, current findings or state, decisions and rationale, key references (files, PRs/MRs, paths), and open questions / next steps. Keep issues light — put shared context in a project document and reference it, per `linear-project-documents`.
+4. **Draft each document.** Title + Markdown content capturing the task detail for that scope, self-contained: purpose/scope, current findings or state, decisions and rationale, key references (files, PRs/MRs, paths), and open questions / next steps. Keep issues light — put shared context in a project document and reference it, per `linear-project-documents`. Linear's markdown normaliser traps per `linear-description-structure`.
 
 5. **Present via `output-diff`**, iterate, and on approval write each with `save_document` (`issue` or `project` parent, `title`, `content`; pass `id` to update an existing one).
 
@@ -42,10 +42,7 @@ This skill packages the **current task's details** — findings, an investigatio
 
 ## Key Principles
 
-- **One document per concern.** If the task details span multiple distinct investigations or topics, split them into separate documents — each attached to the relevant issue or project. Never fold unrelated concerns into one document.
-- **Scope picks the parent — tightest level that covers it.** Detail specific to one issue → that issue; context shared across an issueset → its parent issue; project-wide context → the project. Keep the narrower issues light and pointing at the shared doc.
 - **Update, don't duplicate.** If a document already covers the concern, update it with agreement rather than creating a second one.
-- **Self-contained.** A document should make sense to a reader (or implementing agent) with no conversation history — include the paths, links, and rationale it needs.
 - **Document, not comment or description.** Durable structured context is a document; ephemeral discussion is a comment (`linear-issue-comment`); the entity's own scope is its description (`linear-issue-update` / `linear-project-update`).
 
 ## Examples
@@ -63,8 +60,6 @@ This skill packages the **current task's details** — findings, an investigatio
 
 ## Composition with Other Skills
 
-- **`linear-document-handling`** — the mechanics for updating an existing attached document (glimpse, classify, edit-with-agreement).
-- **`linear-project-documents`** — when a document earns its place, issue-vs-project scoping, and lightweight issues.
 - **`linear-issue-comment`** — for a short discussion note instead of a durable document.
 - **`linear-issue-update` / `linear-project-update`** — to change the entity's own description or fields rather than attach a separate document.
 - **`linear-project-create`** — creates a project and its initial documents from scratch; `linear-document` attaches documents on demand to entities that already exist.

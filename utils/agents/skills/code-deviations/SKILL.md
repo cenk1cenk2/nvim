@@ -1,6 +1,6 @@
 ---
 name: code-deviations
-description: code-deviations Handle user overrides to agent edits - when the user modifies, rejects, or rewrites what an agent produced, learn the intent behind it and align later edits. Use on "why did you change that back", or after the user rewrites your work.
+description: code-deviations Handle user overrides to agent edits - when the user modifies, rejects, or rewrites what an agent produced, learn the intent behind it and align later edits. Use on "why did you change that back", or after the user rewrites your work. Not for a first edit with no prior agent output to compare against, or a bug report unrelated to a prior change.
 disableModelInvocation: true
 ---
 
