@@ -22,6 +22,8 @@ The gate, the `context` rule, and the read-here-write-with-`kubectl` split: `kub
 
 That is what makes this server standing-blessed: nothing reachable through it changes state, so there is nothing to gate. `kubectl` is the gated lane — per `kubernetes`.
 
+**Common writes go through ArgoCD first.** Operations on a resource that ArgoCD manages have a resource action. That covers restarting or scaling a Deployment, refreshing an ExternalSecret, and running a CronJob now. Load `argocd-kilic` and use its actions before reaching for `kubectl`. `kubectl` is for what has no action.
+
 ## Registered Surface — 15 Tools, All Reads
 
 `configuration_contexts_list`, `events_list`, `helm_list`, `namespaces_list`, `nodes_log`, `nodes_stats_summary`, `nodes_top`, `pods_get`, `pods_list`, `pods_list_in_namespace`, `pods_log`, `pods_top`, `projects_list`, `resources_get`, `resources_list`.
@@ -36,7 +38,7 @@ The seven cluster names above **are** the context names, verbatim — `rubik` th
 2. **ArgoCD says it.** An Application's `spec.destination` names the cluster it deploys to, per `kilic-workload-resolution`.
 3. **`configuration_contexts_list`.** A blessed read returning all seven with their server URLs — cheap, and the way to settle a spelling.
 
-Query the resolved context through the server and name it in the answer, so a wrong resolution shows. A `kubectl` command against a context you resolved rather than were given waits for the captain to confirm it.
+Naming and confirming the resolved context: `kubernetes`.
 
 Load `argocd-kilic` when the question is about ArgoCD's view of a workload rather than the cluster's own state.
 

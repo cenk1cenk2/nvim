@@ -11,7 +11,7 @@ argumentHint: '[workload] - e.g. ''my-app'', ''postgres-cluster'''
 ## ArgoCD Workload Deployment Project Generator
 
 Posture: `present-first`.
-**PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill. This skill is kilic-dev workspace specific.
+**PREREQUISITE:** Load `linear-kilic` first when its workspace context is not active — this skill is kilic-dev specific.
 
 ## Overview
 
@@ -70,9 +70,7 @@ Use GitLab MCP to analyze existing deployments for reference:
 
 Create the Linear project with issues based on the template below, presented per `output-diff` for approval before writing to Linear. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
 
-> **CRITICAL:** Every issue MUST have `state: "Backlog"` set explicitly. The Linear API defaults to `Triage` which is WRONG. All required fields per `linear-mandatory-fields`.
-
-> **Blocking relations:** Use `blockedBy` to set dependency order between issues in a project. Think through the dependency graph and set blocking relations so work order is clear.
+> **CRITICAL:** Every issue sets `state: "Backlog"` explicitly. Required fields and blocking relations per `linear-mandatory-fields`.
 
 ## Issue Template
 

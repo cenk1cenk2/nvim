@@ -25,6 +25,12 @@ Key files:
 - **`src/cluster/gateway.service.ts`** — Defines the actual gateways (external + internal), EnvoyProxy, BackendTrafficPolicy, L2 DNSEndpoints for gateway IPs
 - **`src/workloads/workloads.module.ts`** — NestJS module registering all workload services
 
+## After It Syncs
+
+Once merged, ArgoCD syncs the Application automatically — the same `newApplication()` pattern used by `argocd-kilic-workload` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate (verified against a rendered manifest in a target-cluster `apps/1-manifest/`). Removing a route or resource from `.deploy/<cluster>/` therefore deletes it on the LB cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
+
+This pattern is never Kargo-promoted — Kargo only promotes `argocd-system`'s own chart-pin components between environments; a routing Application syncs straight from its own repository's `HEAD`. Load `argocd-kilic` to check sync status or investigate after merge.
+
 ## Workload Types
 
 There are three types of routing workloads in an LB cluster:

@@ -16,7 +16,7 @@ chart-<c>/values.yaml                            fleet-wide default
 
 Environments are `development`, `platform`, `production`, `load-balancer`.
 
-**The top layer is not a git edit.** `values.system.feature.kilic.dev/<component>` annotations reach the cluster secret from **Vault** at `overseer/argocd/clusters/<cluster>`, surfaced by an ExternalSecret in `argocd-root`. A per-cluster override for a system component is therefore a Vault write. Say so out loud rather than pushing the change down to a lower layer where it would reach clusters that did not ask for it.
+**The top layer is a git edit, not a Vault write.** `values.system.feature.kilic.dev/<component>` annotations are templated into the cluster secret from git — `cluster/argocd-root`'s `src/argocd/assets/cluster/<cluster>/annotations.yml` — by an ExternalSecret in `argocd-root` that otherwise pulls only the cluster's `server` and `token` from Vault (`overseer/argocd/clusters/<cluster>`). A per-cluster override for a system component is therefore an edit to `annotations.yml` plus regenerating and committing `argocd/1-manifest`. Say so out loud rather than pushing the change down to a lower layer where it would reach clusters that did not ask for it.
 
 **Inline document 1 is reserved.** It carries `{{...}}`-templated identity only — secret key paths, `txtOwnerId`, per-cluster hostnames. Static values never belong there.
 
@@ -41,7 +41,7 @@ A single-cluster workload has no `base/` and should not gain one for a single ch
 
 1. **Establish the spread** — how many clusters run this application.
 2. **Same change in the same direction everywhere** → the common layer. `chart-*/values.yaml` for a system component, `.deploy/base/` for a workload.
-3. **One or two clusters differ** → leave the common layer and override: `argocd-system/<env>/<c>/values.yaml`, the Vault-backed cluster annotation, or `.deploy/<cluster>/`.
+3. **One or two clusters differ** → leave the common layer and override: `argocd-system/<env>/<c>/values.yaml`, the cluster annotation (a git edit in `argocd-root`), or `.deploy/<cluster>/`.
 4. **Single-cluster application** → its only layer. No override question exists.
 
 Cover the common case in the common layer and treat the rest as overrides. An override that duplicates the common value is drift waiting to happen.
@@ -51,4 +51,4 @@ Cover the common case in the common layer and treat the rest as overrides. An ov
 - **Vendored chart copies are not edit targets.** Workloads carry upstream chart trees at `.deploy/<cluster>/<component>/charts/<chart>-<version>/`. They contain `resources:` blocks that look editable and are regenerated on every dependency update.
 - **`resources:` in a `kustomization.yaml` is a file list**, not container sizing. A naive search for resource blocks returns mostly these.
 - **Empty values are not always inert.** An empty map can be load-bearing: `nfs: {}` meaning "match any NFS volume" changes behavior if removed, while `nodeSelector: {}` does not. Before touching one, check whether the chart template guards it and whether an earlier layer already supplies it.
-- **A chart change ships on a version.** Charts release by semantic-release and are pinned per environment via `targetRevision` in `<env>/<component>/patch-applicationset.yaml`. Editing `chart-*/values.yaml` changes nothing until the chart is released and the pin moves.
+- **A chart change ships on a version.** Charts release by semantic-release and are pinned per environment via `targetRevision` in `<env>/<component>/patch-applicationset.yaml`. Kargo (`cluster/kargo-root`) promotes that pin through environments for the components it covers; a hand edit of `patch-applicationset.yaml` is the fallback. Editing `chart-*/values.yaml` changes nothing until the chart is released and the pin moves.

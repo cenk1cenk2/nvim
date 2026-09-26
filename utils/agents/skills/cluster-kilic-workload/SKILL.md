@@ -75,7 +75,7 @@ Ask the user:
 | If your workload needs...                   | Read this reference repo                                                                                |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | Plain manifests + routing                   | `cluster/workloads/gose` or `cluster/workloads/html-listr2`                                             |
-| Helm chart via kustomize                    | `cluster/workloads/vouch` or `cluster/workloads/gitlab-runner`                                          |
+| Helm chart via kustomize                    | `cluster/workloads/gitlab-runner`                                                                        |
 | Helm + PostgreSQL (CNPG)                    | `cluster/workloads/immich` or `cluster/workloads/zitadel`                                               |
 | Helm + MariaDB                              | `cluster/workloads/seafile`                                                                             |
 | Multi-component (app + db + cache)          | `cluster/workloads/seafile` or `cluster/workloads/paperless-ngx`                                        |

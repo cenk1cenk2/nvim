@@ -14,14 +14,17 @@ observation      cluster, namespace, workload kind + name, container
         spread   how many Applications share that repoURL decides base vs override
 ```
 
-1. **List Applications** with the ArgoCD MCP server and match on `spec.destination.namespace` plus the cluster. Applications are named `cluster-<cluster>-system-<component>`, so the cluster is legible in the name as a cross-check, never as the primary key.
-2. **Read `spec.sources[].repoURL`.** `sources` is plural and a component may carry several; the chart or manifest source is the one that is not a bare `ref:` values source.
+1. **List Applications** with the ArgoCD MCP server and match on `spec.destination.namespace` plus the cluster. Naming varies by kind: system components are `cluster-<cluster>-system-<component>`, workloads are `<cluster>-<workload>`, LB routes are `<lb-cluster>-cluster-<cluster>`, and `zitadel` / `kargo-root` carry no prefix — the name is a cross-check, never the primary key.
+2. **Read `spec.sources[].repoURL`.** `sources` is plural and a component may carry several; the chart or manifest source is the one that is not a bare `ref:` values source. `list_applications` strips `sources` from its results — use `argocd-kilic__get_application` to read them.
 3. **Classify by group** — this determines everything downstream, per `kilic-resource-placement`:
 
    | repoURL group | What it is |
    |---|---|
    | `cluster/charts/chart-*` | System component, deployed by `argocd-system`, layered Helm values |
-   | `cluster/workloads/*` | Workload repository, kustomize under `.deploy/` |
+   | `cluster/workloads/*` | Workload repository, kustomize under `.deploy/`; includes `monitoring` and `monitoring-ruler`, deployed directly by `argocd-system` rather than a per-cluster repo |
+   | `cluster/<cluster>/argocd-<cluster>` | Per-cluster ArgoCD repo — also the source of LB route manifests on `sun`/`moon` and demo workloads on `nailbed` |
+   | `cluster/kargo-root` | Kargo project config, unprefixed Application |
+   | `renovate/renovate-runner` | Workload deployed from outside the `cluster/workloads` group |
 
 4. **Count the spread.** Filter every Application sharing that `repoURL`: the count is how many clusters run it. One cluster means there is no common layer to argue about; several means a change to the common layer reaches all of them, and only a genuine per-cluster difference justifies an override.
 

@@ -4,13 +4,14 @@ description: linear-kilic-project-argocd-system Create a Linear project for depl
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
+  - ../references/linear/linear-mandatory-fields.md
 argumentHint: '[component] - e.g. ''cert-manager'', ''velero'''
 ---
 
 ## ArgoCD System Deployment Project Generator
 
 Posture: `present-first`.
-**PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill. This skill is kilic-dev workspace specific.
+**PREREQUISITE:** Load `linear-kilic` first when its workspace context is not active — this skill is kilic-dev specific.
 
 ## Overview
 
@@ -57,7 +58,7 @@ Use GitLab MCP to analyze existing deployments for reference:
 
 **3. Create Project and Issues:**
 
-Create the Linear project with issues based on the template below, presented per `output-diff` for approval before writing to Linear. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
+Create the Linear project with issues based on the template below, presented per `output-diff` for approval before writing to Linear. **Only include optional issues if the user confirmed they are needed during requirements gathering.** Required issue fields and relations per `linear-mandatory-fields`.
 
 ## Issue Template
 
@@ -103,7 +104,7 @@ Adding to `base/` deploys nothing anywhere — `base/` is referenced only throug
 **Issue 4: Promote to the target environment**
 
 > **Repo:** `cluster/argocd-system`
-> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`), pinning the chart repository's release tag. This is the step that actually deploys.
+> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`), pinning the chart repository's release tag. This is the step that actually deploys. Later pin bumps promote through Kargo (`cluster/kargo-root`) — see `argocd-kilic` for sync/prune/Kargo mechanics.
 
 - Use the repo's own `.claude/skills/promote-application` skill
 - Add the component to `<environment>/kustomization.yaml` in alphabetical order
@@ -132,12 +133,11 @@ Adding to `base/` deploys nothing anywhere — `base/` is referenced only throug
 
 This repo commits generated output, and the generated file is what ArgoCD reads. Editing `labels.yml` alone has no effect.
 
-**Issue 7: Enable automated sync**
+**Issue 7: Confirm sync and health**
 
 > **Repo:** `cluster/argocd-system`
-> **Purpose:** New base ApplicationSets ship with `syncPolicy.automated` commented out by convention. Until it is enabled, the Application exists and never syncs.
+> **Purpose:** Base ApplicationSets ship with automated sync already enabled (prune gated by `Prune=confirm`) — see `argocd-kilic` for sync/prune/Kargo mechanics. Once the feature label and chart pin are in place, the Application syncs on its own.
 
-- Uncomment `automated: {enabled: true, prune: true, selfHeal: true}`, or perform a deliberate manual first sync and record that choice
 - Confirm the Application reaches Synced and Healthy
 - Confirm any CRDs the chart ships report Established
 - **Blocked by:** Issue 6
@@ -213,7 +213,7 @@ System operators typically use:
 - **Always create Helm chart first** — ApplicationSet depends on it, and promotion pins a tag the chart repo must already have released
 - **Run Pulumi after chart creation** — ArgoCD cannot read the repo without the deploy key, and the failure surfaces later as a chart error
 - **Promotion is the deploy** — `base/` is referenced only through environment overlays, so nothing reaches a cluster until the environment merge lands
-- **Sync is off by default** — new base ApplicationSets ship with `automated` commented out; enabling it is its own step
+- **Sync is on by default** — base ApplicationSets ship with automated sync enabled; prune is gated by `Prune=confirm` (see `argocd-kilic` for sync/prune/Kargo mechanics)
 - **`argocd-root` commits generated output** — edit the asset file, then re-run the synth and commit the regenerated manifest
 - **Cluster labels enable selective deployment** — not all clusters need every component
 - **Load balancer cluster is separate** — routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
