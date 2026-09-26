@@ -93,8 +93,7 @@ If the user wants to revise the drawing:
 
 - **MCP preview is mandatory.** Always render the drawing before and after changes. The user must see both states.
 - **Preserve existing style.** When revising, match the drawing's existing color scheme, font sizes, and layout patterns unless the user asks to change them.
-- **Dark mode by default** for new elements. But respect the existing drawing's theme.
-- **Colors from onedarker** per `excalidraw-elements`.
+- **Author light** per `excalidraw-elements` — white canvas, dark strokes; the plugin inverts it to match the dark vault. A drawing authored dark (dark `viewBackgroundColor`, light strokes) renders light in the vault; convert it to the light palette when revising.
 - **Overwrite carefully.** Always present changes and get approval before overwriting the vault file.
 
 ## Composing with Obsidian Skills

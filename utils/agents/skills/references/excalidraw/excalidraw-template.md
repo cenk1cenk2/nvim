@@ -4,13 +4,13 @@
 
 ## appState Defaults
 
-### Dark Mode (default)
+Author light per `excalidraw-elements` — the plugin inverts the canvas when it matches the vault's dark theme.
 
 ```json
 {
 	"theme": "dark",
-	"viewBackgroundColor": "#1e2127",
-	"currentItemStrokeColor": "#abb2bf",
+	"viewBackgroundColor": "#ffffff",
+	"currentItemStrokeColor": "#1e1e1e",
 	"currentItemBackgroundColor": "transparent",
 	"currentItemFillStyle": "solid",
 	"currentItemStrokeWidth": 2,
@@ -26,17 +26,7 @@
 }
 ```
 
-### Light Mode
-
-Override these fields:
-
-```json
-{
-	"theme": "light",
-	"viewBackgroundColor": "#ffffff",
-	"currentItemStrokeColor": "#1e1e1e"
-}
-```
+`theme` is overridden by the plugin on open; `viewBackgroundColor` and the element colours are what render.
 
 ---
 

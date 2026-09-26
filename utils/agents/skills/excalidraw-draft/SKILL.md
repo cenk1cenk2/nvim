@@ -22,7 +22,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 1. **Draft visually** using the Excalidraw MCP server — live interactive preview in chat. Iterate until the user is happy.
 2. **Export** — either to the Obsidian vault (`.excalidraw.md`) or as a shareable excalidraw.com URL.
 
-**Default mode: dark.** Use dark appState and dark fill colors unless the user requests light mode.
+**Author light.** White canvas, dark strokes, light fills per `excalidraw-elements` — the plugin inverts it to match the dark vault.
 
 **Tool selection for vault:** per `obsidian` — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
@@ -51,7 +51,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 1. **Understand the request.** Determine what to visualize — architecture, flow, sequence, concept map, or freeform. Ask if unclear.
 2. **Load the MCP element format.** Call `excalidraw__read_me` once.
-3. **Plan the layout.** List nodes and connections, estimate diagram size, choose onedarker colors per `excalidraw-elements`.
+3. **Plan the layout.** List nodes and connections, estimate diagram size, choose colors from the light palette per `excalidraw-elements`.
 4. **Draft with MCP preview — mandatory, never skipped.** Follow the `excalidraw-mcp-preview` workflow:
    - Call `excalidraw__create_view` with file-format elements per `excalidraw-elements` — 8-char IDs, bound text via `containerId` / `boundElements` — plus `cameraUpdate` for viewport.
    - Draw progressively: zones → shapes with their bound text → arrows.
@@ -63,8 +63,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 ## Conventions
 
-- **Dark mode by default.** Dark appState, `#abb2bf` for text, dark fills for shapes.
-- **Colors from onedarker** per `excalidraw-elements`. `[600]` for strokes, `[100]`/`[300]` for dark fills.
+- **Author light.** `viewBackgroundColor: #ffffff`, `#1e1e1e` text, light fills, colours from the light palette per `excalidraw-elements`.
 - **Font sizes.** Titles: 28+. Labels: 20. Annotations: 16. Never below 14.
 - **Spacing.** 30–50px gaps. 80–100px margin around edges.
 - **IDs.** Exactly 8 chars alphanumeric (`[0-9a-zA-Z]{8}`). Descriptive prefix + random suffix: `rctApi3d`, `txtAp4Wq`, `arwAD8Pn`, `zonBk2Lm`.
@@ -73,7 +72,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.com:
 
-**1. Theme override.** The Obsidian plugin overrides `appState.theme` to match the vault theme. Always use dark mode (appState + colors) to match the user's dark-themed vault. The MCP preview uses a white canvas — design for the final dark output, not the preview.
+**1. Theme inversion.** The Obsidian plugin overrides `appState.theme` to match the dark vault, and Excalidraw's dark mode inverts the canvas colours. Author light on `#ffffff`; the vault shows it dark. A dark-authored scene is inverted to light. The white-canvas MCP preview matches what is authored.
 
 **2. Bound text wrapping.** The Obsidian plugin wraps bound text more aggressively than excalidraw.com. Text that fits on one line on excalidraw.com may wrap to multiple lines in Obsidian, breaking small labels. **Always size containers for the Obsidian plugin** (the stricter renderer): `min_width = text.length × fontSize × 0.6 + fontSize`. Full sizing table: `excalidraw-elements`. If a container is too small for its label, use standalone text overlapping the shape instead of bound text.
 

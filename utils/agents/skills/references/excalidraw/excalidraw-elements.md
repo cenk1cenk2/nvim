@@ -1,72 +1,46 @@
 # Excalidraw Element Format Reference
 
-## Color Palette (from onedarker)
+## Author Light — the Plugin Inverts the Canvas
 
-### Primary Colors (strokes, accents, arrows — `[600]` variants)
+**Every drawing is authored on a white canvas with dark strokes: `viewBackgroundColor: "#ffffff"`, text `#1e1e1e`.** The vault's Obsidian theme is dark and the Excalidraw plugin matches it on every open (`matchTheme` / `matchThemeAlways`). Excalidraw's dark mode renders the canvas through a colour inversion, so a light scene displays as a dark one. A scene authored dark — dark background, light strokes — is inverted into a light-looking drawing.
+
+`appState.theme` does not decide what the user sees; the plugin overrides it. The white-canvas preview in chat is exactly what gets authored.
+
+## Color Palette (Excalidraw light palette)
+
+### Strokes, text, arrows
 
 | Name | Hex | Use |
 |------|-----|-----|
-| Blue | `#61afef` | Primary actions, links, data series 1. |
-| Green | `#98c379` | Success, positive, data series 2. |
-| Yellow | `#e5c07b` | Warnings, highlights, data series 3. |
-| Red | `#e06c75` | Errors, negative, data series 4. |
-| Purple | `#c678dd` | Accents, special items, data series 5. |
-| Orange | `#d19a66` | Neutral, pending, data series 6. |
-| Cyan | `#56b6c2` | Info, secondary, data series 7. |
-| Magenta | `#a40778` | Decorative, data series 8. |
+| Black | `#1e1e1e` | Primary text, outlines. |
+| Dark gray | `#495057` | Secondary strokes. |
+| Gray | `#868e96` | Muted annotations, ground, not-connected. |
+| Blue | `#1971c2` | Primary actions, data series 1. |
+| Green | `#2f9e44` | Success, output, data series 2. |
+| Orange | `#f08c00` | Warnings, highlights, data series 3. |
+| Red | `#e03131` | Errors, negative, data series 4. |
+| Grape | `#9c36b5` | Accents, special items, data series 5. |
+| Cyan | `#0c8599` | Info, secondary, data series 6. |
+| Pink | `#c2255c` | Decorative, data series 7. |
 
-### Pastel Fills (shape backgrounds — `[900]` variants)
-
-| Color | Hex | Good For |
-|-------|-----|----------|
-| Light Blue | `#98caf6` | Input, sources, primary nodes. |
-| Light Green | `#98c379` | Success, output, completed (use with `opacity: 40`). |
-| Light Yellow | `#eed5a8` | Notes, decisions, planning. |
-| Light Red | `#ef9ea1` | Error, critical, alerts. |
-| Light Purple | `#daa6ea` | Processing, middleware, special. |
-| Light Orange | `#f1b862` | Warning, pending, external. |
-| Light Cyan | `#94ced6` | Storage, data, memory. |
-| Light Magenta | `#ca6da4` | Analytics, metrics. |
-
-### Dark Fills (dark mode shape backgrounds — `[100]`/`[300]` variants)
+### Fills (shape backgrounds)
 
 | Color | Hex | Good For |
 |-------|-----|----------|
-| Dark Blue | `#051b2e` | Primary nodes. |
-| Dark Green | `#16210f` | Success, output. |
-| Dark Yellow | `#2c2009` | Notes, planning. |
-| Dark Red | `#29090b` | Error, critical. |
-| Dark Cyan | `#1a373a` | Storage, data. |
-| Mid Blue | `#4676ac` | Active, focused nodes. |
-| Mid Green | `#729c0c` | Positive, confirmed. |
-| Mid Red | `#ce7277` | Warning, attention. |
-
-### Background & Neutral
-
-| Color | Hex | Use |
-|-------|-----|-----|
-| Background | `#1e2127` | Dark mode canvas (`bg[200]`). |
-| Surface | `#22282f` | Dark zone backgrounds (`bg[300]`). |
-| Border | `#2c333d` | Subtle dividers (`bg[400]`). |
-| Muted text | `#5c6370` | Secondary annotations (`bg[600]`). |
-| Foreground | `#abb2bf` | Primary text on dark (`bg[900]`). |
-| White | `#efefef` | Bright text on dark. |
-| Black | `#121212` | Text on light backgrounds. |
-
-### Zone Backgrounds (use with `opacity: 25–35`)
-
-| Color | Hex | Good For |
-|-------|-----|----------|
-| Blue zone | `#98caf6` | UI / frontend layer. |
-| Purple zone | `#daa6ea` | Logic / agent layer. |
-| Green zone | `#98c379` | Data / tool layer. |
-| Yellow zone | `#eed5a8` | Config / planning layer. |
+| White | `#ffffff` | Plain node bodies. |
+| Light Blue | `#a5d8ff` | Input, sources, primary nodes. |
+| Light Green | `#b2f2bb` | Success, output, completed. |
+| Light Yellow | `#ffec99` | Notes, decisions, planning. |
+| Light Red | `#ffc9c9` | Error, critical, alerts. |
+| Light Violet | `#d0bfff` | Processing, middleware, special. |
+| Light Grape | `#eebefa` | Analytics, metrics. |
+| Light Cyan | `#99e9f2` | Storage, data, memory. |
+| Light Gray | `#e9ecef` | Zones, grouping backgrounds (use `opacity: 30–50`). |
 
 ### Text Contrast Rules
 
-- **Dark mode (default)** — text on dark background: use `#abb2bf` (fg) or `#efefef` (white). Never darker than `#5c6370`.
-- **Light mode** — text `strokeColor` on white: use `#121212` (black) or `#5c6370` (muted). Never lighter than `#7c8a9d`.
-- On colored fills, use the `[300]` variant of the same hue for text: `#4676ac` on light blue, `#729c0c` on light green, etc.
+- Text on the white canvas: `#1e1e1e`, or `#868e96` for muted annotations. Never lighter than `#868e96`.
+- On a coloured fill, use the stroke colour of the same hue for text: `#1971c2` on light blue, `#2f9e44` on light green.
 - No emoji — Excalidraw's font does not render them.
 
 ---
@@ -87,8 +61,8 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
   "id": "rct1Ab3d",
   "x": 100, "y": 100,
   "width": 200, "height": 80,
-  "strokeColor": "#61afef",
-  "backgroundColor": "#051b2e",
+  "strokeColor": "#1971c2",
+  "backgroundColor": "#a5d8ff",
   "fillStyle": "solid",
   "roundness": { "type": 3 },
   "seed": 481273645,
@@ -107,8 +81,8 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
   "id": "elp1Xk9z",
   "x": 100, "y": 100,
   "width": 150, "height": 150,
-  "strokeColor": "#c678dd",
-  "backgroundColor": "#daa6ea",
+  "strokeColor": "#9c36b5",
+  "backgroundColor": "#eebefa",
   "fillStyle": "solid",
   "seed": 927364182
 }
@@ -122,7 +96,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
   "id": "dmd1Wq7r",
   "x": 100, "y": 100,
   "width": 150, "height": 150,
-  "strokeColor": "#e5c07b",
+  "strokeColor": "#f08c00",
   "seed": 183746592
 }
 ```
@@ -139,7 +113,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
   "fontSize": 28,
   "fontFamily": 5,
   "textAlign": "center",
-  "strokeColor": "#abb2bf",
+  "strokeColor": "#1e1e1e",
   "seed": 374928163
 }
 ```
@@ -184,8 +158,8 @@ min_width = text.length × fontSize × 0.6 + fontSize
   "id": "box1Hj6t",
   "x": 100, "y": 100,
   "width": 200, "height": 80,
-  "strokeColor": "#98c379",
-  "backgroundColor": "#16210f",
+  "strokeColor": "#2f9e44",
+  "backgroundColor": "#b2f2bb",
   "fillStyle": "solid",
   "roundness": { "type": 3 },
   "seed": 582937461,
@@ -206,7 +180,7 @@ min_width = text.length × fontSize × 0.6 + fontSize
   "fontFamily": 5,
   "textAlign": "center",
   "verticalAlign": "middle",
-  "strokeColor": "#abb2bf",
+  "strokeColor": "#1e1e1e",
   "containerId": "box1Hj6t",
   "seed": 193847562
 }
@@ -225,7 +199,7 @@ min_width = text.length × fontSize × 0.6 + fontSize
   "x": 300, "y": 140,
   "width": 150, "height": 0,
   "points": [[0, 0], [150, 0]],
-  "strokeColor": "#abb2bf",
+  "strokeColor": "#1e1e1e",
   "endArrowhead": "arrow",
   "startBinding": { "elementId": "box1Hj6t", "focus": 0, "gap": 5, "fixedPoint": [1, 0.5] },
   "endBinding": { "elementId": "box2Ry5m", "focus": 0, "gap": 5, "fixedPoint": [0, 0.5] },
