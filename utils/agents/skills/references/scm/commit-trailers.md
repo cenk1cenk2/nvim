@@ -4,7 +4,7 @@ The shared trailer policy: where trailers go, and when to close an issue versus 
 
 | Platform | Reference | The trap it carries |
 |---|---|---|
-| Linear | `commit-trailers-linear` | Every link moves the issue, a Done one included — decide per `scm-linear-follow-up` first. On GitLab, Linear ignores commit messages entirely. |
+| Linear | `commit-trailers-linear` | Every link moves the issue, a Done one included — decide per `scm-linear-follow-up` first. On GitLab, Linear ignores commit messages entirely and `refs` is not a documented keyword. |
 | GitHub | `commit-trailers-github` | Native issues DO close from commit messages; there is no `refs` keyword. |
 | GitLab | `commit-trailers-gitlab` | Native issues DO close from commit messages; multiple issues are comma-separated after one keyword. |
 
