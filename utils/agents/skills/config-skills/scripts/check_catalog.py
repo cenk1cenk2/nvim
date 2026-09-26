@@ -68,6 +68,14 @@ FOREIGN_KEYS = ("when_to_use", "allowed-tools", "allowed_tools", "hooks", "model
 RECOGNISED_LINE = re.compile(r"^(?:\s*- .+|[A-Za-z_][A-Za-z0-9_-]*:.*|\s*#.*|\s*)$")
 
 
+# A backticked kebab name in prose: the form a body cites a reference by.
+CITED_NAME = re.compile(r"`([a-z0-9][a-z0-9-]*)`")
+
+# Words that narrate this system's own past, per `current-state-only`. A hit is
+# a WARN: the same words also describe live external things.
+HISTORY = re.compile(r"\b(?:formerly|used to|no longer|previously|legacy|migrated|renamed)\b", re.IGNORECASE)
+
+
 class Level(StrEnum):
     FAIL = "FAIL"
     WARN = "WARN"
@@ -179,11 +187,63 @@ class Checks:
         "no_emoji",
         "no_mcp_wire_names",
         "no_h1",
+        "cited_references_declared",
+        "declared_references_cited",
+        "no_history",
     )
 
     def __init__(self, root: Path, slugs: set[str]):
         self.root = root
         self.slugs = slugs
+        # Every reference name in the tree, shared or skill-local, by file stem.
+        self.reference_names = {path.stem for path in root.glob("**/references/**/*.md")}
+
+    @staticmethod
+    def declared_names(skill: Skill) -> dict[str, Path]:
+        return {Path(entry).stem: (skill.directory / entry).resolve() for entry in skill.reference_paths}
+
+    def cited_references_declared(self, skill: Skill) -> list[Finding]:
+        """config-skills: a reference name resolves only through a manifest the reader holds.
+
+        A WARN, not a FAIL: `config-*` bodies name references as examples, and a
+        body may reach one through a skill it loads.
+        """
+        declared = self.declared_names(skill)
+        out: list[Finding] = []
+        for name in sorted(set(CITED_NAME.findall(skill.body))):
+            if name in self.reference_names and name not in declared and name not in self.slugs:
+                out.append(Finding(Level.WARN, "ref-undeclared", skill.slug, f"cites `{name}` without declaring it"))
+        return out
+
+    def declared_references_cited(self, skill: Skill) -> list[Finding]:
+        """A declaration nothing uses is a manifest row the reader pays for with no instruction to fetch it.
+
+        Counts as used: named in the body, named by another declared reference
+        (transitive citation), or a member of a `<consumer>-harness-<provider>`
+        family the body names with the placeholder.
+        """
+        declared = self.declared_names(skill)
+        texts = [skill.body]
+        for path in declared.values():
+            if path.is_file():
+                texts.append(path.read_text(encoding="utf-8", errors="replace"))
+        corpus = "\n".join(texts)
+        out: list[Finding] = []
+        for name in sorted(declared):
+            family, _, _ = name.partition("-harness-")
+            used = f"`{name}`" in corpus or ("-harness-" in name and f"{family}-harness-<provider>" in corpus)
+            if not used:
+                out.append(Finding(Level.WARN, "ref-unused", skill.slug, f"declares `{name}` but nothing cites it"))
+        return out
+
+    def no_history(self, skill: Skill) -> list[Finding]:
+        """current-state-only: this system's own past is deleted, not annotated."""
+        return [
+            Finding(Level.WARN, "history", skill.slug, f"history wording: {match.group(0)!r}", offset)
+            for offset, line in enumerate(skill.body.splitlines(), start=skill.body_offset + 1)
+            for match in [HISTORY.search(line)]
+            if match
+        ]
 
     def name_matches_directory(self, skill: Skill) -> list[Finding]:
         """config-skills Conventions: directory name must match `name`, both kebab-case."""

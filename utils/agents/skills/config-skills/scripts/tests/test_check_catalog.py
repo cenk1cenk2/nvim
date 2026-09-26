@@ -382,3 +382,59 @@ class TestInvocation:
         result = lint(empty)
         assert result.code == 2
         assert "no */SKILL.md" in result
+
+
+class TestReferenceWiring:
+    @staticmethod
+    def shared(catalog: Catalog, name: str, body: str = "# Ref\n") -> None:
+        (catalog.root / "references").mkdir(exist_ok=True)
+        (catalog.root / "references" / f"{name}.md").write_text(body)
+
+    def test_a_cited_but_undeclared_reference_warns(self, catalog, lint):
+        self.shared(catalog, "house-style")
+        catalog.add("citer", body="Format per `house-style`.\n")
+        result = lint(catalog)
+        assert result.code == 0
+        assert "cites `house-style` without declaring it" in result
+
+    def test_a_declared_and_cited_reference_is_clean(self, catalog, lint):
+        self.shared(catalog, "house-style")
+        catalog.add(
+            "citer", body="Format per `house-style`.\n", extra="references:\n  - ../references/house-style.md\n"
+        )
+        result = lint(catalog)
+        assert "house-style" not in result
+
+    def test_a_declared_but_uncited_reference_warns(self, catalog, lint):
+        self.shared(catalog, "house-style")
+        catalog.add("idle", extra="references:\n  - ../references/house-style.md\n")
+        result = lint(catalog)
+        assert "declares `house-style` but nothing cites it" in result
+
+    def test_a_citation_inside_another_declared_reference_counts(self, catalog, lint):
+        self.shared(catalog, "inner")
+        self.shared(catalog, "outer", "# Outer\n\nSee `inner`.\n")
+        catalog.add(
+            "layered",
+            body="Per `outer`.\n",
+            extra="references:\n  - ../references/outer.md\n  - ../references/inner.md\n",
+        )
+        result = lint(catalog)
+        assert "declares `inner`" not in result
+
+    def test_a_harness_family_named_by_placeholder_counts(self, catalog, lint):
+        for provider in ("claude", "codex"):
+            self.shared(catalog, f"thing-harness-{provider}")
+        catalog.add(
+            "dispatcher",
+            body="Fetch `thing-harness-<provider>` first.\n",
+            extra="references:\n  - ../references/thing-harness-claude.md\n  - ../references/thing-harness-codex.md\n",
+        )
+        result = lint(catalog)
+        assert "nothing cites it" not in result
+
+    def test_history_wording_warns(self, catalog, lint):
+        catalog.add("storyteller", body="This skill was previously called something else.\n")
+        result = lint(catalog)
+        assert result.code == 0
+        assert "history wording: 'previously'" in result
