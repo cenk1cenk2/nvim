@@ -23,7 +23,7 @@ The current user is on multiple teams (`Infrastructure Foundations`, `Infrastruc
 
 ## Workspace Context
 
-- **Linear MCP:** `linear-laravel` — ALWAYS use `linear-laravel__*` tools unless prompted otherwise.
+- **Linear MCP:** `linear-laravel`, or the harness Linear connector when it is authorized for Laravel. Use whichever is present, per `linear-prerequisite`.
 - **SCM MCP:** `github` — ALWAYS use `github__*` tools for repository operations.
 - **Repository link format:** `{"url": "https://github.com/laravel/...", "title": "repo-name"}`.
 - **PR link format:** `{"url": "https://github.com/laravel/.../pull/123", "title": "PR #123"}`.

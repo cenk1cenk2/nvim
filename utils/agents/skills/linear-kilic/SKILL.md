@@ -12,7 +12,7 @@ references:
 
 ## Workspace Context
 
-- **Linear MCP:** `linear-kilic` — ALWAYS use `linear-kilic__*` tools unless prompted otherwise.
+- **Linear MCP:** `linear-kilic`, or the harness Linear connector when it is authorized for kilic-dev. Use whichever is present, per `linear-prerequisite`.
 - **Code discovery MCP:** `sourcebot-kilic` — prefer for fast organization-wide repository/code discovery and prior-art search when available.
 - **SCM MCP:** `gitlab` — use `gitlab__*` tools for authoritative GitLab metadata, MRs, pipelines, issues, project settings, permissions, live branch state, and writes.
 - **Repository link format:** `{"url": "https://gitlab.kilic.dev/...", "title": "repo-name"}`.

@@ -8,7 +8,7 @@ The rule is harness-agnostic. The inventory below is per harness and grows as in
 
 **When the running harness provides an integration for a service, use it. Do NOT use an external or self-hosted MCP server for that same service.** On Claude Code that means a `mcp__claude_ai_<Connector>__*` connector takes precedence over the equivalent standalone server (`slack-kilic`, `linear-kilic`, and so on) for every read and every write.
 
-**The precedence is per service *and workspace*.** A standalone server keyed to a workspace (`slack-kilic`, `linear-kilic`) is that workspace's only route; the connector is authorized against a different workspace, so applying the rule across workspaces reads or writes into the wrong place. Where a skill declares a per-workspace mapping — the `slack` reference maps kilic to `slack-kilic` and Laravel to the connector — that mapping decides the transport, and the rule above applies within each workspace.
+**The precedence is per service *and workspace*.** A standalone server keyed to a workspace (`slack-kilic`, `linear-kilic`) is that workspace's only route; the connector is authorized against a different workspace, so applying the rule across workspaces reads or writes into the wrong place. Where a skill declares a per-workspace mapping — the `slack` reference maps kilic to `slack-kilic` and Laravel to the connector — that mapping decides the transport, and the rule above applies within each workspace. Linear carries such a mapping: the connector and the `linear-*` servers are the same Linear server, so whichever is present serves the workspace it is authorized for, per `linear-prerequisite`.
 
 Why it is absolute rather than a preference:
 
