@@ -12,7 +12,7 @@ Twenty datasources in three families, one per cluster:
 | Loki | `loki` | `loki-<cluster>` | core, moon, nailbed, neutrino, overseer, rubik, sun |
 | Alertmanager | `alertmanager` | `alertmanager-<cluster>` | moon, nailbed, neutrino, overseer, rubik, sun |
 
-**There is no `alertmanager-core`.** Core carries metrics and logs only.
+**`core` is not a cluster** — it is the standalone host estate (hypervisors, routers, NAS, GitLab, Rancher and the other ansible-managed servers). **There is no `alertmanager-core`.** Core carries metrics and logs only.
 
 ## One datasource is exactly one cluster
 

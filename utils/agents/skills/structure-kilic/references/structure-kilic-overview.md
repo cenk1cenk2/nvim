@@ -160,7 +160,7 @@ Core services run by ansible as containers:
 
 | Cluster | Distro (Rancher) | ArgoCD env label | Region | Nodes (inventory) | Runs | Bootstrapped / configured by |
 |---|---|---|---|---|---|---|
-| overseer | K3s | platform | loki (label) / VMs on `hercules` (thor) | overseer-03..05, seer-04..07 | ArgoCD, Vault, Kargo, Argo Rollouts, Zitadel, kargo-root, system components | `tf-config-proxmox` (VMs), `pulumi-config-rancher`, `tf-overseer` (ArgoCD, Vault), `argocd-overseer` |
+| overseer | K3s | platform | VMs on `hercules` (thor); its `region` label says loki, Unverified which is intended | overseer-03..05, seer-04..07 | ArgoCD, Vault, Kargo, Argo Rollouts, Zitadel, kargo-root, system components | `tf-config-proxmox` (VMs), `pulumi-config-rancher`, `tf-overseer` (ArgoCD, Vault), `argocd-overseer` |
 | rubik | RKE2 | production | loki (VMs on `antaeus`, Hetzner) | rubik-04..06, qubit-07..11 | Most user-facing workloads, rustfs, monitoring backbone/view, grafana-operator, renovate, gitlab-runner | `tf-config-proxmox`, `pulumi-config-rancher`, `argocd-rubik` |
 | neutrino | RKE2 | production | thor | neutrino-03..05, electron-06..11 | GPU/home workloads (ollama, immich, home-assistant, agents, paperless-ngx), nvidia-operator, agentgateway | same pattern, `argocd-neutrino` |
 | nailbed | RKE2 | development | thor | nailbed-01..03 | Development/demo workloads | same pattern, `argocd-nailbed` |
@@ -170,18 +170,47 @@ Core services run by ansible as containers:
 
 Label sources: `cluster.kilic.dev/{environment,region,name}` from `cluster/argocd-root/src/argocd/assets/cluster/<c>/labels.yml`, confirmed live via ArgoCD `list_clusters`.
 
-### Non-cluster hosts (from `ansible-playbooks/inventory.ini`)
+## Regions and Core Hosts
 
-| Role | Hosts |
-|---|---|
-| Hypervisors | hercules, gulag (thor), antaeus (loki, Hetzner), pdm |
-| NAS | norsu (thor), pukki (loki) |
-| Servers | gitlab (loki), netboot (loki), rancher (thor) |
-| Edge / VPN | trojan-thor, trojan-loki |
-| Workstations / agent | labrat, labrat.hermes, mau5, bat |
+### Regions
+
+Two regions, each with its own OPNsense router, joined by a site-to-site WireGuard tunnel. The tunnel and each region's interfaces, DHCP, Unbound, firewall and aliases live in [tf-config-opnsense](https://gitlab.kilic.dev/infrastructure/tf-config-opnsense) as `region-<region>-*.tf`, with one provider alias per router.
+
+| Region | Where | Hypervisors ([tf-config-proxmox](https://gitlab.kilic.dev/infrastructure/tf-config-proxmox)) | Internal domain | Router VM |
+|---|---|---|---|---|
+| **thor** | home | `hercules`, `gulag` | `thor.arpa` | `THOR` on gulag (`router-thor.tf`) |
+| **loki** | remote, Hetzner | `antaeus` (dedicated server) | `loki.arpa` | `LOKI` on antaeus (`router-loki.tf`) |
+
+**loki extends into Hetzner Cloud.** [tf-config-hetzner-cloud](https://gitlab.kilic.dev/infrastructure/tf-config-hetzner-cloud) runs extra servers, `qubit-eNN` (`hcloud_server.rubik_qubit`, `fsn1`) as additional rubik nodes. They sit on the `loki` Hetzner network and join the loki router over its `loki-vswitch` WireGuard server; their peer keys are in Vault under `terraform/hetzner/wireguard/clients/*`.
+
+`tf-config-proxmox` files follow the host: `<hypervisor>-vm-<name>.tf` for a standalone VM, `<hypervisor>-{backup,storage,users}.tf` for the hypervisor itself, and `cluster-<c>.tf`, `router-<region>.tf` and `nas-<name>.tf` by role. Each file's `provider = proxmox.<hypervisor>` says which host it lands on.
+
+### Core / legacy hosts
+
+**Core** means everything that is not a Kubernetes workload: standalone servers and the machines the clusters run on. Terraform creates them in `tf-config-proxmox` (and `tf-config-hetzner-cloud`). [ansible-playbooks](https://gitlab.kilic.dev/ansible/ansible-playbooks) provisions them and runs their services as podman containers. `core` in Grafana datasource names (`mimir-core`, `loki-core`) is this host estate, not a cluster.
+
+| Role | Host | Region / hypervisor | Defined by |
+|---|---|---|---|
+| Hypervisors | hercules, gulag | thor | physical; config in `hercules-*.tf`, `gulag-*.tf` |
+| | antaeus | loki (Hetzner) | physical; `antaeus-*.tf` |
+| | pdm (Proxmox Datacenter Manager) | thor, hercules | `hercules-vm-pdm.tf` |
+| Routers | THOR, LOKI (OPNsense) | gulag, antaeus | `router-*.tf` + `tf-config-opnsense` |
+| NAS | norsu | thor, hercules | `nas-norsu.tf`; ansible `containers/{rclone,seafile-cli}` |
+| | pukki | loki, antaeus | `nas-pukki.tf` |
+| Servers | gitlab | loki, antaeus | `antaeus-vm-gitlab.tf`; ansible `containers/gitlab` |
+| | netboot (PXE / FCOS ignition) | loki, antaeus | `antaeus-vm-netboot.tf`; ansible `containers/{netboot,ignition}` |
+| | rancher (Rancher manager) | thor, hercules | `hercules-vm-rancher.tf`; ansible `containers/rancher` |
+| Edge / VPN | trojan-thor, trojan-loki (headscale/tailscale) | gulag, antaeus | `*-vm-trojan-*.tf`; ansible `containers/{headscale,tailscale}` |
+| Other VMs | orbitar | loki, antaeus | `antaeus-vm-orbitar.tf` (role Unverified) |
+| | vega, mountain2, showmen | thor, hercules | `hercules-vm-*.tf` (role Unverified) |
+| | labrat (agent workstation) | thor, gulag | `gulag-vm-labrat.tf`; ansible `setup/hermes` |
+| Cluster nodes | see Clusters | per cluster | `cluster-<c>.tf`; ansible `provision/cluster` |
+| Workstations | mau5, bat | - | ansible inventory only |
+
+Cluster node placement from `cluster-<c>.tf`: rubik on antaeus (loki) plus the Hetzner Cloud `qubit-e*` nodes; sun on antaeus (loki); overseer, neutrino and nailbed on hercules (thor); moon on gulag (thor).
 
 ---
 
 ## Extending this file
 
-Keep the headings (Groups, Flow, Clusters) so every `structure-<estate>` skill lines up. Add a group as a row in the Groups summary and, if it has more than three live repos, its own sub-table. Link repos only by `web_url` from `get_project` or `list_group_projects`.
+Keep the headings (Groups, Flow, Clusters, Regions and Core Hosts) so every `structure-<estate>` skill lines up. Add a group as a row in the Groups summary and, if it has more than three live repos, its own sub-table. Link repos only by `web_url` from `get_project` or `list_group_projects`.
