@@ -103,13 +103,13 @@ Adding to `base/` deploys nothing anywhere — `base/` is referenced only throug
 
 **Issue 4: Promote to the target environment**
 
-> **Repo:** `cluster/argocd-system`
-> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`), pinning the chart repository's release tag. This is the step that actually deploys. Later pin bumps promote through Kargo (`cluster/kargo-root`) — see `argocd-kilic` for sync/prune/Kargo mechanics.
+> **Repos:** `cluster/argocd-system`, `cluster/kargo-root`
+> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`) and gives it a Kargo project. Kargo writes the chart pin, the first one included; this is the step that actually deploys. Sync, prune and Kargo mechanics: `argocd-kilic`.
 
 - Use the repo's own `.claude/skills/promote-application` skill
 - Add the component to `<environment>/kustomization.yaml` in alphabetical order
-- Create `<environment>/<component>/kustomization.yaml` and `patch-applicationset.yaml`
-- Pin `targetRevision` to the **chart repository's** semantic-release tag, fetched with `gitlab__list_tags` rather than from a local clone
+- Create `<environment>/<component>/kustomization.yaml` and `patch-applicationset.yaml`. Kargo's promotion task reads and rewrites `spec.template.spec.sources[0].targetRevision` in that patch, so the patch must exist with that key before the first promotion
+- Add the component's Kargo project in `cluster/kargo-root` under `.deploy/overseer/projects/argocd-system/<component>/` (Warehouse on the chart repo's tags, one Stage per environment), copied from an existing component. Its first promotion sets the pin
 - **Blocked by:** Issue 3
 
 **Issue 5 (Optional — if secrets are needed): Configure Secrets in Vault**

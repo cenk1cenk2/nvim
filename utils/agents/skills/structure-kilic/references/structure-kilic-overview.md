@@ -20,7 +20,7 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 | `cluster/<cluster>` (rubik, overseer, nailbed, neutrino, moon, sun) | One ArgoCD generator repo per cluster, plus archived per-cluster Terraform | Pulumi-as-generator (NestJS), committed `1-manifest/` output; Terraform (`tf-overseer` only, live) | Namespaces, per-cluster system bits (gateways, Cilium), ArgoCD Applications for workloads, LB routes | That cluster, via ArgoCD on `overseer` |
 | [`cluster/workloads`](https://gitlab.kilic.dev/groups/cluster/workloads) | One repo per application | kustomize (often wrapping Helm charts via `helmCharts`) under `.deploy/<cluster>/` | Application manifests | Clusters named in `.deploy/<cluster>/` |
 | [`cluster/charts`](https://gitlab.kilic.dev/groups/cluster/charts) | One Helm wrapper chart per system component | Helm, semantic-release tags `v<semver>` | Consumed by `argocd-system` ApplicationSets | Every cluster whose labels enable the component |
-| [`cluster/operators`](https://gitlab.kilic.dev/groups/cluster/operators) | Custom Go operators | Go, semantic-release | Unverified where deployed | Unverified |
+| [`cluster/operators`](https://gitlab.kilic.dev/groups/cluster/operators) | Custom Go operators, not deployed yet; kept for future use | Go, semantic-release | Nothing | - |
 | [`cluster/pipes`](https://gitlab.kilic.dev/groups/cluster/pipes) | ArgoCD tooling | Go (ArgoCD Config Management Plugin) | Not wired to any live Application | - |
 | [`cluster/monitoring`](https://gitlab.kilic.dev/groups/cluster/monitoring) | Archived dashboards repo only | - | - | - |
 | [`ansible`](https://gitlab.kilic.dev/groups/ansible) | Host provisioning and non-Kubernetes services | Ansible (`./play` wrapper), podman containers | OS provisioning, core services as containers | Legacy/core VMs and bare metal (see Flow) |
@@ -61,7 +61,7 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 | [argocd-system](https://gitlab.kilic.dev/cluster/argocd-system) | kustomize over ApplicationSets | One ApplicationSet per system component in `base/<c>/`, enabled per environment overlay (`development`, `platform`, `production`, `load-balancer`) with chart pins in `<env>/<c>/patch-applicationset.yaml`; cluster selection by `system.feature.kilic.dev/<c>` + `cluster.kilic.dev/environment` labels |
 | [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) | kustomize, `.deploy/overseer/` | Kargo config: ClusterConfig, ClusterPromotionTasks `promote-chart-pin` / `report-chart-pin`, and one Project `kargo-argocd-system-<component>` per chart-pinned component with Warehouse and Stages `<component>.<env>` (+ `.report`) |
 | `<cluster>/argocd-<cluster>` x6: [rubik](https://gitlab.kilic.dev/cluster/rubik/argocd-rubik), [neutrino](https://gitlab.kilic.dev/cluster/neutrino/argocd-neutrino), [nailbed](https://gitlab.kilic.dev/cluster/nailbed/argocd-nailbed), [overseer](https://gitlab.kilic.dev/cluster/overseer/argocd-overseer), [sun](https://gitlab.kilic.dev/cluster/sun/argocd-sun), [moon](https://gitlab.kilic.dev/cluster/moon/argocd-moon) | Pulumi as generator (NestJS, `src/`), committed output in `apps/`, `system/`, `namespaces/`, `workloads/<name>/` each under `1-manifest/`; CI only lints | Per-cluster: gateways/Cilium/namespaces (`system`, `namespaces`), ArgoCD Applications for each workload (`apps`), and on LB clusters the route manifests themselves (`workloads/`) |
-| [node-patcher](https://gitlab.kilic.dev/cluster/node-patcher) | Unverified | README empty; purpose Unverified |
+| [node-patcher](https://gitlab.kilic.dev/cluster/node-patcher) | Run by hand | Patches new cluster nodes; run manually only when nodes are added |
 | [pipes/argocd-pulumi-hydrator](https://gitlab.kilic.dev/cluster/pipes/argocd-pulumi-hydrator) | Go CMP (`plugin.yaml`, discovers `Pulumi.yaml`) | Would render a Pulumi program inside ArgoCD instead of committing `1-manifest/`. No live Application uses it |
 | Archived: `rubik/tf-rubik`, `neutrino/tf-neutrino`, `nailbed/tf-nailbed`, `sun/tf-sun`, `moon/tf-moon` | Terraform | Archived, not edit targets |
 
@@ -141,11 +141,11 @@ Core services run by ansible as containers:
 | Which system components a cluster gets, per-cluster values | `cluster/argocd-root/src/argocd/assets/cluster/<c>/{labels,annotations}.yml` then regenerate and commit `argocd/1-manifest` | ArgoCD `argocd-root` app (auto, prune off) |
 | A system component's fleet or per-env values | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | ArgoCD `argocd-system` app |
 | A pipeline's template or pipe CLI | `devops/pipelines` (template) or `devops/pipes` (CLI), per `kilic-ci-pipelines` | release tag on that package; each consumer picks it up when it bumps its `ref` |
-| A system component's chart | `cluster/charts/chart-<c>`, release tag; pin moves via Kargo (or `<env>/<c>/patch-applicationset.yaml`) | Kargo Stage commits pin -> ArgoCD |
+| A system component's chart | `cluster/charts/chart-<c>`, release tag; Kargo writes the pin, the first one included | Kargo Stage commits pin -> ArgoCD |
 | Add a workload's Application or namespace | `cluster/<c>/argocd-<c>/src/workloads/<name>/` then regenerate `apps/1-manifest` | ArgoCD `cluster-<c>` app |
 | A workload's manifests | `cluster/workloads/<w>/.deploy/<cluster>/` | ArgoCD `<cluster>-<w>` app, `targetRevision: HEAD`, automated prune |
 | Public route for a workload | `cluster/<lb>/argocd-<lb>` (sun or moon) | ArgoCD `<lb>-cluster-<c>` / `<lb>-routes` |
-| A legacy/core server or its container | `ansible/ansible-playbooks` | `./play ...` run (manual or CI with env from GitLab); Unverified whether CI runs it |
+| A legacy/core server or its container | `ansible/ansible-playbooks` | `./play ...`, run locally or from CI |
 
 ### ArgoCD topology (single instance)
 
@@ -160,7 +160,7 @@ Core services run by ansible as containers:
 
 | Cluster | Distro (Rancher) | ArgoCD env label | Region | Nodes (inventory) | Runs | Bootstrapped / configured by |
 |---|---|---|---|---|---|---|
-| overseer | K3s | platform | VMs on `hercules` (thor); its `region` label says loki, Unverified which is intended | overseer-03..05, seer-04..07 | ArgoCD, Vault, Kargo, Argo Rollouts, Zitadel, kargo-root, system components | `tf-config-proxmox` (VMs), `pulumi-config-rancher`, `tf-overseer` (ArgoCD, Vault), `argocd-overseer` |
+| overseer | K3s | platform | thor (VMs on `hercules`); the `cluster.kilic.dev/region: loki` label in `argocd-root/src/argocd/assets/cluster/overseer/labels.yml` is wrong, and nothing reads it | overseer-03..05, seer-04..07 | ArgoCD, Vault, Kargo, Argo Rollouts, Zitadel, kargo-root, system components | `tf-config-proxmox` (VMs), `pulumi-config-rancher`, `tf-overseer` (ArgoCD, Vault), `argocd-overseer` |
 | rubik | RKE2 | production | loki (VMs on `antaeus`, Hetzner) | rubik-04..06, qubit-07..11 | Most user-facing workloads, rustfs, monitoring backbone/view, grafana-operator, renovate, gitlab-runner | `tf-config-proxmox`, `pulumi-config-rancher`, `argocd-rubik` |
 | neutrino | RKE2 | production | thor | neutrino-03..05, electron-06..11 | GPU/home workloads (ollama, immich, home-assistant, agents, paperless-ngx), nvidia-operator, agentgateway | same pattern, `argocd-neutrino` |
 | nailbed | RKE2 | development | thor | nailbed-01..03 | Development/demo workloads | same pattern, `argocd-nailbed` |
@@ -201,8 +201,8 @@ Two regions, each with its own OPNsense router, joined by a site-to-site WireGua
 | | netboot (PXE / FCOS ignition) | loki, antaeus | `antaeus-vm-netboot.tf`; ansible `containers/{netboot,ignition}` |
 | | rancher (Rancher manager) | thor, hercules | `hercules-vm-rancher.tf`; ansible `containers/rancher` |
 | Edge / VPN | trojan-thor, trojan-loki (headscale/tailscale) | gulag, antaeus | `*-vm-trojan-*.tf`; ansible `containers/{headscale,tailscale}` |
-| Other VMs | orbitar | loki, antaeus | `antaeus-vm-orbitar.tf` (role Unverified) |
-| | vega, mountain2, showmen | thor, hercules | `hercules-vm-*.tf` (role Unverified) |
+| Decommissioning | orbitar | loki, antaeus | `antaeus-vm-orbitar.tf`; being removed, not a target for new work |
+| | vega, mountain2, showmen | thor, hercules | `hercules-vm-*.tf`; being removed, not a target for new work |
 | | labrat (agent workstation) | thor, gulag | `gulag-vm-labrat.tf`; ansible `setup/hermes` |
 | Cluster nodes | see Clusters | per cluster | `cluster-<c>.tf`; ansible `provision/cluster` |
 | Workstations | mau5, bat | - | ansible inventory only |
