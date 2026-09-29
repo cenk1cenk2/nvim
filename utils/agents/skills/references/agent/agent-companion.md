@@ -84,7 +84,7 @@ A live agent's model cannot be changed, so "put it on a smarter model" means rea
 discards the section. **When a companion's answers look under-reasoned, buy the ceiling for the one
 question instead:**
 
-1. Dispatch a one-shot `smart` or `max` delegate per `agent-delegate`, scoped to that question alone.
+1. Dispatch a one-shot `smart` delegate per `agent-delegate`, scoped to that question alone.
 2. **Hand the delegate the durable record's path** — not the companion's context. It reads the truth for
    itself.
 3. Feed its answer back to the companion as a message, with its evidence.

@@ -15,8 +15,6 @@ Runtime mechanics for delegation on Claude Code — how subagent dispatch actual
 
 Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
 
-`max`/`fable` is the ceiling — reserve it for the single hardest problems; `smart`/`opus` covers most heavy work.
-
 ## `Agent` tool parameters (v2.1.283)
 
 | Param | Required | Purpose |

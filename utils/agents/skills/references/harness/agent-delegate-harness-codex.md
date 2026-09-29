@@ -1,19 +1,21 @@
 # Harness: Codex — agent-delegate
 
-Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the model roles. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `agent-background-harness-codex`.
+Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `agent-background-harness-codex`.
 
 **Dispatch:** Codex's own task/subagent spawning. Set the resolved `gpt-*` model.
 
-## Model roles
+## Tier → model
 
-No cheap→max ladder is configured — two role models, both `reasoningEffort: high`:
-
-| Role | Model |
+| Tier | Model |
 |------|-------|
-| general (default) | `gpt-5.5` |
-| coding-specialized | `gpt-5.3-codex-spark` |
+| cheap | `gpt-5.6-luna` |
+| default | `gpt-5.6-terra` |
+| smart | `gpt-5.6-sol` |
+| max | `gpt-6-astra` |
 
-Mirrors the `personal/codex/*` profiles in `~/.config/hyprpilot/config.yaml` and the `openai` provider in `~/.config/opencode/opencode.jsonc`. Keep in sync when those change. If a cheap/default/smart/max ladder is needed later, add it here and to those profiles.
+`gpt-6-astra` alone carries the reasoning levels above `high`, selected by `model_reasoning_effort` in `config.toml`.
+
+Mirrors the `personal/codex/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
 
 ## Background work does NOT wake you
 
