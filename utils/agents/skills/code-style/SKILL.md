@@ -69,6 +69,7 @@ The gap between code that works and code you think works is testing.
 
 - **Fixing a bug starts with the failing test.** Write it, watch it fail, then fix — the only proof you fixed the cause and not the symptom.
 - **Test behavior that can actually break**, not that a constructor sets a field. Cover the error path: a handled happy path with an ignored 500 is **the Optimistic Path**, not a finished feature.
+- **Test your own logic, not upstream's.** Behaviour a dependency, framework or the standard library already validates — a label selector matching, a predicate combinator, a fake client, a flag parser counting flags — gets no spec of its own. Test what your code decides on top of it.
 - **Hard to test is information about the design**, not permission to skip the test.
 
 ## Debugging
