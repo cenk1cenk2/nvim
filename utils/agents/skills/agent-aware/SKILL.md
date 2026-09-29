@@ -24,7 +24,7 @@ Pasting a skill body into a prompt forks it: the skill gets fixed next week, you
 2. **Verify what exists.** Resolve skill slugs with `list_skills` and server names against the active tool list. A pointer to a skill dropped by the current profile is worse than no pointer.
 3. **Open with the declaration line.** State the assumed surface so a wrong assumption surfaces immediately.
 4. **Write pointers for anything covered by a skill, reference, or repo file.**
-   - Skills by slug: "load the `git-commit` skill and follow it".
+   - Skills by slug: "load the `git-commit` skill and follow it". A target that writes code is always told to load `code-style` before its first edit.
    - Tools in `<server>__<tool>` short form.
    - Repo conventions by path: "follow `CLAUDE.md` in the repo root".
 5. **Inline only what the target cannot derive** — the goal, scope, file ownership, boundaries, decisions already made, gotchas found this session, anything that lives solely in this conversation.

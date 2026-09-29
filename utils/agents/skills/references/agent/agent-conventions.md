@@ -57,7 +57,9 @@ Every code-writing dispatch carries this, filled in:
 ```
 ## Conventions — match the house style
 
-FIRST, before writing anything, read these and follow them — in this order of authority:
+FIRST, load the hyprpilot `code-style` skill with `hyprpilot-skills__read_skill` and follow it for every edit. The lines below only fill in what this repository does.
+
+Then, before writing anything, read these and follow them — in this order of authority:
 1. <files/functions the user explicitly pointed at — "do it like this">. These outrank your own judgement; if you think one is wrong, say so in the report, do not silently deviate.
 2. <nearest sibling files>.
 3. <closest existing implementation of the same kind>.
@@ -71,7 +73,7 @@ Extend the existing pattern rather than introducing a new one.
 - Imports: <grouping/ordering>.
 - Tests: <framework, style, location>.
 - Architecture: <where this kind of code belongs>.
-- Comments: match the surrounding density — <none | why-only>. Never restate what the code does; a comment earns its place only by explaining a non-obvious why. No banners, no narration (`// Step 1: …`), no docstrings where the siblings carry none, no TODOs unless asked. Explanation goes in your report, not the code. If a TODO-family comment IS asked for, write `KEYWORD: @<handle> <message>` — e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships` — with the handle read off that repository's git remote. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`).
+- Comments: per `code-style` — the density here is <none | why-only>.
 - Scope: modify only <paths>. No refactors, renames, reformatting, or dependency changes outside the task. A convention you dislike is still the convention — flag it, don't fix it.
 
 Before you report, self-check your diff against <reference file>: if it reads as though someone outside this codebase wrote it — different naming, unfamiliar vocabulary, comments the neighbours would not have, a foreign error or import style — fix it. New functionality is allowed to look new; it is not allowed to look foreign.
