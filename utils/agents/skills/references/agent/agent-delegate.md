@@ -6,7 +6,7 @@ Shared logic for creating and dispatching subagents via the active runtime's dis
 
 ## Dispatch mechanism
 
-The dispatch tool, its parameters and the model values it takes live in `agent-delegate-harness-<provider>`; a custom dispatch (an SDK, a script) takes whatever model value that mechanism expects. Whatever the mechanism, the flow is the same: pick a tier from task complexity, resolve it to a concrete model via the active harness's list, build a self-contained prompt, dispatch.
+The dispatch tool, its parameters and the model values it takes live in `agent-delegate-harness-<provider>`; a custom dispatch (an SDK, a script) takes whatever model value that mechanism expects. Whatever the mechanism, the flow is the same: pick a tier per Model Selection, resolve it to a concrete model via the active harness's list, build a self-contained prompt, dispatch.
 
 ## FIRST: settle the permission context
 
@@ -146,9 +146,9 @@ Announce every dispatch per `AGENTS.md` §VI. Where the flow presented the promp
 
 ## Model Selection
 
-Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active runtime. Load `agent-harness` for the tier definitions, the user-wording mapping, explicit-model overrides and ask-on-mismatch; the per-runtime model lists are in `agent-delegate-harness-<provider>`.
+Delegation picks a **tier** from the `agent-harness` Tiers table, then resolves it to a **concrete model** for the active runtime. Load `agent-harness` for the tier definitions, the user-wording mapping, explicit-model overrides and ask-on-mismatch; the per-runtime model lists are in `agent-delegate-harness-<provider>`.
 
-- **Every dispatch carries a tier you chose and STATED — one per unit.** The routing plan names the tier beside each unit with the signal that picked it ("cheap: two files, spec is exact"). A dispatch that never names a tier took a default nobody weighed.
+- **Every dispatch carries a tier you chose and STATED — one per unit.** The routing plan names the tier beside each unit with the signal that picked it ("default: spec is exact, six files"). A dispatch that never names a tier took a default nobody weighed.
 - **Pick per unit, never per run.** Units in one fan-out routinely differ — a mechanical port and the review of it are not the same tier. One tier stamped across a batch is the batching mistake wearing another hat.
 - **A user's tier word binds where they aimed it.** Named for one task, it holds for that task. Said generically ("use cheap agents"), it is a standing preference you still weigh per unit — and raise when a unit plainly needs more.
 - **In-harness dispatch needs no discovery.** The tier-to-model mapping for the active runtime is in `agent-delegate-harness-<provider>` — read it and choose. Discovery is for a SEPARATE agent session, whose profiles and models are runtime state to be listed before a proposal.

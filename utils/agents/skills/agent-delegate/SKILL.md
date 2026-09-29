@@ -44,7 +44,7 @@ Use it when:
    - For org-wide repository or code discovery, or a repo shortlist before SCM calls, start with a code-discovery MCP when the active profile has one, then verify live state with the workspace SCM tools. With none present, search from the SCM tools directly and say so. When that MCP is Sourcebot, load `sourcebot-discovery` before the first call.
 
 2. **Resolve tier / model selection** per `agent-delegate` Model Selection — an explicit model name is used verbatim, a tier word resolves through `agent-harness` against `agent-delegate-harness-<provider>`. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
-   - If no preference is stated, infer the tier from task complexity and propose with reasoning — always, and per task. A tier the user named for an earlier task, or stated generically, does not settle this one.
+   - If no preference is stated, pick the tier from the `agent-harness` Tiers table and propose with reasoning — always, and per task. A tier the user named for an earlier task, or stated generically, does not settle this one.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
 3. **Establish conventions — mandatory whenever the task writes code.**

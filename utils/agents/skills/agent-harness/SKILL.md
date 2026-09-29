@@ -16,12 +16,14 @@ The second one is where runs get destroyed. A skill body describes intent ("disp
 
 | Tier | Intended for | Signals |
 |------|--------------|---------|
-| cheap | Mechanical implementation | 1-2 files, clear spec, isolated function, template/boilerplate. |
-| default | Integration work | Multi-file, pattern matching, moderate judgment. |
-| smart | Architecture/design/review | Design decisions, broad codebase understanding, complex reasoning. |
-| max | Absolute ceiling | The single hardest problems — deep architecture, subtle correctness, adversarial review. Use sparingly. |
+| cheap | Mechanical edits | Trivial change, template/boilerplate, one-shot text rewrites. |
+| default | The workhorse — most delegated work | A written spec or handed-off plan at any file count, integration, read-only investigation, pattern matching. |
+| smart | Open judgement | Design with no spec to follow, reviews, architecture, a default attempt that already failed. |
+| max | Absolute ceiling — explicit ask only | The user asked for max in so many words, or named the max model. |
 
-Cost and capability vary by an order of magnitude across tiers — pick the cheapest tier that will succeed.
+**Default carries the weight.** On every runtime the default-tier model is capable enough for most delegated work, above all for implementing a defined spec. Start there, and move up to smart only when the task needs open judgement — not because it is large or important. The spec decides the tier, not the file count.
+
+**Max is never inferred.** It runs only when the user asks for it — a max-row word below or the max model by name. Difficulty, stakes, a failed smart attempt or a "next tier up" rule all stop at smart; propose max and wait for the user to say it.
 
 ## User Wording → Tier
 

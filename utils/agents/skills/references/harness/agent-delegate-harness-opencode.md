@@ -8,14 +8,14 @@ Runtime mechanics for delegation on OpenCode — how subagent dispatch behaves, 
 
 | Tier | Model |
 |------|-------|
-| cheap | `kilic/gemma4:31b-cloud` (opencode `small_model`) |
-| default | `kilic/glm-5.2:cloud` (opencode `model`, reasoningEffort `max`) |
-| smart | `kilic/deepseek-v4-pro:cloud` |
-| max | `kilic/deepseek-v4-pro:cloud` (no distinct ceiling above smart) |
+| cheap | `kilic/ollama/cloud/gemma4:31b-cloud` |
+| default | `kilic/ollama/cloud/glm-5.3-flash:cloud` |
+| smart | `kilic/ollama/cloud/glm-5.3:cloud` |
+| max | `kilic/ollama/cloud/kimi-k3:cloud` |
 
-Off-ladder alternates in the `kilic` provider: `kilic/deepseek-v4-flash:cloud` (faster), `kilic/kimi-k2.7-code:cloud` (coding), `kilic/minimax-m3:cloud`.
+The `kilic/kilic.dev/{cheap,default,smart,max}` gateway tiers fail over across backing models and survive a single model's quota.
 
-Mirrors `~/.config/opencode/opencode.jsonc` (`model`, `small_model`) and the `personal/kilic/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
+Mirrors the `personal/kilic/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
 
 ## Dispatch semantics
 
