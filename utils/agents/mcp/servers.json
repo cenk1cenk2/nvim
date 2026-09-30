@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "decision": {
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}"
+      },
+      "url": "https://decision.mcp.kilic.dev/mcp",
+      "hyprpilot": {
+        "autoAcceptTools": ["decide"],
+        "autoRejectTools": []
+      }
+    },
     "excalidraw": {
       "url": "https://mcp.excalidraw.com",
       "hyprpilot": {
