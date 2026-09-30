@@ -49,7 +49,7 @@ Response shape:
 }
 ```
 
-Validation errors come back as a 400 naming the question: an unknown `type` gets `type must be choice, noul, or score`, a `choice` with no criteria gets `choice criteria must map option keys to descriptions or null`.
+Validation errors come back as a 400 naming the question: an unknown `type` gets `type must be choice, noul, or score`, a `choice` with no criteria gets `choice criteria must map option keys to descriptions or null`, and `score` criteria given as objects (`{"description": ..., "score": ...}`) get `score criteria must be an array of descriptions` - pass plain strings.
 
 ## What It Is Good At
 
@@ -69,6 +69,7 @@ Measured against `tev1:4b-q4_K_M`:
 - **Quality judgements.** Rating `fix: stuff` against an OAuth and schema rewrite landed on `adequate` as a `score`, and a flat `useless` at 0.37 as a `choice`, with a descriptive rubric in the criteria either way. It cannot grade.
 - **Judgement calls come back as coin flips.** "Can this diff merge without tests" as a two-option `choice` returned 0.52 / 0.48 with `confidence` 0.002, where the `noul` form of the same question read 0.6 to 0.9. The `choice` form tells the truth - it does not know.
 - **Holistic verdicts over mixed evidence.** A report that was healthy but mentioned an unrelated earlier crash and a monitoring outage came back DEGRADED 0.53 / HEALTHY 0.47, while the narrow "did the deploy cause a crash" on the same text answered no at 0.98. Leaving the word `HEALTHY` anywhere in `state` swung the same verdict to 0.77 - the model latches on to label words.
+- **The requested action echoes back.** A `state` carrying the record of what was already asked for - a Kargo promotion request whose `action` field says `promote` - pulled the `promote` choice to 0.82, and signal cannot be told from echo. Strip the requested-action field from `state` when asking whether to take that action.
 - **Context drift.** The same `noul` moved from 0.88 to 0.62 when unrelated fields were added to or removed from `state`.
 - **Question names leak into the answer.** The name is part of the prompt: the same claim on the same `state` scored 0.96 as `obvious_true`, 0.95 as `q1` and 0.81 as `obvious_false`. Batching the question beside others moved it only a few points (0.95 to 0.98).
 - **Literal checks.** "the message contains the word `stuff`" ranged from 0.65 to 0.98 with naming and batching. String matching belongs in code.
@@ -87,7 +88,7 @@ Measured against `tev1:4b-q4_K_M`:
 ## Pitfalls
 
 - **Advisory only.** It triages and routes; it does not authorize. Never let a `decide` answer stand in for a gate the guidelines put on a human (destructive actions, external writes, `kubectl`).
-- **`score` is a float.** 1.68 on a four-level scale sits between `low` and `medium`; round only if you say so.
+- **`score` is a float.** 1.68 on a four-level scale sits between `low` and `medium`; round only if you say so. Over a rich `state` a multi-level `score` often comes back near-uniform - a four-level manual-approval question over a 2.7k-token Kargo state returned 1.12 at `confidence` 0.07 where `choice` and `noul` on the same state held - so treat flat probabilities as undecided, not the float as a verdict.
 - **Pass only `state` and `questions`.** Call arguments merge over the ConfigMap body, so an extra `model` key replaces the pinned model - an unknown one comes back as a 404 `model "<name>" not found`. Change the model in the ConfigMap, not per call.
 - **No state across calls.** Each `decide` is independent; resend the full `state` every time.
 
