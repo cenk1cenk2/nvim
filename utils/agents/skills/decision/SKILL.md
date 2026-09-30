@@ -58,10 +58,10 @@ Measured against `tev1:4b-q4_K_M`:
 - **Deterministic.** The same `state` and `questions` return identical probabilities, so an answer can be cached and a regression test can pin one.
 - **Order-blind.** Reordering `choice` options leaves the probabilities unchanged.
 - **Classification with described options.** Sorting a message into an area, an alert into page / ticket / ignore, a diff into feature / fix / refactor. A clear case lands above 0.9 with high `confidence`.
-- **Reading a structured agent write-up.** Against real Kargo promotion reviews and reports with their verdict tags stripped, it recovered SAFE (0.94) and CAUTION (0.89), whether a human must watch something (0.99 / 0.95), whether a stateful workload restarts (0.01 / 0.97), and ERRORED from a one-line failure (0.91). Narrow, factual questions about a long text are its strongest use.
+- **Reading a structured agent write-up.** Against real Kargo promotion reviews and reports with their verdict tags stripped, it recovered SAFE (0.94) and CAUTION (0.89), whether a human must watch something (0.99 / 0.95), whether a stateful workload restarts (0.01 / 0.97), and ERRORED from a one-line failure (0.91). Across ten full Kargo reviews of up to 5.5k characters, five narrow `choice` questions each - must a repository change, does a stateful workload restart, does it ask a human to act, what runs differently, does it cite an earlier stage as clean - gave no wrong answer at or above 0.85; its misses sat in the undecided band. Narrow, factual questions about a long text are its strongest use.
 - **Language-agnostic.** A Turkish incident message routed to `k8s` at 0.99 and graded high to critical on urgency.
 - **Plainly factual yes/no.** Against a one-line rename diff, false claims landed at 0.09 to 0.33 and the true one at 0.95.
-- **Cheap.** A few hundred input tokens and 3 to 5 output tokens per call, however many questions it carries.
+- **Cheap and quick.** A few hundred to a couple of thousand input tokens and one output token per question; a five-question call over a 5k-character text answers in about 2 seconds.
 
 ## Where It Falls Down
 
@@ -77,7 +77,7 @@ Measured against `tev1:4b-q4_K_M`:
 ## Process
 
 1. **Check the question fits.** Classification, routing, and triage over clear options fit. Grading, gating, and anything code can compute exactly do not - do those another way.
-2. **Frame the state.** Put only the fields the questions need into `state`, named plainly. Every extra field moves the answers, and any word matching an option key leaks the answer - strip verdict tags and labels from text you pass in. Name every question neutrally for what it asks (`contains_stuff`, `q1`), never for the answer you expect.
+2. **Frame the state.** Put only the fields the questions need into `state`, named plainly. Every extra field moves the answers, and any word matching an option key leaks the answer - strip the labels of what the question itself asks (a review's own verdict tag when you ask for its verdict), and keep every other word, because masking evidence ("the earlier stage was HEALTHY") removes what a question needs. Pass the text whole; a truncated write-up loses its closing sections, where the asks usually sit. Name every question neutrally for what it asks (`contains_stuff`, `q1`), never for the answer you expect.
 3. **Decompose a verdict into narrow questions.** Ask the factual parts (did the deploy cause a crash, does a stateful workload restart, is a human asked to act) and combine them in your own logic, rather than asking for the overall verdict in one question.
 4. **Prefer `choice` over `noul` for anything that needs judgement.** A two-option `choice` with described options (`"yes": "needs tests before merge"`, `"no": "safe to merge as is"`) exposes indecision through `confidence`, where `noul` hides it behind a yes-leaning number. Keep `noul` for plainly factual, positively phrased claims.
 5. **Write every criterion as a description.** Each `choice` key's value says what the option means (`"page": "needs a human now"`). Order `score` levels lowest first, because `score` is the expected index over that order.
