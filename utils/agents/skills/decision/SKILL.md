@@ -70,13 +70,14 @@ Measured against `tev1:4b-q4_K_M`:
 - **Judgement calls come back as coin flips.** "Can this diff merge without tests" as a two-option `choice` returned 0.52 / 0.48 with `confidence` 0.002, where the `noul` form of the same question read 0.6 to 0.9. The `choice` form tells the truth - it does not know.
 - **Holistic verdicts over mixed evidence.** A report that was healthy but mentioned an unrelated earlier crash and a monitoring outage came back DEGRADED 0.53 / HEALTHY 0.47, while the narrow "did the deploy cause a crash" on the same text answered no at 0.98. Leaving the word `HEALTHY` anywhere in `state` swung the same verdict to 0.77 - the model latches on to label words.
 - **Context drift.** The same `noul` moved from 0.88 to 0.62 when unrelated fields were added to or removed from `state`.
-- **Literal checks.** "the message contains the word `stuff`" scored 0.65. String matching belongs in code.
+- **Question names leak into the answer.** The name is part of the prompt: the same claim on the same `state` scored 0.96 as `obvious_true`, 0.95 as `q1` and 0.81 as `obvious_false`. Batching the question beside others moved it only a few points (0.95 to 0.98).
+- **Literal checks.** "the message contains the word `stuff`" ranged from 0.65 to 0.98 with naming and batching. String matching belongs in code.
 - **`null` criteria change the answer.** Dropping descriptions flipped a pick from `feature` to `fix`; the descriptions carry real weight.
 
 ## Process
 
 1. **Check the question fits.** Classification, routing, and triage over clear options fit. Grading, gating, and anything code can compute exactly do not - do those another way.
-2. **Frame the state.** Put only the fields the questions need into `state`, named plainly. Every extra field moves the answers, and any word matching an option key leaks the answer - strip verdict tags and labels from text you pass in.
+2. **Frame the state.** Put only the fields the questions need into `state`, named plainly. Every extra field moves the answers, and any word matching an option key leaks the answer - strip verdict tags and labels from text you pass in. Name every question neutrally for what it asks (`contains_stuff`, `q1`), never for the answer you expect.
 3. **Decompose a verdict into narrow questions.** Ask the factual parts (did the deploy cause a crash, does a stateful workload restart, is a human asked to act) and combine them in your own logic, rather than asking for the overall verdict in one question.
 4. **Prefer `choice` over `noul` for anything that needs judgement.** A two-option `choice` with described options (`"yes": "needs tests before merge"`, `"no": "safe to merge as is"`) exposes indecision through `confidence`, where `noul` hides it behind a yes-leaning number. Keep `noul` for plainly factual, positively phrased claims.
 5. **Write every criterion as a description.** Each `choice` key's value says what the option means (`"page": "needs a human now"`). Order `score` levels lowest first, because `score` is the expected index over that order.
