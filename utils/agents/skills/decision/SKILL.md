@@ -1,6 +1,6 @@
 ---
 name: decision
-description: decision Manual for the decision MCP server - a small, deterministic model answers typed questions (choice, noul, score) about a piece of state with probabilities. Load before the first call to that server. Use for routing, classification, and triage with clear options. Not for quality judgements, gates, or any answer that must be exact.
+description: decision Auto-invoked when a triage, routing, or classification call can be answered from facts already in hand - a small deterministic model answers typed questions (choice, noul, score) with probabilities. Load before the first call to that server. Not for quality judgements, gates, or any answer that must be exact.
 argumentHint: '[what you want decided] - e.g. ''is this alert actionable'', ''which area does this message belong to'''
 ---
 
