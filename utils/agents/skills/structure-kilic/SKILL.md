@@ -24,7 +24,7 @@ Load it before deciding where a change goes or what an observation traces back t
 1. **Place the request on the map** per `structure-kilic-overview`. The Groups section says who owns it, the Flow section says what ships it, and the Clusters section says where it runs.
 2. **Find the exact file** per `structure-kilic-exploring`: pick the tool, match the naming pattern, then follow the recipe. For a running thing traced back to its repo, resolve per `kilic-workload-resolution`. For where a value belongs, per `kilic-resource-placement`. For anything in a pipeline, per `kilic-ci-pipelines`.
 3. **Verify live before acting.** Treat the map as a guide, not proof. Confirm the repo with the `gitlab` read tools (`web_url`, archived flag) and confirm what runs with `argocd-kilic`. When the two disagree with the map, the live state wins, and the map needs updating per Key Principles.
-4. **Hand off to the area skill** that the exploring skill-coverage table names. For example, load `argocd-kilic` for sync, prune and Kargo, `cluster-kilic-workload` for workload manifests, and `argocd-kilic-loadbalancer` for public routes. An area marked **No skill** is worked straight from its repository's own `CLAUDE.md` and in-repo skills.
+4. **Hand off to the area skill** that the exploring skill-coverage table names. For example, load `argocd-kilic` for sync and prune, `kargo-kilic` for promotions, `cluster-kilic-workload` for workload manifests, and `argocd-kilic-loadbalancer` for public routes. An area marked **No skill** is worked straight from its repository's own `CLAUDE.md` and in-repo skills.
 
 ## Key Principles
 

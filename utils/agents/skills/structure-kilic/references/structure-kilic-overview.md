@@ -59,7 +59,7 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 | [overseer/tf-overseer](https://gitlab.kilic.dev/cluster/overseer/tf-overseer) | Terraform (HTTP backend), CI plan/deploy | Bootstraps overseer: installs ArgoCD (Helm `argo-cd`, domain `argocd.int.kilic.dev`), Vault via vault-operator (`vault.int.kilic.dev`), vault backup, proxmox-csi-plugin |
 | [argocd-root](https://gitlab.kilic.dev/cluster/argocd-root) | Pulumi as a local generator (`file://.` state, `task apply`), commits `argocd/1-manifest` and `root/1-manifest` | ArgoCD AppProjects, cluster secrets (ExternalSecret pulling server+token from Vault `overseer/argocd/clusters/<cluster>`; labels and annotations from `src/argocd/assets/cluster/<cluster>/{labels,annotations}.yml`), and the root Applications `argocd-root`, `argocd-system`, `cluster-<cluster>` |
 | [argocd-system](https://gitlab.kilic.dev/cluster/argocd-system) | kustomize over ApplicationSets | One ApplicationSet per system component in `base/<c>/`, enabled per environment overlay (`development`, `platform`, `production`, `load-balancer`) with chart pins in `<env>/<c>/patch-applicationset.yaml`; cluster selection by `system.feature.kilic.dev/<c>` + `cluster.kilic.dev/environment` labels |
-| [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) | kustomize, `.deploy/overseer/` | Kargo config: ClusterConfig, ClusterPromotionTasks `promote-chart-pin` / `report-chart-pin`, and one Project `kargo-argocd-system-<component>` per chart-pinned component with Warehouse and Stages `<component>.<env>` (+ `.report`) |
+| [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) | kustomize, repository root | Kargo platform config: ClusterConfig and credentials (`shared/`), ClusterPromotionTasks `promote-pin` / `report-pin` (`promotions/`), each Project's Namespace and Project with its registry entry `promote.yaml` (`projects/`), and ApplicationSet `kargo-promote`, which generates one Application per Project syncing the owning repository's `.promote/` (Warehouses, Stages, ProjectConfig) |
 | `<cluster>/argocd-<cluster>` x6: [rubik](https://gitlab.kilic.dev/cluster/rubik/argocd-rubik), [neutrino](https://gitlab.kilic.dev/cluster/neutrino/argocd-neutrino), [nailbed](https://gitlab.kilic.dev/cluster/nailbed/argocd-nailbed), [overseer](https://gitlab.kilic.dev/cluster/overseer/argocd-overseer), [sun](https://gitlab.kilic.dev/cluster/sun/argocd-sun), [moon](https://gitlab.kilic.dev/cluster/moon/argocd-moon) | Pulumi as generator (NestJS, `src/`), committed output in `apps/`, `system/`, `namespaces/`, `workloads/<name>/` each under `1-manifest/`; CI only lints | Per-cluster: gateways/Cilium/namespaces (`system`, `namespaces`), ArgoCD Applications for each workload (`apps`), and on LB clusters the route manifests themselves (`workloads/`) |
 | [node-patcher](https://gitlab.kilic.dev/cluster/node-patcher) | Run by hand | Patches new cluster nodes; run manually only when nodes are added |
 | [pipes/argocd-pulumi-hydrator](https://gitlab.kilic.dev/cluster/pipes/argocd-pulumi-hydrator) | Go CMP (`plugin.yaml`, discovers `Pulumi.yaml`) | Would render a Pulumi program inside ArgoCD instead of committing `1-manifest/`. No live Application uses it |
@@ -67,12 +67,12 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 
 ### cluster/workloads
 
-kustomize, one repo per application, deployment root `.deploy/<cluster>/`, `.deploy/base/` only when multi-cluster. CI renders with `devops/pipelines` `kustomize@1.2.0` (some add buildah image builds). Live mapping from ArgoCD:
+kustomize, one repo per application, deployment root `.deploy/<cluster>/`, `.deploy/base/` only when multi-cluster. A repository whose pins Kargo promotes keeps its Kargo Warehouses and Stages beside it in `.promote/`, a separate kustomize root its own Applications never render (`argocd-system` holds one `.promote/<c>/` per chart component the same way). CI renders with `devops/pipelines` `kustomize@1.2.0` (some add buildah image builds). Live mapping from ArgoCD:
 
 | Repo | Cluster(s) | Deployed by |
 |---|---|---|
-| [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring), [monitoring-ruler](https://gitlab.kilic.dev/cluster/workloads/monitoring-ruler) | all six | `argocd-system` ApplicationSets (not a cluster repo); no chart pin, no Kargo |
-| [monitoring-backbone](https://gitlab.kilic.dev/cluster/workloads/monitoring-backbone), [monitoring-view](https://gitlab.kilic.dev/cluster/workloads/monitoring-view) | rubik | `argocd-rubik` |
+| [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring), [monitoring-ruler](https://gitlab.kilic.dev/cluster/workloads/monitoring-ruler) | all six | `argocd-system` ApplicationSets (not a cluster repo); `monitoring` pins promoted by Kargo Project `kargo-argocd-system-monitoring` |
+| [monitoring-backbone](https://gitlab.kilic.dev/cluster/workloads/monitoring-backbone), [monitoring-view](https://gitlab.kilic.dev/cluster/workloads/monitoring-view) | rubik | `argocd-rubik`; `monitoring-backbone` pins promoted by Kargo Project `kargo-monitoring-backbone` |
 | [gose](https://gitlab.kilic.dev/cluster/workloads/gose), [seafile](https://gitlab.kilic.dev/cluster/workloads/seafile), [mailserver](https://gitlab.kilic.dev/cluster/workloads/mailserver), [notifications](https://gitlab.kilic.dev/cluster/workloads/notifications), [obsidian](https://gitlab.kilic.dev/cluster/workloads/obsidian), [rustfs](https://gitlab.kilic.dev/cluster/workloads/rustfs) (main, cache, warehouse), [sourcebot](https://gitlab.kilic.dev/cluster/workloads/sourcebot), [teamspeak3](https://gitlab.kilic.dev/cluster/workloads/teamspeak3), [gitlab-runner](https://gitlab.kilic.dev/cluster/workloads/gitlab-runner), [gitlab-tools](https://gitlab.kilic.dev/cluster/workloads/gitlab-tools), [html-cv3](https://gitlab.kilic.dev/cluster/workloads/html-cv3), [html-listr2](https://gitlab.kilic.dev/cluster/workloads/html-listr2), [html-nurankilic](https://gitlab.kilic.dev/cluster/workloads/html-nurankilic) | rubik | `argocd-rubik` |
 | [agents](https://gitlab.kilic.dev/cluster/workloads/agents), [atuin](https://gitlab.kilic.dev/cluster/workloads/atuin), [home-assistant](https://gitlab.kilic.dev/cluster/workloads/home-assistant), [immich](https://gitlab.kilic.dev/cluster/workloads/immich), [ollama](https://gitlab.kilic.dev/cluster/workloads/ollama), [paperless-ngx](https://gitlab.kilic.dev/cluster/workloads/paperless-ngx), [showmen](https://gitlab.kilic.dev/cluster/workloads/showmen) | neutrino | `argocd-neutrino` |
 | [zitadel](https://gitlab.kilic.dev/cluster/workloads/zitadel) | overseer | `argocd-overseer` (AppProject `platform`) |
@@ -122,7 +122,8 @@ Core services run by ansible as containers:
                              argocd-root, argocd-system, cluster-<cluster> x6
 7a. System components      cluster/argocd-system ApplicationSets x labels in argocd-root assets
                              -> cluster-<cluster>-system-<component> from cluster/charts/chart-<c>@<pin>
-7b. Pin promotion          cluster/kargo-root Stages promote the chart pin through envs by committing to argocd-system
+7b. Pin promotion          Kargo Stages from each repository's .promote/ (registered in cluster/kargo-root) promote
+                             a pin through envs or clusters by committing to that repository
 8. Per-cluster             cluster-<cluster> app -> argocd-<cluster>/apps -> cluster-<cluster>-system, -namespaces,
                              and <cluster>-<workload> Applications
 9. Workloads               <cluster>-<workload> -> cluster/workloads/<workload>/.deploy/<cluster>
@@ -142,6 +143,8 @@ Core services run by ansible as containers:
 | A system component's fleet or per-env values | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | ArgoCD `argocd-system` app |
 | A pipeline's template or pipe CLI | `devops/pipelines` (template) or `devops/pipes` (CLI), per `kilic-ci-pipelines` | release tag on that package; each consumer picks it up when it bumps its `ref` |
 | A system component's chart | `cluster/charts/chart-<c>`, release tag; Kargo writes the pin, the first one included | Kargo Stage commits pin -> ArgoCD |
+| How a pin promotes (Warehouse, Stages, soak, policy) | the pinning repository's `.promote/` | ArgoCD `kargo-<route>-<name>` app generated by `kargo-root` |
+| Kargo tasks, credentials, a Project or its registration | `cluster/kargo-root` | ArgoCD `kargo-root` app (prune confirm-gated) |
 | Add a workload's Application or namespace | `cluster/<c>/argocd-<c>/src/workloads/<name>/` then regenerate `apps/1-manifest` | ArgoCD `cluster-<c>` app |
 | A workload's manifests | `cluster/workloads/<w>/.deploy/<cluster>/` | ArgoCD `<cluster>-<w>` app, `targetRevision: HEAD`, automated prune |
 | Public route for a workload | `cluster/<lb>/argocd-<lb>` (sun or moon) | ArgoCD `<lb>-cluster-<c>` / `<lb>-routes` |
@@ -150,9 +153,9 @@ Core services run by ansible as containers:
 ### ArgoCD topology (single instance)
 
 - ArgoCD runs on **overseer** (in-cluster destination `https://kubernetes.default.svc`). All other clusters register through the Rancher proxy `https://rancher.int.kilic.dev/k8s/clusters/<id>`.
-- Application naming: root `argocd-root`, `argocd-system`, `cluster-<c>`; per cluster `cluster-<c>-system`, `cluster-<c>-namespaces`; system components `cluster-<c>-system-<component>`; workloads `<c>-<workload>`; platform exceptions without prefix: `zitadel`, `kargo-root`.
-- AppProjects: `default`, `argocd`, `argocd-apps`, `platform`, `kargo`, and per cluster `cluster-<c>`, `cluster-<c>-system`, `cluster-<c>-operator`, `cluster-<c>-pv`.
-- Sync, prune and Kargo mechanics: `argocd-kilic`.
+- Application naming: root `argocd-root`, `argocd-system`, `cluster-<c>`; per cluster `cluster-<c>-system`, `cluster-<c>-namespaces`; system components `cluster-<c>-system-<component>`; workloads `<c>-<workload>`; platform exceptions without prefix: `zitadel`, `kargo-root`; Kargo promotion configs `kargo-<route>-<name>`, named after their Project and generated by `kargo-root`.
+- AppProjects: `default`, `argocd`, `argocd-apps`, `platform`, `kargo`, `kargo-root`, and per cluster `cluster-<c>`, `cluster-<c>-system`, `cluster-<c>-operator`, `cluster-<c>-pv`.
+- Sync and prune mechanics: `argocd-kilic`. Kargo promotions: `kargo-kilic`.
 
 ---
 

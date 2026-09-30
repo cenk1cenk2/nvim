@@ -17,27 +17,27 @@ spec:
           targetRevision: v1.0.0
 ```
 
-`promote-pin` defaults point here, so argocd-system Stages omit `pin_file`, `pin_key` and `pin_path`. `argocd_repo` must equal that `repoURL` exactly (SSH form).
+`promote-pin` defaults point here, so argocd-system Stages omit `pin_file` and their Warehouses the `kargo.kilic.dev/pin-key` annotation. The sync `repoURL` the task derives from the subscription (SSH form, ending `.git`) must equal that `repoURL` exactly; a Stage whose ApplicationSet source differs sets `argocd_repo`.
 
 ## Workloads Repositories
 
-Pins live in the workloads repository's per-cluster overlay, `.deploy/<cluster>/`. Two shapes exist.
+Pins live in the workloads repository's per-cluster overlay, `.deploy/<cluster>/`. The Stage names the file in `pin_file`; the Warehouse names the key in its `kargo.kilic.dev/pin-key` annotation. Two shapes exist.
 
 ### Inline `helmCharts:` in a kustomization
 
 `monitoring-backbone` pins each chart inline in the component's cluster kustomization:
 
-| Artifact | `pin_file` | `pin_key` | `pin_path` |
-|---|---|---|---|
-| chart `mimir-distributed` | `.deploy/rubik/mimir/kustomization.yaml` | `helmCharts.0.version` | `helmCharts[0].version` |
-| chart `loki` | `.deploy/rubik/loki/kustomization.yaml` | `helmCharts.0.version` | `helmCharts[0].version` |
-| image `opentelemetry-collector-contrib` | `.deploy/rubik/opentelemetry-ingester/opentelemetry-collector.yaml` | `spec.image` | `spec.image` |
+| Artifact | `pin_file` | `pin-key` |
+|---|---|---|
+| chart `mimir-distributed` | `.deploy/rubik/mimir/kustomization.yaml` | `helmCharts.0.version` |
+| chart `loki` | `.deploy/rubik/loki/kustomization.yaml` | `helmCharts.0.version` |
+| image `opentelemetry-collector-contrib` | `.deploy/rubik/opentelemetry-ingester/opentelemetry-collector.yaml` | `spec.image` |
 
 ### File-based generator pins (worked example: `monitoring`)
 
 [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring) runs on six clusters and keeps `base` unversioned. Every chart and image is pinned per cluster in that component's own cluster folder:
 
-| Artifact | Base (unversioned) | Pin file | Key |
+| Artifact | Base (unversioned) | `pin_file` | `pin-key` |
 |---|---|---|---|
 | grafana-alloy chart | `base/grafana-alloy/helmchart.yaml` | `.deploy/<cluster>/grafana-alloy/helmchart/patch-helmchart.yaml` | `version` |
 | blackbox-exporter chart | `base/blackbox-exporter/helmchart.yaml` | `.deploy/<cluster>/blackbox-exporter/patch-helmchart.yaml` | `version` |
@@ -51,7 +51,7 @@ How the shape works:
 - `patch-helmchart.yaml` is the one override per chart per cluster: it sets `version` and lists the values under `additionalValuesFiles`, starting with the base `values.yaml`. Those paths resolve relative to the kustomization that runs the generator, not the patch file.
 - The collector image is pinned by a strategic patch carrying the full `spec.image`, targeting every `OpenTelemetryCollector` by group, version and kind, so one patch covers both the logs and the metrics collector.
 
-A Kargo Stage on this shape would pin `pin_key: version` / `pin_path: version` for a chart and `pin_key: spec.image` / `pin_path: spec.image` with the default `pin_format: repo-tag` for the collector.
+The collector Stages keep the default `pin_format: repo-tag`.
 
 ## Renovate and Kargo
 
@@ -68,7 +68,7 @@ A pin has one writer. Adopting Kargo for a dependency and handing it back to Ren
 ### Handing a dependency back to Renovate
 
 1. Restore the automerge presets in place of the disable presets (or widen the `argocd` manager pattern again).
-2. Disable the Kargo Stages first (drop `kargo.kilic.dev/auto: "true"` so the ProjectConfig policy stops auto-promoting), then remove the Project, Warehouse and Stages from `kargo-root` and the Stage names from the Application's `kargo.akuity.io/authorized-stage`.
+2. Disable the Kargo Stages first (drop `kargo.kilic.dev/auto: "true"` so the ProjectConfig policy stops auto-promoting), then remove the component's Warehouse and Stages from the repository's `.promote/` and the Stage names from the Application's `kargo.akuity.io/authorized-stage`. When that empties the Project, also remove its registry folder from `kargo-root`; the generated Application stays behind and is deleted by hand.
 3. Make sure Renovate can read the pin.
 
 **Renovate's `kustomize` manager reads only `kustomization.yaml` files** (default `managerFilePatterns` `/(^|/)kustomization\.ya?ml$/`), and within them only inline `helmCharts`, `images`, remote resources and components. A version in a `patch-helmchart.yaml` generator patch, or a `spec.image` in a collector patch, is invisible to it: the automerge presets match nothing and the version silently stops moving. A repository on the file-based pin shape that goes back to Renovate needs a `customManagers` regex entry whose `matchStrings` capture the line under a directive comment:
