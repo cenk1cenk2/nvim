@@ -161,6 +161,10 @@ Use tmux only for **read-only** inspection of the user's panes when they referen
 
 One read-only server per estate (kilic clusters; AWS EKS), only one present per profile. Load the same-named skill before the first call (§I step 5); `kubectl` gates per §V.
 
+### decision
+
+A small, deterministic decision model. When a triage, routing, or classification call can be answered from facts already gathered — which area a message belongs to, whether a write-up asks a human to act, which of N routes fits — feed those facts in as narrow questions and weigh its answer against your own read; say where the two disagree. Load the `decision` skill before the first call. Advisory only: it never stands in for a gate (§V).
+
 ### CLI
 
 CLI owns what no MCP server covers: local git (worktrees via `wt`, below), cluster writes and streaming via `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
