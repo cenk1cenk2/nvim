@@ -109,7 +109,7 @@ Adding to `base/` deploys nothing anywhere — `base/` is referenced only throug
 - Use the repo's own `.claude/skills/promote-application` skill
 - Add the component to `<environment>/kustomization.yaml` in alphabetical order
 - Create `<environment>/<component>/kustomization.yaml` and `patch-applicationset.yaml`. Kargo's promotion task reads and rewrites `spec.template.spec.sources[0].targetRevision` in that patch, so the patch must exist with that key before the first promotion
-- Add the component's Kargo promotion in `cluster/argocd-system` under `.promote/<component>/` (ProjectConfig, Warehouse on the chart repo's tags, one Stage and `.report` Stage per environment), copied from an existing component and listed in `.promote/kustomization.yaml`, and register Project `kargo-argocd-system-<component>` in `cluster/kargo-root` under `projects/argocd-system/<component>/` (Namespace, Project, `promote.yaml`). Its first promotion sets the pin
+- Add the component's Kargo promotion in `cluster/argocd-system` under `.promote/<component>/` (ProjectConfig, Warehouse on the chart repo's tags with the `pin-repo` and `pins` annotations, one Stage and `.report` Stage per environment), copied from an existing component and listed in `.promote/kustomization.yaml`, and register Project `kargo-argocd-system-<component>` in `cluster/kargo-root` under `projects/argocd-system/<component>/` (`project.yaml`, `kustomization.yaml`, `promote.yaml`; Kargo creates the namespace). Its first promotion sets the pin
 - **Blocked by:** Issue 3
 
 **Issue 5 (Optional — if secrets are needed): Configure Secrets in Vault**

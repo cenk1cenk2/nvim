@@ -1,8 +1,26 @@
 # Kargo Pins: kilic
 
-Where each repository kind keeps its version pins, the pin shape for workloads repositories that inflate Helm charts from files, and how a repository moves between Renovate and Kargo.
+Where each repository kind keeps its version pins, how the Warehouse describes them, the pin shape for workloads repositories that inflate Helm charts from files, and how a repository moves between Renovate and Kargo.
 
-**Rule for every kind:** version decisions never live in `base`. Each resource gets exactly one override patch per cluster (per env for chart repositories), and that patch is the file Kargo writes.
+**Rule for every kind:** version decisions never live in `base`. Each resource gets exactly one override patch per cluster (per environment for chart repositories), and that patch is the file Kargo writes.
+
+## Warehouse Pin Annotations
+
+The pin is described on the Warehouse, never in Stage vars:
+
+- `kargo.kilic.dev/pin-repo`: the gitops repository's HTTPS URL ending `.git`.
+- `kargo.kilic.dev/pins`: a JSON list in a YAML `|-` block, one entry per pinned value. `file` (repo-relative, `{stage}` standing for the stage, the Stage name without the component prefix) and `key` (`yaml-update` dot-and-index form, `helmCharts.0.version`) are required; `value` is an optional template over `{version}`, `{tag}`, `{commit}`, `{digest}` and `{repo}`, default `{version}`, so charts and git tags omit it and an image that stores a full reference sets `"{repo}:{tag}"`.
+- Every entry names the same `file`, and the first is the primary pin (its current value is `From:`). Pins in two files take two Warehouses.
+
+```yaml
+kargo.kilic.dev/pins: |-
+  [
+    {
+      "file": "{stage}/<component>/patch-applicationset.yaml",
+      "key": "spec.template.spec.sources.0.targetRevision"
+    }
+  ]
+```
 
 ## Chart Repositories
 
@@ -17,31 +35,35 @@ spec:
           targetRevision: v1.0.0
 ```
 
-`promote-pin` defaults point here, so argocd-system Stages omit `pin_file` and their Warehouses the `kargo.kilic.dev/pin-key` annotation. The sync `repoURL` the task derives from the subscription (SSH form, ending `.git`) must equal that `repoURL` exactly; a Stage whose ApplicationSet source differs sets `argocd_repo`.
+The Warehouse's `file` is `{stage}/<component>/patch-applicationset.yaml` and its `key` `spec.template.spec.sources.0.targetRevision`. The sync `repoURL` the task derives from the subscription (SSH form, ending `.git`) must equal that `repoURL` exactly, so every ApplicationSet chart source ends in `.git`; no var overrides it.
+
+### Chart component images
+
+An image a chart component runs is pinned in a Helm values file of argocd-system, not in the ApplicationSet patch: `external-dns-webhook-opnsense` writes `external-dns.provider.webhook.image.tag` in `load-balancer/<component>/values.yaml` (a `pins` entry without `value`, so the tag is written). Its Warehouse sits in the component's existing Project beside the chart Warehouse, and Renovate is disabled for the image.
 
 ## Workloads Repositories
 
-Pins live in the workloads repository's per-cluster overlay, `.deploy/<cluster>/`. The Stage names the file in `pin_file`; the Warehouse names the key in its `kargo.kilic.dev/pin-key` annotation. Two shapes exist.
+Pins live in the workloads repository's per-cluster overlay, `.deploy/{stage}/`. The Warehouse's `pins` entry names the file (`.deploy/{stage}/...`, the stage being the cluster) and the key. Two shapes exist.
 
 ### Inline `helmCharts:` in a kustomization
 
 `monitoring-backbone` pins each chart inline in the component's cluster kustomization:
 
-| Artifact | `pin_file` | `pin-key` |
+| Artifact | `file` | `key` |
 |---|---|---|
-| chart `mimir-distributed` | `.deploy/rubik/mimir/kustomization.yaml` | `helmCharts.0.version` |
-| chart `loki` | `.deploy/rubik/loki/kustomization.yaml` | `helmCharts.0.version` |
-| image `opentelemetry-collector-contrib` | `.deploy/rubik/opentelemetry-ingester/opentelemetry-collector.yaml` | `spec.image` |
+| chart `mimir-distributed` | `.deploy/{stage}/mimir/kustomization.yaml` | `helmCharts.0.version` |
+| chart `loki` | `.deploy/{stage}/loki/kustomization.yaml` | `helmCharts.0.version` |
+| image `opentelemetry-collector-contrib` | `.deploy/{stage}/opentelemetry-ingester/opentelemetry-collector.yaml` | `spec.image`, `value` `{repo}:{tag}` |
 
 ### File-based generator pins (worked example: `monitoring`)
 
 [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring) runs on six clusters and keeps `base` unversioned. Every chart and image is pinned per cluster in that component's own cluster folder:
 
-| Artifact | Base (unversioned) | `pin_file` | `pin-key` |
+| Artifact | Base (unversioned) | `file` | `key` |
 |---|---|---|---|
-| grafana-alloy chart | `base/grafana-alloy/helmchart.yaml` | `.deploy/<cluster>/grafana-alloy/helmchart/patch-helmchart.yaml` | `version` |
-| blackbox-exporter chart | `base/blackbox-exporter/helmchart.yaml` | `.deploy/<cluster>/blackbox-exporter/patch-helmchart.yaml` | `version` |
-| OpenTelemetry Collector image | untagged `spec.image` in `base/opentelemetry-collector/*/opentelemetry-collector.yaml` | `.deploy/<cluster>/opentelemetry-collector/patch-opentelemetry-collector.yaml` | `spec.image` (full tagged image) |
+| grafana-alloy chart | `base/grafana-alloy/helmchart.yaml` | `.deploy/{stage}/grafana-alloy/helmchart/patch-helmchart.yaml` | `version` |
+| blackbox-exporter chart | `base/blackbox-exporter/helmchart.yaml` | `.deploy/{stage}/blackbox-exporter/patch-helmchart.yaml` | `version` |
+| OpenTelemetry Collector image | untagged `spec.image` in `base/opentelemetry-collector/*/opentelemetry-collector.yaml` | `.deploy/{stage}/opentelemetry-collector/patch-opentelemetry-collector.yaml` | `spec.image` (full tagged image, `value` `{repo}:{tag}`) |
 
 How the shape works:
 
@@ -51,7 +73,7 @@ How the shape works:
 - `patch-helmchart.yaml` is the one override per chart per cluster: it sets `version` and lists the values under `additionalValuesFiles`, starting with the base `values.yaml`. Those paths resolve relative to the kustomization that runs the generator, not the patch file.
 - The collector image is pinned by a strategic patch carrying the full `spec.image`, targeting every `OpenTelemetryCollector` by group, version and kind, so one patch covers both the logs and the metrics collector.
 
-The collector Stages keep the default `pin_format: repo-tag`.
+The collector pins write `{repo}:{tag}`.
 
 ## Renovate and Kargo
 
@@ -63,6 +85,7 @@ A pin has one writer. Adopting Kargo for a dependency and handing it back to Ren
   - `manager-kustomize-automerge-minor(<chart>)` and `manager-kustomize-automerge-major(<chart>)` become `manager-kustomize-disable(<chart>)`.
   - `datasource-docker-automerge-minor(<image>)` becomes `datasource-docker-disable(<image>)`.
   - Prior art: monitoring-backbone `4e1aa5e` (`manager-kustomize-disable(mimir-distributed)`, `manager-kustomize-disable(loki)`, `datasource-docker-disable(ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib)`).
+- **Any other artifact Kargo promotes** (an image in a chart values file): the matching `datasource-docker-disable(<image>)` preset.
 - **argocd-system:** its `argocd` manager is narrowed with `managerFilePatterns` to the patch files Kargo does not own (`platform/argo-rollouts` and `platform/kargo`), so Renovate no longer reads Kargo-managed `targetRevision` pins.
 
 ### Handing a dependency back to Renovate
