@@ -27,7 +27,7 @@ Key files:
 
 Once merged, ArgoCD syncs the Application automatically — `newApplication()` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate (verified against a rendered manifest in `apps/1-manifest/`). Removing a resource from `.deploy/<cluster>/` in the workload repository therefore deletes it on the cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
 
-This pattern is never Kargo-promoted — Kargo only promotes `argocd-system`'s own chart-pin components between environments; a workload Application syncs straight from its own repository's `HEAD`. Load `argocd-kilic` to check sync status or investigate after merge.
+A workload Application syncs straight from its own repository's `HEAD`. When the workload repository promotes its pins with Kargo (a registered `.promote/` folder, as `monitoring-backbone` does), its Stages sync this Application by name, so it must list each of them in `kargo.akuity.io/authorized-stage`. Load `argocd-kilic` to check sync status or investigate after merge.
 
 ## Gather Requirements
 

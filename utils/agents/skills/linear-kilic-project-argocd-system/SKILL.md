@@ -104,12 +104,12 @@ Adding to `base/` deploys nothing anywhere — `base/` is referenced only throug
 **Issue 4: Promote to the target environment**
 
 > **Repos:** `cluster/argocd-system`, `cluster/kargo-root`
-> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`) and gives it a Kargo project. Kargo writes the chart pin, the first one included; this is the step that actually deploys. Sync, prune and Kargo mechanics: `argocd-kilic`.
+> **Purpose:** Adds the component to an environment overlay (`development`, `load-balancer`, `platform`, `production`) and gives it a Kargo project. Kargo writes the chart pin, the first one included; this is the step that actually deploys. Sync and prune mechanics: `argocd-kilic`; promotion layout and registration: `kargo-kilic`.
 
 - Use the repo's own `.claude/skills/promote-application` skill
 - Add the component to `<environment>/kustomization.yaml` in alphabetical order
 - Create `<environment>/<component>/kustomization.yaml` and `patch-applicationset.yaml`. Kargo's promotion task reads and rewrites `spec.template.spec.sources[0].targetRevision` in that patch, so the patch must exist with that key before the first promotion
-- Add the component's Kargo project in `cluster/kargo-root` under `.deploy/overseer/projects/argocd-system/<component>/` (Warehouse on the chart repo's tags, one Stage per environment), copied from an existing component. Its first promotion sets the pin
+- Add the component's Kargo promotion in `cluster/argocd-system` under `.promote/<component>/` (ProjectConfig, Warehouse on the chart repo's tags, one Stage and `.report` Stage per environment), copied from an existing component and listed in `.promote/kustomization.yaml`, and register Project `kargo-argocd-system-<component>` in `cluster/kargo-root` under `projects/argocd-system/<component>/` (Namespace, Project, `promote.yaml`). Its first promotion sets the pin
 - **Blocked by:** Issue 3
 
 **Issue 5 (Optional — if secrets are needed): Configure Secrets in Vault**

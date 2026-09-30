@@ -27,7 +27,9 @@ How an agent finds the repository and file behind a change or an observation. Th
 | `cluster/argocd-system/base/<c>/applicationset.yaml` | One ApplicationSet per system component |
 | `cluster/argocd-system/<env>/<c>/patch-applicationset.yaml` | Chart pin (`targetRevision`) for that env; `<env>` in development, platform, production, load-balancer |
 | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | Layered values |
-| `cluster/kargo-root/.deploy/overseer/projects/argocd-system/<c>/stages/<env>.yaml` | Kargo Stage `<c>.<env>`, Project `kargo-argocd-system-<c>` |
+| `cluster/argocd-system/.promote/<c>/stages/<env>.yaml` | Kargo Stage `<c>.<env>`, Project `kargo-argocd-system-<c>` |
+| `cluster/workloads/<w>/.promote/<component>/stages/<cluster>.yaml` | Kargo Stage `<component>.<cluster>` of a workloads repository's Project |
+| `cluster/kargo-root/projects/<route>/<name>/promote.yaml` | Registry entry: the Project and the `.promote/` path it syncs, beside that Project's Namespace and Project |
 | `cluster/charts/chart-<c>` | Helm wrapper, tags `v<semver>` |
 | `cluster/workloads/<w>/.deploy/<cluster>/` | Workload kustomize root; `.deploy/base/` when multi-cluster; vendored charts under `.../charts/<chart>-<ver>/` are not edit targets |
 | ArgoCD app `cluster-<c>-system-<component>` | System component from argocd-system |
@@ -49,8 +51,9 @@ How an agent finds the repository and file behind a change or an observation. Th
 | Enable a system component on a cluster | `argocd-root` `labels.yml` + regenerate | `list_clusters` labels; skill `linear-kilic-project-argocd-system` |
 | Per-cluster value for a system component | `argocd-root` `annotations.yml` + regenerate | `list_clusters` shows `values.system.feature.kilic.dev/*` annotation keys |
 | Fleet or per-env value for a system component | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | reference `kilic-resource-placement` |
-| New system component | `cluster/charts/chart-<c>` then `argocd-system` base + env overlay, `kargo-root` project | skills `cluster-kilic-chart`, `linear-kilic-project-argocd-system`, `argocd-system/.claude/skills/*` in-repo |
-| Why a chart pin moved / promote a pin | `cluster/kargo-root` Stages, commits on `cluster/argocd-system` | skill `argocd-kilic` |
+| New system component | `cluster/charts/chart-<c>` then `argocd-system` base + env overlay + `.promote/<c>/`, `kargo-root` registry folder | skills `cluster-kilic-chart`, `linear-kilic-project-argocd-system`, `argocd-system/.claude/skills/*` in-repo |
+| Why a pin moved / change how a pin promotes | the pinning repository's `.promote/` Warehouse and Stages, pin MRs on that repository | skill `kargo-kilic` |
+| Shared Kargo tasks and credentials, a Project or its registration | `cluster/kargo-root` `promotions/`, `shared/`, `projects/` | skill `kargo-kilic` |
 | Kubernetes version, node pools, etcd backup of a cluster | `cluster/pulumi-config-rancher/src/modules/clusters.service.ts` | Rancher UI / `kubernetes-kilic` nodes |
 | A cluster's VMs (CPU, RAM, disks) | `infrastructure/tf-config-proxmox/cluster-<c>.tf` | tags `cluster-<c>` |
 | ArgoCD or Vault install itself | `cluster/overseer/tf-overseer` | `kubernetes-kilic` context `overseer` |
@@ -73,7 +76,8 @@ How an agent finds the repository and file behind a change or an observation. Th
 | LB clusters sun/moon routes | `argocd-kilic-loadbalancer` |
 | System chart repos | `cluster-kilic-chart` |
 | Planning a system component / workload rollout | `linear-kilic-project-argocd-system`, `linear-kilic-project-argocd-workload` |
-| Operating ArgoCD, Kargo mechanics | `argocd-kilic` |
+| Operating ArgoCD | `argocd-kilic` |
+| Kargo promotions (`.promote/`, `kargo-root`) | `kargo-kilic` |
 | Cluster reads | `kubernetes-kilic` |
 | Observability | `grafana-kilic`, `grafana-kilic-*` |
 | Resolving observation to repo; value placement | references `kilic-workload-resolution`, `kilic-resource-placement` |
