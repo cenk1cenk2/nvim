@@ -2,7 +2,6 @@ local M = {}
 
 ---@class WKCategories
 ---@field ACTIONS string
----@field BOOKMARKS string
 ---@field BUFFER string
 ---@field COPILOT string
 ---@field SIDEKICK string
@@ -10,6 +9,7 @@ local M = {}
 ---@field FIND string
 ---@field GIT string
 ---@field ISSUES string
+---@field MARK string
 ---@field LSP string
 ---@field NEOVIM string
 ---@field NOTES string
@@ -25,7 +25,7 @@ local M = {}
 ---@type WKCategories
 M.CATEGORIES = {
   ACTIONS = "a",
-  BOOKMARKS = "m",
+  MARK = "m",
   BUFFER = "b",
   COPILOT = "c",
   SIDEKICK = "C",
@@ -464,14 +464,6 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.LSP }),
             group = "lsp",
-            mode = { "n", "v" },
-          },
-
-          -- bookmarks
-
-          {
-            fn.wk_keystroke({ categories.BOOKMARKS }),
-            group = "bookmarks",
             mode = { "n", "v" },
           },
 

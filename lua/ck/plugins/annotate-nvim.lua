@@ -66,12 +66,12 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "m" }),
-          group = "annotate",
+          fn.wk_keystroke({ categories.MARK }),
+          group = "mark",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "c" }),
+          fn.wk_keystroke({ categories.MARK, "c" }),
           function()
             require("annotate").add()
           end,
@@ -79,14 +79,14 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "b" }),
+          fn.wk_keystroke({ categories.MARK, "b" }),
           function()
             require("annotate").add_file()
           end,
           desc = "annotate file",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "C" }),
+          fn.wk_keystroke({ categories.MARK, "C" }),
           function()
             require("annotate").add_with_type()
           end,
@@ -94,84 +94,84 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "r" }),
+          fn.wk_keystroke({ categories.MARK, "r" }),
           function()
             require("annotate").restore()
           end,
           desc = "annotate restore archive",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "R" }),
+          fn.wk_keystroke({ categories.MARK, "R" }),
           function()
             require("annotate").clear_archive({ force = true })
           end,
           desc = "annotate clear archives",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "o" }),
+          fn.wk_keystroke({ categories.MARK, "o" }),
           function()
             require("annotate").show()
           end,
           desc = "annotate show",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "e" }),
+          fn.wk_keystroke({ categories.MARK, "e" }),
           function()
             require("annotate").edit()
           end,
           desc = "annotate edit",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "x" }),
+          fn.wk_keystroke({ categories.MARK, "x" }),
           function()
             require("annotate").delete({ force = true })
           end,
           desc = "annotate delete",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "j" }),
+          fn.wk_keystroke({ categories.MARK, "j" }),
           function()
             require("annotate").next()
           end,
           desc = "annotate next",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "k" }),
+          fn.wk_keystroke({ categories.MARK, "k" }),
           function()
             require("annotate").prev()
           end,
           desc = "annotate previous",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "f" }),
+          fn.wk_keystroke({ categories.MARK, "f" }),
           function()
             require("annotate").pick()
           end,
           desc = "annotate choose",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "q" }),
+          fn.wk_keystroke({ categories.MARK, "q" }),
           function()
             require("annotate").quickfix()
           end,
           desc = "annotate set quickfix",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "s" }),
+          fn.wk_keystroke({ categories.MARK, "s" }),
           function()
             require("annotate").preview()
           end,
           desc = "annotate summary",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "P" }),
+          fn.wk_keystroke({ categories.MARK, "P" }),
           function()
             require("annotate").export()
           end,
           desc = "annotate export",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "S" }),
+          fn.wk_keystroke({ categories.MARK, "S" }),
           function()
             require("annotate").export({
               to = function(markdown)
@@ -182,7 +182,7 @@ function M.config()
           desc = "annotate send to sidekick",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "m", "X" }),
+          fn.wk_keystroke({ categories.MARK, "X" }),
           function()
             require("annotate").clear({ force = true })
           end,
