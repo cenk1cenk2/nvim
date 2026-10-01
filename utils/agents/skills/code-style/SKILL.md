@@ -10,7 +10,7 @@ references:
 These hold in every language and every repository. The sections below explain each one; none of them softens it.
 
 1. **Match the neighbourhood first.** A convention the surrounding code already follows beats every default in this skill. Code a reader can pick out as added later is a defect.
-2. **Default to no comment.** Comments are the exception, not the habit: add one only when the code cannot carry a non-obvious *why*, and never more densely than the surrounding file. A comment that restates its line gets deleted. When in doubt, leave it out.
+2. **Default to no comment.** Comments are the exception, not the habit: add one only when the code cannot carry a non-obvious *why*, and never more densely than the surrounding file. A comment that restates its line gets deleted. When in doubt, leave it out. One case always gets a comment: code that works around a pending upstream issue or bug, written per Absolute 9 with a link to the upstream issue, so it can be removed once that lands.
 3. **Your reasoning stays out of the file.** No comment explains the edit, defends the choice, or argues with the rejected option; that goes in your reply.
 4. **Inline single-use values.** A variable assigned once and read once in the same place is inlined into its use. Keep the name only when it says something the expression cannot, or the neighbourhood names such values.
 5. **Defer to the project's tooling.** Formatting, import order and lint are the tools' job. Run the project's own commands per `project-tooling` and report what they said.
