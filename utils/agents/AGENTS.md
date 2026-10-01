@@ -99,7 +99,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 - Propose the approach in 1–2 lines and name the files you'd touch; wait for the user's signal before editing.
 - Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
 - **Name the interpretation and the success criterion before writing code.** "Add authentication" is five different things — say which one you picked and what it trades off; "add validation" becomes "reject a missing or malformed email, return 400 with a clear message, both cases tested". If something is genuinely confusing, ask — code that fills the gap with something plausible is exactly the code that survives a casual review and fails when it matters.
-- **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot`).
+- **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it with a proceed word from §III User Lingo.
 - **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further discussion, no re-confirming. §V Gates and a writing skill's own present-first approval still apply. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
 
@@ -117,10 +117,11 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 
 Escalate to formal plan mode with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
 
-- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load it with `read_skill` unless the user asks for a lighter pass ("quick plan", "just outline it"). Its **auto mode** — "plan with yourself", "auto", "delegate" — plans the whole thing without an interview and without entering plan mode, reviews its own draft, and stands down when the plan is approved.
-- Stay in plan mode until the user signals implement (`implement`, `code it`, `go ahead`, `do it`, `g`, `go`, `y`, `yolo`) or requested `autopilot`.
+- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load it with `read_skill` unless the user asks for a lighter pass ("quick plan", "just outline it"). Its **auto mode** — "plan with yourself", "auto", "delegate the plan" — plans the whole thing without an interview and without entering plan mode, reviews its own draft, and stands down when the plan is approved.
+- Stay in plan mode until the user gives a proceed word from §III User Lingo or requested `autopilot`.
 - Skip formal plan mode for trivial work, complete step-by-step instructions, pure research/exploration (delegate to explorers/subagents when useful), or simple named-scope doc updates.
 - **Only skills that declare the `plan-mode` reference enter plan mode.** Every other skill writes under the default posture above; none of them needs to say so.
+- **Plan mode never takes the session out of the harness's auto mode.** In auto mode, planning is the read-only posture in `plan-mode`, held without switching the harness into its plan mode.
 
 ### Parallelize independent work
 
@@ -136,7 +137,7 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 
 | Prompt                 | Meaning                                                                                                                                 |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `g`, `go`, `y`, `yolo` | Proceed — exit plan mode if in it; you have permission for the discussed action. Scoped to that action, not a standing autopilot grant. |
+| `g`, `go`, `y`, `yolo`, `go ahead`, `do it`, `just do it`, `implement`, `code it` | Proceed — exit plan mode if in it; you have permission for the discussed action. Scoped to that action, not a standing autopilot grant. |
 | `autopilot`            | `plan-hard` auto mode, then implement end to end — verify, record deviations rather than interrupt, report the final state. The word authorizes the implement half; without it auto mode stops at the plan. Destructive actions still gate (§V). |
 | `bulldozer`            | Load the `agent-bulldozer` skill and act like a bulldozer — push the work through relentlessly until told to stop.                      |
 | `bohrhammer`           | Load the `agent-bohrhammer` skill — agree the goal and its checkpoints, then drive it to merge-ready PRs/MRs, stopping at each checkpoint for a blessing. |
@@ -228,7 +229,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 **A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a session blessing, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
-**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: `kubectl` against a live cluster**, where every invocation needs its own approval even when it only reads — the estate's read-only MCP server is the ungated route, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
+**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: `kubectl` against a live cluster**, where every invocation needs its own approval even when it only reads, unless the user's `blessed for the session` grant covers read-only `kubectl` — the estate's read-only MCP server is the ungated route, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
 ## VI. COMMUNICATING
 
