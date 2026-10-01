@@ -1,6 +1,8 @@
 # Delivery Decisions
 
-A fast, non-binding second opinion from the `decision` model on how work gets delivered: the PR/MR shape and when to review. Load `decision` before the first call; its framing rules apply. The model reads narrow facts well and judgement calls badly, so ask it the facts and derive the call yourself.
+A fast, non-binding second opinion from the `decision` model on how work gets delivered: the PR/MR shape, squashing, and when to review. Load `decision` before the first call; its framing rules apply.
+
+**Optional.** Use it only when the `decision` server is in the session; without it, make the call yourself as the consuming skill already says. The model reads narrow facts well and judgement calls badly, so ask it the facts and derive the call yourself.
 
 ## Facts to pass
 
@@ -24,10 +26,12 @@ Each is a two-option `choice` with both options described, batched into one call
 | Must A land or deploy before B can be verified? | `yes`: B's pipeline or tests read A's live effect; `no`: B verifies on its own |
 | Can a reviewer judge this concern on its own diff? | `yes`: self-contained; `no`: needs another concern's diff in view |
 | Does this concern change a shared boundary? | `yes`: an API, schema, shared config or live state others depend on; `no`: internal only |
+| Do these two commits serve one concern? Pass their subjects and file lists. | `yes`: one change split across commits; `no`: distinct tasks worth keeping apart |
 
 ## Deriving the call
 
 - **Shape.** Build-on in the same repository makes a stack. Must-land-first across repositories makes an ordered pair with the order stated in both PRs/MRs. Neither makes parallel PRs/MRs, or one PR/MR when the concerns are small and reviewable together.
+- **Squash.** Every commit pair serving one concern makes a single logical change, so squash. Any pair of distinct tasks keeps the commits. Commit count and whether another open PR/MR builds on the branch are facts you check yourself, and a branch something builds on is never squashed.
 - **Review timing.** A shared-boundary change, or one a reviewer cannot judge alone, gets `agent-review` before the next step. Everything else is reviewed when the stretch is done. A review the user asked for always runs.
 
 ## Reading the answer

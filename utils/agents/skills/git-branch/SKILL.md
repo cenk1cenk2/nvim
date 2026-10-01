@@ -7,6 +7,7 @@ references:
   - ../references/scm/scm-detect.md
   - ../references/output-diff.md
   - ../references/scm/scm-linear-follow-up.md
+  - ../references/delivery-decisions.md
 ---
 
 ## Git Branch
@@ -92,7 +93,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 - **Kebab-case always** for the descriptive partial. When the user asks for kebab-case-only names, flatten `prefix/descriptive` to `prefix-descriptive` (drop the `/`).
 - **Default branch unless told otherwise** — never branch from a random HEAD silently.
 - **Stack on what you depend on.** Work that builds on an unmerged branch bases off that branch and targets it, so each review sees only its own diff. Both platforms retarget the dependent PR/MR to trunk when the prerequisite merges.
-- **Stack only on a real dependency.** Changes that merely touch the same area but do not need each other's code branch in parallel from the same base; the one that merges second merges trunk in rather than rebasing.
+- **Stack only on a real dependency.** Changes that merely touch the same area but do not need each other's code branch in parallel from the same base; the one that merges second merges trunk in rather than rebasing. A fast second opinion on whether the dependency is real per `delivery-decisions`.
 - **Fast-forward default unless told otherwise.** On any blocker, ask the user — never auto-resolve.
 - **Never push automatically.** Branch creation is local-only until the user explicitly asks to push.
 

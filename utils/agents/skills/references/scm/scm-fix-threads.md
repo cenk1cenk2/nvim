@@ -9,7 +9,7 @@ Identify the target PR/MR and collect its open, unresolved threads first — bot
 Process threads one at a time. For each open thread:
 
 1. **Read the full thread** — every message, not just the first comment. Later replies may refine, contradict, or supersede earlier ones. The latest message in the thread is the most current intent.
-2. **Understand the request** — treat the reviewer's words as a prompt. What are they asking to change? Categories:
+2. **Understand the request** — treat the reviewer's words as a prompt. What are they asking to change? A fast pre-sort per `scm-review-thread-kind`. Categories:
    - **Suggestion block exists** — the reviewer provided an exact code change. Apply it verbatim.
    - **Explicit fix request** — "change X to Y", "add a null check", "rename this". Clear action.
    - **Question or concern** — "why is this here?", "is this intentional?". These need judgment — see Triage.

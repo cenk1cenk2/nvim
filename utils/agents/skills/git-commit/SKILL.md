@@ -13,6 +13,7 @@ references:
   - ../references/scm/scm-linear-follow-up.md
   - ../references/output-diff.md
   - ../references/scm/release-convention.md
+  - ../references/scm/scm-change-kind.md
 ---
 
 ## Git Commit
@@ -53,7 +54,7 @@ Posture: `present-first`.
    - If the diff is large, read the changed files for surrounding context to understand the intent.
 
 4. **Draft the commit message.**
-   - Determine the commit **type** per `commit-style`, based on the nature of the changes:
+   - Determine the commit **type** per `commit-style`, based on the nature of the changes; a fast second opinion on the type and on breaking per `scm-change-kind`:
      - `feat` — new feature or capability.
      - `fix` — bug fix or correction of wrong behavior.
      - `refactor` — restructuring without behavior change.

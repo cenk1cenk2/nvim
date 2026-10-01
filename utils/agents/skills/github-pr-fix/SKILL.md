@@ -6,6 +6,7 @@ argumentHint: '[PR number or URL]'
 references:
   - ../references/reconcile-state.md
   - ../references/scm/scm-fix-threads.md
+  - ../references/scm/scm-review-thread-kind.md
   - ../references/scm/scm-github.md
   - ../references/scm/scm-detect.md
   - ../references/identifier-legibility.md

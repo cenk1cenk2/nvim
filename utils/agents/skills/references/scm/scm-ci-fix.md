@@ -6,7 +6,7 @@ Shared workflow for diagnosing failing CI on the current branch, researching the
 
 When composed from `agent-pickup`:
 
-- Distinguish branch-caused failures from external or unrelated CI failures.
+- Distinguish branch-caused failures from external or unrelated CI failures; a fast second opinion per `scm-ci-failure-kind`.
 - Fix branch-caused failures in the current branch and report the verification evidence.
 - For external or unrelated failures, capture the evidence and return it to the pickup workflow instead of widening scope silently.
 - If the diagnosis changes the issue scope or creates follow-up work, tell the caller so it can update Linear comments or project documents.

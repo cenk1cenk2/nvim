@@ -5,6 +5,7 @@ disableModelInvocation: true
 references:
   - ../references/scm/scm-detect.md
   - ../references/scm/scm-ci-fix.md
+  - ../references/scm/scm-ci-failure-kind.md
   - ../references/scm/scm-gitlab.md
   - ../references/kilic/kilic-ci-pipelines.md
   - ../references/identifier-legibility.md
