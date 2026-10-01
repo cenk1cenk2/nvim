@@ -9,6 +9,8 @@ references:
   - ../references/agent/agent-conventions.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md
+  - ../references/agent/agent-companion-offload.md
+  - ../references/delivery-decisions.md
   - ../references/mode-toggle.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-fan-out.md
@@ -118,7 +120,7 @@ Yours are **routing** wakes, per the posture table in `agent-watchers`. What rou
 
 ## Process
 
-1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. **The split is by unit** — one agent per PR, worktree, repo or issue — and every unit in the plan carries its own tier with the signal that picked it. Present once; then run.
+1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. **The split is by unit** — one agent per PR, worktree, repo or issue — and every unit in the plan carries its own tier with the signal that picked it. When the units could land as one PR/MR, a stack, or parallel PRs/MRs, take a fast second opinion per `delivery-decisions`. Present once; then run.
 2. **Orient minimally.** Enough to write good prompts — repo layout, the task runner, the entry points. A couple of bounded commands, not a reading session. Anything deeper is itself a delegation.
 3. **Dispatch with the return contract.** Prompts are self-contained (agents lack your conversation) but point at skills and tools — subagents in this harness are **aware** targets per `agent-target-capability`. Disjoint file scopes; worktrees for parallel writers per `agent-worktrees`. **Fan out per unit**, in the prep, spawn and response phases of `agent-fan-out`: units that share files go to the agent already holding that context, one turn at a time, and get sequenced only when none is reachable — batching them into a single prompt serialises the work and hides which unit failed.
 4. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition, per `agent-watchers` — including any agent session running under another MCP server.
@@ -148,6 +150,7 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 - **`agent-background`** — every external wait.
 - **`agent-pickup`** — Linear-scoped orchestration; coordinator posture layers over it.
 - **`plan-compact`** — when your context fills anyway, compact to the state file rather than letting the run die.
+- **Companions** — when routing leaves a domain without standing attention, bring in its companion per `agent-companion-offload`.
 
 ### Bulldozer is Opt-In Only
 

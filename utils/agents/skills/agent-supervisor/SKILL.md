@@ -11,6 +11,7 @@ references:
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md
+  - ../references/agent/agent-companion-offload.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-state-transitions.md
   - ../references/linear/linear-issuesets.md
@@ -167,6 +168,7 @@ Supervisor-specific rule on top of the reference's discipline: **on wake, reconc
 - **`agent-background`** — every open condition, armed the moment it opens.
 - **`plan-hard`** — when the open question is design, not status.
 - **`agent-bulldozer`** — opt-in only, per `mode-toggle`.
+- **Companions** — when supervision competes with the routing for your context, bring in the domain's companion per `agent-companion-offload`.
 
 ## Example
 

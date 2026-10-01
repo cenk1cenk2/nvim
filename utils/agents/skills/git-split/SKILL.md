@@ -7,6 +7,7 @@ references:
   - ../references/present-first.md
   - ../references/scm/scm-detect.md
   - ../references/output-diff.md
+  - ../references/delivery-decisions.md
 ---
 
 ## Git Break
@@ -53,6 +54,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
    - For each slice produce:
      - `name` — kebab-case description (`git-branch` will pick the prefix).
      - `base` — default to the original base branch (parallel, independently mergeable). Stack only if the user explicitly asks.
+   - When slices depend on each other, take a fast second opinion on parallel versus stacked per `delivery-decisions` and show it with the plan; the default holds until the user picks a stack.
      - `source` — for commit-based input: list of commit SHAs. For tree-based input: list of file paths or hunk ranges. Note any file that requires partial splitting.
      - `summary` — one line describing the slice.
      - `actions` — `branch` (always), `commit` (always), and optional `push`, `pr-mr` based on user opt-in.

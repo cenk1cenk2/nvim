@@ -9,6 +9,7 @@ references:
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md
+  - ../references/agent/agent-companion-offload.md
   - ../references/agent/agent-delegate.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
@@ -138,6 +139,7 @@ Yours are **momentum** watchers, per the posture table in `agent-watchers`: the 
 - **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
 - **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
 - **Work this runtime dispatched reports itself** — spend that wait on prep instead.
+- **Offload a domain you cannot keep pace with** — a stack of open PRs/MRs or a moving tracker scope gets its companion per `agent-companion-offload`, so the push never drops its state.
 
 ## Boundaries
 

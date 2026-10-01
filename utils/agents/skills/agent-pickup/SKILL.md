@@ -16,6 +16,8 @@ references:
   - ../references/scm/scm-detect.md
   - ../references/project-tooling.md
   - ../references/output-diff.md
+  - ../references/delivery-decisions.md
+  - ../references/agent/agent-companion-offload.md
   - ../references/harness/agent-delegate-harness-claude.md
   - ../references/harness/agent-delegate-harness-codex.md
   - ../references/harness/agent-delegate-harness-opencode.md
@@ -58,6 +60,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer. Tier choice and self-contained agent prompts per `agent-delegate`.
    - **One agent per issue and per PR/MR.** Issues that land separately get separate agents even when they queue behind each other; only issues writing the same code share, and then by sequencing or by steering one agent through them in turn. Every task carries its own proposed tier.
    - Use `agent-review` for a cheap collision/prerequisite review when the task set is complicated or the user asks for deeper research.
+   - When issues could land as one PR/MR, a stack, or parallel PRs/MRs, take a fast second opinion per `delivery-decisions`.
 
 4. **Report before starting tasks.**
    - Present what will be done, who will do it, sequential/parallel shape, target repos, planned branch strategy, verification commands, and open questions.
@@ -83,6 +86,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Use `github-ci-fix` or `gitlab-ci-fix` for branch-caused failures.
    - Use `github-pr-fix` or `gitlab-mr-fix` for clear in-scope review feedback.
    - Use `git-conflict` for conflicts, respecting other issue/agent work.
+   - When open PRs/MRs or the tracker scope outgrow what you can track beside the implementation, bring in a companion per `agent-companion-offload`.
 
 8. **Wrap up.**
    - Use `linear-issue-status` for explicit or situational issue state changes not already handled by pickup/PR/MR triggers.

@@ -17,6 +17,7 @@ references:
   - ./references/agent-merge-review.md
   - ../references/harness/provider-paths.md
   - ../references/identifier-legibility.md
+  - ../references/agent/agent-companion-offload.md
   - ../references/harness/agent-delegate-harness-claude.md
   - ../references/harness/agent-delegate-harness-codex.md
   - ../references/harness/agent-delegate-harness-opencode.md
@@ -144,6 +145,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 - Dispatch parameters and mechanics per `agent-delegate`; load the `agent-harness` skill to resolve tiers to concrete models.
 - Verify each returned worktree path per `agent-worktrees`; the concrete plans directory resolves via `provider-paths`, never hardcoded.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
+- In team mode, when the run outgrows what you can track between layers, bring in a companion per `agent-companion-offload`.
 
 ### Step 9 — Collect layer results
 
