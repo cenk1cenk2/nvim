@@ -564,21 +564,7 @@ spec:
 
 ## Deployment Conventions
 
-- **Renovate image auto-update:** For container images that should auto-update, pin the image as `image: <registry>/<repo>:<tag>@sha256:<digest>`, starting from the digest of the currently-published tag, and add the automerge preset for the image repo to the `extends` of the repo's `renovate.json`:
-
-  ```yaml
-  image: <registry>/<repo>:<tag>@sha256:<digest>
-  ```
-
-  ```json
-  {
-    "extends": [
-      "local>renovate/renovate-config:default/datasource-docker-automerge-minor(<image-repo>)"
-    ]
-  }
-  ```
-
-  Renovate keeps the digest fresh with one MR per moved tag, and automerges it on green CI (same as ollama, rustfs, agents).
+- **Version pins promote through Kargo:** every long-running image (including init containers, sidecars and image volumes) and every Helm chart is pinned in `.deploy/<cluster>/` and promoted by a Warehouse in the repository's `.promote/`, with Renovate disabled for it in `renovate.json`. Pin an image as `<registry>/<repo>:<tag>@sha256:<digest>` from the currently published tag. Load `kargo-kilic` before writing the first pin. One-off Jobs (restores, migrations) stay unpinned.
 
 - **Revision history:** `revisionHistoryLimit: 0` on Deployments unless specified
 
@@ -627,5 +613,6 @@ spec:
 - [ ] If PostgreSQL: create CNPG Cluster + ScheduledBackup + ExternalSecrets in `postgresql/` subfolder
 - [ ] If MariaDB: create Bitnami Helm + CronJob backup + ExternalSecrets in `db/` subfolder
 - [ ] If monitoring: create Probe resource
+- [ ] Onboard every pinned image and chart into Kargo (`.promote/`, `kargo-root` registry, `authorized-stage`, Renovate disable)
 - [ ] Verify kustomize labels (`part-of` at root, `name` at component)
 - [ ] Match code style from reference workload
