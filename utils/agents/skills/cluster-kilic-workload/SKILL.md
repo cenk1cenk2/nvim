@@ -564,7 +564,7 @@ spec:
 
 ## Deployment Conventions
 
-- **Version pins promote through Kargo:** every long-running image (including init containers, sidecars and image volumes) and every Helm chart is pinned in `.deploy/<cluster>/` and promoted by a Warehouse in the repository's `.promote/`, with Renovate disabled for it in `renovate.json`. Pin an image as `<registry>/<repo>:<tag>@sha256:<digest>` from the currently published tag. Load `kargo-kilic` before writing the first pin. One-off Jobs (restores, migrations) stay unpinned.
+- **Version pins promote through Kargo:** every long-running image (including init containers, sidecars and image volumes) and every Helm chart is pinned in `.deploy/<cluster>/` and promoted by a Warehouse in the repository's `.promote/`, with Renovate disabled for it in `renovate.json`. Pin a versioned image as `<registry>/<repo>:<tag>`, and an image on a moving tag (`latest`, `stable`) as `<registry>/<repo>:<tag>@sha256:<digest>` from the currently published digest. Load `kargo-kilic` before writing the first pin. One-off Jobs (restores, migrations) stay unpinned.
 
 - **Revision history:** `revisionHistoryLimit: 0` on Deployments unless specified
 

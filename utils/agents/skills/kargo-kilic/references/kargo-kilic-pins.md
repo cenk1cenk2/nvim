@@ -90,7 +90,7 @@ A pin has one writer. Adopting Kargo for a dependency and handing it back to Ren
   - `datasource-docker-automerge-minor(<image>)` becomes `datasource-docker-disable(<image>)`.
   - Prior art: monitoring-backbone `4e1aa5e` (`manager-kustomize-disable(mimir-distributed)`, `manager-kustomize-disable(loki)`, `datasource-docker-disable(ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib)`).
 - **Any other artifact Kargo promotes** (an image in a chart values file): the matching `datasource-docker-disable(<image>)` preset.
-- **argocd-system:** its `argocd` manager is narrowed with `managerFilePatterns` to the patch files Kargo does not own (`platform/argo-rollouts` and `platform/kargo`), so Renovate no longer reads Kargo-managed `targetRevision` pins.
+- **argocd-system:** its `argocd` manager is narrowed with `managerFilePatterns` to the patch files Kargo does not own (`platform/argo-rollouts` and `platform/kargo`), so Renovate reads no Kargo-managed `targetRevision` pin.
 
 ### Handing a dependency back to Renovate
 

@@ -24,9 +24,9 @@ observation      cluster, namespace, workload kind + name, container
    | `cluster/workloads/*` | Workload repository, kustomize under `.deploy/`; includes `monitoring` and `monitoring-ruler`, deployed directly by `argocd-system` rather than a per-cluster repo |
    | `cluster/<cluster>/argocd-<cluster>` | Per-cluster ArgoCD repo — also the source of LB route manifests on `sun`/`moon` and demo workloads on `nailbed` |
    | `cluster/kargo-root` | Kargo platform config (tasks, credentials, Projects, registry), unprefixed Application |
+   | `renovate/renovate` | Workload deployed from outside the `cluster/workloads` group |
 
    An Application whose source path is `.promote` or `.promote/<component>` (AppProject `kargo`, destination `overseer` / `kargo-*`) holds that repository's Kargo Warehouses and Stages, not its workload.
-   | `renovate/renovate` | Workload deployed from outside the `cluster/workloads` group |
 
 4. **Count the spread.** Filter every Application sharing that `repoURL`: the count is how many clusters run it. One cluster means there is no common layer to argue about; several means a change to the common layer reaches all of them, and only a genuine per-cluster difference justifies an override.
 

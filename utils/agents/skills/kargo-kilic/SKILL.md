@@ -1,6 +1,6 @@
 ---
 name: kargo-kilic
-description: kargo-kilic Load when adding, changing, reverting or debugging a Kargo promotion flow in the kilic estate - a repository's .promote/ Warehouse or Stage, its kargo-root Project and registration, the pin file it writes, or moving a repository between Renovate and Kargo. Covers Project shape, pins, soak chains and wiring. Not for ArgoCD sync or prune state, or the Laravel estate.
+description: kargo-kilic Shape and wire Kargo promotions in the kilic estate - Project naming, .promote/ Warehouses and Stages, pins, soak chains, kargo-root registration and the Renovate handover. Use when adding, changing, reverting or debugging a promotion flow. Not for ArgoCD sync or prune state, or the Laravel estate.
 references:
   - ./references/kargo-kilic-pins.md
   - ./references/kargo-kilic-stage-wiring.md
