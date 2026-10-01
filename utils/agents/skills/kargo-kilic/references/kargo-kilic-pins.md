@@ -77,7 +77,7 @@ The collector pins write `{repo}:{tag}`.
 
 ### Floating-tag images
 
-An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `review`, `report` and `notify` `"false"`; an image the estate builds itself (home-assistant's `config` image volume) keeps its report. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx, gitlab-runner's runner `image.tag: alpine`, and gitlab-tools' frozen `bitnamilegacy/rabbitmq` tag; kargo-root `CLAUDE.md` keeps that list.
+An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `review`, `report` and `notify` `"false"`; an image the estate builds itself (home-assistant's `config` image volume) keeps its report. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx and gitlab-runner's runner `image.tag: alpine`; kargo-root `CLAUDE.md` keeps that list.
 
 ## Renovate and Kargo
 
