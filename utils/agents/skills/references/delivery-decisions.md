@@ -31,7 +31,7 @@ Each is a two-option `choice` with both options described, batched into one call
 ## Deriving the call
 
 - **Shape.** Build-on in the same repository makes a stack. Must-land-first across repositories makes an ordered pair with the order stated in both PRs/MRs. Neither makes parallel PRs/MRs, or one PR/MR when the concerns are small and reviewable together.
-- **Squash.** Every commit pair serving one concern makes a single logical change, so squash. Any pair of distinct tasks keeps the commits. Commit count and whether another open PR/MR builds on the branch are facts you check yourself, and a branch something builds on is never squashed.
+- **Squash.** Every commit pair serving one concern makes a single logical change, so squash. Any pair of distinct tasks keeps the commits. Commit count and whether another open PR/MR builds on the branch are facts you check yourself, and nothing inside a stack is squashed while the provider allows another merge method.
 - **Review timing.** A shared-boundary change, or one a reviewer cannot judge alone, gets `agent-review` before the next step. Everything else is reviewed when the stretch is done. A review the user asked for always runs.
 
 ## Reading the answer
