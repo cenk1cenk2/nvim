@@ -94,6 +94,7 @@ local plugins = {
   "nvim-dbee",
   "netman-nvim",
   "gitlab-nvim",
+  "review-nvim",
   "symbol-usage-nvim",
   "obsidian-nvim",
   "urlview-nvim",
