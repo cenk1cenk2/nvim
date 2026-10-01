@@ -9,7 +9,7 @@ The shared brief every slice agent in a `config-reconcile` run reads first. Copy
 
 You are reconciling ONE slice of a skill catalog so it is consistent, correctly wired, current, and concise. Your writable files are in your dispatch prompt. Everything else is read-only.
 
-Catalog root: <root>. Each skill is `<slug>/SKILL.md`; shared references live under `<root>/references/`, skill-local ones under `<slug>/references/`. Central guidance: <central guidance file(s)>.
+Catalog root: <root>. Each skill is a directory holding `SKILL.md`, at any depth, and its slug is its path; shared references live under `<root>/references/`, skill-local ones under `<slug>/references/`. Central guidance: <central guidance file(s)>.
 
 ## FIRST: read the standard
 

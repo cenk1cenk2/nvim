@@ -1,6 +1,6 @@
 ---
 name: hyprpilot-skills
-description: hyprpilot-skills Auto-invoked at session start when the hyprpilot-skills server is present. The skills system itself - the servers hyprpilot injects, how a skill and its references reach you, how to address a reference by path and pay for it once, and where skill source lives. Not for authoring or editing a skill, and not for driving a separate agent session.
+description: hyprpilot-skills Auto-invoked at session start when the hyprpilot-skills server is present. The skills system itself - the servers hyprpilot injects, how a skill, its files, its references and served prompts reach you, and how to pay for a reference once. Not for authoring or editing a skill, and not for driving a separate agent session.
 ---
 
 ## The Hyprpilot Skills System
@@ -11,7 +11,7 @@ Mechanics of how skills reach you. Whether to route a task through a skill at al
 
 | Server | Carries | Its manual |
 |---|---|---|
-| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, and `reload` for a root `list_skills` reports degraded or off | this skill |
+| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, `read_skill_files`, and `reload` for a root `list_skills` reports degraded or off; also serves prompts, the session's system prompt among them | this skill |
 | `hyprpilot` | general tools — `open` (URL, file, or directory in the OS default handler) | none yet |
 | `hyprpilot-nvim` | the captain's live Neovim — buffers, LSP, diagnostics | `hyprpilot-nvim`, eager at startup |
 | `hyprpilot-harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
@@ -20,19 +20,22 @@ Every `hyprpilot-skills` tool is auto-accepted and never prompts.
 
 ## Loading a Skill
 
-Skills are exposed as resources: `hyprpilot://skills` is the catalogue index in one read, `hyprpilot://skills/<slug>` is one skill's body.
+A skill's slug is its path under the catalog root — `git-commit`, or `group/name` for a nested one.
 
-- `list_skills` — the catalog. Descriptions and metadata for every skill, no bodies. Each row carries `referenceCount`, served from cache with no filesystem access, so checking whether a skill is heavy costs nothing.
-- `read_skill { slug }` — one body, **plus a manifest of the references it declares. The reference bodies do not come with it.**
+- `list_skills` — the catalog. Descriptions and metadata for every skill, no bodies. Each row carries `referenceCount` and `fileCount`, served from cache with no filesystem access, so checking whether a skill is heavy costs nothing.
+- `read_skill { slug }` — one body, **plus two manifests: the shared references it declares and the files it ships. Neither manifest carries bodies.**
 - `read_skill { slug, bundle: true }` — body plus every reference body. Worth it on the first load of an unfamiliar skill; wasteful once you hold the shared conventions.
-- `list_skill_references { slug }` — the manifest alone, no bodies and no skill body.
-- `read_skill_references { references: [path] }` — the bodies you actually want. See below.
+- `list_skill_references { slug }` — the reference manifest alone, no bodies and no skill body.
+- `read_skill_references { references: [path] }` — the reference bodies you actually want. See below.
+- `read_skill_files { uris }` — files the skill ships, by the `skill://` uris its file manifest lists. See below.
+
+The same content is served as resources: `hyprpilot://skills` is the catalogue index in one read, `skill://<slug>/SKILL.md` is one skill's raw file, and `skill://<slug>/<file>` is any file it ships.
 
 The roots are WATCHED, so an edit on disk is rescanned and announced without anything asked of you. When a change lands on something you already hold, Load `agent-read` to re-read it.
 
-A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slug>}` mention, a palette pick, or auto-injection. Do not re-read it.
+A skill the harness already attached is loaded — a `skill://<slug>/SKILL.md` mention, a palette pick, or auto-injection. Do not re-read its body.
 
-**An attached skill carries its reference manifest as a footer in the body text**, under a `skill_references:` banner naming the skill and count. The same rows also ride `_meta`, but many clients never surface `_meta` to the model — so the footer is what keeps an attached skill's references visible rather than silently absent. Fetch from those paths exactly as you would from a `read_skill` manifest.
+**An attached skill is the raw file, with no manifests.** Its frontmatter `references:` names what it cites in the declared spelling, which is not an address. Call `list_skill_references { slug }` for the paths before fetching, and `read_skill { slug }` when you need its file manifest. A `read_skill` result carries both manifests as text footers too — under `skill_references:` and `skill_files:` banners — so a client that shows no structured content still sees them.
 
 **Never use the runtime's own built-in skill tool for these.** That tool serves the harness's own skills, not the hyprpilot catalog.
 
@@ -50,7 +53,7 @@ Because the address is a path rather than a skill-and-name pair:
 - **A repeated path is served once**, so passing the same file twice costs nothing.
 - **There are no name collisions and no shadowing.** `git-commit`'s `output-diff` and `git-push`'s `output-diff` are literally the same path, so they are comparable and de-duplicate on sight.
 
-Each manifest row carries `path`, `name` (the display label — the reference's frontmatter `name`, else the file stem), `size`, `modified`, `created`, and `metadata` (the reference's own frontmatter, verbatim, and absent entirely when the file has none). Skill metadata carries the same `size` / `modified` / `created` alongside `path` and `bundleDir`.
+Each manifest row carries `path`, `uri` (the same file as a `file://` resource), `name` (the display label — the reference's frontmatter `name`, else the file stem), `size`, `modified`, `created`, and `metadata` (the reference's own frontmatter, verbatim, and absent entirely when the file has none). Skill metadata carries the same `size` / `modified` / `created` alongside `path` and `bundleDir`.
 
 A skill's metadata block is its whole frontmatter minus the three keys another field already carries — `title` and `description` (the spec `Resource` fields) and `references` (superseded by the manifest, which publishes the canonical path that actually addresses each file). Everything else, including keys nobody planned for, rides through verbatim.
 
@@ -80,11 +83,21 @@ A manifest is cheap and bodies are not. So:
 - **Pre-flight an expensive skill** with `list_skill_references { slug }` — a few hundred bytes to learn what it cites and how large each file is, against up to ~20 KB of bodies. Worth it for the agent-family skills; pointless for a skill citing one small file.
 - **Reach for `bundle: true`** only when you genuinely want everything, on a skill you have not run before.
 
+## Files a Skill Ships
+
+A skill's own directory — `scripts/`, templates, a local `references/` — is served whole: every file but hidden and gitignored ones. `read_skill`'s file manifest lists each as a `skill://<slug>/<file>` uri with its size, and `read_skill_files { uris: [...] }` returns their bodies; a file that is not text is described rather than inlined. A local reference needs no frontmatter declaration to be reachable this way.
+
+Use these uris when the skill's directory is not on your filesystem — a server reached over HTTP, or a sandboxed runtime. When it is, `bundleDir` in the metadata block is the directory, and a script is run by its path there.
+
 ## Reading a Reference Directly
 
 Every declared reference publishes an absolute path, so `Read`ing one is a legitimate route rather than an exception — use it when you want a single file and already know where it is.
 
-**The one case that has no alternative** is a file a skill body names that **no skill declares** in its frontmatter. It appears in no manifest, so `read_skill_references` refuses it. Those bodies name the absolute path explicitly, and `Read` is the only way to get them.
+**The one case that has no alternative** is a file outside every skill directory that a body names and **no skill declares**. It appears in no manifest, so neither fetch tool serves it. Those bodies name the absolute path explicitly, and `Read` is the only way to get them.
+
+## Served Prompts
+
+The server also serves prompts: the session's own system prompt files, and any prompt directory the profile configures. Each is an MCP prompt and a `hyprpilot://prompts/<name>` resource — `AGENTS.md` is `AGENTS`. A system prompt is baked in at launch and cannot change mid-session, so when it is edited, re-read it through either route rather than trusting the copy in your context; in Claude Code the captain can also run it as a slash command named after the server and the prompt.
 
 ## Skill Source
 

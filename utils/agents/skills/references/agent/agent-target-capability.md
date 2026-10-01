@@ -10,7 +10,7 @@ Judge each axis separately — targets are often mixed.
 
 | Axis | Available means | Unavailable means |
 |------|-----------------|-------------------|
-| Hyprpilot skills | Can load `hyprpilot://skills/<slug>` and follow it. | Skill slugs are meaningless text — inline the content. |
+| Hyprpilot skills | Can load a skill (`read_skill { slug }`, or the `skill://<slug>/SKILL.md` resource) and follow it. | Skill slugs are meaningless text — inline the content. |
 | MCP servers | Can call `<server>__<tool>` (which servers, exactly). | Only CLI, or nothing but its own reasoning. |
 | Repository | Has the checkout, can read any path. | Needs the code pasted, or works blind. |
 | Instruction files | Reads `AGENTS.md` / `CLAUDE.md` on its own. | Rules must be inlined. |

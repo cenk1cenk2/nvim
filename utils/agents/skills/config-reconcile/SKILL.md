@@ -18,7 +18,7 @@ references:
 
 ## Catalog Reconcile
 
-A catalog is a root holding `<slug>/SKILL.md` directories plus a `references/` tree, checked against its own authoring standard. The default target is `~/.config/nvim/utils/agents/skills/`, whose standard is `config-skills`, `config-references`, `hyprpilot-skills`, `current-state-only` and the central `AGENTS.md`. Any other catalog with that layout works the same way once its standard is named.
+A catalog is a root holding skill directories — any directory with a `SKILL.md`, at any depth, slugged by its path — plus a `references/` tree, checked against its own authoring standard. The default target is `~/.config/nvim/utils/agents/skills/`, whose standard is `config-skills`, `config-references`, `hyprpilot-skills`, `current-state-only` and the central `AGENTS.md`. Any other catalog with that layout works the same way once its standard is named.
 
 Posture: `present-first`. Agents apply only edits that preserve meaning; every change of meaning, deletion or merge comes back to the user first.
 

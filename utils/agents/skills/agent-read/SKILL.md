@@ -44,7 +44,8 @@ Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut i
    **Re-fetch everything that moved.** A rescan rebuilds the sidecar's catalog, never your context — a skill or reference you read earlier is a snapshot taken before the edit, and it stays authoritative-looking while being wrong.
    - Re-read each changed skill with `read_skill { slug }`; the returned body is authoritative and the earlier copy is void.
    - Drop each changed reference path from your loaded-path set and re-fetch it with `read_skill_references`. The set is keyed on path, so a body that changed under the same path is exactly what it cannot notice on its own.
-   - Re-read an attached `hyprpilot://skills/<slug>` resource rather than trusting it — it reads as current and carries no fetch time.
+   - Re-read an attached `skill://<slug>/SKILL.md` resource rather than trusting it — it reads as current and carries no fetch time.
+   - Re-read a served system prompt (`hyprpilot://prompts/<name>`) when its file moved — the copy baked in at launch never updates.
    - When the catalogue's shape moved (a skill added, renamed, or deleted), route against the new names.
    - Skip nothing because "the edit was small" — you cannot tell from context which copy you hold.
 5. **Reload the caveman voice.** Call `read_skill { slug: "caveman" }` and re-apply it (level: full) as the default communication style, per `AGENTS.md` §I step 4. Read it live; don't answer from memory.

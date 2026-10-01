@@ -98,12 +98,13 @@ Served on the same server for clients that declare `io.modelcontextprotocol/task
 If you are on it:
 
 - **A task id is `<session-handle>:<turn>` — it names ONE TURN, not the conversation.** Terminal states are immutable, so turn 1's task keeps reporting `completed` forever while the session moves on. `session_send` mints a new task.
-- **A terminal task's payload never moves.** Every field of its `sessionInfo` — provenance, `pid`, `turnStartedAt`, file paths — is read off that turn's own record, so re-polling a finished task after a later turn returns the bytes it returned the first time.
+- **Tasks exist only on protocol `2026-07-28` or later.** A client on an older revision gets the ordinary result even if it declared the extension, and `tasks/*` answers it `-32021`. A task arrives when the turn starts — `wait` is ignored in task mode — seeded from the turn's real state.
+- **A terminal task's payload never moves.** Its `status`, `exitCode` and every field of its `sessionInfo` — provenance, `pid`, `turnStartedAt`, file paths — are read off that turn's own record, so re-polling a finished task after a later turn returns the bytes it returned the first time.
 - **Do not parse the id to get the handle.** It rides `_meta["io.hyprpilot/session"]` on the `spawn` result and every `tasks/get`.
 - **The session tools still work on a task-created session.** Both paths address the same thing.
-- **Every exit is `completed`, including a non-zero one.** `failed` is reserved for a JSON-RPC error; an agent that ran and failed is a *successful call reporting a failure*. Read the `exitCode` inside the completed result before calling it a success — this server never populates `status_message`, so waiting for one waits forever.
-- **`tasks/cancel` cancels that TURN.** Cancelling an already-terminal task is a no-op and will not stop a later turn.
-- **`tasks/update` is unimplemented** (`-32601`). The harness never emits `input_required`.
+- **Every exit is `completed`, including a non-zero one.** `failed` is reserved for a JSON-RPC error; an agent that ran and failed is a *successful call reporting a failure*. Read the `exitCode` inside the completed result before calling it a success; `statusMessage` says the same in words (`turn 2 exited 1`), and the result's `answer` carries the agent's final reply.
+- **`tasks/cancel` cancels that TURN.** Cancelling an already-terminal task is a no-op and never stops a later turn, even one that started while the cancel was in flight.
+- **`tasks/update` only acknowledges.** The harness never emits `input_required`, so there is nothing to answer; an unknown task id is `-32602`.
 - **Task ids die with the sidecar**, and finished ones are dropped by session eviction. `ttl_ms` is `null` because retention is bounded by count and process lifetime, not duration.
 
 ## Storage — each turn owns a directory
@@ -154,11 +155,11 @@ Even where it is registered it is narrow: **interactive only** (a headless `clau
 
 ### 1b. Resource notifications — real, and not yours to arm
 
-A `session_send` turn starting emits `resources/updated` for its session, and a turn ending emits `updated` and `list_changed`. A fresh `spawn` announces itself with `list_changed` alone — there is no prior state to invalidate. A **client** that opens `subscriptions/listen` is woken by them and can then read only the view it wants.
+A `session_send` turn starting emits `resources/updated` for its session's views, and a turn ending emits `updated` for the session's views and that turn's. The resource listing is fixed — the two indexes, with sessions reached through `hyprpilot://sessions` and the templates — so nothing emits `list_changed`. A **client** that opens `subscriptions/listen` is woken by these and can then read only the view it wants.
 
 **That is a client capability, not an agent one.** No resource-subscribe tool is exposed to you, so you cannot arm it and must not plan around being woken by it. What it changes for you is nothing about waiting — and everything about the read *after* you wake, which is now one small resource fetch.
 
-`notifications/tasks` is pushed on the task path with the same caveat: rmcp refuses to route task notifications through a subscription, so it arrives unsolicited and a client that does not handle the method drops it silently. Poll `tasks/get` and honour its `pollIntervalMs`; treat any push you happen to receive as permission to poll sooner.
+There is no task status push. Poll `tasks/get` and honour its `pollIntervalMs`.
 
 ### 2. `session_status` — the cheap poll. Any MCP caller.
 
@@ -287,7 +288,7 @@ jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 | Sessions retained | 64 — oldest **finished** evicted, with their transcripts |
 | Bytes per read, and per `/transcript` or `/stderr` view | 60 000, cut from the front |
 | Default tail | 200 lines |
-| Default turn timeout | 300 s |
+| Default turn timeout | 45 s — under opencode's 60 s tool-call cut-off; Codex and Hermes cut at 300 s |
 
 ## Rules that bite
 

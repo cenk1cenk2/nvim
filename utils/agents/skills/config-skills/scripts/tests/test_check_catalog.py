@@ -63,6 +63,27 @@ def lint():
     return _lint
 
 
+def test_a_nested_skill_is_found_under_its_path(catalog, lint):
+    """The skills server serves a skill at any depth, so the linter must see it too."""
+    directory = catalog.root / "group" / "inner"
+    directory.mkdir(parents=True)
+    described = GOOD_DESCRIPTION.replace("good-skill", "group/inner")
+    (directory / "SKILL.md").write_text(f"---\nname: inner\ndescription: {described}\n---\n\nBody.\n")
+    (catalog.root / "tool" / ".venv" / "hidden").mkdir(parents=True)
+    (catalog.root / "tool" / ".venv" / "hidden" / "SKILL.md").write_text("not a skill\n")
+    result = lint(catalog)
+    assert result.code == 0, result.out
+    assert "name-dir" not in result
+
+
+def test_a_nested_name_must_match_its_own_directory(catalog, lint):
+    directory = catalog.root / "group" / "inner"
+    directory.mkdir(parents=True)
+    described = GOOD_DESCRIPTION.replace("good-skill", "group/inner")
+    (directory / "SKILL.md").write_text(f"---\nname: group\ndescription: {described}\n---\n\nBody.\n")
+    assert "name-dir" in lint(catalog)
+
+
 def test_a_clean_catalog_passes(catalog, lint):
     catalog.add("good-skill")
     result = lint(catalog)
@@ -381,7 +402,7 @@ class TestInvocation:
         empty.mkdir()
         result = lint(empty)
         assert result.code == 2
-        assert "no */SKILL.md" in result
+        assert "no SKILL.md" in result
 
 
 class TestReferenceWiring:
