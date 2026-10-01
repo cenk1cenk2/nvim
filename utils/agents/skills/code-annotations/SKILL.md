@@ -1,32 +1,25 @@
 ---
 name: code-annotations
-description: code-annotations Work through review annotations the captain left in the editor - issues, suggestions, notes, praise pinned to file lines - and apply or answer each one. Use on "use the code-annotations skill", "work through my annotations", or an exported annotations file. Not for reviewing a diff or branch from scratch, or PR/MR review threads.
+description: code-annotations Work through review notes the captain left with annotate.nvim - typed notes pinned to file lines or diff sides - and act on each as its type asks. Use on "use the code-annotations skill", "work through my annotations", or an exported annotations file. Not for reviewing a diff or branch from scratch, or PR/MR review threads.
 references:
   - ../references/review-findings.md
 ---
 
 ## Context
 
-The captain annotates the repository in Neovim and exports a markdown file, linked from the prompt as `@<path>`. The file names the repository root, then one numbered line per annotation:
+The captain annotates the repository in Neovim with annotate.nvim and exports a markdown file, linked from the prompt as `@<path>`. The file is self-describing:
 
-```
-N. **[TYPE]** `path:line` - text
-```
+- **The opening paragraph** is the captain's instruction for the whole review.
+- **`## Description`** lists each note type in use with what the captain expects for it. That line is the contract for every note of the type; read it before acting, because types and their meanings are configurable and change.
+- **`## Compared`** appears only when notes came from a diff view, and names each comparison as `` `<left>` .. `<right>` ``.
+- **`## [TYPE]` sections**, separated by `---`, hold the notes: `` `path:line` - text ``, `` `path:start-end` `` for a range, a bare `` `path` `` for a whole-file note, and `` @ <rev> `` when the note sits on a commit or stage side of a diff rather than the working tree. Multi-line text continues on indented lines.
 
-- Paths are relative to the repository root. `line-end` is a range, a bare path is a whole-file comment, and `~` before a line number points at the old side of a diff.
-- Multi-line text continues on indented lines.
-
-| Type | Means |
-|---|---|
-| `ISSUE` | A defect. Fix it. |
-| `SUGGESTION` | A requested change. Apply it unless it conflicts with another annotation or breaks something, and say so when it does. |
-| `NOTE` | Context or a question. Answer it, or treat it as a constraint on the other fixes. Changes code only when it says to. |
-| `PRAISE` | Keep this. Do not refactor it away while fixing its neighbours. |
+Paths are relative to the repository root.
 
 ## Process
 
-1. Read the linked file. Line numbers were taken when the export ran, so re-read each target around its line before editing; if the code moved, find it by content.
-2. Group annotations that touch the same concern and present the plan, one line per annotation: fix, answer, or push back. Skip the plan when the captain already said to go.
-3. Apply fixes one annotation at a time, issues first, then suggestions. Load `code-style` before the first edit.
-4. Report per `review-findings`, keyed by annotation number: what changed, what was answered, and what was pushed back on and why.
-5. Leave the annotations in the editor store. Clearing them is the captain's call.
+1. Read the linked file whole. Line numbers were taken at export, so re-read each target around its line before acting, and find it by content when it moved. A `@ <rev>` note refers to that revision; check the working tree for whether it still applies.
+2. Present the plan grouped by concern, one line per note: what you will do, per its type's Description line. Skip the plan when the captain already said to go.
+3. Act on each note as its type's Description says, loading `code-style` before the first edit. Notes the Description says to settle together go back to the captain unanswered in code.
+4. Report per `review-findings`, keyed by section and item, covering everything the opening paragraph asks the report to contain.
+5. Leave the notes in the editor store. Clearing them is the captain's call.
