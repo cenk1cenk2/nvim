@@ -29,7 +29,7 @@ How an agent finds the repository and file behind a change or an observation. Th
 | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | Layered values |
 | `cluster/argocd-system/.promote/<c>/stages/<stage>.yaml` | Kargo Stage `<c>.<stage>` (the stage is the environment), Project `kargo-argocd-system-<c>` |
 | `cluster/workloads/<w>/.promote/<component>/stages/<cluster>.yaml` | Kargo Stage `<component>.<cluster>` of a workloads repository's Project |
-| `cluster/kargo-root/projects/<route>/<name>/promote.yaml` | Registry entry: the Project and the `.promote/` path it syncs, beside that Project's `project.yaml` (Kargo creates the namespace) |
+| `cluster/kargo-root/projects/<repo>/promote.yaml` or `projects/argocd-system/<component>/promote.yaml` | Registry entry: the Project and the `.promote/` path it syncs, beside that Project's `project.yaml` (Kargo creates the namespace) |
 | `cluster/charts/chart-<c>` | Helm wrapper, tags `v<semver>` |
 | `cluster/workloads/<w>/.deploy/<cluster>/` | Workload kustomize root; `.deploy/base/` when multi-cluster; vendored charts under `.../charts/<chart>-<ver>/` are not edit targets |
 | ArgoCD app `cluster-<c>-system-<component>` | System component from argocd-system |

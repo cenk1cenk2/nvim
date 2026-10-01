@@ -20,7 +20,7 @@ Each gitops repository owns how it promotes; `kargo-root` owns what the promotio
 | `cluster/kargo-root` | The gitops repository's `.promote/` |
 |---|---|
 | `shared/` (ClusterConfig, credentials), `promotions/` (ClusterPromotionTasks `promote-pin`, `report-pin`, ClusterAnalysisTemplate `report-verdict`) | the Project's ProjectConfig (auto-promotion policy) |
-| each Project's `project.yaml` in `projects/<route>/<name>/` or `projects/<house>/`; Kargo's Project controller creates and owns the Project's namespace, so `kargo-root` holds no Namespace | Warehouses, with the `kargo.kilic.dev/pin-repo`, `kargo.kilic.dev/pins` and `kargo.kilic.dev/release-url` annotations |
+| each Project's `project.yaml` in `projects/argocd-system/<component>/` or `projects/<repo>/`; Kargo's Project controller creates and owns the Project's namespace, so `kargo-root` holds no Namespace | Warehouses, with the `kargo.kilic.dev/pin-repo`, `kargo.kilic.dev/pins` and `kargo.kilic.dev/release-url` annotations |
 | the registry entry `promote.yaml` beside it, and ApplicationSet `kargo-promote` | deploy and report Stages |
 
 `kargo-promote` reads every `projects/**/promote.yaml` (`project`, `source.repoURL`, `source.path`) and generates one Application named after the Project, in AppProject `kargo`, syncing that `.promote/` path into the Project's namespace. `.promote/` is a separate kustomize root built by the repository's CI and never part of its own root build; it stays inert until registered.
@@ -28,10 +28,10 @@ Each gitops repository owns how it promotes; `kargo-root` owns what the promotio
 | Registry folder | Project | Source |
 |---|---|---|
 | `projects/argocd-system/<component>/`, one per chart component | `kargo-argocd-system-<component>` | `cluster/argocd-system`, `.promote/<component>` |
-| `projects/argocd-system/monitoring/` | `kargo-argocd-system-monitoring` | `cluster/workloads/monitoring`, `.promote` |
+| `projects/monitoring/` | `kargo-monitoring` | `cluster/workloads/monitoring`, `.promote` |
 | `projects/monitoring-backbone/` | `kargo-monitoring-backbone` | `cluster/workloads/monitoring-backbone`, `.promote` |
 
-The Project name follows the deployment route: `kargo-argocd-system-<name>` when a `cluster/argocd-system` ApplicationSet deploys the Applications the Stages sync, `kargo-<house>` when the clusters' ArgoCD repositories deploy them directly. The house is the Application name without its cluster prefix (`<cluster>-<house>`), so one Project spans every cluster (`kargo-gose` for `rubik-gose` and `nailbed-gose`): usually the repository name, the shared stem when one repository hosts several Applications (`kargo-renovate` for `rubik-renovate` and `rubik-renovate-operator` in `renovate-runner`, `kargo-rustfs` for its `-main`, `-cache` and `-warehouse` Applications), and a lone Application's full name otherwise (`kargo-gitlab-runner-system`). The registry folder is `projects/<house>/`. The Kargo UI title is always `metadata.name`; the Project's `kargo.akuity.io/description` (`argocd-system.<name>` or `<house>`) shows under it.
+The Project is named after the repository its `.promote/` lives in: `kargo-<repo>` for a workloads repository (`kargo-monitoring`, `kargo-rustfs`, `kargo-gitlab-runner`, `kargo-renovate` for `renovate/renovate`), whichever ArgoCD repository deploys its Applications and however many clusters and Applications it spans, and `kargo-argocd-system-<component>` for each `cluster/argocd-system` chart component. The registry folder follows it: `projects/<repo>/` or `projects/argocd-system/<component>/`. The Kargo UI title is always `metadata.name`; the Project's `kargo.akuity.io/description` (`<repo>` or `argocd-system.<component>`) shows under it.
 
 ## Repository Kinds
 
@@ -41,9 +41,9 @@ Every Kargo-managed repository is one of two kinds, and the kind fixes the Stage
 |---|---|---|
 | Source | wrapper chart `cluster/charts/chart-<component>`, released as git tags | upstream Helm charts and images pinned inside `cluster/workloads/<repo>` |
 | Pin lives in | [argocd-system](https://gitlab.kilic.dev/cluster/argocd-system) `<environment>/<component>/patch-applicationset.yaml`, `targetRevision` | the workloads repository's own per-cluster overlay files, per `kargo-kilic-pins` |
-| ArgoCD shape | one ApplicationSet per component per env, generating one Application per cluster of that env | plain directory source, one Application per cluster and repository: `<cluster>-<house>` from the cluster's ArgoCD repository, or `cluster-<cluster>-system-<repo>` from an `argocd-system` ApplicationSet |
+| ArgoCD shape | one ApplicationSet per component per env, generating one Application per cluster of that env | plain directory source, one Application per cluster and repository: `<cluster>-<repo>` from the cluster's ArgoCD repository, or `cluster-<cluster>-system-<repo>` from an `argocd-system` ApplicationSet |
 | Stages | per environment: `<component>.<stage>` and `<component>.<stage>.report`, the stage an environment | per cluster: `<component>.<stage>` and `<component>.<stage>.report`, the stage a cluster |
-| Project | one per component, `kargo-argocd-system-<component>`, registering `argocd-system` `.promote/<component>` | one per repository, registering its whole `.promote/`: `kargo-<house>` (`kargo-monitoring-backbone`), or `kargo-argocd-system-<repo>` when an `argocd-system` ApplicationSet deploys it (`kargo-argocd-system-monitoring`) |
+| Project | one per component, `kargo-argocd-system-<component>`, registering `argocd-system` `.promote/<component>` | one per repository, registering its whole `.promote/`: `kargo-<repo>` (`kargo-monitoring-backbone`, `kargo-monitoring`) |
 | Sync | `argocd_selector` unset: the default `matchLabels`, pinned to the promoted revision | `argocd_selector` with `matchApplications`, one name: the cluster's Application |
 | `environment` var | the stage, by default | still the environment of the pin (`production`), not the stage |
 

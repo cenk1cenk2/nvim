@@ -27,7 +27,7 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 | [`devops`](https://gitlab.kilic.dev/groups/devops) | CI for every other repo: [`pipelines`](https://gitlab.kilic.dev/devops/pipelines) (GitLab CI templates, tagged `<package>@<semver>`) and [`pipes`](https://gitlab.kilic.dev/devops/pipes) (Go CLIs published as `cenk1cenk2/pipe-<pipe>` images the templates run) | GitLab CI `include:project`, Go | Every pipeline job in the estate | GitLab runners |
 | [`libraries`](https://gitlab.kilic.dev/groups/libraries) | Shared Taskfiles and code libraries | Taskfile, Go, Node | Included by repos (`libraries/taskfiles`) | - |
 | [`pulumi`](https://gitlab.kilic.dev/groups/pulumi) | Pulumi template and shared libs | Pulumi TS | Template for new `pulumi-config-*` | - |
-| [`renovate`](https://gitlab.kilic.dev/groups/renovate) | Renovate config and runner | Renovate | `renovate-runner` is deployed to rubik by `argocd-rubik` | rubik |
+| [`renovate`](https://gitlab.kilic.dev/groups/renovate) | Renovate config and runner | Renovate | `renovate` is deployed to rubik by `argocd-rubik` | rubik |
 | [`docker`](https://gitlab.kilic.dev/groups/docker) | Container images (caddy, gitlab-tools, external-dns-webhook-opnsense, ansible-core, ...) | buildah/docker CI | Images to registries | Consumed by workloads and ansible containers |
 | `terraform`, `services`, `html`, `config`, `cenk`, `utils`, `proposal`, `freelance` | Archived modules, personal sites, dotfiles, misc | - | Mostly out of scope for infra | - |
 
@@ -71,13 +71,13 @@ kustomize, one repo per application, deployment root `.deploy/<cluster>/`, `.dep
 
 | Repo | Cluster(s) | Deployed by |
 |---|---|---|
-| [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring), [monitoring-ruler](https://gitlab.kilic.dev/cluster/workloads/monitoring-ruler) | all six | `argocd-system` ApplicationSets (not a cluster repo); `monitoring` pins promoted by Kargo Project `kargo-argocd-system-monitoring` |
+| [monitoring](https://gitlab.kilic.dev/cluster/workloads/monitoring), [monitoring-ruler](https://gitlab.kilic.dev/cluster/workloads/monitoring-ruler) | all six | `argocd-system` ApplicationSets (not a cluster repo); `monitoring` pins promoted by Kargo Project `kargo-monitoring` |
 | [monitoring-backbone](https://gitlab.kilic.dev/cluster/workloads/monitoring-backbone), [monitoring-view](https://gitlab.kilic.dev/cluster/workloads/monitoring-view) | rubik | `argocd-rubik`; `monitoring-backbone` pins promoted by Kargo Project `kargo-monitoring-backbone` |
 | [gose](https://gitlab.kilic.dev/cluster/workloads/gose), [seafile](https://gitlab.kilic.dev/cluster/workloads/seafile), [mailserver](https://gitlab.kilic.dev/cluster/workloads/mailserver), [notifications](https://gitlab.kilic.dev/cluster/workloads/notifications), [obsidian](https://gitlab.kilic.dev/cluster/workloads/obsidian), [rustfs](https://gitlab.kilic.dev/cluster/workloads/rustfs) (main, cache, warehouse), [sourcebot](https://gitlab.kilic.dev/cluster/workloads/sourcebot), [teamspeak3](https://gitlab.kilic.dev/cluster/workloads/teamspeak3), [gitlab-runner](https://gitlab.kilic.dev/cluster/workloads/gitlab-runner), [gitlab-tools](https://gitlab.kilic.dev/cluster/workloads/gitlab-tools), [html-cv3](https://gitlab.kilic.dev/cluster/workloads/html-cv3), [html-listr2](https://gitlab.kilic.dev/cluster/workloads/html-listr2), [html-nurankilic](https://gitlab.kilic.dev/cluster/workloads/html-nurankilic) | rubik | `argocd-rubik` |
 | [agents](https://gitlab.kilic.dev/cluster/workloads/agents), [atuin](https://gitlab.kilic.dev/cluster/workloads/atuin), [home-assistant](https://gitlab.kilic.dev/cluster/workloads/home-assistant), [immich](https://gitlab.kilic.dev/cluster/workloads/immich), [ollama](https://gitlab.kilic.dev/cluster/workloads/ollama), [paperless-ngx](https://gitlab.kilic.dev/cluster/workloads/paperless-ngx), [showmen](https://gitlab.kilic.dev/cluster/workloads/showmen) | neutrino | `argocd-neutrino` |
 | [zitadel](https://gitlab.kilic.dev/cluster/workloads/zitadel) | overseer | `argocd-overseer` (AppProject `platform`) |
 | [nailbed](https://gitlab.kilic.dev/cluster/workloads/nailbed) | nailbed | `argocd-nailbed` (demo-cnpg, demo-nginx; second source) |
-| [renovate-runner](https://gitlab.kilic.dev/renovate/renovate-runner) (group `renovate`, not `cluster/workloads`) | rubik | `argocd-rubik` (`rubik-renovate`, `rubik-renovate-operator`) |
+| [renovate](https://gitlab.kilic.dev/renovate/renovate) (group `renovate`, not `cluster/workloads`) | rubik | `argocd-rubik` (`rubik-renovate`, `rubik-renovate-operator`) |
 | Archived: `vouch` | - | - |
 
 ### cluster/charts
@@ -143,7 +143,7 @@ Core services run by ansible as containers:
 | A system component's fleet or per-env values | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | ArgoCD `argocd-system` app |
 | A pipeline's template or pipe CLI | `devops/pipelines` (template) or `devops/pipes` (CLI), per `kilic-ci-pipelines` | release tag on that package; each consumer picks it up when it bumps its `ref` |
 | A system component's chart | `cluster/charts/chart-<c>`, release tag; Kargo writes the pin, the first one included | Kargo Stage commits pin -> ArgoCD |
-| How a pin promotes (Warehouse, Stages, soak, policy) | the pinning repository's `.promote/` | ArgoCD `kargo-argocd-system-<name>` or `kargo-<house>` app generated by `kargo-root` |
+| How a pin promotes (Warehouse, Stages, soak, policy) | the pinning repository's `.promote/` | ArgoCD `kargo-argocd-system-<component>` or `kargo-<repo>` app generated by `kargo-root` |
 | Kargo tasks, credentials, a Project or its registration | `cluster/kargo-root` | ArgoCD `kargo-root` app (prune confirm-gated) |
 | Add a workload's Application or namespace | `cluster/<c>/argocd-<c>/src/workloads/<name>/` then regenerate `apps/1-manifest` | ArgoCD `cluster-<c>` app |
 | A workload's manifests | `cluster/workloads/<w>/.deploy/<cluster>/` | ArgoCD `<cluster>-<w>` app, `targetRevision: HEAD`, automated prune |

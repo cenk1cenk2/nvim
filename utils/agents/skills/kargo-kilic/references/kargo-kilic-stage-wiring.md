@@ -9,7 +9,7 @@ In the gitops repository, `.promote/` holds one Project's promotion config. A wo
 ```
 .promote/
   kustomization.yaml        # projectconfig.yaml, <component>/ ...; the report verification patch
-  projectconfig.yaml        # ProjectConfig kargo-<route>-<name> or kargo-<house>
+  projectconfig.yaml        # ProjectConfig kargo-<repo>
   <component>/              # = the Warehouse name
     kustomization.yaml      # warehouse.yaml, stages/
     warehouse.yaml
@@ -27,10 +27,10 @@ In the gitops repository, `.promote/` holds one Project's promotion config. A wo
 - Report Stage files carry no `verification:`. One patch selecting `kargo.kilic.dev/role=report` adds `report-verdict`: in `.promote/kustomization.yaml` for a workloads repository, in the `report-verification` Component for `argocd-system`.
 - Every Stage carries labels `kargo.kilic.dev/auto: "true"` (selected by the ProjectConfig auto-promotion policy) and `kargo.kilic.dev/role` (`deploy` or `report`), and annotation `kargo.akuity.io/color` (development `green`, production `yellow`, load-balancer `amber`, platform `red`, every report `gray`).
 
-In `kargo-root`, `projects/<route>/<name>/` or `projects/<house>/` holds `project.yaml` (sync-wave `-1`, `Delete=confirm,Prune=confirm`, `kargo.akuity.io/description`), a `kustomization.yaml` listing it, and `promote.yaml`, which no kustomization lists. No Namespace: Kargo's Project controller creates the Project's namespace and the `kargo-root` AppProject whitelist does not allow one.
+In `kargo-root`, `projects/argocd-system/<component>/` or `projects/<repo>/` holds `project.yaml` (sync-wave `-1`, `Delete=confirm,Prune=confirm`, `kargo.akuity.io/description`), a `kustomization.yaml` listing it, and `promote.yaml`, which no kustomization lists. No Namespace: Kargo's Project controller creates the Project's namespace and the `kargo-root` AppProject whitelist does not allow one.
 
 ```yaml
-project: kargo-<house>            # kargo-argocd-system-<name> under projects/argocd-system/
+project: kargo-<repo>             # kargo-argocd-system-<component> under projects/argocd-system/
 source:
   repoURL: git@gitlab.kilic.dev:<group>/<repo>.git
   path: .promote                  # .promote/<component> for an argocd-system component
@@ -79,4 +79,4 @@ Every Application a Stage syncs must list it in `kargo.akuity.io/authorized-stag
 
 - Chart repositories: `argocd-system/patch-kargo.yaml` templates it on every ApplicationSet as `kargo-argocd-system-{{ .values.component }}:{{ .values.component }}.<stage>`, together with the two selector labels. A component's second Warehouse adds its own entry (`external-dns-webhook-opnsense.load-balancer`) in a root patch listed after `patch-kargo.yaml`.
 - Workloads repositories deployed by a cluster's ArgoCD repository: that repository sets it on the shared Application, e.g. `rubik-monitoring-backbone` carries `kargo-monitoring-backbone:mimir.rubik,kargo-monitoring-backbone:loki.rubik,kargo-monitoring-backbone:opentelemetry-ingester.rubik`. A new Stage on a shared Application is appended to that string.
-- Workloads repositories deployed by an `argocd-system` ApplicationSet: the ApplicationSet templates one entry per component, `kargo-argocd-system-monitoring:<component>.{{.name}}`. A new component adds its entry there.
+- Workloads repositories deployed by an `argocd-system` ApplicationSet: the ApplicationSet templates one entry per component, `kargo-monitoring:<component>.{{.name}}`. A new component adds its entry there.

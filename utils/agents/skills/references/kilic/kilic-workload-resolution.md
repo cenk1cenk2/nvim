@@ -26,7 +26,7 @@ observation      cluster, namespace, workload kind + name, container
    | `cluster/kargo-root` | Kargo platform config (tasks, credentials, Projects, registry), unprefixed Application |
 
    An Application whose source path is `.promote` or `.promote/<component>` (AppProject `kargo`, destination `overseer` / `kargo-*`) holds that repository's Kargo Warehouses and Stages, not its workload.
-   | `renovate/renovate-runner` | Workload deployed from outside the `cluster/workloads` group |
+   | `renovate/renovate` | Workload deployed from outside the `cluster/workloads` group |
 
 4. **Count the spread.** Filter every Application sharing that `repoURL`: the count is how many clusters run it. One cluster means there is no common layer to argue about; several means a change to the common layer reaches all of them, and only a genuine per-cluster difference justifies an override.
 
