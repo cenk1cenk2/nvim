@@ -75,6 +75,10 @@ How the shape works:
 
 The collector pins write `{repo}:{tag}`.
 
+### Floating-tag images
+
+An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `review`, `report` and `notify` `"false"`; an image the estate builds itself (home-assistant's `config` image volume) keeps its report. One-off Jobs (restores, migrations) stay unpinned and outside Kargo.
+
 ## Renovate and Kargo
 
 A pin has one writer. Adopting Kargo for a dependency and handing it back to Renovate are both edits to that repository's `renovate.json`, landed with the Kargo change.

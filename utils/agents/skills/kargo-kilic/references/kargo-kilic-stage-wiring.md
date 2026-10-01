@@ -9,7 +9,7 @@ In the gitops repository, `.promote/` holds one Project's promotion config. A wo
 ```
 .promote/
   kustomization.yaml        # projectconfig.yaml, <component>/ ...; the report verification patch
-  projectconfig.yaml        # ProjectConfig kargo-<route>-<name> or kargo-<repo>
+  projectconfig.yaml        # ProjectConfig kargo-<route>-<name> or kargo-<house>
   <component>/              # = the Warehouse name
     kustomization.yaml      # warehouse.yaml, stages/
     warehouse.yaml
@@ -27,10 +27,10 @@ In the gitops repository, `.promote/` holds one Project's promotion config. A wo
 - Report Stage files carry no `verification:`. One patch selecting `kargo.kilic.dev/role=report` adds `report-verdict`: in `.promote/kustomization.yaml` for a workloads repository, in the `report-verification` Component for `argocd-system`.
 - Every Stage carries labels `kargo.kilic.dev/auto: "true"` (selected by the ProjectConfig auto-promotion policy) and `kargo.kilic.dev/role` (`deploy` or `report`), and annotation `kargo.akuity.io/color` (development `green`, production `yellow`, load-balancer `amber`, platform `red`, every report `gray`).
 
-In `kargo-root`, `projects/<route>/<name>/` or `projects/<repo>/` holds `project.yaml` (sync-wave `-1`, `Delete=confirm,Prune=confirm`, `kargo.akuity.io/description`), a `kustomization.yaml` listing it, and `promote.yaml`, which no kustomization lists. No Namespace: Kargo's Project controller creates the Project's namespace and the `kargo-root` AppProject whitelist does not allow one.
+In `kargo-root`, `projects/<route>/<name>/` or `projects/<house>/` holds `project.yaml` (sync-wave `-1`, `Delete=confirm,Prune=confirm`, `kargo.akuity.io/description`), a `kustomization.yaml` listing it, and `promote.yaml`, which no kustomization lists. No Namespace: Kargo's Project controller creates the Project's namespace and the `kargo-root` AppProject whitelist does not allow one.
 
 ```yaml
-project: kargo-<repo>             # kargo-argocd-system-<name> under projects/argocd-system/
+project: kargo-<house>            # kargo-argocd-system-<name> under projects/argocd-system/
 source:
   repoURL: git@gitlab.kilic.dev:<group>/<repo>.git
   path: .promote                  # .promote/<component> for an argocd-system component

@@ -20,7 +20,7 @@ Each gitops repository owns how it promotes; `kargo-root` owns what the promotio
 | `cluster/kargo-root` | The gitops repository's `.promote/` |
 |---|---|
 | `shared/` (ClusterConfig, credentials), `promotions/` (ClusterPromotionTasks `promote-pin`, `report-pin`, ClusterAnalysisTemplate `report-verdict`) | the Project's ProjectConfig (auto-promotion policy) |
-| each Project's `project.yaml` in `projects/<route>/<name>/` or `projects/<repo>/`; Kargo's Project controller creates and owns the Project's namespace, so `kargo-root` holds no Namespace | Warehouses, with the `kargo.kilic.dev/pin-repo`, `kargo.kilic.dev/pins` and `kargo.kilic.dev/release-url` annotations |
+| each Project's `project.yaml` in `projects/<route>/<name>/` or `projects/<house>/`; Kargo's Project controller creates and owns the Project's namespace, so `kargo-root` holds no Namespace | Warehouses, with the `kargo.kilic.dev/pin-repo`, `kargo.kilic.dev/pins` and `kargo.kilic.dev/release-url` annotations |
 | the registry entry `promote.yaml` beside it, and ApplicationSet `kargo-promote` | deploy and report Stages |
 
 `kargo-promote` reads every `projects/**/promote.yaml` (`project`, `source.repoURL`, `source.path`) and generates one Application named after the Project, in AppProject `kargo`, syncing that `.promote/` path into the Project's namespace. `.promote/` is a separate kustomize root built by the repository's CI and never part of its own root build; it stays inert until registered.
@@ -31,7 +31,7 @@ Each gitops repository owns how it promotes; `kargo-root` owns what the promotio
 | `projects/argocd-system/monitoring/` | `kargo-argocd-system-monitoring` | `cluster/workloads/monitoring`, `.promote` |
 | `projects/monitoring-backbone/` | `kargo-monitoring-backbone` | `cluster/workloads/monitoring-backbone`, `.promote` |
 
-The Project name follows the deployment route: `kargo-argocd-system-<name>` when a `cluster/argocd-system` ApplicationSet deploys the Applications the Stages sync, `kargo-<repo>` when a cluster's ArgoCD repository deploys them directly. The Kargo UI title is always `metadata.name`; the Project's `kargo.akuity.io/description` (`argocd-system.<name>` or `<repo>`) shows under it.
+The Project name follows the deployment route: `kargo-argocd-system-<name>` when a `cluster/argocd-system` ApplicationSet deploys the Applications the Stages sync, `kargo-<house>` when the clusters' ArgoCD repositories deploy them directly. The house is the Application name without its cluster prefix (`<cluster>-<house>`), so one Project spans every cluster (`kargo-gose` for `rubik-gose` and `nailbed-gose`): usually the repository name, the shared stem when one repository hosts several Applications (`kargo-renovate` for `rubik-renovate` and `rubik-renovate-operator` in `renovate-runner`, `kargo-rustfs` for its `-main`, `-cache` and `-warehouse` Applications), and a lone Application's full name otherwise (`kargo-gitlab-runner-system`). The registry folder is `projects/<house>/`. The Kargo UI title is always `metadata.name`; the Project's `kargo.akuity.io/description` (`argocd-system.<name>` or `<house>`) shows under it.
 
 ## Repository Kinds
 
@@ -41,9 +41,9 @@ Every Kargo-managed repository is one of two kinds, and the kind fixes the Stage
 |---|---|---|
 | Source | wrapper chart `cluster/charts/chart-<component>`, released as git tags | upstream Helm charts and images pinned inside `cluster/workloads/<repo>` |
 | Pin lives in | [argocd-system](https://gitlab.kilic.dev/cluster/argocd-system) `<environment>/<component>/patch-applicationset.yaml`, `targetRevision` | the workloads repository's own per-cluster overlay files, per `kargo-kilic-pins` |
-| ArgoCD shape | one ApplicationSet per component per env, generating one Application per cluster of that env | plain directory source, one Application per cluster and repository: `<cluster>-<repo>` from the cluster's ArgoCD repository, or `cluster-<cluster>-system-<repo>` from an `argocd-system` ApplicationSet |
+| ArgoCD shape | one ApplicationSet per component per env, generating one Application per cluster of that env | plain directory source, one Application per cluster and repository: `<cluster>-<house>` from the cluster's ArgoCD repository, or `cluster-<cluster>-system-<repo>` from an `argocd-system` ApplicationSet |
 | Stages | per environment: `<component>.<stage>` and `<component>.<stage>.report`, the stage an environment | per cluster: `<component>.<stage>` and `<component>.<stage>.report`, the stage a cluster |
-| Project | one per component, `kargo-argocd-system-<component>`, registering `argocd-system` `.promote/<component>` | one per repository, registering its whole `.promote/`: `kargo-<repo>` (`kargo-monitoring-backbone`), or `kargo-argocd-system-<repo>` when an `argocd-system` ApplicationSet deploys it (`kargo-argocd-system-monitoring`) |
+| Project | one per component, `kargo-argocd-system-<component>`, registering `argocd-system` `.promote/<component>` | one per repository, registering its whole `.promote/`: `kargo-<house>` (`kargo-monitoring-backbone`), or `kargo-argocd-system-<repo>` when an `argocd-system` ApplicationSet deploys it (`kargo-argocd-system-monitoring`) |
 | Sync | `argocd_selector` unset: the default `matchLabels`, pinned to the promoted revision | `argocd_selector` with `matchApplications`, one name: the cluster's Application |
 | `environment` var | the stage, by default | still the environment of the pin (`production`), not the stage |
 
@@ -101,7 +101,7 @@ Split a coupled repository per component only when its components genuinely ship
 ## Key Principles
 
 - **The repositories win.** Check `kargo-root` `CLAUDE.md` on `main`, the gitops repository's own `CLAUDE.md` section on `.promote/`, and the live manifests before relying on a fact here; a drifted fact is corrected in this skill in the same turn, per `current-state-only`.
-- **Moving a Kargo object between Applications is adoption, not recreation.** Names stay, so Freight and Stage records survive, but a removal is `Prune=confirm`-gated everywhere: sync the adopting Application first, check each moved object's `argocd.argoproj.io/tracking-id` names it, and never confirm a prune that still lists live Stages, Warehouses or ProjectConfigs. Deleting a Stage drops its records and re-opens the report gates.
+- **A rename is a cutover.** The estate is in testing, so Freight and Stage records are disposable: the repository's `.promote/` switches every name and namespace, `kargo-root` renames the registry folder, and the Applications' `authorized-stage` entries take the new prefix. The old Project's generated Application and namespace stay behind and are deleted by hand; every removal is `Prune=confirm`-gated, so confirm only prunes of the old Project's objects.
 - **One promotion pins one artifact in one file.** The Warehouse's `pins` may write that artifact's version to several keys of the file; a second artifact is a second Warehouse with its own Stages.
 - **A pin has one writer.** Kargo or Renovate owns each dependency, never both; Renovate is disabled for every artifact Kargo promotes.
 - **Review, report, notify and comment default to `"true"`; a Stage turns one off with `"false"`.** Turn one off only with a stated reason (the `prometheus-operator` and `opentelemetry-operator` Projects run review, report and notify `"false"` because Renovate automerges their charts).
