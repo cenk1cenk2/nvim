@@ -12,7 +12,7 @@ The captain annotates the repository in Neovim with annotate.nvim and exports a 
 - **The opening paragraph** is the captain's instruction for the whole review.
 - **`## Description`** lists each note type in use with what the captain expects for it. That line is the contract for every note of the type; read it before acting, because types and their meanings are configurable and change.
 - **`## Compared`** appears only when notes came from a diff view, and names each comparison as `` `<left>` .. `<right>` ``.
-- **`## [TYPE]` sections**, separated by `---`, hold the notes. Each note is a `### [TYPE] <location>` heading followed by the note itself as free markdown. The location is `` `path:line` ``, `` `path:start-end` `` for a range, a bare `` `path` `` for a whole-file note, `` @ <rev> `` when the note sits on a commit or stage side of a diff rather than the working tree, and the plain word `repository` for a note about the repository as a whole, attached to no file.
+- **`## [TYPE]` sections**, separated by `---`, hold the notes. Each note is a `### <location>` heading followed by the note itself as free markdown. The location is `` `path:line` ``, `` `path:start-end` `` for a range, a bare `` `path` `` for a whole-file note, `` @ <rev> `` when the note sits on a commit or stage side of a diff rather than the working tree, and the plain word `repository` for a note about the repository as a whole, attached to no file.
 
 Paths are relative to the repository root.
 
