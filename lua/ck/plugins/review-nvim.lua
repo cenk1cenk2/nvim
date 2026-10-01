@@ -33,6 +33,9 @@ function M.config()
           issue = { icon = nvim.ui.icons.ui.Bug },
           praise = { icon = nvim.ui.icons.ui.Check },
         },
+        keymaps = {
+          popup_cycle_type = "<C-n>",
+        },
         export = {
           clipboard = false,
         },
@@ -40,14 +43,7 @@ function M.config()
     end,
     on_setup = function(c)
       require("review").setup(c)
-
-      -- the comment popup buffer has no filetype, so completion would run every default source in it
-      local popup = require("review.popup")
-      local open = popup.open
-      popup.open = function(...)
-        open(...)
-        vim.bo.filetype = "review"
-      end
+      require("review.popup").open = M.popup
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -63,38 +59,6 @@ function M.config()
             M.add()
           end,
           desc = "review add comment",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "m", "C" }),
-          function()
-            M.add("suggestion")
-          end,
-          desc = "review add suggestion",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "m", "n" }),
-          function()
-            M.add("note")
-          end,
-          desc = "review add note",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "m", "i" }),
-          function()
-            M.add("issue")
-          end,
-          desc = "review add issue",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "m", "p" }),
-          function()
-            M.add("praise")
-          end,
-          desc = "review add praise",
           mode = { "n", "v" },
         },
         {
@@ -180,6 +144,71 @@ function M.config()
 end
 
 M.skill = "code-annotations"
+
+M.types = { "note", "suggestion", "issue", "praise" }
+
+---@param initial_type? "note"|"suggestion"|"issue"|"praise"
+---@param initial_text? string
+---@param callback fun(comment_type: string|nil, text: string|nil)
+function M.popup(initial_type, initial_text, callback)
+  local config = require("review.config").get()
+  local index = math.max(vim.fn.index(M.types, initial_type or "note") + 1, 1)
+  local submitted = false
+
+  local function title()
+    local info = config.comment_types[M.types[index]]
+
+    return (" %s %s "):format(info.icon, info.name)
+  end
+
+  local function submit(self)
+    local text = table.concat(self:lines(), "\n"):gsub("%s+$", "")
+    submitted = true
+    self:close()
+    vim.cmd.stopinsert()
+    callback(text ~= "" and M.types[index] or nil, text ~= "" and text or nil)
+  end
+
+  local win = require("snacks").win({
+    text = initial_text and vim.split(initial_text, "\n") or nil,
+    title = title(),
+    footer = (" %s type  %s submit "):format(config.keymaps.popup_cycle_type, config.keymaps.popup_submit),
+    footer_pos = "center",
+    width = nvim.ui.dimensions.float.sm,
+    height = nvim.ui.dimensions.float.xs,
+    border = nvim.ui.border,
+    enter = true,
+    bo = {
+      buftype = "nofile",
+      filetype = "review",
+    },
+    wo = {
+      wrap = true,
+      spell = false,
+      conceallevel = 2,
+    },
+    keys = {
+      cycle = {
+        config.keymaps.popup_cycle_type,
+        function(self)
+          index = index % #M.types + 1
+          self:set_title(title())
+        end,
+        mode = { "i", "n" },
+      },
+      submit = { config.keymaps.popup_submit, submit, mode = { "i", "n" } },
+      cancel = { config.keymaps.popup_cancel, "close", mode = "n" },
+    },
+    on_close = function()
+      if not submitted then
+        callback(nil, nil)
+      end
+    end,
+  })
+  pcall(vim.treesitter.start, win.buf, "markdown")
+
+  vim.cmd.startinsert()
+end
 
 ---@param comment_type? "note"|"suggestion"|"issue"|"praise"
 function M.add(comment_type)
