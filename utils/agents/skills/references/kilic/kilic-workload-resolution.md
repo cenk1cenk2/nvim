@@ -14,7 +14,7 @@ observation      cluster, namespace, workload kind + name, container
         spread   how many Applications share that repoURL decides base vs override
 ```
 
-1. **List Applications** with the ArgoCD MCP server and match on `spec.destination.namespace` plus the cluster. Naming varies by kind: system components are `cluster-<cluster>-system-<component>`, workloads are `<cluster>-<workload>`, LB routes are `<lb-cluster>-cluster-<cluster>`, `zitadel` / `kargo-root` carry no prefix, and Kargo promotion configs are `kargo-<route>-<name>` — the name is a cross-check, never the primary key.
+1. **List Applications** with the ArgoCD MCP server and match on `spec.destination.namespace` plus the cluster. Naming varies by kind: system components are `cluster-<cluster>-system-<component>`, workloads are `<cluster>-<workload>`, LB routes are `<lb-cluster>-cluster-<cluster>`, `zitadel` / `kargo-root` carry no prefix, and Kargo promotion configs are `kargo-<repo>` (workloads repositories) or `kargo-argocd-system-<component>` (chart components) — the name is a cross-check, never the primary key.
 2. **Read `spec.sources[].repoURL`.** `sources` is plural and a component may carry several; the chart or manifest source is the one that is not a bare `ref:` values source. `list_applications` strips `sources` from its results — use `argocd-kilic__get_application` to read them.
 3. **Classify by group** — this determines everything downstream, per `kilic-resource-placement`:
 
