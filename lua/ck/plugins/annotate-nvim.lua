@@ -37,6 +37,7 @@ function M.config()
     setup = function()
       local icons = {
         issue = nvim.ui.icons.ui.Pencil,
+        rewrite = nvim.ui.icons.ui.Code,
         general = nvim.ui.icons.git.Repo,
         praise = nvim.ui.icons.ui.Check,
         suggestion = nvim.ui.icons.ui.Lightbulb,
@@ -56,6 +57,7 @@ function M.config()
             delete = true,
             delete_all = true,
             restore_clear = true,
+            split = true,
           },
         },
         export = {
@@ -94,6 +96,20 @@ function M.config()
             require("annotate").add_file()
           end,
           desc = "annotate file",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "m" }),
+          function()
+            require("annotate").publish()
+          end,
+          desc = "annotate stage drafts on the merge request",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "M" }),
+          function()
+            require("annotate").publish({ publish = true })
+          end,
+          desc = "annotate submit review",
         },
         {
           fn.wk_keystroke({ categories.MARK, "n" }),
