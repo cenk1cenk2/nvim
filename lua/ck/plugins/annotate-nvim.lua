@@ -40,7 +40,7 @@ function M.config()
         end, require("annotate.config").options.types),
         archive_days = 14,
         export = {
-          prompt = "Use the `code-annotations` skill to work through these review notes on the repository. Each section below groups one kind of note, and its line under Description says what I expect for that kind. Re-read the code at each location before acting, since lines may have moved since I wrote the note, and do what the note's type asks. Questions are for us to settle together, so bring them back to me instead of deciding them yourself. Report back item by item: what you changed, where you applied a general or praise note, what you decided on each suggestion and why, and the questions still waiting on me.",
+          prompt = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through these review notes on the repository. Each section below groups one kind of note, and its line under Description says what I expect for that kind. Re-read the code at each location before acting, since lines may have moved since I wrote the note, and do what the note's type asks. Questions are for us to settle together, so bring them back to me instead of deciding them yourself. Report back item by item: what you changed, where you applied a general or praise note, what you decided on each suggestion and why, and the questions still waiting on me.",
           clipboard_message = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through my review notes in the attached file.",
         },
         input = {
