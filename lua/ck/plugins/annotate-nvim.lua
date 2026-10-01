@@ -96,7 +96,7 @@ function M.config()
           desc = "annotate file",
         },
         {
-          fn.wk_keystroke({ categories.MARK, "g" }),
+          fn.wk_keystroke({ categories.MARK, "n" }),
           function()
             require("annotate").add_repository()
           end,
