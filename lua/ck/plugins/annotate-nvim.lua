@@ -38,6 +38,7 @@ function M.config()
         types = vim.tbl_map(function(type)
           return vim.tbl_extend("force", type, { icon = icons[type.key] or type.icon })
         end, require("annotate.config").options.types),
+        archive_days = 14,
         input = {
           width = nvim.ui.dimensions.float.sm,
           height = nvim.ui.dimensions.float.xs,
