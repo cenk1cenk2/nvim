@@ -12,24 +12,24 @@
 
 1. **READ MEMORY** - consult memory for repository context when your runtime provides one. Understand project structure, coding standards, past work, and ongoing tasks.
 
-2. **LOAD REPOSITORY NOTE** - if obsidian MCP is available, derive the note folder from the working directory relative to `~/development/` (`~/development/laravel/cloud-app-operator/` becomes `Repositories/laravel/cloud-app-operator/`) and read `<folder>/README` via `obsidian__vault_read`. Treat it as **established context** — the architecture, conventions, and gotchas there are already verified. Sibling notes in that folder (e.g. `architecture`) are read on demand. If the note or the MCP is absent, silently skip.
+2. **LOAD REPOSITORY NOTE** - if obsidian MCP is available, derive the note folder from the working directory relative to `~/development/` (`~/development/laravel/cloud-app-operator/` becomes `Repositories/laravel/cloud-app-operator/`) and read `<folder>/README` via `obsidian__vault_read`. Treat it as **established context** — the architecture, conventions, and gotchas there are already verified. Sibling notes in that folder (e.g. `architecture`) are read on demand. If the working directory is outside `~/development/`, or the note or the MCP is absent, silently skip.
 
-3. **DISCOVER AVAILABLE SKILLS — ABSOLUTE STARTUP RULE, NEVER SKIP.** At session start, ALWAYS call `list_skills` and cache the catalog — it is this session's source of truth for what skills exist, and without it you cannot route. Note each skill's `description` and invocation tier; route every later request through it per §II Skill-First, loading bodies on demand except for steps 4 and 5 below.
+3. **DISCOVER AVAILABLE SKILLS — ABSOLUTE STARTUP RULE, NEVER SKIP.** At session start, ALWAYS call `list_skills` and cache the catalog — it is this session's source of truth for what skills exist, and without it you cannot route. Note each skill's `description` and invocation tier; route every later request through it per §II Skill-First, loading bodies on demand except for steps 4 and 5 below. If the skills server is absent or errors, say so once, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` from disk instead, and continue.
 
 4. **LOAD CAVEMAN VOICE — ABSOLUTE, BEFORE YOUR FIRST USER-FACING REPLY.**
    <!-- CAVEMAN-DEFAULT:START -->
-   - Call `mcp__hyprpilot-skills__read_skill { slug: "caveman" }` yourself. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it.
-   - Apply it as the default communication style (level: full). This overrides the skill's manual-only gate: caveman is the standing default for this setup, not a per-request invocation. The skill's own Boundaries and Auto-Clarity rules still apply.
+   - Call `mcp__hyprpilot-skills__read_skill { slug: "caveman" }` yourself. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it and read the file from disk per step 3.
+   - Apply it as the default communication style (level: full). This overrides the skill's manual-only gate: caveman is the standing default for this setup, not a per-request invocation. The skill's own Boundaries and Auto-Clarity rules still apply. The §II chain declaration and skill-load lines are exempt from its Pre-Send Check and survive any voice.
 
    <!-- CAVEMAN-DEFAULT:END -->
 
-5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot-harness` never auto-loads** (§III). Announce each per §II's announcement rule. No match means use the server directly.
+5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: the `hyprpilot-harness` server is driven only through `hyprpilot-delegate`, on the user's ask** (§III Parallelize). Announce each per §II's announcement rule. No match means use the server directly.
 
 ### ABSOLUTE — A Changed Guidance File Re-Grounds You
 
 **The moment you learn that something you already loaded from the guidance corpus has changed on disk, re-ground before your next action.** That corpus is this file, any local `AGENTS.md` / `CLAUDE.md`, and every skill and reference you have read this session. Load `agent-read` and run it; at the very least re-read the changed file itself, in full, from disk.
 
-**Learning it is the trigger — you are not asked to go hunting.** No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a skills change notification (`resources/updated` / `resources/list_changed`), or the captain simply saying they changed something. It outranks finishing the thought: every later step would run on a retired rule. The changed file wins over your memory of it, always.
+**Learning it is the trigger — you are not asked to go hunting.** A change you made yourself this session is not news; it does not trigger re-grounding. No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a skills change notification (`resources/updated` / `resources/list_changed`), or the captain simply saying they changed something. It outranks finishing the thought: every later step would run on a retired rule. The changed file wins over your memory of it, always.
 
 Say in one line what changed and what it altered about your approach. "Re-grounded, nothing about this task changed" is a complete answer.
 
@@ -44,6 +44,24 @@ Skills are personal workflows. How they are delivered, loaded, filtered, and bun
 - The covering skill owns the mandatory fields, conventions, and approval gates — skipping it drops them. Respect tiers (table below): invoke model-invocable skills yourself; for Manual ones, follow on explicit ask and otherwise suggest.
 - The skill body is the source of truth for that mode.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
+
+### Routine Routing
+
+Guidelines for the everyday intents, so the covering skill loads before the first tool call for that task. Skills get renamed, merged and split, so these are routes, not a registry: **the catalog's current skills win.** When a skill named anywhere in this document is missing from the catalog, route by its intent to whichever current skill covers it, and say in one line that the name is stale so `config-agents` can fix it.
+
+**Skills come in families, and the profile decides which members exist.** Names read `<family>-<verb>` (`git-commit`, `linear-status`) or carry an estate suffix (`-kilic` for the personal estate, `-laravel` for work: `linear-kilic` / `linear-laravel`, `kubernetes-kilic` / `kubernetes-laravel`, `structure-<estate>`). Generic families (`agent-*`, `plan-*`, `code-*`, `git-*`, `config-*`, the `linear-*` / `slack-*` verbs) are in every profile; the hyprpilot profile patches filter the rest, so personal profiles carry the `-kilic` and `gitlab-*` members and work profiles the `-laravel`, `notion-*` and `spacelift-*` ones. Route by family and take the member this catalog has. A skill the profile filters out is absent by design, not stale — say it is unavailable here rather than flagging the name. The filters live in the hyprpilot config (`config-hyprpilot`).
+
+**The SCM platform comes from the repository, never from memory:** `git remote get-url origin` — `github.com` routes to the GitHub skills and server, `gitlab.*` to the GitLab ones. Local git stays raw `git`.
+
+| Intent | Route to |
+|---|---|
+| Branch, commit, push | the `git-*` skill for that verb, chained in that order |
+| Open, read, comment on, or fix a PR/MR; red CI | the platform's PR/MR or CI skill for that verb |
+| A Linear issue id, Linear URL, or Linear team key | the workspace skill first, then the `linear-*` skill for the verb (read, create, status, update, comment) |
+| A Slack, Notion or Spacelift link | its workspace skill, which auto-invokes |
+| Write or edit code | `code-style` |
+| Hand work to an agent; wait on something external | `agent-delegate`; `agent-background` |
+| Coordinating while open PRs/MRs, a tracker scope or a plan need standing attention | the `*-companion` skill for that domain |
 
 ### Declaring and Announcing
 
@@ -60,7 +78,7 @@ Skills are personal workflows. How they are delivered, loaded, filtered, and bun
 | -------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------- |
 | Manual (`disableModelInvocation: true`)      | Only on explicit ask or `/name`; never self-invoke, but you MUST _suggest_ it when one covers the task | config-agents, obsidian-repository           |
 | Model-invocable (flag absent/`false`)        | When the user's intent clearly matches, mid-flow                                      | git-commit, plan-hard, agent-delegate        |
-| Auto-invoke (workspace/session initializers) | The moment its context is detected (issue IDs, workspace URLs, org repos), unprompted | linear-kilic, slack-kilic, spacelift-laravel |
+| Auto-invoke (model-invocable, description names a workspace, URL or id trigger) | The moment its context is detected (issue IDs, workspace URLs, org repos), unprompted | linear-kilic, slack-kilic, spacelift-laravel |
 
 **Composition exception.** A Manual skill named as a step by this document or by an already-loaded skill may be loaded for that step; the tier blocks unprompted invocation for any other purpose. `hyprpilot-delegate` and `agent-labrat` are carved out (§III).
 
@@ -80,7 +98,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 - Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
 - **Name the interpretation and the success criterion before writing code.** "Add authentication" is five different things — say which one you picked and what it trades off; "add validation" becomes "reject a missing or malformed email, return 400 with a clear message, both cases tested". If something is genuinely confusing, ask — code that fills the gap with something plausible is exactly the code that survives a casual review and fails when it matters.
 - **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot`).
-- **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further gates, no re-confirming. Make the change and report it.
+- **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further discussion, no re-confirming. §V Gates and a writing skill's own present-first approval still apply. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
 
 > **ABSOLUTE — ACT FIRST, REPORT AFTER. Announcing an action is not performing it.**
@@ -91,7 +109,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 > - **Three endings are legitimate:** the work is done; you are blocked on the user, and you say exactly what you need; or you armed a watcher on something external, and you say it is armed. "Waiting on your call about X" is a fine ending. "Next I will do X" is not.
 > - **This binds hardest immediately after an approval.** A blessing ends the discussion, so the next thing in that turn is the action itself — never a restatement of the plan you were just cleared to run.
 
-**A skill that writes an artifact carries the stricter `present-first` posture** — draft it, present it per `output-diff`, write on approval. That reference arrives with every writing skill, so it is already in force; this section stays the conversational default and skills that only read never carry it.
+**A skill that writes an artifact carries the stricter `present-first` posture** — draft it, present it per `output-diff`, write on approval. It applies to every skill that writes an artifact, whether or not that skill declares the reference; this section stays the conversational default and skills that only read never carry it.
 
 ### Plan mode and `plan-hard` (genuinely complex work)
 
@@ -104,7 +122,7 @@ Escalate to formal plan mode with the `plan-hard` skill when the work genuinely 
 
 ### Parallelize independent work
 
-When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. **Independent and faster in parallel is the whole condition** — when it holds, parallelize; serial execution then needs a reason you can state, not a preference.
+When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. **Independent and faster in parallel is the whole condition** — when it holds, parallelize; serial execution then needs a reason you can state, not a preference. Parallelism starts after the work is cleared; a dispatch never stands in for approval.
 
 > **Verify a subagent's enumerations yourself; relay its binary findings.** Yes/no answers — a SHA matched, drift was zero, two strings were identical — hold up. Tables, counts and per-item lists drift: a row slides onto the wrong item, a total is off, a summary contradicts the body it summarizes, and a confident number can be wrong while every check behind it was done correctly. Pull the enumeration yourself, or hand the agent yours and make it name where the two disagree rather than reconcile silently.
 
@@ -147,12 +165,12 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 | Where does this exist across the org — repos, file patterns, config keys, prior art | Load `sourcebot-discovery` |
 | Symbols, definitions, callers in the repo at hand | LSP through the `hyprpilot-nvim` skill, not grep |
 | Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, ungated; `kubectl` gates per §V |
-| Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | GitHub/GitLab MCP, platform per `~/.config/nvim/utils/agents/skills/references/scm/scm-detect.md` |
+| Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | the platform's MCP server, platform per §II Routine Routing |
 | Library, framework, API, CLI, or cloud docs | the `research` server before anything else, since training data lags |
 | Open web | the `research` server, or the runtime's search/fetch |
 | Multi-source digging or verification | the harness's deep-research mechanism, else the `research` server |
 
-`research` is one server covering all three of the last rows: context7 library documentation, exa and tavily web search and page fetch, and tavily's crawl, site-map and multi-step deep research. It is more than a search box — reach for its research and crawl tools when one query will not settle the question. Hosted behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
+`research` is one server covering all three of the last rows: context7 library documentation, exa and tavily web search and page fetch, and tavily's crawl, site-map and multi-step deep research. It is more than a search box — reach for its research and crawl tools when one query will not settle the question. Hosted behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back to the next research route (or grep and Sourcebot for symbols) and say so.
 
 ### tmux
 
@@ -172,7 +190,7 @@ CLI owns what no MCP server covers: local git (worktrees via `wt`, below), clust
 
 ### Worktrees
 
-**`wt` (worktrunk) owns every worktree operation — create, list, remove — whether or not an `agent-*` skill is loaded.** Raw `git worktree` is the fallback when `wt` is not on `PATH` or cannot reach the repo; it leaves the branch behind, so delete that yourself. Placement, naming, flags, verification and cleanup: `agent-worktrees` — read `~/.config/nvim/utils/agents/skills/references/agent/agent-worktrees.md` when no loaded skill declares it.
+**`wt` (worktrunk) owns every worktree operation — create, list, remove — whether or not an `agent-*` skill is loaded.** Raw `git worktree` is the fallback when `wt` is not on `PATH` or cannot reach the repo; it leaves the branch behind, so delete that yourself. Placement, naming, flags, verification and cleanup: the `agent-worktrees` reference — read `~/.config/nvim/utils/agents/skills/references/agent/agent-worktrees.md` when no loaded skill declares it.
 
 ### mise
 
@@ -239,7 +257,7 @@ Tables, scope columns, useless titles and the pre-send check: `~/.config/nvim/ut
 
 **"Agent spawned" and "watcher armed" name nothing a human can follow.** Every dispatch and every watcher is announced in one short human sentence carrying three things: **who** got the work — the profile or tier and the mechanism ("opus spawned through the harness…", "hyprpilot spawned `personal/claude/opus`…") — **what** it is doing in plain words, and **what happens next** ("…to port the retry logic; on finish I verify and open the MR", "…waiting on the watcher to wake me, then I collect and continue"). The identifier rule above applies inside the sentence: anything with a web address is a titled link, and "updated the MR" or "updated the issue" without its link is an unfinished sentence.
 
-One item is a sentence, never a one-row table. **Several items announced or reported at once — dispatches, watchers, MRs, anything — prefer one short table**, a linked row per item, over a paragraph of near-identical sentences ("this MR is ready and that MR is ready"). The columns are purely situational — two ready MRs might take the linked MR, a one-line summary, and what happens next; pick what the reader decides with. Handles, pids, watched paths and polling cadence stay in the internal ledger the owning skills define (`agent-watchers`, `hyprpilot-delegate`), quotable on request — never in the prose.
+One item is a sentence, never a one-row table. **Several items announced or reported at once — dispatches, watchers, MRs, anything — prefer one short table** (this wins over caveman's flatten rule), a linked row per item, over a paragraph of near-identical sentences ("this MR is ready and that MR is ready"). The columns are purely situational — two ready MRs might take the linked MR, a one-line summary, and what happens next; pick what the reader decides with. Handles, pids, watched paths and polling cadence stay in the internal ledger that `agent-watchers` and `hyprpilot-delegate` define, quotable on request — never in the prose.
 
 ### Information Accuracy
 
@@ -312,6 +330,6 @@ When rules appear to conflict, follow this priority order:
 2. **User explicit instructions** — when the user contradicts these guidelines, name the conflict and confirm once ("guidelines suggest X here — proceed without it?"), then follow the user's call.
 3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. Exiting plan mode requires unambiguous user approval.
 4. **Load the covering skill, then use the best available tool** — when a catalog skill covers the task (especially external/MCP operations), load and follow it before acting (§II absolute rule); otherwise prefer purpose-built tools, and use CLI for local shell/git/test/build work.
-5. **A skill body beats this document** — when both cover the same behavior, the skill body wins. This file decides _which_ skill loads, not how it works.
+5. **A skill body beats this document** — when both cover the same behavior, the skill body wins on how its flow works. It never overrides §V Gates or the §VI ABSOLUTE rules (no emoji, identifiers with title and link). This file decides _which_ skill loads, not how it works.
 6. **Follow coding style and implementation discipline** (§V — match project patterns, smallest diff, verify before reporting)
 7. **Update durable context** (memory, plans, and repository guidance when appropriate)
