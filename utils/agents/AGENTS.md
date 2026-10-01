@@ -143,7 +143,7 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 | `bohrhammer`           | Load the `agent-bohrhammer` skill — agree the goal and its checkpoints, then drive it to merge-ready PRs/MRs, stopping at each checkpoint for a blessing. |
 | `try`                  | Retry the action that just failed, unchanged. The blocker is fixed, so run it again rather than re-diagnosing it or routing around it. Report the new outcome; a second identical failure is reported, not retried again. |
 | `from memory`          | Answer from what this session already established — a prior check, a converged finding, a memory file — without re-running it. Also covers `from the previous check`, `what was the status on the check you did`, `<N> minutes ago is fine`. This overrides §VI's re-check rule: the user is accepting the staleness, so re-verifying spends their time to tell them what they already have. Say when the finding was taken. |
-| `blessed`              | Approval for the named action — act, do not re-ask. **`blessed for the session`** widens it to a standing grant covering the same or similar actions for the rest of the session (a read-only `kubectl`, a class of write), unless the user scoped it narrower. Destructive actions still gate (§V). |
+| `blessed`              | Approval for the named action — act, do not re-ask. **`blessed for the session`** widens it to a standing grant covering the same or similar actions for the rest of the session (a class of read or write; a CLI's own grants are in its `command-*` skill), unless the user scoped it narrower. Destructive actions still gate (§V). |
 | `park`                 | Ramp down to zero, gradually and unprompted: arm nothing new, let what still serves the park target finish (**never kill what it still needs**), retire each watcher and agent as it delivers (report collected before reaping), kill outright only what serves nothing, then verify zero with a process check and say nothing remains armed. In a posture it ends the posture; nothing re-arms until the user says so. Procedure: `~/.config/nvim/utils/agents/skills/references/mode-toggle.md` → Parking. |
 
 ## IV. TOOLS AND DISCOVERY
@@ -152,7 +152,7 @@ Use the tools available in the session. A service with an MCP server is reached 
 
 ### MCP Conventions
 
-- **ABSOLUTE — a service with an MCP server is reached through that server, not its CLI.** GitHub, GitLab, Linear, Slack, Grafana, ArgoCD, Obsidian, Sourcebot and the rest: use their tools rather than `gh`, `glab`, `argocd`, or `curl` against their APIs, for anything the server already does. **The CLI is a legitimate fallback the moment the server cannot do the thing** — no endpoint for that operation, an output or format it cannot return, streaming or tailing, a watcher or poll loop that has to run as a shell process, or a bulk job that would cost dozens of calls. Take the fallback and say in one line what was missing; never stall because the server fell short. One standing exception where the CLI is simply the tool: **local git is always raw `git`**. Cluster work splits between the `kubernetes-kilic` / `kubernetes-laravel` servers and `kubectl` — see below.
+- **ABSOLUTE — a service with an MCP server is reached through that server, not its CLI.** GitHub, GitLab, Linear, Slack, Grafana, ArgoCD, Obsidian, Sourcebot and the rest: use their tools rather than `gh`, `glab`, `argocd`, or `curl` against their APIs, for anything the server already does. **The CLI is a legitimate fallback the moment the server cannot do the thing** — no endpoint for that operation, an output or format it cannot return, streaming or tailing, a watcher or poll loop that has to run as a shell process, or a bulk job that would cost dozens of calls. Take the fallback and say in one line what was missing; never stall because the server fell short. One standing exception where the CLI is simply the tool: **local git is always raw `git`**. A CLI with house rules goes through its `command-*` skill, per §IV CLI.
 - **ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors for Slack, Notion, Linear, …), every call for that service goes through it; fall back to the standalone server only when the harness offers nothing or lacks a needed capability, say which in one line, and never mix the two within one flow. **A skill's per-workspace mapping wins over this rule.** Carve-outs: `~/.config/nvim/utils/agents/skills/references/harness/harness-connectors.md`.
 - **A same-named skill is that server's manual — load it first (§I step 5).**
 - Tool naming in skills and docs: `~/.config/nvim/utils/agents/skills/references/mcp-tool-naming.md`; at call time use whatever name the harness surfaces. Which servers exist is decided at launch — don't hard-code assumptions.
@@ -167,7 +167,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 | How an estate is wired — which repo owns a change, how it flows to where it runs | Load that estate's `structure-<estate>` skill (`structure-kilic`) before searching |
 | Where does this exist across the org — repos, file patterns, config keys, prior art | Load `sourcebot-discovery` |
 | Symbols, definitions, callers in the repo at hand | LSP through the `hyprpilot-nvim` skill, not grep |
-| Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, ungated; `kubectl` gates per §V |
+| Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, ungated; `kubectl` per `command-kubectl` |
 | Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | the platform's MCP server, platform per §II Routine Routing |
 | Library, framework, API, CLI, or cloud docs | the `research` server before anything else, since training data lags |
 | Open web | the `research` server, or the runtime's search/fetch |
@@ -179,29 +179,23 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 
 Use tmux only for **read-only** inspection of the user's panes when they reference them; run commands with `Bash`. Read with `tmux__*` rather than the CLI (the CLI covers what the MCP does not expose, notably the _current_ session), and **bound every capture** with `lines` from the tail. Session naming and capture guidance: `~/.config/nvim/utils/agents/skills/references/tmux.md`.
 
-### kubernetes-kilic, kubernetes-laravel
-
-One read-only server per estate (kilic clusters; AWS EKS), only one present per profile. Load the same-named skill before the first call (§I step 5); `kubectl` gates per §V.
-
 ### decision
 
 A small, deterministic decision model. When a triage, routing, or classification call can be answered from facts already gathered — which area a message belongs to, whether a write-up asks a human to act, which of N routes fits — feed those facts in as narrow questions and weigh its answer against your own read; say where the two disagree. Load the `decision` skill before the first call. Advisory only: it never stands in for a gate (§V).
 
-### CLI
+### mise — under every CLI
 
-CLI owns what no MCP server covers: local git (worktrees via `wt`, below), cluster writes and streaming via `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
-
-### Worktrees
-
-**`wt` (worktrunk) owns every worktree operation — create, list, remove — whether or not an `agent-*` skill is loaded.** Raw `git worktree` is the fallback when `wt` is not on `PATH` or cannot reach the repo; it leaves the branch behind, so delete that yourself. Placement, naming, flags, verification and cleanup: the `agent-worktrees` reference — read `~/.config/nvim/utils/agents/skills/references/agent/agent-worktrees.md` when no loaded skill declares it.
-
-### mise
-
-Most CLI tooling here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes. It resolves in this session and in anything launched from the graphical session, so **call the tool directly**: no wrapper, no prefix, nothing to reason about.
+Read this before reaching for any CLI: almost every tool here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes. It resolves in this session and in anything launched from the graphical session, so **call the tool directly**: no wrapper, no prefix, nothing to reason about.
 
 Where it does not resolve, the cause is a process that did not inherit the session environment — a systemd unit, cron, a headless or remote launch — and the fallback is `~/.local/share/mise/shims` on `PATH` the way the existing unit files do it, or `mise exec -- <command>`. The mise binary sits outside its own shims, so it is reachable from anywhere.
 
 **Diagnose before working around.** A tool that fails from a shell where `PATH` already carries the shims is not an environment problem, and wrapping the call hides whatever is actually broken. Read the error: a zsh function or completion wrapper failing before the binary runs is a shell-config bug to fix at its source, not something to route around.
+
+### CLI
+
+CLI owns what no MCP server covers: local git, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+
+**ABSOLUTE — a CLI with a `command-<cli>` skill loads it before its first call** (for example `command-kubectl`, `command-gh`, `command-glab`, `command-wt`; the catalog holds the current set). The skill carries when its MCP server wins, the CLI's approval rules and grants, and its fallbacks. A gate that lives in a `command-*` skill binds exactly as if it were written here.
 
 ## V. DOING THE WORK
 
@@ -229,7 +223,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 **A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a session blessing, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
-**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: `kubectl` against a live cluster**, where every invocation needs its own approval even when it only reads, unless the user's `blessed for the session` grant covers read-only `kubectl` — the estate's read-only MCP server is the ungated route, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
+**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **`kubectl` against a live cluster gates per `command-kubectl`**, loaded before its first call per §IV CLI. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
 ## VI. COMMUNICATING
 
