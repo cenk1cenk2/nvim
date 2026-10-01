@@ -17,15 +17,18 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.setup_callback(require("ck.plugins.blink-cmp").name, function(c)
-        c.sources.per_filetype.markdown = function()
+        c.sources.providers.annotate = {
+          name = "annotate",
+          module = "annotate.blink",
+        }
+        c.sources.per_filetype.annotate = function()
           local origin = vim.b.annotate_origin
           local sources = origin and vim.api.nvim_buf_is_valid(origin) and c.sources.per_filetype[vim.bo[origin].filetype]
-
           if type(sources) == "function" then
-            return sources()
+            sources = sources()
           end
 
-          return sources or { inherit_defaults = true }
+          return vim.list_extend(vim.deepcopy(sources or { inherit_defaults = true }), { "annotate" })
         end
 
         return c
@@ -164,7 +167,7 @@ function M.config()
           desc = "annotate set quickfix",
         },
         {
-          fn.wk_keystroke({ categories.MARK, "s" }),
+          fn.wk_keystroke({ categories.MARK, "p" }),
           function()
             require("annotate").preview()
           end,
@@ -178,7 +181,7 @@ function M.config()
           desc = "annotate export",
         },
         {
-          fn.wk_keystroke({ categories.MARK, "S" }),
+          fn.wk_keystroke({ categories.MARK, "s" }),
           function()
             require("annotate").export({
               to = function(markdown)
