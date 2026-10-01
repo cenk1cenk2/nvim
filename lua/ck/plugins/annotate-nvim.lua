@@ -64,6 +64,9 @@ function M.config()
           prompt = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through these review notes on the repository. Each section below groups one kind of note, and its line under Description says what I expect for that kind. Re-read the code at each location before acting, since lines may have moved since I wrote the note, and do what the note's type asks. Bring back anything that needs me one at a time, each with its file and line and a one-line summary of the code there. Report back item by item when you finish.",
           clipboard_message = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through my review notes in the attached file.",
         },
+        external = {
+          legend = true,
+        },
         input = {
           width = nvim.ui.dimensions.float.sm,
           height = nvim.ui.dimensions.float.xs,
