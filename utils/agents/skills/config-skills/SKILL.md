@@ -115,16 +115,18 @@ references: # YAML array of relative paths to reference files.
   - ./references/local.md
 ```
 
-Hyprpilot hands the frontmatter to the agent verbatim — as `metadata` in `list_skills` / `read_skill` output, and as the `io.hyprpilot/skill` key in resource `_meta` — minus `title` and `description` (they ride as the spec `Resource.title` / `Resource.description` fields) and `references` (superseded by the manifest).
+Hyprpilot hands the frontmatter to the agent verbatim — as `metadata` in `list_skills` / `read_skill` output, as the `io.hyprpilot/skill` key in resource `_meta` (minus `title`, `description` and `references`, which other fields carry), and whole in the raw `skill://<slug>/SKILL.md` resource and in `skills/list`.
 
 What hyprpilot itself *acts on* is small:
 
 | Key | What hyprpilot does with it |
 |-----|------------------------------|
-| `description` | Becomes `Resource.description`. Falls back to `Guidance for <slug>` when absent — always write one anyway. |
+| `name` | **Required, and must equal the directory name** — a skill's slug is its directory path under the catalog root, and the name is that path's last segment. A missing or mismatched `name` skips the skill with a startup warning; it is never served. Lowercase letters, digits and single hyphens, at most 64 characters. |
+| `description` | **Required and non-empty**, or the skill is skipped the same way. Becomes `Resource.description`. |
 | `title` | Becomes `Resource.title`. Optional; the slug stands in when absent. |
 | `references` | Resolved relative to the skill's own `bundleDir` into manifest rows carrying each file's canonical path; bodies fetched by path with `read_skill_references`. |
-| `name` | Passed through only — the **directory name is the slug**. A mismatch changes nothing at runtime, so keep them equal for the reader. |
+
+A skill may sit at any depth: a directory holding a `SKILL.md` is a skill wherever it is, and its slug is its path (`group/name`), so a folder of related skills is a plain directory without a `SKILL.md` of its own. Every file in the skill's directory except hidden and gitignored ones is served as part of it, and readable through `read_skill_files`; a bundle past 512 files or 16 MiB is not served.
 
 Everything else — `disableModelInvocation`, `argumentHint`, and any key you invent — is **passed through untouched**. Hyprpilot enforces none of it; those are conventions the agent reads out of the metadata block, and the central `AGENTS.md` is what turns `disableModelInvocation` into an actual invocation rule. A stray Claude Code key (`when_to_use`, `allowed-tools`, `model`, `hooks`, …) therefore does not error — it just reaches the agent as noise. Do not add them.
 
