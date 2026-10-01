@@ -19,7 +19,7 @@ references:
   - ../references/harness/agent-background-harness-opencode.md
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Plan Compact — In-Session Compaction Anchor
 
@@ -143,29 +143,17 @@ Detail on each step:
 
 ## Carrying Posture Across the Compaction
 
-Compaction strips posture hardest, because it reads as tone rather than fact. Each subsection below is a thing the anchor MUST carry and the resuming agent MUST honour. **A resuming agent adopts the recorded architecture — it does not pick its own.**
+Compaction strips posture hardest, because it reads as tone rather than fact. Each subsection below is what the anchor MUST record. **A resuming agent adopts the recorded architecture — it does not pick its own.** The rules each posture enforces come from its own skill, re-read on resume (step 1 above); the anchor carries only the facts.
 
 ### Watchers
 
-Watcher cases and cadence live in `agent-watchers`; arming mechanics in the `agent-background` skill. What matters here is that a watcher is **runtime state that does not survive** — the loop dies with the session, and its body lives in a scratchpad that is already gone.
+A watcher is **runtime state that does not survive** — the loop dies with the session, and its body lives in a scratchpad that is already gone. Record per watcher, in *Scratchpad Scripts & Watchers*:
 
-Record per watcher, in *Scratchpad Scripts & Watchers*:
-
-- **What it watches and the done-condition** — "prod pipeline 8 jobs, all FINISHED", "PR #4821 merged", "human approval on the MR".
+- **Its ledger row**, copied across per `agent-watchers` — done-condition as tested, cadence, cap and its expiry action, the action that fires on wake.
 - **The verbatim body** — full command or loop, plus its scratchpad path. Not a description of it.
-- **The cadence and any cap**, and what happens when the cap is hit.
-- **What fires on the wake** — the action the watcher exists to trigger, exactly.
+- **Whether it was live at compaction**, or its condition already met.
 
-Then state, unambiguously, **whether the resuming agent re-arms**:
-
-| Recorded state | Resuming agent |
-|---|---|
-| Mode ON, watcher was live | Re-arm it from the inlined body, report that it did |
-| Mode ON, condition already met while compacting | Do NOT re-arm — run the fired action instead |
-| PARKED | Re-arm **nothing**. Parked means nothing is armed and nothing resumes until the user re-engages by name |
-| Mode OFF | Re-arm nothing; ending the turn idle is correct |
-
-**Re-arming is a write, not a read.** If the anchor does not say a watcher was live, the resuming agent asks rather than arming one it inferred.
+Re-arm only what the anchor records as live with the mode ON; a condition met while compacting runs its fired action instead. Parked or mode off re-arms nothing, per `mode-toggle`. **Re-arming is a write, not a read** — if the anchor does not say a watcher was live, ask rather than arming one inferred.
 
 ### Coordinator / Supervisor
 
@@ -173,21 +161,19 @@ These postures decide *who does the work*, so resuming without them silently con
 
 - **Which posture is active**, its **agreed scope**, and the exact phrase that re-engages it.
 - **The routing rule in force** — what gets dispatched versus kept in-house, and at which tier.
-- **Every agent spawned**: name/id, its brief, and whether it is live, delivered, or reaped. A resuming agent must not re-dispatch work that already ran, and must not assume a quiet agent failed.
-- **Standing holds and pre-approvals** — what the user already blessed within the scope, so the resuming agent neither re-asks nor over-reaches.
-- **For supervisor specifically:** that implementation is never done in-house, and which tracker items it is keeping honest.
-
-The resuming agent stays in that posture. Dropping to hands-on work because the transcript looks like a normal task is the failure this section prevents.
+- **Every agent spawned**: name/id, its brief, and whether it is live, delivered, or reaped, so the resume neither re-dispatches work that already ran nor assumes a quiet agent failed.
+- **Standing holds and pre-approvals** — what the user already blessed within the scope.
+- **For supervisor:** which tracker items it is keeping honest.
 
 ### Bulldozer
 
-Bulldozer is momentum, so the anchor has to carry *how* the push was running, not just that it was:
+Bulldozer is momentum, so the anchor carries *how* the push was running, not just that it was:
 
 - **What was being pushed through**, and the stop condition — what "done" is, and whether the user set a boundary.
-- **The queue** — what was in flight, what was next, in order. Bulldozer never ends a turn idle, so a resume with an empty queue means the queue was lost, not finished.
+- **The queue** — what was in flight, what was next, in order. A resume with an empty queue means the queue was lost, not finished.
 - **What was already tried and rejected**, so the resume does not re-attempt it and call it progress.
-- **The hard stops that still apply** — destructive actions, credentials, external sends. Bulldozer never relaxes those, and the anchor says so explicitly so a resuming agent does not read momentum as permission.
-- **The exact re-engage phrase**, and that a watcher wake or task notification is never itself permission to resume pushing.
+- **The hard stops that still apply** — destructive actions, credentials, external sends — stated explicitly so momentum is not read as permission.
+- **The exact re-engage phrase.**
 
 ## Anchor Document Format
 

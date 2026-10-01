@@ -4,8 +4,7 @@ What to watch, how often, what a wake means, and how to keep the set legible. Re
 arm a watcher — from `agent-background` (which owns the launch mechanics), `agent-bulldozer` (never
 idle), `agent-supervisor` (never drift), or `agent-coordinator` (covering a wait).
 
-The runtime facility and its parameters live in `agent-background-harness-<provider>`. Subagents are
-tracked separately, per `agent-roster`.
+Subagents are tracked separately, per `agent-roster`.
 
 ## Discipline
 
@@ -142,6 +141,8 @@ when you report it, because "MR merged" means *fire the next stage* to one, *dis
 another, and *move the issue to Done* to the third.
 
 ## What to arm, and how to check it
+
+**Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility and its parameters, and a missed read is silent. If that runtime cannot wake you at all, say so plainly and schedule the check explicitly rather than silently downgrading to hoping the user mentions it.
 
 **Load `agent-watcher-recipes` before arming, and read its entry for the domain you are about to watch** — the per-domain signals and the checks that poll them. A signal chosen from memory is how a watcher ends up polling something that never changes.
 

@@ -283,17 +283,12 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
 
 **Arm a watcher only when the user asks for one.** Watching costs their session — each wake is a turn — so it is their call, not a default. Without a watcher you simply read the thread when they next ask, which is often exactly right for a long-running handoff.
 
-When they do ask, arm for what the chosen mode needs: **every reply** when steering, the **terminal signal** when delegating. Both are awareness watchers — they reconcile and report, they never push labrat's work forward.
-
-**Cadence: judge it from how fast the thread actually moves, and bias tight.** An agent mid-run answers in minutes, so **2-3 minutes** is right while it is working — 10 is slack you pay for in stalled turns, and a question of its own sitting unanswered for ten minutes is ten minutes of an idle offsite agent. Stretch the interval only for a phase you know is slow (a long plan, a queued pipeline, a human approval), and tighten it again as the expected reply approaches.
+When they do ask, arm for what the chosen mode needs: **every reply** when steering, the **terminal signal** when delegating. Both are awareness watchers per `agent-watchers`, which owns the wake cycle and cadence discipline. The thread-specific figure: an agent mid-run answers in minutes and Slack rate-limits tight polling, so **2-3 minutes** while it works, stretched only for a phase you know is slow (a long plan, a queued pipeline, a human approval).
 
 The thread is the only signal, and thread replies are reachable only through Slack MCP — **bash cannot call MCP**. So:
 
-- **Preferred:** the runtime's deferred-wakeup facility, per `agent-background-harness-<provider>` — it re-invokes the session on an interval, and you read the thread through the active Slack integration on the main loop and diff against the last `ts` you processed. Fetch that reference before arming; where the runtime has no such facility, use the shell proxy below.
-- **If a Slack token is reachable from the shell**, a background loop polling `conversations.replies` for a new reply is a valid shell-visible proxy. **Write it in python** — the check is a JSON response diffed against the last `ts` you processed, which is a program rather than a test, and the language rule in `agent-watchers` puts that in `python3 -c`. Still do the authoritative read over MCP on wake.
-- **Cadence:** minutes, not seconds. An offsite agent's turn takes as long as real work takes, and Slack rate limits punish tight polling.
-
-On each wake, run the awareness cycle from `agent-watchers`: read what is new, verify any claim against its artifact, reconcile the tracker, report terse, then re-arm — until the work reaches a terminal state or the user stops it.
+- **Preferred:** the runtime's deferred-wakeup facility, per `agent-background-harness-<provider>` — it re-invokes the session on an interval, and you read the thread through the active Slack integration on the main loop and diff against the last `ts` you processed. Where the runtime has no such facility, use the shell proxy below.
+- **If a Slack token is reachable from the shell**, a background loop polling `conversations.replies` for a reply newer than the last `ts` you processed is a valid shell-visible proxy, written in python. Still do the authoritative read over MCP on wake.
 
 **Not every message is progress.** Hermes posts its own housekeeping into the thread — gateway online/restarting notices, cron job responses, and `:floppy_disk: Self-improvement review` lines where it patches its own skills and memory mid-run. Read those as "still alive, not advancing the task": they are not a stall to escalate on, and they are not work to report as progress either. An **empty message** is the same class of signal — a turn that produced no visible text.
 
@@ -306,12 +301,10 @@ Judge liveness by task-relevant replies, not message count. If two or three cons
 | Progress line (`Working — N min — iteration x/y`) | Mid-run | Keep armed. |
 | A phase narration ("let me dig into…", "opus dispatched") | Mid-run | Keep armed. |
 | Housekeeping or empty | Alive, not advancing | Keep armed; status-ping after 2-3 such checks. |
-| A verdict, a report, an MR link, "done" | **Terminal** | Verify the claim, then **reap the watcher** — the run is over and every further tick is a wasted turn. |
+| A verdict, a report, an MR link, "done" | **Terminal** | Verify the claim, then **reap the watcher** — further work is a new steer and, if the user wants it, a new watcher. |
 | Gateway restarting / offline notice | Interrupted | Re-send or re-steer once it is back; do not treat as failure. |
 
-A terminal report is the signal to stop watching, not to keep watching in case something else arrives. If more work follows, that is a new steer and, if the user wants it, a new watcher.
-
-**A quiet thread is not a verdict.** It can mean working, blocked on an approval prompt, or a stalled run. Check the thread before concluding anything, and if it is waiting on approval, answer it — that is a reply you owe, not an event to observe.
+**A quiet thread can be waiting on an approval prompt** — check it, and if so answer it; that is a reply you owe, not an event to observe.
 
 ## Steer and queue mid-run
 

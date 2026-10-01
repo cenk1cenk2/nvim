@@ -108,14 +108,11 @@ Posture: `present-first`.
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
 - **New commits by default; amend your own work when it fits.** Default to a fresh commit (and separate commits for separate concerns). Amend or rewrite only your own commits on your own branch — a fixup to the commit you just made, or tidying unshared history — or when the user asks; pushing the rewrite uses `--force-with-lease` via `git-push`. Never amend or rewrite shared or protected-branch history.
-- **Different tasks → different commits.** Don't collapse unrelated work into one commit. A branch that carries several meaningful commits should keep them: squash can be applied later at merge time, but when the branch holds multiple distinct commits keep squash OFF on the PR/MR so the history survives (see `github-pr-create` / `gitlab-mr-create`).
+- **Different tasks → different commits.** Don't collapse unrelated work into one commit; keep a branch's distinct commits (squash is decided in `github-pr-create` / `gitlab-mr-create`).
 
 ## Composing with Other Skills
 
-This skill is composable — the commit step is a single, focused responsibility that other skills build on.
-
-- **Followed by `git-push`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), this skill runs to completion (analyze → draft → approve → commit), then control hands off to `git-push`. Never push from within this skill.
-- **Never mix responsibilities.** This skill does not push, branch, pull, or open PRs. Those stay with the dedicated skills (`git-push`, `git-branch`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
+On "commit and push", chain into `git-push` after the commit lands; this skill never pushes itself.
 
 ## Examples
 

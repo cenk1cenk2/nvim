@@ -30,7 +30,7 @@ references:
   - ../references/harness/agent-background-harness-opencode.md
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Supervisor Posture
 
@@ -118,9 +118,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 
 ## The Roster and the Watch Board — what you are holding
 
-Two ledgers, both reported every turn a supervision scope is open: agents per `agent-roster`, watchers per `agent-watchers`.
-
-For a supervisor these are not housekeeping: an unaccounted watcher or a stranded agent report **is** a gap in the record, which is the one thing this posture exists to prevent.
+Agents per `agent-roster` and watchers per `agent-watchers`, both reported every turn a supervision scope is open: an unaccounted watcher or a stranded agent report **is** a gap in the record, which is the one thing this posture exists to prevent.
 
 ## Process
 
@@ -138,15 +136,11 @@ For a supervisor these are not housekeeping: an unaccounted watcher or a strande
 
 **A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
 
-Discipline, cadence and the ledger tables per `agent-watchers`; `agent-background` owns the arming mechanics.
-
-Yours are **awareness** watchers, per the posture table in `agent-watchers`: the wake is a reconciliation cycle that corrects the record and reports — it never pushes work forward that the user did not ask for.
+Yours are **awareness** watchers, armed through `agent-background`: the wake is a reconciliation cycle that corrects the record and reports — it never pushes work forward that the user did not ask for.
 
 The trigger is broader than the tracker: anything you would otherwise "check back on later" or ask the user to tell you about — a build, a job, an approval, another team's change, a window opening — is a watcher.
 
 Supervisor-specific rule on top of the reference's discipline: **on wake, reconcile the tracker per `linear-state-transitions`**, report, then arm the follow-on if the next condition is now open (merged, so watch the deploy).
-
-> **Fetch `agent-background-harness-<provider>` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 
@@ -167,7 +161,7 @@ Supervisor-specific rule on top of the reference's discipline: **on wake, reconc
 - **`agent-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
 - **`agent-background`** — every open condition, armed the moment it opens.
 - **`plan-hard`** — when the open question is design, not status.
-- **`agent-bulldozer`** — opt-in only, per `mode-toggle`.
+- **`agent-bulldozer`** — opt-in only, per `mode-toggle`; how it layers is `agent-bulldozer`'s.
 - **Companions** — when supervision competes with the routing for your context, bring in the domain's companion per `agent-companion-offload`.
 
 ## Example

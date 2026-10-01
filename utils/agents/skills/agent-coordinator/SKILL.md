@@ -27,7 +27,7 @@ references:
   - ../references/harness/agent-background-harness-opencode.md
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Coordinator Posture
 
@@ -42,9 +42,8 @@ Invoking coordinator IS a standing blessing to dispatch within the agreed scope:
 On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-coordinator`, "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator".
-- **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the coordinated scope completing.
-- **A park signal ramps everything down to zero, unasked**, per `mode-toggle` Parking. In coordinator mode the pending report IS the product, so an agent still writing one serves the park target.
-- **Survives disengage:** the state file only. Spawned agents and armed watchers are collected and torn down by the park.
+- **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", any park signal, per `mode-toggle`, or the coordinated scope completing. The pending report IS the product here, so an agent still writing one serves the park target.
+- **Survives disengage:** the state file only.
 
 ## Context
 
@@ -105,13 +104,9 @@ An agent that returns a wall of text has failed the task even if the work is rig
 
 ## The Roster and the Watch Board — what you are holding
 
-Two ledgers, and a router needs both visible every turn. Agents per `agent-roster` — the roster table, and the rule that reaping an uncollected agent destroys its report. Watchers per `agent-watchers` — the armed and ended tables, plus what to arm for each kind of wait.
-
-Report both whenever you dispatch, whenever one returns, and before any teardown. A live entry you cannot justify is the map going stale, which is the one thing this posture cannot afford.
+Agents per `agent-roster` and watchers per `agent-watchers`, both visible every turn: a live entry you cannot justify is the map going stale, which is the one thing this posture cannot afford.
 
 ## Watchers — what routing adds
-
-> **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 Yours are **routing** wakes, per the posture table in `agent-watchers`. What routing adds on top of it:
 
@@ -154,9 +149,7 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 
 ### Bulldozer is Opt-In Only
 
-**`agent-bulldozer` is NOT part of coordinator mode.** The two are orthogonal — coordinator decides who does the work, bulldozer decides never to idle — and they layer independently per `mode-toggle`, engaged only on the user's explicit signal (`/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer`). Without it, run the default rhythm: dispatch, verify, report, wait for the user.
-
-- When both are engaged, bulldozer owns the momentum rules and its own Boundaries and situational holds bind unchanged; coordinator still owns the routing and the return contract.
+**`agent-bulldozer` is opt-in only, per `mode-toggle`; how it layers is `agent-bulldozer`'s.** It engages only on the user's explicit signal (`/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer`). Without it, run the default rhythm: dispatch, verify, report, wait for the user.
 
 ## Example
 

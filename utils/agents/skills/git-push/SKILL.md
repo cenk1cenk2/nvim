@@ -61,11 +61,7 @@ references:
 
 ## Composing with Other Skills
 
-This skill is composable — other skills can hand off to it once their work is done.
-
-- **After `git-commit`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), `git-commit` runs its full workflow (analyze → draft → approve → commit). On successful commit, control hands off to this skill, which starts at step 1 with the post-commit state. No shared tool state is required — this skill re-inspects the tree.
-- **Skip the dirty-tree note in step 1** when called immediately after `git-commit` in the same turn — leftover untracked or deliberately-unstaged files are expected.
-- **Never mix responsibilities.** This skill does not stage, commit, resolve conflicts, pull, or open PRs. Those stay with the dedicated skills (`git-commit`, `git-conflict`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
+When invoked right after `git-commit` ("commit and push"), start at step 1 with the post-commit state and skip the dirty-tree note, since leftover untracked or unstaged files are expected.
 
 ## Key Principles
 

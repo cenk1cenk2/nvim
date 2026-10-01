@@ -24,7 +24,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Never hand back a bare identifier: MRs, PRs, pipelines and branches carry their title and a markdown link to their URL, plus the repository when more than one is in play, per `identifier-legibility`.
+MRs, PRs, pipelines and branches carry their title and link, per `identifier-legibility`.
 
 ## Context
 

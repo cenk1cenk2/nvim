@@ -16,7 +16,7 @@ references:
   - ../references/agent/agent-roster.md
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Toggle
 
@@ -24,7 +24,7 @@ State that spans turns is written durably per `long-running-work`. On/off mechan
 
 - **On:** `/agent-bohrhammer`, "bohrhammer".
 - **Off:** "stop the bohrhammer", "normal mode", any park signal, or the last agreed checkpoint reached and reported.
-- **Survives disengage:** open PRs/MRs, tracker writes, and the state file. Watchers, agents and companions come down with the park, companions on the user's word.
+- **Survives disengage:** open PRs/MRs, tracker writes, and the state file. Companions are retired only on the user's word.
 
 ## Context
 

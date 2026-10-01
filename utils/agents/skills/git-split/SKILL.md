@@ -109,15 +109,6 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 - **Coverage check is mandatory.** Before executing, verify the union of slices equals the original change set.
 - **Delegate, don't duplicate.** All branch / commit / push / PR / MR work goes through the dedicated skills.
 
-## Composing with Other Skills
-
-This skill is the **caller** in a delegation chain. The composed skills run their full workflows (analyze → draft → approve → act) for each slice.
-
-- **`git-branch`** — branch creation per slice. Sticky prefix carries across slices.
-- **`git-commit`** — commit drafting per slice. Reuse cherry-picked messages where applicable.
-- **`git-push`** — push per slice (opt-in).
-- **`github-pr-create` / `gitlab-mr-create`** — draft PR/MR per slice (opt-in). Platform selected via `scm-detect`.
-
 **Conflict with `git-manual`.** `git-manual` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-manual` is active when `git-split` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
 
 ## Examples

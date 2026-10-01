@@ -14,7 +14,7 @@ references:
   - ../references/identifier-legibility.md
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
@@ -153,6 +153,8 @@ Scope picks the parent — tightest level that covers it, per `linear-project-do
 
 Attach documents on demand with the `linear-document` skill — one concern per document, tightly focused like obsidian repository notes. Investigations, plans, candidate matrices, migration guides, solved problems, deviations.
 
+Dependencies and nesting go through Linear fields — `blockedBy`, `blocks`, `parentId` — never as dependency chains or sub-issue tables in descriptions.
+
 ## Ownership — Bless It Once, Up Front
 
 **Before the first agent starts, ask one question and get one answer: is this project or issue tree ours to keep current?** Ownership rules per `reconcile-state` — the permission is "what this session created, or what the user explicitly handed you", and everything else is off limits.
@@ -209,7 +211,7 @@ A small manual step belongs as a **task inside an issue** when it is a dependenc
 | Migrate data from old server | Separate issue | Significant work, different concern |
 | Run terraform apply | The issue holding the terraform code | Part of completing that PR |
 
-Ask the user when uncertain whether a manual step is separate or included.
+Ask whether an external system is configured via code or by hand: code means a separate issue in that repository, manual means a task inside the related issue. Ask the user when uncertain whether a manual step is separate or included.
 
 ## Structure Checklist
 
@@ -234,40 +236,6 @@ Ask the user when uncertain whether a manual step is separate or included.
 | **DNS changes** | One repo for the DNS provider |
 | **Secrets** | Vault via code means a separate repo issue; manual means a task in the workload issue |
 | **Fleet-wide mechanical change** | An issueset — exact change on the parent, one sub-issue per repo |
-
-## Anti-Patterns
-
-**Don't:**
-
-- "Set up TeamSpeak" — spans repositories, too vague.
-- "Create workload and routing" — two concerns, two repos.
-- One issue listing six repositories in its description.
-- Sub-issues each carrying a full copy of the parent's description.
-- Deciding single issue versus issueset without investigating repo span.
-- Starting agents without settling ownership, then writing into the tree anyway.
-- Reconstructing verification evidence at wrap-up instead of capturing it at the task.
-- Dependency chains or sub-issue tables written into descriptions.
-
-**Do:**
-
-- "Create teamspeak3 workload manifests" — one repo, one PR.
-- "Configure load balancer routes for teamspeak3" — one repo, one PR.
-- An issueset "Adopt shared CI template" with one sub-issue per repository.
-
-## Key Principles
-
-1. **The executable unit is one repo, one PR, one concern.** Everything above it is a container.
-2. **Investigate repo span before choosing the shape.** A mechanical change is multi-repo until proven otherwise.
-3. **Repository named explicitly in every executable issue.**
-4. **The parent holds the description; sub-issues hold deviations.** Never both.
-5. **Containers are never implemented.** A project and an issueset's parent produce no PR.
-6. **Shared context at the tightest scope that covers it** — sub-issue, parent, or project.
-7. **Ownership is blessed once, up front, and recorded durably.** No blessing means surface drift, do not write.
-8. **The record is a notebook during execution.** Baseline before, result after, deviations as they surface, reconciled in batches.
-9. **External systems:** ask whether the system is configured via code or by hand. Code means a separate issue in that repository; manual means a task inside the related issue.
-10. **Dependencies via Linear fields** — `blockedBy`, `blocks`, `parentId`. Never in descriptions.
-11. **Structuring and picking up are one mentality.** The mode follows what you are doing; switching back to reshape mid-implementation needs no ceremony.
-12. **Shape and record honesty here; writing and execution mechanics elsewhere.** The create/update/comment skills write; `agent-pickup` and the pickup skills execute.
 
 ## Examples
 

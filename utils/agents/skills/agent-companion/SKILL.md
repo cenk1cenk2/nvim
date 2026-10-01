@@ -21,7 +21,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Never hand back a bare identifier: whatever the domain's objects are, they carry their title and a markdown link to their URL where one exists, per `identifier-legibility`.
+The domain's objects carry their title and link where one exists, per `identifier-legibility`.
 
 ## Context
 

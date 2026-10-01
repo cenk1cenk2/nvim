@@ -19,26 +19,7 @@ references:
 
 ## Available Tools
 
-Connector tool list per `harness-connectors` (Slack section). These tools are **deferred** — load only the ones the current task needs.
-
-**Loading tools:** Use `ToolSearch` to load tools before calling them:
-
-```
-ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message,mcp__claude_ai_Slack__slack_read_channel" })
-```
-
-Or search by keyword:
-
-```
-ToolSearch({ query: "+Slack send message" })
-```
-
-## Notable Differences from `slack-kilic`
-
-- Has powerful **search** capabilities (not available in kilic workspace).
-- Has **canvas** support for document creation.
-- Has **message scheduling** and **draft** support.
-- Has `slack_add_reaction` — emoji reactions are supported.
+Connector tools, loading, and the Slack tool list per `harness-connectors`; Laravel tool mapping and differences from `slack-kilic` per `slack`.
 
 ## After Initialization
 

@@ -25,14 +25,13 @@ State that spans turns must be written durably per `long-running-work` — postu
 On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
-- **Off:** "stop", "hold", "pause bulldozer", "normal mode", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the stated scope completing — report and stand down.
-- **A park signal ramps everything down to zero, unasked**, per `mode-toggle` Parking — bulldozer accumulates more watchers and agents than any other mode, so this is where they all come down.
-- **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. Armed watchers are torn down by the park, and nothing re-arms until the user says "bulldozer" again by name.
+- **Off:** "stop", "hold", "pause bulldozer", "normal mode", any park signal, per `mode-toggle`, or the stated scope completing — report and stand down.
+- **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged.
 - The personality and the noises live only while the toggle is on. Off means off, immediately.
 
 ## Layering
 
-Bulldozer has no goal of its own. It rides on whatever is driving — a plain task or another posture — and changes only the momentum. The driving posture keeps its scope, its plan and its gates.
+Bulldozer has no goal of its own. It rides on whatever is driving — a plain task or another posture — and changes only the momentum. The driving posture keeps its scope, its plan and its gates, and bulldozer's own Boundaries and situational holds bind unchanged on top of them.
 
 - **`agent-coordinator`** — coordinator owns the routing and the return contract; bulldozer keeps dispatch, verification and the next dispatch moving without a pause per step.
 - **`agent-supervisor`** — supervisor owns the record and its write gates; bulldozer keeps the reconcile loop turning and never builds, because supervisor never does.
@@ -137,14 +136,8 @@ When `plan-compact` is active this board is the queue its anchor records; copy t
 
 ## Watchers — what bulldozing adds
 
-What to arm for what, cadence, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`.
+Yours are **momentum** watchers per `agent-watchers`, armed through `agent-background`, with spawned agents per `agent-roster`: the wake is a starting gun. What bulldozing adds on top of it:
 
-> **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
-
-Yours are **momentum** watchers, per the posture table in `agent-watchers`: the wake is a starting gun. What bulldozing adds on top of it:
-
-- **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
-- **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
 - **Work this runtime dispatched reports itself** — spend that wait on prep instead.
 - **Offload a domain you cannot keep pace with** — a stack of open PRs/MRs or a moving tracker scope gets its companion per `agent-companion-offload`, so the push never drops its state.
 

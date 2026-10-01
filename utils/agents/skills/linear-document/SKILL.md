@@ -13,7 +13,7 @@ references:
 argumentHint: '[optional: issue or project, and the concern to capture]'
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Linear Document — Attach Task Details to an Issue or Project
 

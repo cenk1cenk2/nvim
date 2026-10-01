@@ -22,7 +22,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Never hand back a bare identifier: issues, MRs and plan tasks carry their title and, where one exists, a markdown link to their URL, per `identifier-legibility`.
+Issues, MRs and plan tasks carry their title and link where one exists, per `identifier-legibility`.
 
 ## Context
 

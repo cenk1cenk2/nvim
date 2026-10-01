@@ -80,11 +80,7 @@ Posture: `present-first`.
 
 ## Composing with Other Skills
 
-This skill is composable — other skills can delegate branch creation to it as a prerequisite step.
-
-- **Calling skill responsibilities:** pass a descriptive hint or explicit name/prefix through the conversation context (e.g., Linear issue title, feature summary).
-- **This skill:** runs the process above, confirms with the user, and hands control back to the calling skill after the new branch is checked out.
-- **Never mix responsibilities.** This skill does not commit, push, or open PRs. Those stay with the calling skill or with the dedicated skills (`git-commit`, `github-pr-create`, `gitlab-mr-create`).
+When another skill delegates branch creation here, take its hint (issue title, feature summary, prefix) from the conversation context and hand control back once the branch is checked out.
 
 ## Key Principles
 

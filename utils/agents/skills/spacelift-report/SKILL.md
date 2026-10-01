@@ -11,7 +11,7 @@ references:
 argumentHint: '[PR, branch, commit, or Actions link]'
 ---
 
-Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Spacelift Infrastructure Impact Report
 

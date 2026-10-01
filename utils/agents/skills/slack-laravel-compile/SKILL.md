@@ -17,17 +17,15 @@ references:
 ## Slack Compile
 
 Posture: `present-first`.
-> **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
+
+Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 
 This skill takes the user's input — a question, finding, or topic — and compiles it into a concise Slack message enriched with real links and references. The goal is to make the message self-contained so others can understand it and reach the relevant resources without asking follow-up questions.
 
 ## Context
 
 - **Slack workspace:** Laravel enterprise (`slack-laravel`).
-- **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`) — load via `ToolSearch` before use:
-  ```
-  ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })
-  ```
+- **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`), routing per `slack`.
 - **Target channel:** Ask the user which channel to post to. If already clear from context (e.g., combined with another skill that specifies a channel), use that.
 
 ## Process

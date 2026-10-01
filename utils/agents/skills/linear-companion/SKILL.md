@@ -26,7 +26,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Never hand back a bare identifier: issues, projects and MRs carry their title and a markdown link to their URL, plus the parent scope when more than one is in play, per `identifier-legibility`.
+Issues, projects and MRs carry their title and link, per `identifier-legibility`.
 
 ## Context
 

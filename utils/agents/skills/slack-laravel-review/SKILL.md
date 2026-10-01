@@ -16,16 +16,14 @@ references:
 ## Slack Review Request Poster
 
 Posture: `present-first`.
-> **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
+
+Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 
 ## Context
 
 - **Channel:** `#cloud-infra-pr` (ID: `C0B0XMD0HS4`).
 - **Slack workspace:** Laravel enterprise (`slack-laravel`).
-- **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`) — load via `ToolSearch` before use:
-  ```
-  ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })
-  ```
+- **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`), routing per `slack`.
 
 ## Process
 

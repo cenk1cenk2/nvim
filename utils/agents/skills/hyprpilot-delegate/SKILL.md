@@ -29,19 +29,13 @@ references:
 
 ## ABSOLUTE — arm the turn's watcher before reporting the session as running
 
-**Every detached turn is followed, in the same turn, by arming exactly one runtime-managed watcher on that turn's own `done.json`.** This binds to `spawn` and to every `session_send` alike, steering or not — each starts a turn, each returns that turn's own path, and each finishes into silence otherwise.
+**Every detached turn is followed, in the same turn, by arming exactly one runtime-managed watcher on that turn's own `done.json`.** This binds to `spawn` and to every `session_send` alike, steering or not — each starts a turn, each returns that turn's own path, and each finishes into silence otherwise. **Until that watcher is armed and verified, "the session is running" is a false statement.**
 
-The call hands you the exact path in `sessionInfo.files.turnDir`. There is nothing left to discover and nothing to wait for, so there is no state in which arming is premature and no reason to defer it to a later turn.
+The call hands you the exact path in `sessionInfo.files.turnDir`, so there is no state in which arming is premature. Take it from the call that just returned — it names this turn and nothing else; never carry a previous turn's path forward and never reconstruct one by hand. Launch through the facility per `agent-background-harness-<provider>`; handle confirmation, the armed row and the announcement per `agent-watchers`. What this skill adds:
 
-The sequence, in order, no step skippable:
-
-1. **Take `sessionInfo.files.turnDir` from the call that just returned.** It names this turn and nothing else. Never carry a previous turn's path forward and never reconstruct one by hand.
-2. **Fetch `agent-background-harness-<provider>` for the runtime's background-exec facility.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`).
-3. **Launch one watcher through that facility**, on the two-condition check below. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
-4. **Confirm the launch returned a watcher handle and did not die on the spot.** An immediate non-zero exit — a refused `--turn-dir` (exit 2), a shell parse error, a missing `uv` — is an arming failure that looks armed until checked. No handle, or a launch already dead, means you detached instead of arming: diagnose which — path, command, auth, permission, usage, a stale turn path, or the runtime's own background facility — then re-arm, or take a branch from *No wake available* below and report the session as **unwatched**. Never announce a session as watched on a failed or unverified launch.
-5. **Record three identifiers together, then announce in one plain sentence.** The session handle, the exact `turnDir` path being watched, and the watcher handle go into the armed row `agent-watchers` defines — that row is the internal proof, and a session recorded without a watcher handle is an unwatched session. What the user hears is a short human sentence naming the profile it went to, the delegated task in plain words, and the next action — "delegated to the hyprpilot opus profile to refactor the retry logic; watching it — when it finishes I'll verify the result and continue" — plus the session handle, which is what they steer with; anything in that sentence with a web address is a titled link per `identifier-legibility`, never a bare id. The `turnDir`, the watcher handle, pids, and polling cadence stay in the row, quotable on request, never in ordinary prose.
-
-**Only after step 5 is "the session is running" a true statement.** The announcement stays short; the recorded proof never does — all three identifiers, or the session is unwatched.
+- **The armed row carries three identifiers** — the session handle, the exact `turnDir` being watched, and the watcher handle. A session recorded without a watcher handle is an unwatched session.
+- **A refused `--turn-dir` (exit 2) or a missing `uv` dies at launch**, an arming failure that looks armed until checked. Re-arm, or take a branch from *No wake available* below and report the session as **unwatched**.
+- **The announcement names the profile, the delegated task in plain words, the next action, and the session handle** — the handle is what the user steers with. The `turnDir` and watcher handle stay in the row.
 
 ### The check
 
@@ -76,7 +70,7 @@ Launch that through the runtime's background facility. Pass `--turn-dir` **verba
 
 **`--stall-after` belongs on every turn watcher.** Without it a wedged turn never writes its marker and never wakes you at all; with it, exit 11 is the wedge report.
 
-**Why a script rather than an inlined loop.** A loop authored at the moment it is needed arms unverified, and the failure is silent in the worst direction: a payload carrying nested quotes or a JSON body dies at the shell's parser and arrives as an *unarmed* watcher, which reads exactly like a quiet one. The script takes its condition as argv, refuses a relative or globbed path, and has an exit-code contract the suite covers. Discipline, cadence and the announce tables per `agent-watchers`.
+**Why a script rather than an inlined loop.** A loop authored at the moment it is needed arms unverified, and the failure is silent in the worst direction: a payload carrying nested quotes or a JSON body dies at the shell's parser and arrives as an *unarmed* watcher, which reads exactly like a quiet one. The script takes its condition as argv, refuses a relative or globbed path, and has an exit-code contract the suite covers.
 
 **Where the script is unavailable** — a runtime that serves this catalog over MCP without the tree on disk — fall back to the equivalent inline loop, keeping both halves of the test:
 
@@ -104,13 +98,11 @@ Never end a turn reporting a detached session as running with neither a watcher 
 
 ### On wake — audit the completion state, then collect
 
-**A wake is the runtime's own notification firing on the watcher you armed, and nothing else.** A live OS process is not a wake, and a watcher's log or output file is not a wake. If you are reading either to find out whether the turn finished, nothing is waking you — that is a detached process, and the watch must be re-armed through the runtime facility before you rely on it again.
-
 On a real wake, in order:
 
 1. **Audit the completion state through the harness.** `session_status { session }` for `status`, `exitCode` and `hasResult`. `done.json` says the turn ended, never that it succeeded, and a missing directory says it was cleaned up rather than that it worked.
 2. **Collect the result** per step 6, before any further steering. `exitCode: 0` and `hasResult: true` describe the turn, not the brief.
-3. **Reap the watcher** and record its outcome in the ending row `agent-watchers` defines. A watcher that fired and was left running double-wakes the next turn.
+3. **Reap the watcher** and record its ending row.
 
 ## Context
 
