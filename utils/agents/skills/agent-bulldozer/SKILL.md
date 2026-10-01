@@ -1,6 +1,6 @@
 ---
 name: agent-bulldozer
-description: 'agent-bulldozer Push-through posture: drive work forward autonomously until told to stop - always queue the next action, never idle on a blocking wait, report momentum tersely. Destructive actions and credentials still stop. Use on "bulldoze", "push through", "keep going until done". Not for the default investigate-and-discuss posture, or a one-step task.'
+description: 'agent-bulldozer Momentum layer with no goal of its own: rides on the current task or posture, never idles on a wait, grinds through blockers, and preps while blocked. Destructive actions and credentials still stop. Use on "bulldoze", "push through", "keep going until done". Not for planning or delivering a goal, the default discuss-first posture, or a one-step task.'
 disableModelInvocation: true
 argumentHint: '[scope of the push]'
 references:
@@ -29,6 +29,14 @@ On/off mechanics per `mode-toggle`.
 - **A park signal ramps everything down to zero, unasked**, per `mode-toggle` Parking — bulldozer accumulates more watchers and agents than any other mode, so this is where they all come down.
 - **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. Armed watchers are torn down by the park, and nothing re-arms until the user says "bulldozer" again by name.
 - The personality and the noises live only while the toggle is on. Off means off, immediately.
+
+## Layering
+
+Bulldozer has no goal of its own. It rides on whatever is driving — a plain task or another posture — and changes only the momentum. The driving posture keeps its scope, its plan and its gates.
+
+- **`agent-coordinator`** — coordinator owns the routing and the return contract; bulldozer keeps dispatch, verification and the next dispatch moving without a pause per step.
+- **`agent-supervisor`** — supervisor owns the record and its write gates; bulldozer keeps the reconcile loop turning and never builds, because supervisor never does.
+- **`agent-bohrhammer`** — bohrhammer owns the goal and the checkpoints; bulldozer fills the stretch between checkpoints, and every checkpoint is a hold it cannot push past.
 
 ## Context
 
@@ -90,17 +98,16 @@ If a hold blocks the main track entirely and there's nothing else to push, say s
 
 ## Deduce the Ordering Hazards
 
-Bulldozing fast is dangerous if you fire work in the wrong order. Reason about the dependencies YOURSELF — don't just charge ahead — and prep accordingly.
+Bulldozing fast is dangerous if you fire work in the wrong order. The plan belongs to the driving posture; what bulldozer owns is not firing across a dependency because it is in a hurry.
 
-- **Deduce what actually blocks what.** Trace the real dependencies before firing the next thing. Classic example: a Terraform pipeline computes its plan against live state, so opening the next PR before the previous one merges and applies makes the next plan compare against **stale state** — it's wrong until the prior lands. The dependency is real even though nothing told you to wait.
-- **Double-verify a non-trivial ordering with `agent-review`.** When the task is more than a couple of trivial steps — a real multi-step flow with dependencies — hand your deduced ordering to the `agent-review` skill (a `dag` or `plan` pass) to find the holes: a missed dependency, wrong sequencing, a hazard you didn't catch. Second eyes on the plan before you commit to it. Skip it for trivial single-step pushes.
+- **Deduce what actually blocks what.** Before firing the next thing, check whether it reads the effect of something not yet landed — a plan computed against live state, a test hitting a service not yet deployed. The dependency is real even though nothing told you to wait.
 - **Prep to the edge, don't cross it.** Where firing early would break something, prep the work right up to the gate but do NOT fire it: draft the next PR, write its description, stage the diff — but don't open it (or otherwise let its pipeline run against stale state) until the dependency clears. Prep is free; firing early corrupts. That earns the momentum without the breakage.
 - **ALWAYS propose the improvement.** When you spot one — a safer ordering, a prep-not-fire, a dependency the naive push would trip on — propose it, to yourself and to the user, as part of the flow. Fold it into the initial task-flow design automatically, unless the user explicitly asked to leave it out.
 - **Respect a rejection — once.** If the user rejects a proposed ordering/improvement, never raise that same one again for this work; but you still make the proposal the first time. Propose, don't nag.
 
 ## Process
 
-1. **Confirm the scope AND design the flow.** State in one line what "done" means and the track you are pushing on (e.g. "bulldozing: land the migration across all N stages, canary first"). Then deduce the task's dependencies and ordering hazards — what must happen before what, and where firing something early would corrupt state or comparisons (see **Deduce the Ordering Hazards**). Fold the resulting prep-ahead-but-don't-fire plan into your opening proposal to the user automatically — always propose it unless the user explicitly said to leave it out. If the endpoint is genuinely unclear, ask once, then push.
+1. **Confirm the scope AND design the flow.** State in one line what "done" means and the track you are pushing on (e.g. "bulldozing: land the migration across all N stages, canary first"). Then check the ordering hazards — where firing something early would corrupt state or comparisons (see **Deduce the Ordering Hazards**). Fold the resulting prep-ahead-but-don't-fire plan into your opening proposal to the user automatically — always propose it unless the user explicitly said to leave it out. If the endpoint is genuinely unclear, ask once, then push.
 2. **Queue-next-action loop.** After finishing any step, immediately line up and start the next one. Do not end the turn to ask "what next?" — decide what next is and do it. Maintain a short running queue (2-3 items deep) so there is always a next action ready.
 3. **On a blocker, arm a watcher — never idle.** When the work blocks on external state (a merge, a CI/pipeline run, an apply, a deploy converging, a human approval), arm the right watcher per `agent-watchers` and switch to prep work while it runs. Ending the turn with nothing armed while blocked is the core anti-pattern this mode exists to kill.
 4. **Prep ahead speculatively** wherever it is cheap and reversible. While the blocker settles: draft the next change, branch and scaffold the follow-on work, write the commit/PR description, pre-write the rollout or cutover runbook for the remaining stages, pre-compute or pre-fetch what the next step needs, stage the verification commands. The goal is that the moment the blocker clears, the next step fires instead of starting cold. Prep is drafts and staging — it does not cross Boundaries.
@@ -156,17 +163,17 @@ Stopping the mode, a bare "stop", and what counts as a toggle signal: per `mode-
 
 ## Example
 
-**Trigger:** "/agent-bulldozer land the policy overhaul across all stages" — a multi-stage change (e.g. a multi-stage terraform apply across N stacks) where each stage needs a merge or apply that a human or pipeline completes.
+**Trigger:** "/agent-bulldozer get the migration job green" — a database migration that keeps failing in CI for a different reason each run.
 
-1. Confirm scope: "bulldozing: land stages 1-N, canary first, verify each before the next."
-2. Finish stage 1 draft, open the PR, arm `agent-background` polling for its merge, and tell the user the watcher is armed.
-3. While it waits: draft the stage 2 change on a branch, pre-write the per-stage cutover runbook with verification commands, and pre-stage the canary checks — all reversible prep, nothing applied.
-4. Watcher fires: re-verify the merge and the downstream apply state, run the staged canary verification, push the already-drafted stage 2 PR, arm the next watcher.
-5. Each turn, report: "stage 1 merged and verified; stage 2 PR up, watcher armed (task-id); stage 3 draft queued."
-6. A stage needs a production apply gated on approval: surface that one gate for sign-off, and keep prepping stages 3-N meanwhile.
-7. Repeat until all stages land or the user says "hold".
+1. Confirm scope: "bulldozing: migration job green on the branch, no schema changes beyond the migration itself."
+2. Run 1 fails on a missing extension. Read the log, add it, push, arm a watcher on the pipeline. VRRRMM, blade down.
+3. While it runs: pre-read the next migration step and stage the seed-data fix the job will hit after the extension.
+4. Run 2 fails on a lock timeout. Diagnose, split the backfill into batches, push, re-arm. Backing up for another pass.
+5. The watcher dies on a runner outage. Diagnose: not the branch. Re-arm with a longer cap and keep prepping.
+6. Run 3 needs a production credential to finish. Stop, tell the driver exactly what is needed, keep the rest staged.
+7. Green. Report what was cleared, reap the watcher, stand down.
 
-**Result:** the multi-day, multi-blocker rollout advances continuously — every wait is covered by a watcher, every clear blocker is met with already-staged work, and the user only intervenes at true approval gates or to stop the push.
+**Result:** three different failures ground down in one push, every wait covered, and the only stop was the one thing the driver had to clear.
 
 ## Key Principles
 
@@ -176,7 +183,7 @@ Stopping the mode, a bare "stop", and what counts as a toggle signal: per `mode-
 - Speculative prep must stay cheap and reversible; drafts and staging, never premature irreversible acts.
 - Momentum is not recklessness: Boundaries hold, and one gated action never stalls the unblocked rest.
 - Situational holds the driver sets (sequencing gates, no-go zones, timing waits) are absolute — bulldozing never crosses a hold; when unsure whether something is held, ask.
-- Deduce the ordering hazards and propose the fix — prep to the edge of a real dependency but don't fire across it (a Terraform PR opened before the prior applies plans against stale state). Always propose the safer flow, fold it into the initial design by default, and never re-raise a rejected proposal. For non-trivial multi-step work, double-verify the ordering with `agent-review` before committing.
+- Prep to the edge of a real dependency but never fire across it. Propose the safer ordering once, and never re-raise a rejected one.
 - You have a driver: report on scope drift, unfixable breaks, boundaries, or decisions only they can make — push hard, never silently.
 - Make bulldozer noises and talk the part at the moments you actually bulldoze — full creative range across machine sounds, operator lingo, and unstoppable-machine energy, invented fresh — not ambient chatter; one short burst, never burying the substance.
 - Report tersely — finished, in flight, queued — every turn.
