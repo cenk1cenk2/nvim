@@ -1,6 +1,6 @@
 ---
-name: agent-machine
-description: agent-machine End-to-end delivery posture - agree the goal and its checkpoints, then drive it to merge-ready PRs/MRs through coordinated agents, stacked where dependencies demand, stopping at every checkpoint for a blessing. Use on "machine", "run the machine", "take this end to end". Not for a single change, pure tracker work, or a push with no checkpoints.
+name: agent-bohrhammer
+description: agent-bohrhammer End-to-end delivery posture - agree the goal and its checkpoints, then drive it to merge-ready PRs/MRs through coordinated agents, stacked where dependencies demand, stopping at every checkpoint for a blessing. Use on "bohrhammer". Not for a single change, pure tracker work, or a push with no checkpoints.
 disableModelInvocation: true
 argumentHint: '[goal] [scope: project, issueset, issue, or none] [checkpoint]'
 references:
@@ -23,15 +23,15 @@ Never hand back a bare identifier: issues, MRs and PRs carry their title and a m
 
 State that spans turns is written durably per `long-running-work`. On/off mechanics per `mode-toggle`.
 
-- **On:** `/agent-machine`, "machine", "run the machine", "take this end to end".
-- **Off:** "stop the machine", "normal mode", any park signal, or the last agreed checkpoint reached and reported.
+- **On:** `/agent-bohrhammer`, "bohrhammer".
+- **Off:** "stop the bohrhammer", "normal mode", any park signal, or the last agreed checkpoint reached and reported.
 - **Survives disengage:** open PRs/MRs, tracker writes, and the state file. Watchers, agents and companions come down with the park, companions on the user's word.
 
 ## Context
 
-The machine takes a goal from agreement to merge-ready PRs/MRs, up to a point the user names. It composes the other postures rather than replacing them, and you stay on top of all of it yourself; delegation spends agents, never your grip on the state.
+The bohrhammer takes a goal from agreement to merge-ready PRs/MRs, up to a point the user names. It composes the other postures rather than replacing them, and you stay on top of all of it yourself; delegation spends agents, never your grip on the state.
 
-The user sets the pace. A blessing covers the stretch up to the next checkpoint, nothing further. **Inside a blessed stretch the machine owns the rhythm**: the composed postures' wait-for-the-user points collapse into the checkpoints, so dispatch, verify and advance without pausing per step. Their gates on external writes and destructive actions still hold. `agent-bulldozer` stays off unless the user engages it. Eagerness past a checkpoint is the failure.
+The user sets the pace. A blessing covers the stretch up to the next checkpoint, nothing further. **Inside a blessed stretch the bohrhammer owns the rhythm**: the composed postures' wait-for-the-user points collapse into the checkpoints, so dispatch, verify and advance without pausing per step. Their gates on external writes and destructive actions still hold. `agent-bulldozer` stays off unless the user engages it. Eagerness past a checkpoint is the failure.
 
 ## Process
 
@@ -52,11 +52,11 @@ A steer from the user is a rule change, not a one-off. Apply it to the PR/MR it 
 
 - Destructive actions, credentials, and external writes keep their own gates, per the central guidelines. A blessing for a stretch never covers them.
 - Never cross a checkpoint without the user's word.
-- Never merge. Opening and updating PRs/MRs is the machine's job; merging is the user's.
+- Never merge. Opening and updating PRs/MRs is the bohrhammer's job; merging is the user's.
 
 ## Example
 
-**Trigger:** "/agent-machine adopt the auth-rotation issueset, stop when the first two MRs are up"
+**Trigger:** "/agent-bohrhammer adopt the auth-rotation issueset, stop when the first two MRs are up"
 
 1. Load `agent-supervisor`, read the issueset, and present the breakdown: two MRs in the same repo, the second stacked on the first because it builds on the first's code, and one manual secret rotation before the second merges. `decision` reads the dependency the same way at 0.93.
 2. User adjusts the second MR's scope; finalize and read back the checkpoint.
@@ -64,4 +64,4 @@ A steer from the user is a rule change, not a one-off. Apply it to the PR/MR it 
 4. Both MRs open with pipelines and review threads to track; bring in `git-companion` for them and arm the pipeline watchers. A pipeline fails, a fix is dispatched, it goes green.
 5. Checkpoint report: two linked MRs with merge order, the rotation step between them, and "waiting on you: review and merge the first MR, then run the rotation".
 
-**Result:** the agreed stretch lands as reviewable MRs with a clear merge path, and the machine waits for the next blessing.
+**Result:** the agreed stretch lands as reviewable MRs with a clear merge path, and the bohrhammer waits for the next blessing.
