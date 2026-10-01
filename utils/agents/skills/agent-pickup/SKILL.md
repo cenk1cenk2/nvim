@@ -91,7 +91,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - When open PRs/MRs or the tracker scope outgrow what you can track beside the implementation, bring in a companion per `agent-companion-offload`.
 
 8. **Wrap up.**
-   - Use `linear-issue-status` for explicit or situational issue state changes not already handled by pickup/PR/MR triggers.
+   - Use `linear-status` for explicit or situational issue state changes not already handled by pickup/PR/MR triggers.
    - Always try checklist reconciliation when issues move to `In Review` or `Done`.
    - Comment on issues by default for deviations, decisions, blockers, findings, reviewer-driven scope changes, or non-obvious implementation notes.
    - Update issue descriptions only for autonomous-agent alignment or huge rewrites where the old issue is materially out of whack; otherwise prefer comments.

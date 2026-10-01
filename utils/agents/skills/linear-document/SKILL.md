@@ -43,7 +43,7 @@ This skill packages the **current task's details** — findings, an investigatio
 ## Key Principles
 
 - **Update, don't duplicate.** If a document already covers the concern, update it with agreement rather than creating a second one.
-- **Document, not comment or description.** Durable structured context is a document; ephemeral discussion is a comment (`linear-issue-comment`); the entity's own scope is its description (`linear-issue-update` / `linear-project-update`).
+- **Document, not comment or description.** Durable structured context is a document; ephemeral discussion is a comment (`linear-issue-comment`); the entity's own scope is its description (`linear-update`).
 
 ## Examples
 
@@ -61,5 +61,5 @@ This skill packages the **current task's details** — findings, an investigatio
 ## Composition with Other Skills
 
 - **`linear-issue-comment`** — for a short discussion note instead of a durable document.
-- **`linear-issue-update` / `linear-project-update`** — to change the entity's own description or fields rather than attach a separate document.
+- **`linear-update`** — to change the entity's own description or fields rather than attach a separate document.
 - **`linear-project-create`** — creates a project and its initial documents from scratch; `linear-document` attaches documents on demand to entities that already exist.

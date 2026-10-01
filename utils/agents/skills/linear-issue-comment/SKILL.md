@@ -6,8 +6,6 @@ references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear/linear-state-transitions.md
-  - ../references/scm/commit-trailers-linear.md
   - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
 ---
@@ -38,9 +36,7 @@ The current conversation context holds the most recent version of the issue's in
 3. **Post the comment:**
    - Present the drafted comment per `output-diff`, then write it with the Linear MCP `save_comment` tool from the appropriate workspace. Markdown normaliser traps per `linear-description-structure`.
 
-4. **Transition to `Done` (when applicable):**
-   - If the comment is a delivery / close-out note AND either the user explicitly says to close/mark the issue done or the linked merged MR/PR contains a Linear closing keyword for the issue, apply the post-merge `Done` trigger per `linear-state-transitions`.
-   - Detect "delivery / close-out" from the comment shape: it announces the MR merge, links the merged MR/PR, or the user prompt says "close K-xxx", "mark K-xxx done", "K-xxx is merged". A plain findings / research comment does NOT trigger this.
+4. **Close out:** when the comment is a delivery or close-out note — it announces or links a merged MR/PR, or the user says "close K-xxx", "mark K-xxx done", "K-xxx is merged" — Load `linear-status` to move the issue to `Done`.
 
 ## Comment Style
 

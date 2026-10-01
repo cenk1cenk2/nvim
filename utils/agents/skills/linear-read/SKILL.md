@@ -18,7 +18,7 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 ## Core Principle
 
-> **THE RECORD IS NOT THE ABSOLUTE TRUTH.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. "The record" is whatever the scope covers — a project's description, issues and status updates; a parent issue and its children; or one issue's description and comments. This skill is read-only, so it stops at surfacing the gap: flag stale records with their timestamps and ask the user, never present them as definitive. Hand actionable edits to `linear-project-update` or `linear-issue-update`.
+> **THE RECORD IS NOT THE ABSOLUTE TRUTH.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. "The record" is whatever the scope covers — a project's description, issues and status updates; a parent issue and its children; or one issue's description and comments. This skill is read-only, so it stops at surfacing the gap: flag stale records with their timestamps and ask the user, never present them as definitive. Hand actionable edits to `linear-update`.
 
 Handle attached, linked, and project documents per `linear-document-handling` — in this read-only skill, glimpse them for context, surface what's relevant, and flag stale ones with their timestamps. Never edit.
 
@@ -137,7 +137,7 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 
 - **`linear-pickup`** — prepare the refreshed scope for implementation.
 - **`agent-pickup`** — execute the refreshed scope with direct work and/or agents.
-- **`linear-project-update`, `linear-issue-update`** — edit descriptions and documents to match the conversation.
+- **`linear-update`** — edit descriptions and documents to match the conversation.
 - **`linear-reconcile`** — audit + modify structure (priorities, estimates, labels, relations).
 - **`linear-post`** — draft a new status update post.
-- **`linear-project-match`** — sync issue states against external reality (merged MRs/PRs, user statements). A natural follow-up when this read flags mismatched states.
+- **`linear-status`** — sync issue states against external reality (merged MRs/PRs, user statements). A natural follow-up when this read flags mismatched states.

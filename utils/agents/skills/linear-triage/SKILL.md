@@ -59,7 +59,7 @@ Present a recommendation covering:
 5. **Team** — confirm team assignment. Flag if the issue seems like it belongs to a different team.
 6. **Target state** — recommend `backlog` as the default. Recommend `todo` if the issue is urgent or the user wants it in the current cycle.
 7. **Cycle** — if recommending `todo`, suggest adding to the current cycle. Only if the user confirms.
-8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-issue-update` skill: identify what's missing or unclear, draft improvements, and present them for approval.
+8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-update` skill: identify what's missing or unclear, draft improvements, and present them for approval.
 9. **Estimate** — recommend an estimate if missing.
 
 **Present recommendations as a concise block per issue**, formatted per `output-diff`, before writing anything to Linear. Example:

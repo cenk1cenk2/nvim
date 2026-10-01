@@ -97,7 +97,7 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
 
 3. **Write the brief** with the contract in `agent-companion`, filled in for Linear:
    - **The workspace skill to load first**, by name, and the scope ids it owns.
-   - **The skills it works through** — `linear-reconcile` for audits, `linear-issue-create` / `linear-issue-update` / `linear-issue-comment` / `linear-issue-status` / `linear-issue-checklist` for writes, `linear-next-task` for selection, `linear-document` for anything that outlives one issue, `linear-triage` and `linear-project-match` for intake and state sync.
+   - **The skills it works through** — `linear-reconcile` for audits, `linear-issue-create` / `linear-update` / `linear-issue-comment` for writes, `linear-next-task` for selection, `linear-document` for anything that outlives one issue, `linear-triage` for intake.
    - **The status-update absolute** from above, stated in the brief rather than assumed.
    - **The re-read rule** from `agent-companion`: it re-reads the issues before asserting any state, and labels every claim observed or reported, quoting what it read. A tracker answer from memory is the one thing that makes a PM worse than no PM.
    - State transitions follow `linear-state-transitions` — name it so the PM never downgrades a state.
@@ -128,6 +128,6 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
 - **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the Linear instance.
 - **`git-companion`**, **`plan-companion`** — the same shape over MRs and over a plan; one record each. Drift between them reaches each through you.
 - **`agent-coordinator`** — routes implementation while this skill routes the tracker. Both run at once; say which is driving what.
-- **`linear-reconcile`**, **`linear-next-task`**, **`linear-triage`**, **`linear-project-match`** — the PM's own working skills; name them in the brief rather than restating what they do.
+- **`linear-reconcile`**, **`linear-next-task`**, **`linear-triage`**, **`linear-status`** — the PM's own working skills; name them in the brief rather than restating what they do.
 - **`linear-structure-agent`**, **`linear-project-create`** — build the section before the PM inherits it.
 - **`agent-background`** — arms every watcher this skill depends on. The mechanics live there; the duty to arm lives here.

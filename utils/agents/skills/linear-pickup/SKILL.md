@@ -73,7 +73,7 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 4. **Detect stale scope.**
    - Compare descriptions, comments, project documents, and the user's prompt against each other.
    - If a record says details are unfinished, or comments contradict the description, ask early.
-   - If a description is too stale or misleading, plan an update through `linear-issue-update` or `linear-project-update`.
+   - If a description is too stale or misleading, plan an update through `linear-update`.
    - Identify missing details and project documentation that needs updates.
 
 5. **Prepare the execution set.**

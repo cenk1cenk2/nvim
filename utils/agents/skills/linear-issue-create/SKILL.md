@@ -33,7 +33,7 @@ Additional rules for issue creation:
 - When creating multiple related issues, batch create them in a single response using parallel tool calls.
 - Use project names directly when creating issues — Linear MCP will resolve them, unless prompted to specifically search for it.
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
-- If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-issue-status` immediately after creation.
+- If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-status` immediately after creation.
 
 Present the drafted issue in logical chunks for user approval per `output-diff` before writing to Linear.
 
@@ -51,8 +51,7 @@ Research process, analysis, appendix, and link conventions per `linear-research-
 
 ## Related Skills
 
-- **`linear-issue-status`** — lightweight status changes after creation or when the user verbally specifies a target state.
-- **`linear-issue-checklist`** — checklist updates for created issues when the user immediately provides completion criteria changes.
+- **`linear-status`** — status changes after creation, when the user verbally specifies a target state, and checklist updates when the user immediately provides completion criteria changes.
 
 ## Examples
 

@@ -72,12 +72,11 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 
 - Move each picked-up issue to `In Progress` before implementation starts, respecting `linear-state-transitions`.
 - Reconcile the issue's relations on pickup and again at wrap-up: resolve its parent and sub-issues (plus `blocks`/`blockedBy`) so ordering and completion aren't missed — issueset links are the most-missed part. Flag or fix gaps per `linear-document-handling`.
-- Use `linear-issue-status` for explicit or situational status changes outside the automatic pickup/PR/MR triggers.
-- When an issue reaches `In Review` or `Done`, always try checklist reconciliation with `linear-issue-checklist`.
+- Use `linear-status` for explicit or situational status changes outside the automatic pickup/PR/MR triggers, and for checklist reconciliation whenever an issue reaches `In Review` or `Done`.
 - In autonomous agent workflows, comment on the issue by default when there are deviations, decisions, blockers, findings, reviewer-driven scope changes, or non-obvious implementation notes. Keep comments short and factual.
 - Prefer comments over description edits for normal deviations.
-- Use `linear-issue-update` for description changes only when an autonomous agent workflow needs the updated description to keep future agents aligned, or when the issue requires a huge rewrite because the old description is materially out of whack.
-- Use `linear-issue-checklist` to reflect completed or explicitly canceled checklist items.
+- Use `linear-update` for description changes only when an autonomous agent workflow needs the updated description to keep future agents aligned, or when the issue requires a huge rewrite because the old description is materially out of whack.
+- Use `linear-status` to reflect completed or explicitly canceled checklist items.
 - Update project documents via the workspace `save_document` tool when deviations or findings are shared across multiple issues.
 - When PRs/MRs are opened, ensure referenced issues advance to `In Review` through the PR/MR skill or explicit state transition.
 - At wrap-up, if all issues in a project are done, close or complete the project by default unless evidence says it should stay open.
