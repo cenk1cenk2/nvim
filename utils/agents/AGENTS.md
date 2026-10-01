@@ -31,6 +31,8 @@
 
 **Learning it is the trigger — you are not asked to go hunting.** A change you made yourself this session is not news; it does not trigger re-grounding. No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a skills change notification (`resources/updated` / `resources/list_changed`), or the captain simply saying they changed something. It outranks finishing the thought: every later step would run on a retired rule. The changed file wins over your memory of it, always.
 
+**The skills server announces every change; track each one.** A `resources/list_changed` means the catalog itself moved — skills added, removed, renamed or merged — so re-run `list_skills` and replace the §I step 3 cache before the next routing decision. A `resources/updated` names the skill that changed: re-ground on it if you hold it, and refresh its row in the cache either way. An announcement is never background noise to finish the turn past.
+
 Say in one line what changed and what it altered about your approach. "Re-grounded, nothing about this task changed" is a complete answer.
 
 ## II. ROUTING AND SKILLS
