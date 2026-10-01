@@ -32,7 +32,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 **Default — interview mode.** Traverse the design tree one question at a time with the user (the Process below). This is the disposition unless the user asks to delegate.
 
-**Auto mode.** Triggered when the user says "plan with yourself", "auto", "delegate", "delegate the plan", "review and refine the plan", or similar. Plan the whole thing yourself, hand back a plan and a summary, and stand down. It replaces the interview, never the gate on implementation.
+**Auto mode.** Triggered when the user says "plan with yourself", "auto", "delegate the plan", "review and refine the plan", or similar. Plan the whole thing yourself, hand back a plan and a summary, and stand down. It replaces the interview, never the gate on implementation.
 
 **No plan mode at all** — the "plan with yourself" carve-out in `plan-mode` applies. An interview and an approval gate are exactly what this mode exists to avoid.
 

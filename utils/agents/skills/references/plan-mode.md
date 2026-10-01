@@ -4,7 +4,7 @@ Plan mode is for **meticulous planning and analysis with implementation fully di
 
 > **ALWAYS enter plan mode when this prompt is invoked.**
 >
-> - Enter plan mode immediately.
+> - Enter plan mode immediately. **When the session runs in the harness's auto permission mode, stay in it:** plan read-only under this posture without switching the harness into its plan mode, because the switch drops the session out of auto mode. Everything below binds the same either way.
 > - **Implementation is disabled for the entire skill.** Do NOT write code or modify any external system.
 > - **The single exception is the plan file itself** — writing it to your internal plans directory (`provider-paths`) is the point of the mode, not a violation of it. Nothing else may be written anywhere.
 > - **NEVER exit plan mode** until the user gives an explicit, unambiguous implement signal ("implement this", "start coding", "write the code", or the lingo `g` / `go` / `y` / `yolo`).
