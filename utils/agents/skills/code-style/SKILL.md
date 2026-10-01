@@ -5,9 +5,19 @@ references:
   - ../references/project-tooling.md
 ---
 
-## Writing Code
+## Absolutes
 
-Across languages and frameworks, **matching the local project first**. A convention the surrounding code already follows beats every default below.
+These hold in every language and every repository. The sections below explain each one; none of them softens it.
+
+1. **Match the neighbourhood first.** A convention the surrounding code already follows beats every default in this skill. Code a reader can pick out as added later is a defect.
+2. **Default to no comment.** Comments are the exception, not the habit: add one only when the code cannot carry a non-obvious *why*, and never more densely than the surrounding file. A comment that restates its line gets deleted. When in doubt, leave it out.
+3. **Your reasoning stays out of the file.** No comment explains the edit, defends the choice, or argues with the rejected option; that goes in your reply.
+4. **Inline single-use values.** A variable assigned once and read once in the same place is inlined into its use. Keep the name only when it says something the expression cannot, or the neighbourhood names such values.
+5. **Defer to the project's tooling.** Formatting, import order and lint are the tools' job. Run the project's own commands per `project-tooling` and report what they said.
+6. **Stubs fail loudly.** Unfinished code errors with a clear message, never a fake success.
+7. **Never paper over a surprise.** An unexpected null or error gets a cause, not a guard that hides it.
+8. **Breaking a caller is said out loud.** A design change deletes and rewires; it never leaves aliases, deprecated wrappers or dead re-exports. When the change breaks something outside the diff, such as a public API, another repository or a consumer, name what breaks and ask before making it, unless the user already opted out of compatibility.
+9. **TODO-family comments carry the user's handle**, `KEYWORD: @handle message`, read from the repository's remote.
 
 ## Match the Neighbourhood
 
@@ -32,9 +42,9 @@ Check each axis against the siblings solving the same problem:
 
 ## Comments
 
-- **Match the surrounding comment style, or add none.** Before writing any comment, look at the neighboring code and mirror its density, tone, and format — including when that means no comments at all. Do not add comments or docstrings unless the surrounding file already uses them or the user asks.
-- **Never state the obvious — this is absolute.** A comment must explain *why*: a non-obvious constraint, trade-off, edge case, or gotcha that stays true and stays surprising long after the change lands. Never restate *what* the code already says. A comment that names the operation its line performs is noise; if it only paraphrases the line below it, delete it.
-- **Keep your own reasoning out of the file — this is absolute.** A comment documents the code for whoever maintains it next. It is not where you explain the edit you just made, justify the option you picked, or argue against the one you rejected. This is thinking, not a comment:
+- **Match the surrounding comment style, or add none (Absolute 2).** Before writing any comment, look at the neighboring code and mirror its density, tone, and format — including when that means no comments at all. Do not add comments or docstrings unless the surrounding file already uses them or the user asks.
+- **Never state the obvious (Absolute 2).** A comment must explain *why*: a non-obvious constraint, trade-off, edge case, or gotcha that stays true and stays surprising long after the change lands. Never restate *what* the code already says. A comment that names the operation its line performs is noise; if it only paraphrases the line below it, delete it.
+- **Keep your own reasoning out of the file (Absolute 3).** A comment documents the code for whoever maintains it next. It is not where you explain the edit you just made, justify the option you picked, or argue against the one you rejected. This is thinking, not a comment:
 
   ```terraform
   # null_resource.karpenter_ami triggers on this rather than the variable, so the AMI stays
@@ -45,7 +55,7 @@ Check each axis against the siblings solving the same problem:
 
   **The test: would this comment exist if the code had always looked this way?** If it only makes sense as a defence of a change, it belongs in your chat message to the user, never in the file. Catch yourself on the tells — "rather than", "instead of", "so callers that…", any clause comparing against an alternative the file does not contain, and any sentence that would start with "I".
 
-- **Tag every TODO-family comment with the user's handle, right after the colon** — `KEYWORD: @handle <message>`, e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships`. The handle is the user's account on **that repository's git provider**, so read it off the remote rather than assuming; it is `@cenk1cenk2` on GitHub and on `gitlab.kilic.dev`. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`). This is how such a comment is written, not permission to add one — the rules above still decide whether it exists.
+- **Tag every TODO-family comment with the user's handle, right after the colon (Absolute 9)** — `KEYWORD: @handle <message>`, e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships`. The handle is the user's account on **that repository's git provider**, so read it off the remote rather than assuming; it is `@cenk1cenk2` on GitHub and on `gitlab.kilic.dev`. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`). This is how such a comment is written, not permission to add one — the rules above still decide whether it exists.
 
 ## Naming
 
@@ -54,12 +64,12 @@ Names should not repeat context their scope already provides — drop the qualif
 ## Design Defaults
 
 - **Solve today's problem:** the minimum code that solves the problem in front of you now, not the minimum that could solve every future version of it. No premature abstraction, no handling for errors that cannot occur, hardcoded values until something real needs them configurable. If the only reason a thing is abstracted is "in case we need it", it is over-built.
-- **No compatibility shims in personal projects:** when a design changes, delete and rewire in one shape instead of leaving aliases, deprecated wrappers, or dead re-exports.
-- **Stubs fail loudly:** unfinished code throws, errors, or panics with a clear message. Never a fake success.
+- **No compatibility shims (Absolute 8):** when a design changes, delete and rewire in one shape instead of leaving aliases, deprecated wrappers, or dead re-exports. What breaks outside the diff is named and asked about first, unless the user opted out.
+- **Stubs fail loudly (Absolute 6):** unfinished code throws, errors, or panics with a clear message. Never a fake success.
 - **Behavior lives with the owner:** helpers that operate on a type's state, handles, channels, or invariants should be methods or composable methods, not detached functions. Pure transformations can stay free.
 - **Carry invariants in objects:** if every call passes the same base, config, or client, wrap it once and let the methods use the validated state.
 - **Compose instead of bagging:** when consumers need behavior or rendering flexibility, use the language's composition mechanism — closures, callbacks, interfaces, traits, slots. Keep config bags for uniform data.
-- **Inline single-use helpers:** extract only when there is a second caller or the abstraction clearly earns its name. Copy-paste twice before abstracting — an abstraction drawn from one example is **the Wrong Abstraction**.
+- **Inline single-use helpers and values (Absolute 4 for values):** extract only when there is a second caller or the abstraction clearly earns its name. Copy-paste twice before abstracting — an abstraction drawn from one example is **the Wrong Abstraction**.
 - **Polymorphism for open sets, unions for closed sets:** reach for a shared one-method abstraction only when multiple concrete branches would otherwise repeat the same dispatch shape.
 - **Every dependency is permanent code you do not control:** check the project's existing dependencies and the standard library first (`crypto.randomUUID()` over a `uuid` package). When you add one, say why in your report — never let the choice appear only in the manifest.
 
@@ -75,7 +85,7 @@ The gap between code that works and code you think works is testing.
 ## Debugging
 
 - **Investigate, do not guess.** Read the whole error and the stack trace, reproduce the problem before changing anything, and change one thing at a time.
-- **Never paper over a surprise.** An unexpected null gets a cause, not a null check — silenced, the bug just moves somewhere quieter.
+- **Never paper over a surprise (Absolute 7).** An unexpected null gets a cause, not a null check — silenced, the bug just moves somewhere quieter.
 - Suggest `code-debug` for behavioural bugs and `code-task-failed` for failing build, test, or lint commands. They own the full flow.
 
 ## Proactive Improvement
