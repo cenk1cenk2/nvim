@@ -39,6 +39,13 @@ function M.config()
           return vim.tbl_extend("force", type, { icon = icons[type.key] or type.icon })
         end, require("annotate.config").options.types),
         archive_days = 14,
+        confirm_delete = false,
+        picker = {
+          force = {
+            delete = true,
+            delete_all = true,
+          },
+        },
         export = {
           prompt = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through these review notes on the repository. Each section below groups one kind of note, and its line under Description says what I expect for that kind. Re-read the code at each location before acting, since lines may have moved since I wrote the note, and do what the note's type asks. Questions are for us to settle together, so bring them back to me instead of deciding them yourself. Report back item by item: what you changed, where you applied a general or praise note, what you decided on each suggestion and why, and the questions still waiting on me.",
           clipboard_message = "@hyprpilot-skills:skill://code-annotations/SKILL.md Work through my review notes in the attached file.",
@@ -77,6 +84,13 @@ function M.config()
           desc = "annotate file",
         },
         {
+          fn.wk_keystroke({ categories.GIT, "m", "o" }),
+          function()
+            require("annotate").show()
+          end,
+          desc = "annotate show",
+        },
+        {
           fn.wk_keystroke({ categories.GIT, "m", "e" }),
           function()
             require("annotate").edit()
@@ -86,7 +100,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "m", "x" }),
           function()
-            require("annotate").delete()
+            require("annotate").delete({ force = true })
           end,
           desc = "annotate delete",
         },
@@ -146,7 +160,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "m", "X" }),
           function()
-            require("annotate").clear()
+            require("annotate").clear({ force = true })
           end,
           desc = "annotate archive and clear",
         },
