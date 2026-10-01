@@ -111,10 +111,15 @@ class Skill:
     def directory(self) -> Path:
         return self.path.parent
 
+    @property
+    def name(self) -> str:
+        """The slug's last segment: a nested skill's slug is its path, its name is its directory."""
+        return self.path.parent.name
 
-def parse_skill(path: Path) -> tuple[Skill | None, list[Finding]]:
+
+def parse_skill(path: Path, root: Path) -> tuple[Skill | None, list[Finding]]:
     """Split frontmatter from body. A skill that will not parse is a FAIL, not a crash."""
-    slug = path.parent.name
+    slug = path.parent.relative_to(root).as_posix()
     raw = path.read_text(encoding="utf-8", errors="replace")
     lines = raw.splitlines()
     if not lines or lines[0].strip() != "---":
@@ -250,7 +255,7 @@ class Checks:
         name = skill.frontmatter.get("name")
         if name is None:
             return [Finding(Level.FAIL, "name", skill.slug, "no name: field")]
-        if name != skill.slug:
+        if name != skill.name:
             return [Finding(Level.FAIL, "name-dir", skill.slug, f"name: {name} does not match the directory")]
         return []
 
@@ -300,8 +305,8 @@ class Checks:
         return out
 
     def kebab_case(self, skill: Skill) -> list[Finding]:
-        """config-skills Conventions: directory and `name` are both kebab-case."""
-        if not KEBAB.match(skill.slug):
+        """config-skills Conventions: directory and `name` are both kebab-case, at every depth."""
+        if not all(KEBAB.match(segment) for segment in skill.slug.split("/")):
             return [Finding(Level.FAIL, "kebab", skill.slug, "directory name is not kebab-case")]
         return []
 
@@ -382,8 +387,14 @@ class Checks:
 def collect(root: Path) -> tuple[list[Skill], list[Finding]]:
     skills: list[Skill] = []
     findings: list[Finding] = []
-    for path in sorted(root.glob("*/SKILL.md")):
-        skill, problems = parse_skill(path)
+    # Any depth, like the skills server: a directory holding a SKILL.md is a
+    # skill wherever it sits. Hidden trees (a script's .venv) are never skills,
+    # and a SKILL.md at the root would be a skill with no name.
+    for path in sorted(root.rglob("SKILL.md")):
+        relative = path.relative_to(root)
+        if len(relative.parts) < 2 or any(part.startswith(".") for part in relative.parts):
+            continue
+        skill, problems = parse_skill(path, root)
         findings.extend(problems)
         if skill is not None:
             skills.append(skill)
@@ -422,7 +433,7 @@ def cli(root: str | None, warnings: bool, verbose: bool) -> None:
     # Findings with no parseable skills means every SKILL.md is broken, which is
     # a lint result to report - not an empty catalog to complain about.
     if not skills and not findings:
-        emit(f"error: no */SKILL.md found under {catalog}")
+        emit(f"error: no SKILL.md found under {catalog}")
         raise SystemExit(ExitCode.USAGE)
 
     slugs = {skill.slug for skill in skills}
