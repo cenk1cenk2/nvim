@@ -96,6 +96,13 @@ function M.config()
           desc = "annotate file",
         },
         {
+          fn.wk_keystroke({ categories.MARK, "g" }),
+          function()
+            require("annotate").add_repository()
+          end,
+          desc = "annotate repository",
+        },
+        {
           fn.wk_keystroke({ categories.MARK, "C" }),
           function()
             require("annotate").add_with_type()
