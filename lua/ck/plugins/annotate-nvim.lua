@@ -25,7 +25,19 @@ function M.config()
       end)
     end,
     setup = function()
+      local icons = {
+        general = nvim.ui.icons.git.Repo,
+        praise = nvim.ui.icons.ui.Check,
+        suggestion = nvim.ui.icons.ui.Lightbulb,
+        bug = nvim.ui.icons.ui.Bug,
+        question = nvim.ui.icons.diagnostics.Question,
+        context = nvim.ui.icons.ui.Note,
+      }
+
       return {
+        types = vim.tbl_map(function(type)
+          return vim.tbl_extend("force", type, { icon = icons[type.key] or type.icon })
+        end, require("annotate.config").options.types),
         input = {
           width = nvim.ui.dimensions.float.sm,
           height = nvim.ui.dimensions.float.xs,
