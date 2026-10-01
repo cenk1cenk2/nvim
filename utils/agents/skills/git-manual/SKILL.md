@@ -36,7 +36,7 @@ Composite phrases route the same way:
 
 ## Explicit User Requests Win
 
-If the user explicitly asks for one of the suppressed actions while the mode is active — by skill name (`/git-commit`, `/github-pr`) or by unambiguous direct command ("commit this now", "push this", "open the PR for me") — comply, but report briefly: _"Manual mode is active — committing because you asked explicitly."_ The mode stays on for subsequent turns.
+If the user explicitly asks for one of the suppressed actions while the mode is active — by skill name (`/git-commit`, `/github-pr-create`) or by unambiguous direct command ("commit this now", "push this", "open the PR for me") — comply, but report briefly: _"Manual mode is active — committing because you asked explicitly."_ The mode stays on for subsequent turns.
 
 ## What This Mode Does NOT Affect
 

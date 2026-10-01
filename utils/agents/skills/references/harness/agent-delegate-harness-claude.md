@@ -32,7 +32,7 @@ Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in 
 
 ## Permissions — inherited, NOT set on the dispatch
 
-**As of v2.1.212 the `Agent` tool's `mode` parameter is deprecated and ignored** (still so on v2.1.283). Subagents inherit the parent session's permission mode. A subagent definition's `permissionMode` frontmatter may override it, with these exceptions:
+**The `Agent` tool's `mode` parameter is deprecated and ignored** (v2.1.283). Subagents inherit the parent session's permission mode. A subagent definition's `permissionMode` frontmatter may override it, with these exceptions:
 
 - Parent `bypassPermissions` or `acceptEdits` **takes precedence and cannot be overridden**.
 - Parent `auto` mode is inherited and the subagent's own `permissionMode` is ignored; the parent's classifier rules evaluate its tool calls.

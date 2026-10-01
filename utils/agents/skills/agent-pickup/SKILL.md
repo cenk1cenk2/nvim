@@ -9,6 +9,8 @@ references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
+  - ../references/linear/linear-chunk-issues.md
+  - ../references/linear/linear-state-transitions.md
   - ../references/linear/linear-project-documents.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-conventions.md

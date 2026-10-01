@@ -7,7 +7,6 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/mode-toggle.md
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/report-status.md
   - ../references/identifier-legibility.md

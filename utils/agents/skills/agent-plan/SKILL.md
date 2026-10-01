@@ -14,6 +14,8 @@ references:
   - ../references/agent/agent-conventions.md
   - ../references/agent/agent-completion.md
   - ../references/agent/agent-plan-split.md
+  - ../references/linear/linear-chunk-issues.md
+  - ../references/linear/linear-state-transitions.md
   - ./references/agent-merge-review.md
   - ../references/harness/provider-paths.md
   - ../references/identifier-legibility.md
