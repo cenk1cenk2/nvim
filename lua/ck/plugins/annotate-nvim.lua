@@ -17,8 +17,15 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.setup_callback(require("ck.plugins.blink-cmp").name, function(c)
-        c.sources.per_filetype.annotate = function()
-          return { "buffer", "path" }
+        c.sources.per_filetype.markdown = function()
+          local origin = vim.b.annotate_origin
+          local sources = origin and vim.api.nvim_buf_is_valid(origin) and c.sources.per_filetype[vim.bo[origin].filetype]
+
+          if type(sources) == "function" then
+            return sources()
+          end
+
+          return sources or { inherit_defaults = true }
         end
 
         return c
