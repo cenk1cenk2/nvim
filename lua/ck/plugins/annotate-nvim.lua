@@ -22,13 +22,7 @@ function M.config()
           module = "annotate.blink",
         }
         c.sources.per_filetype.annotate = function()
-          local origin = vim.b.annotate_origin
-          local sources = origin and vim.api.nvim_buf_is_valid(origin) and c.sources.per_filetype[vim.bo[origin].filetype]
-          if type(sources) == "function" then
-            sources = sources()
-          end
-
-          return vim.list_extend(vim.deepcopy(sources or { inherit_defaults = true }), { "annotate" })
+          return { inherit_defaults = true, "annotate" }
         end
 
         return c
