@@ -22,7 +22,13 @@ function M.config()
           module = "annotate.blink",
         }
         c.sources.per_filetype.annotate = function()
-          return { inherit_defaults = true, "annotate" }
+          return {
+            "snippets",
+            "path",
+            "buffer",
+            "ripgrep",
+            "annotate",
+          }
         end
 
         return c
@@ -78,6 +84,14 @@ function M.config()
           fn.wk_keystroke({ categories.MARK }),
           group = "mark",
           mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "l" }),
+          function()
+            require("annotate")
+            require("annotate.marks").refresh()
+          end,
+          desc = "annotate load",
         },
         {
           fn.wk_keystroke({ categories.MARK, "c" }),
