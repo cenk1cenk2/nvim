@@ -215,7 +215,7 @@ function M.config()
           desc = "annotate export",
         },
         {
-          fn.wk_keystroke({ categories.MARK, "s" }),
+          fn.wk_keystroke({ categories.MARK, "S" }),
           function()
             require("annotate").export({
               to = function(markdown)
