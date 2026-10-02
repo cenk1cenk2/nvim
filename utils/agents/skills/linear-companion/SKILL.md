@@ -10,7 +10,8 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issuesets.md
@@ -107,7 +108,7 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
 
 5. **Collect, present, release.** Its proposals come back as a change ledger; present them chunked per `output-diff`, and on approval tell the PM to apply.
 
-6. **Report the PM every turn the section is open**, shaped per `report-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection is written into Linear before the agent goes, because Linear is what survives the session.
+6. **Report the PM every turn the section is open**, shaped per `output-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection is written into Linear before the agent goes, because Linear is what survives the session.
 
 ## Example
 

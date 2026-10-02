@@ -8,7 +8,8 @@ references:
   - ../references/reconcile-state.md
   - ../references/mode-toggle.md
   - ../references/output-diff.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/delivery-decisions.md
   - ../references/agent/agent-companion-offload.md
@@ -41,7 +42,7 @@ The user sets the pace. A blessing covers the stretch up to the next checkpoint,
 5. **Weigh the calls.** Single, stacked or parallel PRs/MRs, and review now or later, get a fast second opinion per `delivery-decisions`. Use `agent-review` when a second opinion on the work itself is worth it, or when reviewing in-house would pollute your context.
 6. **Offload what you cannot hold.** When coordinating leaves a domain without standing attention, bring in its companion per `agent-companion-offload`.
 7. **Cover every wait.** Each merge, pipeline, review or approval gets a watcher through `agent-background` the moment it opens, per `agent-watchers`. On wake, re-verify and act.
-8. **Stop at the checkpoint.** Report per `report-status`: every PR/MR and issue in a table with state and merge order, the manual steps the user must run between them, and an explicit list of what is waiting on the user at the end. List every live companion and ask whether to keep or retire it. Ask for the blessing to continue.
+8. **Stop at the checkpoint.** Report per `output-status`, its state as a flow table per `output-table`: every PR/MR and issue a row, merge order as dependencies, the manual steps the user must run between them as their own rows, and an explicit list of what is waiting on the user at the end. List every live companion and ask whether to keep or retire it. Ask for the blessing to continue.
 
 ## Steering
 

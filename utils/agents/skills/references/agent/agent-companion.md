@@ -194,7 +194,7 @@ Talking to a companion is free and gates nothing. **What gates is the durable re
   so a write that would prompt you still prompts. Delegating the write moves the work, not the gate.
 
 **Report one roster row per companion, every turn the section is open**, per `agent-roster`, inside
-your per-turn report shaped per `report-status`: name, scope, tier, state, and whether anything it
+your per-turn report shaped per `output-status`: name, scope, tier, state, and whether anything it
 sent is uncollected. One row — not a status report of its own.
 
 ## Retirement is the user's call

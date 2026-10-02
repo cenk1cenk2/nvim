@@ -17,7 +17,8 @@ references:
   - ../references/agent/agent-worktrees.md
   - ../references/agent/agent-target-capability.md
   - ../references/harness/provider-paths.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/harness/agent-delegate-harness-claude.md
   - ../references/harness/agent-delegate-harness-codex.md
@@ -122,7 +123,7 @@ Yours are **routing** wakes, per the posture table in `agent-watchers`. What rou
 5. **Verify cheaply, never blindly.** An agent's summary describes intent. Confirm with a bounded check — `git diff --stat`, the specific file's diff, the test exit code. If honest verification would be expensive, dispatch `agent-review` instead of reading it yourself.
 5b. **Reap what you spawned — but only when completely done with it**, collecting first, per `agent-delegate` Reaping. A router accumulates agents and watchers faster than a worker does, so stale entries corrupt the map you are holding; run the reap checkpoint before reporting a phase done.
 6. **Record state, then let it go.** Write the outcome to the state file in one or two lines and stop carrying the detail. The file is the memory; your context is the workbench.
-7. **Report terse each turn, in the `report-status` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay.
+7. **Report terse each turn, in the `output-status` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay. When the work is a flow — ordered steps, a merge order, handoffs between you and the user — the state and the asks are one flow table per `output-table`.
 8. **Take over only on the exception list.** Otherwise re-dispatch with a sharper prompt.
 
 ## When You Do the Work Yourself

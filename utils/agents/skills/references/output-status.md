@@ -50,6 +50,7 @@ Tables rather than bullets, because this section is *scanned* rather than read.
 
 - **Use `###` subheaders to group** when items fall into distinct sets — one table per group beats one wide table with a discriminator column.
 - **A short summary under a table is welcome** when the rows share something worth stating once (a fleet-wide zero, a common baseline, an exception that applies to all rows). Put it under the table, not inside it.
+- **When the tracked work is a flow** — ordered steps, a merge order, handoffs between you and the user — the state table is a flow table per `output-table`, and its ready `you` rows feed `Waiting on you`.
 
 ### `## What happened`
 
@@ -69,6 +70,8 @@ Cover explicitly:
 **Bullets of what is wanted from the user** — decisions, approvals, manual steps, anything blocked on them. One bullet each, each naming the concrete action.
 
 **Include this section even when it is empty**, and say so ("nothing needed from you"). Its absence is ambiguous: the reader cannot tell whether nothing is needed or whether you forgot to ask.
+
+When `Current state` is a flow table, name its ready `you` rows here by number and action rather than restating them; their prerequisites already sit in the row's `Needs` and `Blocker`. Asks outside the flow stay bullets, marked as below.
 
 #### Mark an item's prerequisite inline
 

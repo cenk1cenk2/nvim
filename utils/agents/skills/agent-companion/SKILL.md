@@ -10,7 +10,8 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-roster.md

@@ -10,7 +10,8 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/scm/scm-detect.md
   - ../references/scm/commit-trailers-linear.md
@@ -112,17 +113,18 @@ Watchers per `agent-companion` — you arm them, never the companion. Its half i
 
 5. **Collect, present, release.** Its answers come back as a per-MR ledger — the shape below. Present anything that writes to the platform chunked per `output-diff`.
 
-6. **Report the companion and its watchers every turn**, shaped per `report-status`, per `agent-companion` and `agent-watchers` otherwise, and retire it only on the user's word. Before it goes, get its final read of the merge order and record it wherever the section's work lives — the tracker issue, the plan file — because the graph is the thing you cannot rebuild from the MRs alone.
+6. **Report the companion and its watchers every turn**, shaped per `output-status`, with the MR ledger below as its current state, per `agent-companion` and `agent-watchers` otherwise, and retire it only on the user's word. Before it goes, get its final read of the merge order and record it wherever the section's work lives — the tracker issue, the plan file — because the graph is the thing you cannot rebuild from the MRs alone.
 
 ## The MR Ledger
 
-The ledger in `agent-companion`, with CI and threads added:
+The ledger in `agent-companion`, laid out as a flow table per `output-table`: one row per step in merge order, the user's merges as `you` rows, your rebases and fixes as `me` rows, CI and review threads in `Check` and `Blocker`.
 
-| MR | State | Blocked on | Next action | Whose |
-|---|---|---|---|---|
-| [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315) | open, pipeline green as of 14:02 | nothing | ready to merge | the user |
-| [rustfs!319 — Point alerts at the new ruler](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/319) | open, behind by 4 | !315 | rebase after !315 lands | you |
-| [ruler!320 — Drop the legacy ruler CRDs](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/320) | open, 2 threads | review | one real change, one answerable | you |
+| # | Who | Action | Check | Needs | Status | Blocker |
+|---|---|---|---|---|---|---|
+| 1 | you | Merge [app!315 — Revert the dependency bump](https://example.invalid/app/-/merge_requests/315) | Merged, pipeline green as of 14:02 | | ready | |
+| 2 | me | Rebase [app!319 — Point alerts at the new backend](https://example.invalid/app/-/merge_requests/319), behind by 4 | Pipeline green on the rebased head | 1 | waiting | |
+| 3 | me | Address the one real change request on [infra!320 — Drop the legacy CRDs](https://example.invalid/infra/-/merge_requests/320), answer the other thread | Both threads resolved | | blocked | review: one change request open |
+| 4 | you | Merge app!319, then infra!320 | Both merged | 2, 3 | waiting | |
 
 ## Example
 

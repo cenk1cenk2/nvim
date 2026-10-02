@@ -10,7 +10,8 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
-  - ../references/report-status.md
+  - ../references/output-status.md
+  - ../references/output-table.md
   - ../references/identifier-legibility.md
   - ../references/agent/agent-write-plans.md
   - ../references/agent/agent-delegate.md
@@ -112,7 +113,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 
 5. **Collect, present, release.** Revisions come back as edits to named tasks; present them chunked per `output-diff` before they land in the plan file.
 
-6. **Report the companion every turn**, shaped per `report-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection goes into the plan file: open questions, what it would tell the next implementer, and which decisions turned out to be load-bearing. That file is what survives the session.
+6. **Report the companion every turn**, shaped per `output-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection goes into the plan file: open questions, what it would tell the next implementer, and which decisions turned out to be load-bearing. That file is what survives the session.
 
 ## Verification Is the Done Signal
 
