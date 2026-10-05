@@ -36,13 +36,12 @@ function M.config()
     end,
     setup = function()
       local icons = {
-        issue = nvim.ui.icons.ui.Pencil,
+        apply = nvim.ui.icons.ui.Pencil,
         rewrite = nvim.ui.icons.ui.Code,
-        general = nvim.ui.icons.git.Repo,
-        praise = nvim.ui.icons.ui.Check,
-        suggestion = nvim.ui.icons.ui.Lightbulb,
-        bug = nvim.ui.icons.ui.Bug,
-        question = nvim.ui.icons.diagnostics.Question,
+        consider = nvim.ui.icons.ui.Lightbulb,
+        discuss = nvim.ui.icons.diagnostics.Question,
+        report = nvim.ui.icons.ui.Search,
+        keep = nvim.ui.icons.ui.Check,
         context = nvim.ui.icons.ui.Note,
       }
 
@@ -106,7 +105,14 @@ function M.config()
           function()
             require("annotate").add_file()
           end,
-          desc = "annotate file",
+          desc = "annotate buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "B" }),
+          function()
+            require("annotate").add_file_with_type()
+          end,
+          desc = "annotate buffer with type",
         },
         {
           fn.wk_keystroke({ categories.MARK, "m" }),
@@ -128,6 +134,13 @@ function M.config()
             require("annotate").add_repository()
           end,
           desc = "annotate repository",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "N" }),
+          function()
+            require("annotate").add_repository_with_type()
+          end,
+          desc = "annotate repository with type",
         },
         {
           fn.wk_keystroke({ categories.MARK, "C" }),
