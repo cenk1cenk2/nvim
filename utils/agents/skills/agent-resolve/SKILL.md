@@ -4,6 +4,7 @@ description: agent-resolve Drive a plan to a fixed point with no interview - pla
 disableModelInvocation: true
 argumentHint: '[the task or an existing plan path]'
 references:
+  - ../references/plan-mode.md
   - ../references/long-running-work.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -14,6 +15,8 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
   - ../references/harness/provider-paths.md
 ---
+
+**Enter plan mode for the whole run** per `plan-mode`, including the `plan-hard` draft; the plan file is the only write.
 
 ## Context
 
@@ -31,7 +34,7 @@ On/off mechanics per `mode-toggle`.
 
 ## Process
 
-1. **Draft.** Load `plan-hard` and run its auto mode to produce the first draft — no interview, no plan mode. When given an existing plan path instead, that file is the draft. Write it to the internal plans directory per `provider-paths`.
+1. **Draft.** Load `plan-hard` and run its auto mode to produce the first draft — no interview, and still inside this run's plan mode. When given an existing plan path instead, that file is the draft. Write it to the internal plans directory per `provider-paths`.
 2. **Review.** Load `agent-review` and dispatch `type=plan` on the draft, plus `type=facts` on the claims it rests on; both lenses go out in one message.
 3. **Collect the open set.** Every reviewer FAIL, CONCERN and QUESTION, every branch the draft left as an assumption, and every unknown the draft names, deduplicated. Classify each:
    - **Researchable** — evidence exists somewhere: the codebase, another repo, docs, the live system, the web.
@@ -41,7 +44,7 @@ On/off mechanics per `mode-toggle`.
 6. **Loop.** Return to step 2 on the revised plan, reviewing only what this round changed plus anything it touched. The plan has **settled** when a round's review and research change nothing — no new findings, no re-opened branch, an empty researchable set. Report each round's close per `output-status`; mid-round progress is one line.
 7. **Cap the loop.** Three rounds without settling means the plan is oscillating or the question is underspecified. Stop looping, and carry the still-moving items into the residual with what each round found.
 8. **Final pass.** Once settled, read the whole plan top to bottom yourself, end to end, as its executor would: every step has a target, every decision a reason, no step contradicts another, verification covers every requirement, and the skill chain the executor runs is named. Fix what the pass finds; a fix that changes a decision runs one more review round instead.
-9. **Present and stand down.** The plan, the rounds it took, and the residual in one batch — intent questions each with a recommended answer, plus the items the cap carried over. Implementation is a separate blessing, unless the run was invoked as `autopilot`.
+9. **Present and stand down.** The plan, the rounds it took, and the residual in one batch — intent questions each with a recommended answer, plus the items the cap carried over. Stay in plan mode until the user gives a proceed signal, unless the run was invoked as `autopilot`.
 
 ## Key Principles
 
