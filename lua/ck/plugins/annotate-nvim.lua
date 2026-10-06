@@ -51,6 +51,9 @@ function M.config()
         end, require("annotate.config").options.types),
         archive_days = 14,
         confirm_delete = false,
+        store = {
+          per_branch = true,
+        },
         picker = {
           force = {
             delete = true,
@@ -208,6 +211,13 @@ function M.config()
             require("annotate").pick()
           end,
           desc = "annotate choose",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "F" }),
+          function()
+            require("annotate").pick({ all = true })
+          end,
+          desc = "annotate choose from all branches",
         },
         {
           fn.wk_keystroke({ categories.MARK, "q" }),
