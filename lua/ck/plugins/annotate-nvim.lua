@@ -65,6 +65,9 @@ function M.config()
         },
         external = {
           legend = true,
+          legend_prompt = function(default)
+            return "`@hyprpilot-skills:skill://code-annotations/SKILL.md` " .. default
+          end,
         },
         input = {
           width = nvim.ui.dimensions.float.sm,
@@ -127,6 +130,15 @@ function M.config()
             require("annotate").publish({ publish = true })
           end,
           desc = "annotate submit review",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "L" }),
+          function()
+            local external = require("annotate.config").options.external
+            external.legend = not external.legend
+            vim.notify(("Publishing %s the type descriptions."):format(external.legend and "with" or "without"))
+          end,
+          desc = "annotate toggle descriptions on the merge request",
         },
         {
           fn.wk_keystroke({ categories.MARK, "n" }),
