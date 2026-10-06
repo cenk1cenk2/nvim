@@ -10,6 +10,35 @@ function M.get_cwd()
   return root
 end
 
+--- Returns the git root of the buffer, which is the worktree it belongs to.
+---@param bufnr? number
+---@return string?
+function M.get_git_root(bufnr)
+  return vim.fs.root(bufnr or 0, { ".git" })
+end
+
+--- Returns the main worktree of the repository the buffer belongs to.
+---@param bufnr? number
+---@return string?
+function M.get_git_main_worktree(bufnr)
+  local root = M.get_git_root(bufnr)
+
+  if not root then
+    return nil
+  end
+
+  return (vim.system({ "git", "worktree", "list", "--porcelain" }, { cwd = root, text = true }):wait().stdout or ""):match("^worktree ([^\n]+)")
+end
+
+--- Changes the global cwd and announces it.
+---@param path string
+---@param label string
+function M.set_cwd(path, label)
+  require("ck.log"):info("Changing cwd to %s: %s", label, path)
+
+  vim.api.nvim_set_current_dir(path)
+end
+
 --- Returns relative to user home directory cwd for the project.
 ---@return string
 function M.get_relative_cwd()

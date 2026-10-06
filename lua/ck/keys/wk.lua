@@ -486,18 +486,32 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.GIT, "r" }),
             function()
-              local root = vim.fs.root(0, { ".git" })
+              local root = require("ck.utils.fs").get_git_root()
 
               if not root then
                 require("ck.log"):warn("Can not find git root.")
                 return
               end
 
-              require("ck.log"):info("Changing cwd to git root: %s", root)
-
-              vim.api.nvim_set_current_dir(root)
+              require("ck.utils.fs").set_cwd(root, "git root")
             end,
             desc = "cwd as git root",
+            mode = { "n", "v" },
+          },
+
+          {
+            fn.wk_keystroke({ categories.GIT, "t" }),
+            function()
+              local worktree = require("ck.utils.fs").get_git_main_worktree()
+
+              if not worktree then
+                require("ck.log"):warn("Can not find main worktree.")
+                return
+              end
+
+              require("ck.utils.fs").set_cwd(worktree, "main worktree")
+            end,
+            desc = "cwd as main worktree",
             mode = { "n", "v" },
           },
 

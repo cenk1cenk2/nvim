@@ -466,8 +466,7 @@ function M.switch_branch(branch, checkout)
   local root = vim.trim(vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait().stdout or "")
 
   if vim.uv.fs_realpath(path) ~= vim.uv.fs_realpath(root) then
-    vim.cmd.cd(path)
-    require("ck.log"):info("Switched to worktree: %s", path)
+    require("ck.utils.fs").set_cwd(path, "worktree")
   end
 
   return path, nil
