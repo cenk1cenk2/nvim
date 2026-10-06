@@ -165,6 +165,13 @@ function M.config()
     end,
     on_setup = function(c)
       require("gitlab").setup(c)
+
+      local git = require("gitlab.git")
+      local checkout = git.switch_branch
+
+      git.switch_branch = function(branch)
+        return M.switch_branch(branch, checkout)
+      end
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -430,6 +437,35 @@ function M.config()
       }
     end,
   })
+end
+
+-- git refuses to check out a branch that another worktree holds, so move into that worktree instead
+function M.switch_branch(branch, checkout)
+  local worktrees = vim.system({ "git", "worktree", "list", "--porcelain" }, { text = true }):wait()
+  local worktree, path
+
+  for line in tostring(worktrees.stdout):gmatch("[^\n]+") do
+    worktree = line:match("^worktree (.+)$") or worktree
+
+    if line == "branch refs/heads/" .. branch then
+      path = worktree
+
+      break
+    end
+  end
+
+  if not path then
+    return checkout(branch)
+  end
+
+  local root = vim.trim(vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait().stdout or "")
+
+  if vim.uv.fs_realpath(path) ~= vim.uv.fs_realpath(root) then
+    vim.cmd.cd(path)
+    require("ck.log"):info("Switched to worktree: %s", path)
+  end
+
+  return path, nil
 end
 
 return M
