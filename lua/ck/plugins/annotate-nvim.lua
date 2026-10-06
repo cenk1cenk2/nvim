@@ -132,15 +132,6 @@ function M.config()
           desc = "annotate submit review",
         },
         {
-          fn.wk_keystroke({ categories.MARK, "L" }),
-          function()
-            local external = require("annotate.config").options.external
-            external.legend = not external.legend
-            vim.notify(("Publishing %s the type descriptions."):format(external.legend and "with" or "without"))
-          end,
-          desc = "annotate toggle descriptions on the merge request",
-        },
-        {
           fn.wk_keystroke({ categories.MARK, "n" }),
           function()
             require("annotate").add_repository()
@@ -256,6 +247,26 @@ function M.config()
             require("annotate").clear({ force = true })
           end,
           desc = "annotate archive and clear",
+        },
+      }
+    end,
+    toggles = function(_, categories, fn)
+      ---@type WKToggleMappings
+      return {
+        {
+          fn.wk_keystroke({ categories.MARK, "L" }),
+          function()
+            return require("snacks.toggle").new({
+              name = "annotate type descriptions on the merge request",
+              get = function()
+                return require("annotate.config").options.external.legend
+              end,
+              set = function(state)
+                require("annotate.config").options.external.legend = state
+              end,
+            })
+          end,
+          desc = "annotate type descriptions on the merge request",
         },
       }
     end,
