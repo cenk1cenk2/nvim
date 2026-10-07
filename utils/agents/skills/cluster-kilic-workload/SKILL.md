@@ -117,7 +117,7 @@ The following patterns are **standardized** across all workloads. Use these exac
 
 ## Deployment Conventions
 
-- **Version pins promote through Kargo:** every long-running image (including init containers, sidecars and image volumes) and every Helm chart is pinned in `.deploy/<cluster>/` and promoted by a Warehouse in the repository's `.promote/`, with Renovate disabled for it in `renovate.json`. Pin a versioned image as `<registry>/<repo>:<tag>`, and an image on a moving tag (`latest`, `stable`) as `<registry>/<repo>:<tag>@sha256:<digest>` from the currently published digest. Load `kargo-kilic` before writing the first pin. One-off Jobs (restores, migrations) stay unpinned.
+- **Version pins promote through Kargo:** every long-running image (including init containers, sidecars and image volumes) and every Helm chart is pinned in `.deploy/<cluster>/` and promoted by a Warehouse, a `warehouses` entry in the repository's `.promote/values.yaml`, with Renovate disabled for it in `renovate.json`. Pin a versioned image as `<registry>/<repo>:<tag>`, and an image on a moving tag (`latest`, `stable`) as `<registry>/<repo>:<tag>@sha256:<digest>` from the currently published digest. Load `kargo-kilic` before writing the first pin. One-off Jobs (restores, migrations) stay unpinned.
 
 - **Revision history:** `revisionHistoryLimit: 0` on Deployments unless specified.
 
@@ -160,6 +160,6 @@ The following patterns are **standardized** across all workloads. Use these exac
 - [ ] If PostgreSQL: create CNPG Cluster + ScheduledBackup + ExternalSecrets in `postgresql/` subfolder.
 - [ ] If MariaDB: create Bitnami Helm + CronJob backup + ExternalSecrets in `db/` subfolder.
 - [ ] If monitoring: create Probe resource.
-- [ ] Onboard every pinned image and chart into Kargo (`.promote/`, `kargo-root` registry, `authorized-stage`, Renovate disable).
+- [ ] Onboard every pinned image and chart into Kargo (`.promote/` `kustomization.yaml` and `values.yaml`, `kargo-root` registry, `authorized-stage`, Renovate disable).
 - [ ] Verify kustomize labels (`part-of` at root, `name` at component).
 - [ ] Match code style from reference workload.

@@ -4,22 +4,26 @@ Where each repository kind keeps its version pins, how the Warehouse describes t
 
 **Rule for every kind:** version decisions never live in `base`. Each resource gets exactly one override patch per cluster (per environment for chart repositories), and that patch is the file Kargo writes.
 
-## Warehouse Pin Annotations
+## Warehouse Pins
 
-The pin is described on the Warehouse, never in Stage vars:
+The pin is described on the Warehouse, never in Stage vars. In `.promote/values.yaml` the top-level `repo` and each Warehouse's `pins` list carry it, and the chart writes them as the annotations `kargo.kilic.dev/pin-repo` and `kargo.kilic.dev/pins`:
 
-- `kargo.kilic.dev/pin-repo`: the gitops repository's HTTPS URL ending `.git`.
-- `kargo.kilic.dev/pins`: a JSON list in a YAML `|-` block, one entry per pinned value. `file` (repo-relative, `{stage}` standing for the stage, the Stage name without the component prefix) and `key` (`yaml-update` dot-and-index form, `helmCharts.0.version`) are required; `value` is an optional template over `{version}`, `{tag}`, `{commit}`, `{digest}` and `{repo}`, default `{version}`, so charts and git tags omit it and an image that stores a full reference sets `"{repo}:{tag}"`.
-- Every entry names the same `file`, and the first is the primary pin (its current value is `From:`). Pins in two files take two Warehouses.
+- `repo`: the gitops repository's HTTPS URL ending `.git`.
+- `pins`: one entry per pinned value. `file` (repo-relative, `{stage}` standing for the stage, the Stage name without the component prefix) and `key` (`yaml-update` dot-and-index form, `helmCharts.0.version`) are required; `value` is an optional template over `{version}`, `{tag}`, `{commit}`, `{digest}` and `{repo}`, default `{version}`, so charts and git tags omit it and an image that stores a full reference sets `"{repo}:{tag}"`.
+- Every entry names the same `file` (the render fails otherwise), and the first is the primary pin (its current value is `From:`). Pins in two files take two Warehouses.
 
 ```yaml
-kargo.kilic.dev/pins: |-
-  [
-    {
-      "file": "{stage}/<component>/patch-applicationset.yaml",
-      "key": "spec.template.spec.sources.0.targetRevision"
-    }
-  ]
+---
+warehouses:
+  - name: <component>
+    subscriptions:
+      - git:
+          repoURL: https://gitlab.kilic.dev/cluster/charts/chart-<component>.git
+          commitSelectionStrategy: SemVer
+          semverConstraint: "*"
+    pins:
+      - file: "{stage}/<component>/patch-applicationset.yaml"
+        key: spec.template.spec.sources.0.targetRevision
 ```
 
 ## Chart Repositories
@@ -35,11 +39,11 @@ spec:
           targetRevision: v1.0.0
 ```
 
-The Warehouse's `file` is `{stage}/<component>/patch-applicationset.yaml` and its `key` `spec.template.spec.sources.0.targetRevision`. The sync `repoURL` the task derives from the subscription (SSH form, ending `.git`) must equal that `repoURL` exactly, so every ApplicationSet chart source ends in `.git`; no var overrides it.
+The Warehouse's pin `file` is `{stage}/<component>/patch-applicationset.yaml` and its `key` `spec.template.spec.sources.0.targetRevision`. The sync `repoURL` the task derives from the subscription (SSH form, ending `.git`) must equal that `repoURL` exactly, so every ApplicationSet chart source ends in `.git`; no var overrides it.
 
 ### Chart component images
 
-An image a chart component runs is pinned in a Helm values file of argocd-system, not in the ApplicationSet patch: `external-dns-webhook-opnsense` writes `external-dns.provider.webhook.image.tag` in `load-balancer/<component>/values.yaml` (a `pins` entry without `value`, so the tag is written). Its Warehouse sits in the component's existing Project beside the chart Warehouse, and Renovate is disabled for the image.
+An image a chart component runs is pinned in a Helm values file of argocd-system, not in the ApplicationSet patch: `external-dns-webhook-opnsense` writes `external-dns.provider.webhook.image.tag` in `load-balancer/<component>/values.yaml` (a `pins` entry without `value`, so the tag is written). Its Warehouse is a second `warehouses` entry in the component's `.promote/<component>/values.yaml`, beside the chart Warehouse, and Renovate is disabled for the image.
 
 ## Workloads Repositories
 
@@ -77,7 +81,7 @@ The collector pins write `{repo}:{tag}`.
 
 ### Floating-tag images
 
-An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `review`, `report` and `notify` `"false"`; an image the estate builds itself (home-assistant's `config` image volume) keeps its report. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx and gitlab-runner's runner `image.tag: alpine`; kargo-root `CLAUDE.md` keeps that list.
+An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `jobs: []` on their stage (no review and no report Stage); an image the estate builds itself (home-assistant's `config` image volume) keeps `report`. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx and gitlab-runner's runner `image.tag: alpine`; kargo-root `CLAUDE.md` keeps that list.
 
 ## Renovate and Kargo
 
@@ -95,7 +99,7 @@ A pin has one writer. Adopting Kargo for a dependency and handing it back to Ren
 ### Handing a dependency back to Renovate
 
 1. Restore the automerge presets in place of the disable presets (or widen the `argocd` manager pattern again).
-2. Disable the Kargo Stages first (drop `kargo.kilic.dev/auto: "true"` so the ProjectConfig policy stops auto-promoting), then remove the component's Warehouse and Stages from the repository's `.promote/` and the Stage names from the Application's `kargo.akuity.io/authorized-stage`. When that empties the Project, also remove its registry folder from `kargo-root`: the ApplicationSet then deletes the generated Application and its objects, and confirming the `kargo-root` prune of the Project deletes its namespace.
+2. Remove the component's `warehouses` entry from the repository's `.promote/values.yaml`, which drops its Warehouse and Stages on the next sync, and the Stage names from the Application's `kargo.akuity.io/authorized-stage`. When that empties the Project, also remove its registry folder from `kargo-root`: the ApplicationSet then deletes the generated Application and its objects, and confirming the `kargo-root` prune of the Project deletes its namespace.
 3. Make sure Renovate can read the pin.
 
 **Renovate's `kustomize` manager reads only `kustomization.yaml` files** (default `managerFilePatterns` `/(^|/)kustomization\.ya?ml$/`), and within them only inline `helmCharts`, `images`, remote resources and components. A version in a `patch-helmchart.yaml` generator patch, or a `spec.image` in a collector patch, is invisible to it: the automerge presets match nothing and the version silently stops moving. A repository on the file-based pin shape that goes back to Renovate needs a `customManagers` regex entry whose `matchStrings` capture the line under a directive comment:

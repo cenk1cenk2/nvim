@@ -1,6 +1,6 @@
 ---
 name: kargo-kilic
-description: kargo-kilic Shape and wire Kargo promotions in the kilic estate - Project naming, .promote/ Warehouses and Stages, pins, soak chains, kargo-root registration and the Renovate handover. Use when adding, changing, reverting or debugging a promotion flow. Not for ArgoCD sync or prune state, or the Laravel estate.
+description: kargo-kilic Shape and wire Kargo promotions in the kilic estate - Project naming, .promote/ chart values, pins, soak chains, kargo-root registration and the Renovate handover. Use when adding, changing, reverting or debugging a promotion flow. Not for ArgoCD sync or prune state, or the Laravel estate.
 references:
   - ./references/kargo-kilic-pins.md
   - ./references/kargo-kilic-stage-wiring.md
@@ -9,7 +9,7 @@ references:
 
 ## Kargo Promotion: kilic
 
-Kargo runs on `overseer`. [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) `CLAUDE.md` on `main` is the authority for task internals, record schema, the `.promote/` layout and Kargo version quirks; this skill carries the estate-level decisions around it: which Project shape a repository gets, where its pins live (on the Warehouse), how Stages chain, and how a repository moves between Renovate and Kargo.
+Kargo runs on `overseer`. [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) `CLAUDE.md` on `main` is the authority for task internals, record schema, the `.promote/` layout and Kargo version quirks, and [chart-kargo-promote](https://gitlab.kilic.dev/cluster/charts/chart-kargo-promote) `README.md` for every `.promote/values.yaml` key; this skill carries the estate-level decisions around it: which Project shape a repository gets, where its pins live (on the Warehouse), how Stages chain, and how a repository moves between Renovate and Kargo.
 
 A promotion never calls ArgoCD's sync API to deploy a new version. `promote-pin` writes the pinned values of one file of a gitops repository, merges the pin MR, then asks ArgoCD to sync the Application; the report Stage judges the result after a soak.
 
@@ -17,13 +17,13 @@ A promotion never calls ArgoCD's sync API to deploy a new version. `promote-pin`
 
 Each gitops repository owns how it promotes; `kargo-root` owns what the promotions share and the Projects they run in.
 
-| `cluster/kargo-root` | The gitops repository's `.promote/` |
+| `cluster/kargo-root` | The gitops repository's `.promote/`, rendered by `chart-kargo-promote` |
 |---|---|
 | `shared/` (ClusterConfig, credentials), `promotions/` (ClusterPromotionTasks `promote-pin`, `report-pin`, ClusterAnalysisTemplate `report-verdict`) | the Project's ProjectConfig (auto-promotion policy) |
 | each Project's `project.yaml` in `projects/argocd-system/<component>/` or `projects/<repo>/`; Kargo's Project controller creates and owns the Project's namespace, so `kargo-root` holds no Namespace | Warehouses, with the `kargo.kilic.dev/pin-repo`, `kargo.kilic.dev/pins` and `kargo.kilic.dev/release-url` annotations |
 | the registry entry `promote.yaml` beside it, and ApplicationSet `kargo-promote` | deploy and report Stages |
 
-`kargo-promote` reads every `projects/**/promote.yaml` (`project`, `source.repoURL`, `source.path`) and generates one Application named after the Project, in AppProject `kargo`, syncing that `.promote/` path into the Project's namespace. `.promote/` is a separate kustomize root built by the repository's CI and never part of its own root build; it stays inert until registered.
+`kargo-promote` reads every `projects/**/promote.yaml` (`project`, `sources` with `repoURL`, `path` and `targetRevision`) and generates one Application named after the Project, in AppProject `kargo`, syncing that `.promote/` path into the Project's namespace. `.promote/` is a separate kustomize root whose `helmCharts` entry inflates `chart-kargo-promote` from `values.yaml`, built by the repository's CI and never part of its own root build; it stays inert until registered. Each repository pins the chart version itself and Renovate bumps it; `kargo-root` pins nothing.
 
 | Registry folder | Project | Source |
 |---|---|---|
@@ -57,14 +57,14 @@ A pin in a chart repository's env covers every cluster of that env at once. A wo
 
 `argocd_selector` is an expr literal map, `"${{ {matchApplications: ['rubik-monitoring-backbone']} }}"`: `matchApplications` is a list of exactly one name, because the `sync_app` step writes a fixed-length `apps` list; `matchLabels` is a label map. The default `matchLabels` is `system.kilic.dev/component` plus `cluster.kilic.dev/environment`. One Stage on `matchApplications` syncs one Application, which is the other reason Stages are per cluster. When one cluster carries several separately pinned instances of a repository, the stage names the instance and the pin sits in `.deploy/<cluster>/{stage}/`: one Application per instance for rustfs (`rustfs.main` syncs `rubik-rustfs-main`), or one Application holding several chart releases for gitlab-runner (`gitlab-runner.loki-rubik-amd64-privileged` and `gitlab-runner.loki-rubik-amd64` both sync `rubik-gitlab-runner-system`).
 
-**Chart component images** are a third case: an image a chart component runs, pinned in a Helm values file of `cluster/argocd-system` (`load-balancer/<component>/values.yaml`) that the component's Applications read at `HEAD`. It is a second Warehouse, with an `image` subscription, inside the component's existing Project, whose Stages set `matchLabels` and sync with `sync_head`. The first is `external-dns-webhook-opnsense` in `kargo-argocd-system-external-dns-opnsense-{loki,thor}`, with `review`, `report` and `notify` off.
+**Chart component images** are a third case: an image a chart component runs, pinned in a Helm values file of `cluster/argocd-system` (`load-balancer/<component>/values.yaml`) that the component's Applications read at `HEAD`. It is a second Warehouse, with an `image` subscription, inside the component's existing Project, whose Stages set `matchLabels` and sync with `sync_head`. The first is `external-dns-webhook-opnsense` in `kargo-argocd-system-external-dns-opnsense-{loki,thor}`, with `jobs: []`.
 
 ## Choosing the Project Split
 
-**The Project boundary follows the ArgoCD Application boundary.** Decide it before writing any manifest:
+**The Project boundary follows the ArgoCD Application boundary.** Decide it before writing any values:
 
 - **One Project, several Warehouses** when the components share one Application per cluster: a workloads repository whose components all sync through the cluster's Application. `monitoring-backbone` is the precedent: Project `kargo-monitoring-backbone`, Warehouses `mimir`, `loki` (charts) and `opentelemetry-ingester` (image), Stages `mimir.rubik`, `loki.rubik`, `opentelemetry-ingester.rubik` with a `.report` each.
-- **One Project per component** when each component is its own ApplicationSet and is versioned and released on its own: every `argocd-system` wrapper chart, Project `kargo-argocd-system-<component>` with Warehouse `<component>`. An image of that chart is a further Warehouse in the same Project, and the component's `.promote/<component>/` folder then holds one subfolder per Warehouse.
+- **One Project per component** when each component is its own ApplicationSet and is versioned and released on its own: every `argocd-system` wrapper chart, Project `kargo-argocd-system-<component>` with Warehouse `<component>`. An image of that chart is a further Warehouse in the same Project, a second `warehouses` entry in the component's `.promote/<component>/values.yaml`.
 
 What each side buys and costs:
 
@@ -72,36 +72,38 @@ What each side buys and costs:
 |---|---|---|
 | Authorization | the cluster's Application lists every Stage in one `kargo.akuity.io/authorized-stage` string, or its ApplicationSet templates one entry per component | `argocd-system/patch-kargo.yaml` templates `kargo-argocd-system-{{ .values.component }}:{{ .values.component }}.<stage>` for every ApplicationSet; it only works because Project and Stage names derive from the component |
 | Isolation | one namespace, one ProjectConfig promotion policy, one UI view of a coupled rollout | a namespace (Kargo's), ProjectConfig and UI entry per component; a bad component cannot crowd another's view |
-| Cost of adding a component | a `.promote/<component>/` folder, one repository MR; nothing changes in `kargo-root` | a `.promote/<component>/` folder in `argocd-system` plus a registry folder in `kargo-root` |
+| Cost of adding a component | a `warehouses` entry in `.promote/values.yaml`, one repository MR; nothing changes in `kargo-root` | a `.promote/<component>/` folder (`kustomization.yaml`, `values.yaml`) in `argocd-system` plus a registry folder in `kargo-root` |
 
-Both sides name Stages the same way: short names in the manifests, `namePrefix: <component>.` in each Warehouse's `stages/kustomization.yaml`, and a per-folder `kustomizeconfig.yaml` rewriting the Warehouse and `sources.stages` references.
+Both sides name Stages the same way: the chart prefixes each stage of the `chain` with the Warehouse name (`<warehouse>.<stage>`, `<warehouse>.<stage>.report`) and wires the `sources` references itself.
 
 Split a coupled repository per component only when its components genuinely ship on their own Applications. Keep an independently released chart in its own Project even when it is small.
 
 ## Soak and Report Chain
 
-- Every deploy Stage has a report Stage beside it that sources only from it, with `requiredSoakTime: 2h0m0s`, auto-promotes, runs `report-pin` and verifies with ClusterAnalysisTemplate `report-verdict` (fails on `DEGRADED` and `ERRORED`).
-- A downstream deploy Stage sources **only** from the upstream `.report` Stage, never from the upstream deploy Stage. The tasks read the chain from the Stages themselves; no var names a Stage.
-- Soak on top of the report's 2h: `10h0m0s` after the first env's report (`development.report`), `4h0m0s` after any later report.
-- Stage order for chart repositories (the environments): `development`, `production`, `load-balancer`, `platform`, skipping envs a component does not pin (reloader, goldilocks and vpa source `platform` from `production.report`). The last report is a leaf.
+The chart renders the chain from the values `chain` and each stage's `jobs`; nothing below is written by hand.
+
+- A stage whose `jobs` list `report` has a report Stage beside its deploy Stage that sources only from it, with `requiredSoakTime: 2h0m0s`, auto-promotes, runs `report-pin` and verifies with ClusterAnalysisTemplate `report-verdict` (fails on `DEGRADED` and `ERRORED`).
+- A downstream deploy Stage sources **only** from the upstream `.report` Stage, or from the upstream deploy Stage when that stage has no report Stage. The tasks read the chain from the Stages themselves; no var names a Stage.
+- Soak comes from the environment of the upstream stage (`stages.<stage>.environment`, else the stage), on top of the report's 2h: `10h0m0s` after `development`, `4h0m0s` after any other environment; `stages.<stage>.soak` overrides it.
+- Stage order for chart repositories (the environments): `development`, `production`, `load-balancer`, `platform`, skipping envs a component does not pin through its own `chain` in `.promote/<component>/values.yaml` (reloader, goldilocks and vpa chain `development`, `production`, `platform`). The last report is a leaf.
 - Chains are linear. The fan-in form (`sources.stages: [<up>, <up>.report]` with `availabilityStrategy: All`) is unusable: `ListFreightAvailableToStage` requires the verified set to equal the sources (`verifiedStages.Equal`), so under `All` real Freight never lists for later Stages and they become manual-only.
-- Durations are written normalized (`2h0m0s`, `10h0m0s`), or ArgoCD reports the Stage OutOfSync.
-- Stage order for workloads repositories is the cluster chain the repository states (`monitoring`: `nailbed`, `neutrino`, `rubik`, `moon`, `sun`, `overseer`). A single-cluster workloads Project has no chain: each deploy Stage sources `direct: true` from its Warehouse.
+- A `soak` override is written normalized (`2h0m0s`, `10h0m0s`), or ArgoCD reports the Stage OutOfSync.
+- Stage order for workloads repositories is the cluster chain the repository states (`monitoring`: `nailbed`, `neutrino`, `rubik`, `moon`, `sun`, `overseer`). A single-cluster workloads Project has a one-stage `chain`: each deploy Stage sources directly from its Warehouse.
 
 ## Process
 
 1. **Classify the repository** as a chart or workloads repository per Repository Kinds, and pick the Project split per Choosing the Project Split.
 2. **Locate or create the pin** per `kargo-kilic-pins`. Version decisions never live in `base`; one override patch per resource per cluster (or per environment).
-3. **Write the Warehouse and Stages** in the gitops repository's `.promote/`, wired per `kargo-kilic-stage-wiring`: the Warehouse's single subscription and its `pin-repo` and `pins` annotations, `argocd_selector` and `environment` for workloads, the chain and soak above. A component of an already registered workloads repository is this one repository MR; nothing changes in `kargo-root`.
+3. **Write the values** in the gitops repository's `.promote/values.yaml` (and `.promote/<component>/` in `argocd-system`), per `kargo-kilic-stage-wiring`: `project`, `repo`, `chain`, the `stages` catalog with `jobs`, plus `environment` and `argocd_selector` for workloads, and a `warehouses` entry with its single subscription, `pins` and `release`. A new `.promote/` also gets the `helmCharts` kustomization, `charts/` in `.gitignore` and the chart's Renovate preset. A component of an already registered workloads repository is one `warehouses` entry in one repository MR; nothing changes in `kargo-root`.
 4. **Register a new Project** in `kargo-root` per `kargo-kilic-stage-wiring`: the registry folder with `project.yaml`, `kustomization.yaml` and `promote.yaml` (Kargo creates the namespace), listed in its parent kustomization. A repository outside `cluster/argocd-system` and `cluster/workloads/*` also needs a `kargo` AppProject `sourceRepos` entry in `cluster/argocd-root`. Merge the repository MR first; it is inert until registered.
 5. **Authorize the Stages on the Application** in its gitops repository (`kargo.akuity.io/authorized-stage`, comma-separated `<project>:<stage>`), per `kargo-kilic-stage-wiring`.
 6. **Hand the version off from Renovate** in the same change set per `kargo-kilic-pins`, so the two never race on one pin.
-7. **Verify by rendering** before opening MRs: `kustomize build .promote` (and `.promote/<component>` in `argocd-system`) in the gitops repository, `kustomize build .` in `kargo-root`, and the workloads overlay with `--enable-helm` for a generator pin. After `kargo-root` syncs, check that the Application named after the Project exists and is synced and that the Project lists its Stages.
+7. **Verify by rendering** before opening MRs: `kustomize build --enable-helm --load-restrictor LoadRestrictionsNone .promote` (and `.promote/<component>` in `argocd-system`) in the gitops repository, `kustomize build .` in `kargo-root`, and the workloads overlay with `--enable-helm` for a generator pin. After `kargo-root` syncs, check that the Application named after the Project exists and is synced and that the Project lists its Stages.
 
 ## Key Principles
 
-- **The repositories win.** Check `kargo-root` `CLAUDE.md` on `main`, the gitops repository's own `CLAUDE.md` section on `.promote/`, and the live manifests before relying on a fact here; a drifted fact is corrected in this skill in the same turn, per `current-state-only`.
-- **A rename is a cutover.** The estate is in testing, so Freight and Stage records are disposable: the repository's `.promote/` switches every name and namespace, `kargo-root` renames the registry folder, and the Applications' `authorized-stage` entries take the new prefix. Syncing removes the old Project completely: ApplicationSet `kargo-promote` deletes its generated Application, whose resources finalizer deletes its Stages, Warehouses and ProjectConfig, and confirming the `kargo-root` prune of the old Project deletes its namespace. Only `kargo-root` syncs with `Prune=confirm`; the generated Applications prune and self-heal without a confirmation.
+- **The repositories win.** Check `kargo-root` `CLAUDE.md` on `main`, the gitops repository's own `CLAUDE.md` section on `.promote/`, and its live `.promote/` values before relying on a fact here; a drifted fact is corrected in this skill in the same turn, per `current-state-only`.
+- **A rename is a cutover.** The estate is in testing, so Freight and Stage records are disposable: the repository's `.promote/` values switch `project`, which renames the ProjectConfig and moves every object's namespace, `kargo-root` renames the registry folder, and the Applications' `authorized-stage` entries take the new prefix. Syncing removes the old Project completely: ApplicationSet `kargo-promote` deletes its generated Application, whose resources finalizer deletes its Stages, Warehouses and ProjectConfig, and confirming the `kargo-root` prune of the old Project deletes its namespace. Only `kargo-root` syncs with `Prune=confirm`; the generated Applications prune and self-heal without a confirmation.
 - **One promotion pins one artifact in one file.** The Warehouse's `pins` may write that artifact's version to several keys of the file; a second artifact is a second Warehouse with its own Stages.
 - **A pin has one writer.** Kargo or Renovate owns each dependency, never both; Renovate is disabled for every artifact Kargo promotes.
-- **Review, report, notify and comment default to `"true"`; a Stage turns one off with `"false"`.** Turn one off only with a stated reason (the `prometheus-operator` and `opentelemetry-operator` Projects run review, report and notify `"false"` because Renovate automerges their charts). Helper images, dependency charts and Applications on an auto-update cycle (digest-pinned moving tags, the html sites, gose, teamspeak3, gitlab-tools, the agents bridges, the ollama MCP images) run review, report and notify `"false"` by owner decision; kargo-root `CLAUDE.md` keeps the list.
+- **Review and report run when a stage's `jobs` list them; notify and comment default to `"true"` and a Stage turns one off with `"false"`.** Turn one off only with a stated reason (the `prometheus-operator` and `opentelemetry-operator` Projects run review, report and notify `"false"` because Renovate automerges their charts). Helper images, dependency charts and Applications on an auto-update cycle (digest-pinned moving tags, the html sites, gose, teamspeak3, gitlab-tools, the agents bridges, the ollama MCP images) run `jobs: []` (no review, no report Stage) by owner decision; kargo-root `CLAUDE.md` keeps the list.
