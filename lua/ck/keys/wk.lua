@@ -448,7 +448,7 @@ function M.setup()
           },
 
           {
-            fn.wk_keystroke({ categories.GIT, "g" }),
+            fn.wk_keystroke({ categories.GIT, "h" }),
             group = "github",
             mode = { "n", "v" },
           },
