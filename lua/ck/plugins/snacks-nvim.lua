@@ -292,50 +292,6 @@ function M.config()
           desc = "open permalink in browser",
           mode = { "n", "v" },
         },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "f" }),
-          function()
-            require("snacks").picker.gh_issue()
-          end,
-          desc = "github issues",
-          mode = { "n", "v" },
-        },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "F" }),
-          function()
-            require("snacks").picker.gh_issue({ state = "all" })
-          end,
-          desc = "github issues [all]",
-          mode = { "n", "v" },
-        },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "p" }),
-          function()
-            require("snacks").picker.gh_pr()
-          end,
-          desc = "github pull requests",
-          mode = { "n", "v" },
-        },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "P" }),
-          function()
-            require("snacks").picker.gh_pr({ state = "all" })
-          end,
-          desc = "github pull requests [all]",
-          mode = { "n", "v" },
-        },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "r" }),
-          function()
-            require("snacks").picker.gh_actions()
-          end,
-          desc = "github current commands",
-        },
       }
     end,
     autocmds = function()

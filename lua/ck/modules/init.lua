@@ -11,6 +11,7 @@ local modules = {
   "autowidth",
   "unimpaired",
   "uuid",
+  "github",
 }
 
 function M.config()
