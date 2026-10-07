@@ -6,9 +6,9 @@ Where each repository kind keeps its version pins, how the Warehouse describes t
 
 ## Warehouse Pins
 
-The pin is described on the Warehouse, never in Stage vars. In `.promote/values.yaml` the top-level `repo` and each Warehouse's `pins` list carry it, and the chart writes them as the annotations `kargo.kilic.dev/pin-repo` and `kargo.kilic.dev/pins`:
+The pin is described on the Warehouse, never in Stage vars. In `.promote/values.yaml` the top-level `repository` and each Warehouse's `pins` list carry it, and the chart writes them as the annotations `kargo.kilic.dev/pin-repo` and `kargo.kilic.dev/pins`:
 
-- `repo`: the gitops repository's HTTPS URL ending `.git`.
+- `repository`: the gitops repository's HTTPS URL ending `.git`.
 - `pins`: one entry per pinned value. `file` (repo-relative, `{stage}` standing for the stage, the Stage name without the component prefix) and `key` (`yaml-update` dot-and-index form, `helmCharts.0.version`) are required; `value` is an optional template over `{version}`, `{tag}`, `{commit}`, `{digest}` and `{repo}`, default `{version}`, so charts and git tags omit it and an image that stores a full reference sets `"{repo}:{tag}"`.
 - Every entry names the same `file` (the render fails otherwise), and the first is the primary pin (its current value is `From:`). Pins in two files take two Warehouses.
 
@@ -16,11 +16,12 @@ The pin is described on the Warehouse, never in Stage vars. In `.promote/values.
 ---
 warehouses:
   - name: <component>
-    subscriptions:
-      - git:
-          repoURL: https://gitlab.kilic.dev/cluster/charts/chart-<component>.git
-          commitSelectionStrategy: SemVer
-          semverConstraint: "*"
+    spec:
+      subscriptions:
+        - git:
+            repoURL: https://gitlab.kilic.dev/cluster/charts/chart-<component>.git
+            commitSelectionStrategy: SemVer
+            semverConstraint: "*"
     pins:
       - file: "{stage}/<component>/patch-applicationset.yaml"
         key: spec.template.spec.sources.0.targetRevision
@@ -81,7 +82,7 @@ The collector pins write `{repo}:{tag}`.
 
 ### Floating-tag images
 
-An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers run `jobs: []` on their stage (no review and no report Stage); an image the estate builds itself (home-assistant's `config` image volume) keeps `report`. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx and gitlab-runner's runner `image.tag: alpine`; kargo-root `CLAUDE.md` keeps that list.
+An image on a moving tag (`latest`, `stable`, `13.0-latest`), including long-running helpers such as init containers, sidecars and image volumes, is its own Warehouse with `imageSelectionStrategy: Digest`, the tag as `constraint`, and pin value `{repo}:{tag}@{digest}`. Helpers set `deploy.vars.review: "false"` and `jobs.report.enabled: false` on their Warehouse's stage (no review and no report Stage); an image the estate builds itself (home-assistant's `config` image volume) keeps `report`. Outside Kargo stay only one-off Jobs (restores, migrations, a chart's setup Jobs), CloudNativePG `imageName`, the `renovate/renovate` image of the RenovateJob CRs, the `nginx:alpine` proxies in `monitoring/.deploy/base`, nailbed's demo nginx and gitlab-runner's runner `image.tag: alpine`; kargo-root `CLAUDE.md` keeps that list.
 
 ## Renovate and Kargo
 
