@@ -7,7 +7,7 @@
         "AWS_API_MCP_ALLOW_UNRESTRICTED_LOCAL_FILE_ACCESS": "no-access",
         "AWS_API_MCP_SUPPRESS_DEPRECATION_WARNING": "true",
         "AWS_API_MCP_TELEMETRY": "false",
-        "AWS_CONFIG_FILE": "${HOME}/.aws/laravel-reader",
+        "AWS_CONFIG_FILE": "${HOME}/.aws/laravel-readonly",
         "AWS_REGION": "us-east-2",
         "FASTMCP_LOG_LEVEL": "ERROR",
         "READ_OPERATIONS_ONLY": "true"
@@ -88,7 +88,7 @@
       }
     },
     "kubernetes-laravel": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm", "--kubeconfig", "~/.kube/laravel-reader"],
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm", "--kubeconfig", "~/.kube/laravel-readonly"],
       "command": "bunx",
       "hyprpilot": {
         "autoAcceptTools": ["*"],
