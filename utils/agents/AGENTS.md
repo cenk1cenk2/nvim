@@ -59,6 +59,7 @@ Guidelines for the everyday intents, so the covering skill loads before the firs
 |---|---|
 | Branch, commit, push | the `git-*` skill for that verb, chained in that order |
 | Create, open, remove or prune a worktree | `command-wt` |
+| Run a CLI the catalog has a `command-<cli>` skill for | that skill, before the first call |
 | Open, read, comment on, or fix a PR/MR; red CI | the platform's PR/MR or CI skill for that verb |
 | A Linear issue id, Linear URL, or Linear team key | the workspace skill first, then the `linear-*` skill for the verb (read, create, status, update, comment) |
 | A Slack, Notion or Spacelift link | its workspace skill, which auto-invokes |

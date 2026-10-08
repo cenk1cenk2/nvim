@@ -4,7 +4,7 @@
 
 - For broad repository/code discovery across `gitlab.kilic.dev`, start with a code-discovery MCP when the active profile has one, then switch to `gitlab` MCP for authoritative metadata and operations. With none present, search from `gitlab` MCP directly and say so.
 - Use raw `git` CLI commands for local git operations.
-- Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs).
+- Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs); Load `command-glab` before the first call.
 - Determine project path from the git remote URL.
 - Determine the current branch from local git state via `git status`.
 

@@ -19,6 +19,8 @@ Run the CI-diagnosis workflow per `scm-ci-fix`, with GitHub MCP tools, local git
 
 ## Platform specifics
 
+Load `command-gh` before the first `gh` call.
+
 - **List failing runs:** Get the current branch via `git status`, then list recent workflow runs with `gh run list --branch <branch>` (or the github MCP). Identify runs with `failure` or `error` status.
 - **Fetch failing logs:** Use `gh run view <run-id>` for the summary, then `gh run view <run-id> --log-failed` to extract the relevant error logs.
 - **CI definitions** live under `.github/workflows/`.

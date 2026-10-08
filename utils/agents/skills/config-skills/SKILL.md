@@ -169,7 +169,7 @@ How a skill *should* be invoked is declared by `disableModelInvocation`. Hyprpil
 Assignment guidance:
 
 - **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes and postures (`caveman`, `agent-bulldozer`, `agent-coordinator`, `agent-supervisor`), companions, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `agent-labrat`, `hyprpilot-delegate`).
-- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, `code-improve`, and in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`).
+- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, `code-improve`, in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`), and CLI manuals (`command-*`).
 - **Auto-invoke** — session and workspace initializers only (`hyprpilot-skills`, `hyprpilot-nvim`, `linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`).
 - **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disableModelInvocation: false` because autopilot may auto-apply it.
 
@@ -399,6 +399,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 - **Description** must follow the description checklist above.
 - **Posture** — inherited by default; declare `plan-mode` only for skills that write nothing outside the internal plans directory. See Posture above.
 - **Invocation tier** — set `disableModelInvocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
+- **CLI calls** — a step that runs a CLI with a `command-<cli>` skill says **Load `command-<cli>`** where it first calls it; that skill owns the CLI's route, flags, gates and fallback, so the body names the job and leaves those out.
 - **MCP tools** — name specific tools when the skill depends on them, per `mcp-tool-naming`. A server with a harness connector also gets its routing per `harness-connectors`.
 - **Describe the current state only**, per `current-state-only` — no deprecation notes, no compatibility shims, no history. Delete the old wording and state the new one.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.

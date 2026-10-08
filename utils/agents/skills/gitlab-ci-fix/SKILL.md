@@ -20,6 +20,8 @@ Diagnosis workflow per `scm-ci-fix`. GitLab tooling, local git, CLI fallback, an
 
 ## Platform specifics
 
+Load `command-glab` before the first `glab` call.
+
 - **List failing pipelines:** Get the current branch via `git status`, then list recent pipelines for the branch ref with `gitlab__list_pipelines`. Identify pipelines with `failed` status.
 - **Fetch failing logs:** Use `gitlab__list_pipeline_jobs` to get the job list and identify failed jobs, then `glab ci trace <job-id>` to extract the relevant job logs.
 - **CI definitions** live in `.gitlab-ci.yml`. Nearly every job extends a `devops/pipelines` template and runs a `devops/pipes` CLI. Trace a failing job from its template to the pipe command that produced the error, and decide which layer the fix belongs in, per `kilic-ci-pipelines`. A fix in `devops/pipelines` or `devops/pipes` is its own MR, and the consumer only picks it up once it bumps its tag.

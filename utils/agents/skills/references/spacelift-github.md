@@ -45,7 +45,7 @@ All input forms must converge to: **owner**, **repo**, **PR number**, **head bra
 3. The `details_url` field is a direct Spacelift URL (e.g., `https://<account>.app.spacelift.io/stack/<stack-id>/run/<run-id>`). Parse it to extract stack ID and run ID — then skip Spacelift discovery entirely and go straight to run detail collection.
 4. Use `head_sha` to find the associated PR (same as "from commit SHA" below).
 
-**Note:** GitHub MCP tools do not cover check runs or Actions runs. Always use `gh api` / `gh run view` CLI for these.
+**Note:** GitHub MCP tools do not cover check runs or Actions runs. Always use `gh api` / `gh run view` CLI for these, after loading `command-gh`.
 
 **From Spacelift URL:**
 

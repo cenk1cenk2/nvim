@@ -30,7 +30,7 @@ The captain's editor is the destination, not a second one of yours. Reading a fi
    - An explicit path in the request — use it.
    - Nothing named — `git rev-parse --show-toplevel` from the working directory.
    - A branch named — `wt list --format=json`, match `items[].branch`, take that item's `worktree.path`. The main worktree carries `"main": true`; a branch checked out there opens the repo root.
-   - A branch with no worktree — create one per `agent-worktrees`: `wt switch <branch> --no-cd` for a branch that already exists, `wt switch --create <branch> --base @ --no-cd` for one that does not. Confirm before creating a **new** branch; an existing branch just gets its tree. Re-read `wt list --format=json` for the resulting path.
+   - A branch with no worktree — Load `command-wt` and create one: `wt switch <branch> --no-cd --format=json` for a branch that already exists, `wt switch --create <branch> --base @ --no-cd --format=json` for one that does not. Confirm before creating a **new** branch; an existing branch just gets its tree. Take the path from that JSON output.
 
    Verify the directory exists before opening. A path that does not resolve is a stop, not a guess.
 
@@ -53,7 +53,7 @@ The captain's editor is the destination, not a second one of yours. Reading a fi
    - **Foreground — no `-d`.** The captain asked to be taken there, and the new window being current is what keeps the editor's own rename on target.
    - A file instead of a tree: `'zsh -ic "nvim <file>"'`, or `'zsh -ic "nvim +<line> <file>"'` for a position.
 
-5. **Report one line** — window index, name, and the path it opened, plus the worktree you created if you created one. Removing it later is `wt remove <branch>`, and it is the captain's call, not yours.
+5. **Report one line** — window index, name, and the path it opened, plus the worktree you created if you created one. Removing it later is `wt remove <branch>` per `command-wt`, and it is the captain's call, not yours.
 
 ## Key Principles
 

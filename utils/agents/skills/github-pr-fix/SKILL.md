@@ -37,7 +37,7 @@ One row per open thread, so it is checkable whether every reviewer got an answer
 - **Identify the PR** (when not given): use `git status` for the current branch, extract owner/repo from the remote URL, then `github__list_pull_requests` with `head: "owner:branch"` and `state: open`. If none is open, inform the user and stop. Read PR metadata via `github__pull_request_read` (method: `get`).
 - **List open threads:** read all review comments and conversation threads on the PR, filtering to **unresolved/open** threads only. Pending suggestions are GitHub `suggestion` blocks.
 - **Reply to a thread:** post the reply to the thread via the GitHub review-comment tools (see `scm-github`).
-- **Resolve a thread — requires GraphQL** (the MCP tools do not expose this). Use `gh api graphql` as fallback:
+- **Resolve a thread — requires GraphQL** (the MCP tools do not expose this). Load `command-gh`, then use `gh api graphql`:
   1. Get thread IDs: `gh api graphql -f query='query { repository(owner:"OWNER", name:"REPO") { pullRequest(number:N) { reviewThreads(first:50) { nodes { id isResolved comments(first:1) { nodes { body } } } } } } }'`
   2. Resolve each thread: `gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "THREAD_ID"}) { thread { isResolved } } }'`
 

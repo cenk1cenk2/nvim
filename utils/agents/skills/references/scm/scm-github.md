@@ -4,7 +4,7 @@
 
 - **ALWAYS use `github` MCP tools for all GitHub operations.**
 - **Use the raw `git` CLI (via `Bash`) for local git operations — there is no git MCP server.**
-- Use `gh` CLI as fallback when MCP tools lack the needed capability (e.g., `gh run list`, `gh run view`).
+- Use `gh` CLI as fallback when MCP tools lack the needed capability (e.g., `gh run list`, `gh run view`); Load `command-gh` before the first call.
 - Determine repository owner and name from the git remote URL.
 - Determine the current branch from local git state via `git status`.
 

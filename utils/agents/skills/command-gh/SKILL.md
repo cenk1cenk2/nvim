@@ -8,7 +8,7 @@ references:
 ## Route
 
 - **The GitHub MCP server first** for PRs, issues, reviews, branches and file reads; tool surface per `scm-github`.
-- **`gh` for what the server cannot do**: workflow runs and their logs, a stack, an output the server cannot return, a bulk job that would cost dozens of calls. Say in one line what the server was missing.
+- **`gh` for what the server cannot do**: workflow runs and their logs, check runs (`gh api`), resolving review threads (`gh api graphql`), a stack, an output the server cannot return, a bulk job that would cost dozens of calls. Say in one line what the server was missing.
 - **Writes gate like any external write**: summarize the change and wait unless the user already cleared that class of write. Reads never gate.
 
 ## Stacks — `gh stack`
