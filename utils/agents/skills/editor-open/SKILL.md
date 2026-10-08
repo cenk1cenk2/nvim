@@ -5,7 +5,6 @@ disableModelInvocation: true
 argumentHint: "[branch | path | file]"
 references:
   - ../references/tmux.md
-  - ../references/agent/agent-worktrees.md
 ---
 
 ## Context

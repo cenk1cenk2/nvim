@@ -293,8 +293,8 @@ Checklist for any skill that dispatches subagents:
 2. A directive points at `agent-delegate-harness-<provider>` **before** the first dispatch step.
 3. Blocking vs detached is expressed as intent; the provider reference owns the flag and its default.
 4. Result collection is covered explicitly, including diagnose-before-re-dispatch.
-5. If it isolates writes, it points at `agent-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
-6. Anything else that differs per runtime (plans directory, state directory, worktree location) points at `provider-paths` instead of hardcoding a path.
+5. If it isolates writes, it creates the worktree and dispatches into it per `agent-worktrees` — never the runtime's isolation flag, which follows the **session's** repo, not the task's.
+6. Anything else that differs per runtime (plans directory, state directory) points at `provider-paths` instead of hardcoding a path.
 
 When a runtime's behavior turns out to contradict a generic skill body, fix it in that provider's reference — do not special-case the runtime inside the shared body.
 

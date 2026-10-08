@@ -12,7 +12,7 @@ references:
 - **`wt` places the tree** from the configured `worktree-path` template (`wt config show`). Address worktrees by branch and never pass a path.
 - **Another repository is `wt -C <repo> …`**, never a `cd`. Cross-repo dispatch per `agent-worktrees`.
 - **Read the path from the command's own `--format=json` output**, not from a follow-up listing.
-- **Raw `git worktree` is the fallback** when `wt` does not resolve or cannot reach the repository; placement then per `agent-worktrees`. Say which form you used when you report a path.
+- **Raw `git worktree` is the fallback** when `wt` does not resolve or cannot reach the repository; place the tree where the `worktree-path` template in `~/.config/worktrunk/config.toml` would, so `wt` finds it later. Say which form you used when you report a path.
 
 ## Commands
 

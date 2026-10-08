@@ -1,28 +1,15 @@
 # Agent Worktree Convention
 
-**Load `command-wt` before the first worktree command** — it owns the commands, flags, fallback and gates; this reference owns where agent worktrees go and how agents share them.
+**Every agent worktree is created and removed through `command-wt` — Load it before the first worktree command.** It owns the commands, flags, fallback and gates; this reference owns how agents are placed in worktrees and how they share them.
 
-**Two different things create agent worktrees, and only one of them is yours to place:**
+**The runtime's own worktree isolation is not used.** Claude Code's `isolation: "worktree"`, OpenCode's workspace worktrees and Codex's `--worktree` each branch from a base of their choosing, place the tree where `wt` cannot see it, and only Claude Code can be redirected. One mechanism on every runtime keeps every tree in `wt list`, on the base you named, in the repository the task targets.
 
-| Creator | Tool | Location |
-|---|---|---|
-| A skill creating one itself | `wt switch --create` | whatever `wt` computes; never override it |
-| The runtime's own isolation flag | the harness | harness-controlled — verify the path it returns |
+## Dispatching Into a Worktree
 
-For a harness-created worktree, and for the fallback form, the location is the active runtime's agent-worktrees directory per `provider-paths`. Never scatter agent worktrees elsewhere in the filesystem.
-
-## Worktree isolation follows the SESSION's repo, not the task's repo
-
-**The runtime's worktree-isolation flag creates a worktree of the repository the session is running in — the cwd project — NOT the repository the delegated task targets.** In a multi-repo workspace those are frequently different, and then the agent lands in a worktree where **its target files do not exist**.
-
-Concretely: a session running in `<repo-a>` delegates an edit that lives in `<repo-b>` with worktree isolation on. The agent is handed a worktree of `<repo-a>`, where none of its target paths exist. A careful agent reports the mismatch; a careless one edits the wrong tree or creates files that do not belong.
-
-**So, before turning worktree isolation on:**
-
-- **Confirm the task's repo IS the session's repo.** If it is not, do NOT rely on the flag.
-- **For a cross-repo task, create the worktree yourself in the TARGET repo** per Creating a Worktree Yourself below, and pass its absolute path in the prompt under a `## Workspace` section telling the agent to `cd` there first. Dispatch without isolation.
-- **Say which repo the work belongs to in the prompt**, explicitly. An agent that knows the target repo can recover from a wrong worktree; one that assumes will edit the wrong tree or create files that do not belong.
-- **Verify after dispatch** where the branch and commit actually landed — check the target repo's `git worktree list` and `git branch`, not the agent's own account of it.
+1. **Create the worktree in the TARGET repository** per `command-wt` — `-C <repo>` when that is not the session's repository, and `--base @` whenever the agent needs the current `HEAD`. Take the absolute path from the command's JSON output.
+2. **Dispatch without the runtime's isolation flag.** Put the path in the prompt under a `## Workspace` section, tell the agent to `cd` there before any file operation, and name the repository the work belongs to.
+3. **Track the branch and path yourself** for merge and cleanup.
+4. **Verify after the agent reports** — the commits sit on the worktree's branch in the target repository (`wt list --format=json`, `git log <branch>`), not on the agent's account of it.
 
 ## One worktree, one LIVE agent
 
@@ -32,16 +19,9 @@ Concretely: a session running in `<repo-a>` delegates an edit that lives in `<re
 
 **Reuse and re-steering pair naturally.** Where the agent that built the tree is still reachable, giving it the next unit in that same tree keeps both the worktree and the context that produced it.
 
-## Why a managed location
-
-- **One tool owns the path.** `wt` computes it from a single configured template, so every worktree lands in the same shape without any skill hardcoding a directory.
-- **Inside the repo.** Worktrees live under the project root, making them easy to find, list (`wt list`), and prune.
-- **Gitignored.** Assuming the worktrees directory is in `.gitignore`, the worktrees don't pollute `git status` on the parent repo.
-- **Predictable for scripts.** Tooling that cleans up stale worktrees, measures disk usage, or reports status knows exactly where to look — and `wt list --format=json` reports paths without parsing them out of prose.
-
 ## Naming
 
-**Under `wt` the branch name is the identity** — the path derives from it, so name the branch and let `wt` place the directory.
+**The branch name is the identity** — `wt` derives the path from it, so name the branch and let `wt` place the directory.
 
 Format: `<role>-<short-id>`
 
@@ -52,39 +32,18 @@ Examples: `worker-1-a3f`, `task-02-b91`, `review-fix-c47`, `delegate-d12`.
 
 Keep names ≤ 64 chars total and use only letters, digits, dots, underscores, dashes.
 
-## Verification (mandatory after dispatch)
-
-When your subagent-dispatch tool returns a worktree path, verify it:
-
-1. Is absolute.
-2. Is where its creating tool was meant to put it — `wt list` for a `wt`-created worktree, the runtime's agent-worktrees directory (per `provider-paths`) for a harness-created or fallback one.
-
-If verification fails, treat it as an error:
-
-- Do NOT proceed with merge or review.
-- Surface the unexpected path to the user.
-- Manually recreate the worktree at the correct location (see Creating a Worktree Yourself) and re-dispatch with the manual path.
-
-## Creating a Worktree Yourself
-
-When your runtime's worktree-isolation returns a non-conforming path, is unavailable, or the task targets a repository other than the session's:
-
-1. Create the worktree per `command-wt`, with `--base @` whenever the agent needs the current `HEAD`.
-2. Dispatch the agent WITHOUT worktree isolation. Include the absolute worktree path in the prompt under a `## Workspace` section and instruct the agent to `cd` into it before any file operations.
-3. Track the path yourself for later merge and cleanup.
-
 ## Cleanup
 
-Once the agent's work is merged back to the original branch (or discarded), remove it per `command-wt`.
+Once the agent's work is merged back to the original branch (or discarded), remove the worktree per `command-wt`.
 
 For `agent-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agent-delegate`, cleanup happens after the user's completion-handoff choice.
 
-On removal failure (uncommitted changes, for example), surface the error to the user and let them decide whether to force-remove (`-f`) or keep the worktree for manual recovery. When the worktree ran a dev server or watcher — a `post-start` hook commonly does — `wt remove --reap` terminates processes whose working directory is under it.
+On removal failure (uncommitted changes, for example), surface the error to the user and let them decide whether to force-remove or keep the worktree for manual recovery.
+
+## A Worktree You Did Not Create
+
+A tree under a runtime's native location (per `provider-paths`) came from something outside this convention — a manual flag or a tool call. Report it with its branch and base, and let the captain decide whether to keep, merge or remove it; never adopt it as an agent workspace silently.
 
 ## Gitignore
 
-Ensure the worktrees directory is in the project's `.gitignore` — `wt`'s configured path, or the runtime's agent-worktrees directory per `provider-paths`, whichever applies. If not, the worktrees will pollute `git status`. This is a user-level concern — the skill should NOT modify `.gitignore` automatically, but MAY warn the user if the worktrees directory is not gitignored when a worktree is first created.
-
-## Key Rule
-
-**Create it with `wt` wherever `wt` is available, and never override where it places the result.** On the fallback path, a worktree about to be created anywhere other than the agent worktrees directory is a STOP. This is non-negotiable. The rule exists to keep agent work contained and predictable. Every agent skill follows it.
+The worktrees directory must be gitignored, or the worktrees pollute `git status`. This is a user-level concern — warn when it is not ignored on the first create; never edit `.gitignore` for it.

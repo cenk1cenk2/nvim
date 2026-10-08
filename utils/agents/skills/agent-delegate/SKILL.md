@@ -73,10 +73,9 @@ Use it when:
 7. **Launch the agent — background by default.**
    - **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — the dispatch parameters, whether blocking exists at all, and how a detached result actually reaches you all differ per runtime.
    - Dispatch mode per `agent-delegate` Dispatch Mode: detached where the runtime delivers the result; when you need the answer to continue, hold for it — blocking where the runtime offers it, otherwise by collecting its completion before the dependent step.
-   - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
+   - **A task that modifies files gets its own worktree** — offer, confirm with the user, then create it and dispatch into it per `agent-worktrees`. Never pass the runtime's isolation flag.
    - **Settle the permission context FIRST**, per `agent-delegate` — it is never a dispatch parameter. If the task needs more autonomy than the session has, raise it with the user; do not dispatch and hope.
    - **Collect deliberately**, per the collection ladder in `agent-delegate` (including its two-failed-attempts rule) and the harness reference.
-   - **If worktree isolation is used**, verify the returned path per `agent-worktrees`. If it does not conform, abort the result and create the worktree yourself per that reference, then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into that path.
 
 8. **Handle the result.**
    - Relay the agent's summary to the user.

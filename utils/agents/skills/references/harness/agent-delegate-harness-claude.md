@@ -119,12 +119,12 @@ Limits unverified on v2.1.283; a subagent on that build still holds the `Agent` 
 
 ## Worktree isolation
 
-`isolation: "worktree"` gives the subagent a temporary git worktree — an isolated copy of the repo, **branched from the default branch, not the parent session's `HEAD`**. It is cleaned up automatically if the subagent makes no changes. Setup costs disk and a few hundred ms, so use it only when parallel writers would otherwise collide.
+`isolation: "worktree"` gives the subagent a temporary git worktree — an isolated copy of the repo, **branched from the default branch, not the parent session's `HEAD`**. It is cleaned up automatically if the subagent makes no changes. This setup does not use it: worktrees are created with `wt` and the agent dispatched without isolation, per `agent-worktrees`.
 
 - Since **v2.1.203** a worktree subagent's Bash/PowerShell commands run inside its worktree, and a command whose working directory resolves to the main checkout fails instead of running there.
 - Since **v2.1.210** that check covers the whole repository containing the launch directory — and, for a session already inside a linked worktree, the main checkout it links from.
 
-The concrete on-disk location is a harness detail, not a documented contract: verify the path the dispatch returns rather than assuming one, and see `agent-worktrees` for the naming and cleanup conventions this setup expects.
+The on-disk location is in `provider-paths`, for recognising a tree it created.
 
 `isolation: "remote"` (v2.1.283) runs the agent in a remote cloud environment instead; it is always background and gated per account. Its checkout, branch and cleanup behavior are **unverified**.
 

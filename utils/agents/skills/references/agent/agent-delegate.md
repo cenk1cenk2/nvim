@@ -177,7 +177,7 @@ Point at skills and tools by name rather than inlining them when the target shar
 4. Are file boundaries explicit? No "and related files."
 5. Are verification commands included when the task modifies code?
 5b. Does the prompt carry the `agent-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
-6. Is isolation right? One worktree for this one unit; omit for read-only work.
+6. Is isolation right? One `wt` worktree for this one unit, created before dispatch per `agent-worktrees`; none for read-only work.
 7. Does the dispatch mode match the runtime's delivery behavior (per `agent-delegate-harness-<provider>`), and does the agent have the tools it needs in that mode?
 7b. Where the runtime does not deliver the report on its own, does the prompt tell the agent how to deliver it, and to whom?
 8. Does the session's own permission posture actually allow the work you are asking for?

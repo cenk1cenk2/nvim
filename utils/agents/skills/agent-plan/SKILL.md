@@ -127,7 +127,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 **Team mode (default):**
 
 - Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
-  - Worktree isolation (unless user opted out).
+  - Its own worktree, created before the dispatch per `agent-worktrees` (unless user opted out).
   - A name — that is what makes a teammate addressable for mid-run steering and for its own report. There is no team-creation step and no team parameter.
   - A delivery instruction naming the recipient, only where `agent-delegate-harness-<provider>` says the runtime needs one — without it there, the report is lost and the layer cannot close.
   - A general-purpose agent type.
@@ -135,7 +135,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 **Fire-and-forget mode:**
 
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
-  - Worktree isolation (unless user opted out).
+  - Its own worktree, created before the dispatch per `agent-worktrees` (unless user opted out).
   - No name.
   - Where the runtime offers blocking dispatch, block explicitly, so the dispatch itself holds the barrier; otherwise the barrier is held by collection, as in team mode.
   - A general-purpose agent type.
@@ -145,7 +145,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 **Shared:**
 
 - Dispatch parameters and mechanics per `agent-delegate`; load the `agent-harness` skill to resolve tiers to concrete models.
-- Verify each returned worktree path per `agent-worktrees`; the concrete plans directory resolves via `provider-paths`, never hardcoded.
+- Verify where each agent's commits landed per `agent-worktrees`; the concrete plans directory resolves via `provider-paths`, never hardcoded.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 - In team mode, when the run outgrows what you can track between layers, bring in a companion per `agent-companion-offload`.
 
@@ -188,7 +188,7 @@ Fire-and-forget mode has no shutdown — agents exit on their own when their tas
 
 ## Worktree Mode
 
-Worktree mode is the **default**. Every agent in every layer runs in its own worktree, created and removed per `agent-worktrees`. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
+Worktree mode is the **default**. Every agent in every layer runs in its own worktree, created and removed per `agent-worktrees`, from the post-merge state of the previous layer (`--base @`). Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
 
 **When to skip worktrees (user must opt out with "without worktrees" or "same worktree"):**
 - Tasks are small and low-risk.
