@@ -47,6 +47,8 @@ Both files are written by `tools/add-profiles.py` in the `cloud-infrastructure` 
 | `tools/add-profiles.py -a ~/.aws/laravel -P`                              | `~/.aws/laravel` - every account and role         |
 | `tools/add-profiles.py -a ~/.aws/laravel-readonly -r ReadOnlyAccessPlusK8s` | `~/.aws/laravel-readonly` - the read-only subset |
 
+`tools/add-clusters.py -a ~/.aws/laravel-readonly -k ~/.kube/laravel-readonly -P` builds the kubeconfig the `kubernetes-laravel` server reads from the read-only file.
+
 A local config can be stale while the other is current, so a profile missing from one is not evidence it does not exist. Regenerating is the captain's call.
 
 ## Read-Only Is Enforced, Secrecy Is Not

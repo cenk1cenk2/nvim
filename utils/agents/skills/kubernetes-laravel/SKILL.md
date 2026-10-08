@@ -15,6 +15,12 @@ Read-only inspection of the AWS EKS clusters. **Load this before the first call 
 
 The gate, the `context` rule, and the read-here-write-with-`kubectl` split: `kubernetes`.
 
+## Startup - the Kubeconfig and Its Credentials
+
+The server reads `~/.kube/laravel-readonly`, written by `tools/add-clusters.py -a ~/.aws/laravel-readonly -k ~/.kube/laravel-readonly -P` in the `cloud-infrastructure` repository. Every context's exec block authenticates through `aws eks get-token` as a `ReadOnlyAccessPlusK8s` profile from `~/.aws/laravel-readonly`, so it reaches no admin role.
+
+An expired SSO session makes every call fail with a credential error. Say so and let the captain run `assume`. A cluster missing from the context list means the kubeconfig is older than the cluster; regenerating it is the captain's call.
+
 ## Read-Only
 
 The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools and nothing else, and no mutating tool is registered. **The exact registered list is not recorded here** — this server is absent from the profile where it could be verified. Check the live tool list before writing a step against a specific tool name; do not assume the kilic surface, which differs.
@@ -25,7 +31,7 @@ The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools a
 
 ## Naming the Cluster
 
-Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN. When the captain named a workload rather than a cluster, or a spelling needs settling, read the server's context-listing tool — a blessed read over an estate-scoped kubeconfig, so the set comes back small and every entry is reachable.
+Contexts are named `<cluster>-<type>` after the cluster role they assume: `<cluster>-kubereader` for reads, `<cluster>-kubesupport` where the support role is mapped. The context is that name, never the ARN. When the captain named a workload rather than a cluster, or a spelling needs settling, read the server's context-listing tool — a blessed read over an estate-scoped kubeconfig, so the set comes back small and every entry is reachable.
 
 Naming and confirming the resolved context: `kubernetes`.
 
