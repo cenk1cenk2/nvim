@@ -1,6 +1,6 @@
 # Agent Worktree Convention
 
-**`wt` (worktrunk) is the preferred tool for any worktree an `agent-*` skill creates or removes itself.** It derives the path from a configured template, addresses worktrees by branch name, and removes the branch with the worktree. Raw `git worktree` is the fallback, for when `wt` is not on `PATH` or cannot reach the target repository. Check `command -v wt` once before creating anything, and say which form you used when you report a path.
+**Load `command-wt` before the first worktree command** — it owns the commands, flags, fallback and gates; this reference owns where agent worktrees go and how agents share them.
 
 **Two different things create agent worktrees, and only one of them is yours to place:**
 
@@ -69,32 +69,13 @@ If verification fails, treat it as an error:
 
 When your runtime's worktree-isolation returns a non-conforming path, is unavailable, or the task targets a repository other than the session's:
 
-1. Create the worktree.
-
-   **Preferred:**
-   ```
-   wt switch --create <branch> --base @ --no-cd
-   ```
-   `--no-cd` leaves the calling shell where it is, which is what scripted creation wants; `wt list --format=json` reports the resulting path. **Name the base explicitly** — with no `--base`, `wt switch --create` branches from the default branch rather than current `HEAD`, silently discarding the state a dependent task needs. `@` is the shortcut for the current branch.
-
-   **Fallback:**
-   ```
-   git branch <branch-name>
-   git worktree add <agent-worktrees-dir>/<name> <branch-name>
-   ```
+1. Create the worktree per `command-wt`, with `--base @` whenever the agent needs the current `HEAD`.
 2. Dispatch the agent WITHOUT worktree isolation. Include the absolute worktree path in the prompt under a `## Workspace` section and instruct the agent to `cd` into it before any file operations.
 3. Track the path yourself for later merge and cleanup.
 
 ## Cleanup
 
-Once the agent's work is merged back to the original branch (or discarded):
-
-```
-wt remove <branch>            # preferred
-git worktree remove <path>    # fallback
-```
-
-`wt remove` deletes the branch **only if it is merged** — an abandoned branch survives unless you pass `-D`, and `--no-delete-branch` keeps one deliberately. The fallback removes the worktree alone, so delete the branch yourself when that matters.
+Once the agent's work is merged back to the original branch (or discarded), remove it per `command-wt`.
 
 For `agent-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agent-delegate`, cleanup happens after the user's completion-handoff choice.
 
