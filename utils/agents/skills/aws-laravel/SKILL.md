@@ -30,22 +30,22 @@ The reason is the tool's shape. `call_aws` takes an arbitrary CLI command string
 
 **`--region`** - omitted, the command silently answers about `us-east-1`. That is the dangerous one: right shape, wrong region, nothing errors. Pass it on every call and name it in the answer.
 
-Profiles are `<AccountName>/<RoleName>`, every one `.../ReadOnlyAccessPlusK8s`. The region is carried in the account name - `...-EU-London-...` is `eu-west-2`; `tools/add-all-eks-clusters.sh` in `cloud-infrastructure` holds the full label-to-region map.
+Profiles are `<AccountName>/<RoleName>`, every one `.../ReadOnlyAccessPlusK8s`. Most account names carry the region - `...-EU-London-...` is `eu-west-2` - but the global, staging, dev and sandbox accounts carry none. For those, take the region from the task, or list the account's enabled regions with `ec2 describe-regions` first.
 
 ## Startup - the SSO Session Is the Captain's
 
-The server holds no credentials of its own. It reads `~/.aws/config-readonly`, whose profiles resolve through Granted's `credential_process`.
+The server holds no credentials of its own. It reads `~/.aws/laravel-readonly`, whose profiles resolve through Granted's `credential_process`.
 
 **There is no auto-login.** An expired SSO token makes every `call_aws` fail with a credential error rather than opening a browser, which is deliberate. When calls start failing that way, say so and let the captain run `assume`; do not work around it.
 
 **A wedged server is the other failure mode, and it looks nothing like the first.** `call_aws` stops responding entirely - no error, no credential message, just silence past the foreground window and then an idle-timeout abort. It is the server, not the query: a command that hung for the full timeout returned in under a second once the server was reconnected. So when a call goes quiet, say so and ask the captain to reconnect the server; do not narrow the query, split it, or wait out the timeout.
 
-Both files are written by scripts in the `cloud-infrastructure` repository, and both fetch the account set live from AWS IAM Identity Center rather than reading each other:
+Both files are written by `tools/add-profiles.py` in the `cloud-infrastructure` repository, and each run fetches the account set live from AWS IAM Identity Center rather than reading the other file:
 
-| Script                           | Writes                                          |
-| -------------------------------- | ----------------------------------------------- |
-| `tools/aws-populate.sh`          | `~/.aws/config` - every account and role        |
-| `tools/aws-populate-readonly.sh` | `~/.aws/config-readonly` - the read-only subset |
+| Command                                                                  | Writes                                            |
+| ------------------------------------------------------------------------ | ------------------------------------------------- |
+| `tools/add-profiles.py -a ~/.aws/laravel -P`                              | `~/.aws/laravel` - every account and role         |
+| `tools/add-profiles.py -a ~/.aws/laravel-readonly -r ReadOnlyAccessPlusK8s` | `~/.aws/laravel-readonly` - the read-only subset |
 
 A local config can be stale while the other is current, so a profile missing from one is not evidence it does not exist. Regenerating is the captain's call.
 
