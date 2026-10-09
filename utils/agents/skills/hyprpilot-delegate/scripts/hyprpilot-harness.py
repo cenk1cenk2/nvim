@@ -1,4 +1,4 @@
-#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
+#!/usr/bin/env -S sh -c 'd="$(dirname "$0")"; uv sync -q --project "$d" && exec "$d/.venv/bin/python" "$0" "$@"'
 """Wait on, resolve, judge, collect and tear down hyprpilot sessions from a shell, without calling MCP."""
 
 from __future__ import annotations

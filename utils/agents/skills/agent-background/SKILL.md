@@ -193,6 +193,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 - **A watcher may not appear in the runtime's task list** even while running. Track the handle the launch returned, and stop it through the mechanism the harness reference names.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
 - **Compaction does not preserve watchers**, and neither does a scratchpad path — record them durably per step 5.
+- **Launch every skill script by its path.** The canonical shebang (`uv sync -q --project <dir> && exec <dir>/.venv/bin/python`) builds the environment from the script's own directory; `python3 <script>` or `uv run --with ...` bypasses it and dies on a missing import (`click`, `agentlib`).
 
 ## Fallback
 
