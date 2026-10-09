@@ -341,7 +341,7 @@ Each skill's `scripts/` is its own uv project:
 The shebang makes the script runnable by path with no wrapper, which is what a background launcher needs:
 
 ```sh
-#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
+#!/usr/bin/env -S sh -c 'd="$(dirname "$0")"; uv sync -q --project "$d" && exec "$d/.venv/bin/python" "$0" "$@"'
 ```
 
 **And the shebang only fires when the script is launched by its own path.** A consuming body therefore instructs executing the path, resolved from the owning skill's `bundleDir` — never `python3 <path>`, which bypasses the uv project beside the script and dies on the first third-party import (`ModuleNotFoundError`) at exit 1, colliding with the ceiling code below.

@@ -1,4 +1,4 @@
-#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
+#!/usr/bin/env -S sh -c 'd="$(dirname "$0")"; uv sync -q --project "$d" && exec "$d/.venv/bin/python" "$0" "$@"'
 """Report what a repository builds with, what CI enforces, and how it releases.
 
 Three questions an agent otherwise answers by hand every time, each mechanical

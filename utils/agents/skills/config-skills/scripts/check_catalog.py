@@ -1,4 +1,4 @@
-#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
+#!/usr/bin/env -S sh -c 'd="$(dirname "$0")"; uv sync -q --project "$d" && exec "$d/.venv/bin/python" "$0" "$@"'
 """Lint the hyprpilot skill catalog against the conventions `config-skills` states.
 
 Every check here is mechanical - a rule whose violation a reader cannot see and
