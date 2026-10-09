@@ -20,7 +20,7 @@ Repository and wiring map of the kilic estate on the self-hosted GitLab `gitlab.
 | `cluster/<cluster>` (rubik, overseer, nailbed, neutrino, moon, sun) | One ArgoCD generator repo per cluster, plus archived per-cluster Terraform | Pulumi-as-generator (NestJS), committed `1-manifest/` output; Terraform (`tf-overseer` only, live) | Namespaces, per-cluster system bits (gateways, Cilium), ArgoCD Applications for workloads, LB routes | That cluster, via ArgoCD on `overseer` |
 | [`cluster/workloads`](https://gitlab.kilic.dev/groups/cluster/workloads) | One repo per application | kustomize (often wrapping Helm charts via `helmCharts`) under `.deploy/<cluster>/` | Application manifests | Clusters named in `.deploy/<cluster>/` |
 | [`cluster/charts`](https://gitlab.kilic.dev/groups/cluster/charts) | One Helm wrapper chart per system component | Helm, semantic-release tags `v<semver>` | Consumed by `argocd-system` ApplicationSets | Every cluster whose labels enable the component |
-| [`cluster/operators`](https://gitlab.kilic.dev/groups/cluster/operators) | Custom Go operators, not deployed yet; kept for future use | Go, semantic-release | Nothing | - |
+| [`cluster/operators`](https://gitlab.kilic.dev/groups/cluster/operators) | Custom Go operators; [operator-lb](https://gitlab.kilic.dev/cluster/operators/operator-lb) runs the cross-cluster LB relay | Go, semantic-release | operator-lb: `charts/chart` on the LB clusters, `charts/target` per downstream | LB and target clusters |
 | [`cluster/pipes`](https://gitlab.kilic.dev/groups/cluster/pipes) | ArgoCD tooling | Go (ArgoCD Config Management Plugin) | Not wired to any live Application | - |
 | [`cluster/monitoring`](https://gitlab.kilic.dev/groups/cluster/monitoring) | Archived dashboards repo only | - | - | - |
 | [`ansible`](https://gitlab.kilic.dev/groups/ansible) | Host provisioning and non-Kubernetes services | Ansible (`./play` wrapper), podman containers | OS provisioning, core services as containers | Legacy/core VMs and bare metal (see Flow) |
@@ -127,8 +127,11 @@ Core services run by ansible as containers:
 8. Per-cluster             cluster-<cluster> app -> argocd-<cluster>/apps -> cluster-<cluster>-system, -namespaces,
                              and <cluster>-<workload> Applications
 9. Workloads               <cluster>-<workload> -> cluster/workloads/<workload>/.deploy/<cluster>
-10. Exposure               LB clusters sun (loki) and moon (thor) route to downstream clusters and VMs
-                             via their own argocd-<lb>/workloads/<cluster-x|vm-x|routes>
+10. Exposure               LB clusters sun (loki) and moon (thor) run their gateways, vm-<name> and routes
+                             workloads from argocd-<lb>; cross-cluster exposure is the operator-lb relay
+                             (cluster/operators/operator-lb): argocd-<target> declares relay ListenerSets,
+                             Upstreams and DNSEndpoints, workload repos add routes and DNSEndpoints, and the
+                             operator on the LB cluster copies them into lb-<target>
 ```
 
 ### Change paths
@@ -147,7 +150,8 @@ Core services run by ansible as containers:
 | Kargo tasks, credentials, a Project or its registration | `cluster/kargo-root` | ArgoCD `kargo-root` app (prune confirm-gated) |
 | Add a workload's Application or namespace | `cluster/<c>/argocd-<c>/src/workloads/<name>/` then regenerate `apps/1-manifest` | ArgoCD `cluster-<c>` app |
 | A workload's manifests | `cluster/workloads/<w>/.deploy/<cluster>/` | ArgoCD `<cluster>-<w>` app, `targetRevision: HEAD`, automated prune |
-| Public route for a workload | `cluster/<lb>/argocd-<lb>` (sun or moon) | ArgoCD `<lb>-cluster-<c>` / `<lb>-routes` |
+| Public route for a cluster-target workload | `cluster/<c>/argocd-<c>/src/cluster/relay.service.ts` (relay ListenerSets), `src/cluster/operator-lb.service.ts` (Upstreams), the workload repo's routes and DNSEndpoints | ArgoCD `cluster-<c>` / `<c>-<workload>`; operator-lb copies into `lb-<c>` on the LB cluster |
+| Public route for a VM or an LB's own route | `cluster/<lb>/argocd-<lb>` (sun or moon) | ArgoCD `<lb>-vm-<host>` / `<lb>-routes` |
 | A legacy/core server or its container | `ansible/ansible-playbooks` | `./play ...`, run locally or from CI |
 
 ### ArgoCD topology (single instance)
@@ -167,8 +171,8 @@ Core services run by ansible as containers:
 | rubik | RKE2 | production | loki (VMs on `antaeus`, Hetzner) | rubik-04..06, qubit-07..11 | Most user-facing workloads, rustfs, monitoring backbone/view, grafana-operator, renovate, gitlab-runner | `tf-config-proxmox`, `pulumi-config-rancher`, `argocd-rubik` |
 | neutrino | RKE2 | production | thor | neutrino-03..05, electron-06..11 | GPU/home workloads (ollama, immich, home-assistant, agents, paperless-ngx), nvidia-operator, agentgateway | same pattern, `argocd-neutrino` |
 | nailbed | RKE2 | development | thor | nailbed-01..03 | Development/demo workloads | same pattern, `argocd-nailbed` |
-| sun | K3s | load-balancer | loki | sun-02 | Gateways, external-dns (Cloudflare + OPNsense), routes to rubik, gitlab VM, trojan-loki | same pattern, `argocd-sun` |
-| moon | K3s | load-balancer | thor | moon-02 | Gateways, external-dns, routes to nailbed, neutrino, overseer, trojan-thor | same pattern, `argocd-moon` |
+| sun | K3s | load-balancer | loki | sun-02 | Gateways, external-dns (Cloudflare + OPNsense), operator-lb relay for rubik (`lb-rubik`), routes to gitlab VM, trojan-loki | same pattern, `argocd-sun` |
+| moon | K3s | load-balancer | thor | moon-02 | Gateways, external-dns, operator-lb relay for neutrino, nailbed, overseer (`lb-<target>`), routes to trojan-thor | same pattern, `argocd-moon` |
 | rancher (manager) | Unverified | not in ArgoCD | thor | `rancher` VM | Rancher server (podman via ansible `containers/rancher`) | `ansible-playbooks`, `tf-config-proxmox` (`hercules-vm-rancher.tf`) |
 
 Label sources: `cluster.kilic.dev/{environment,region,name}` from `cluster/argocd-root/src/argocd/assets/cluster/<c>/labels.yml`, confirmed live via ArgoCD `list_clusters`.

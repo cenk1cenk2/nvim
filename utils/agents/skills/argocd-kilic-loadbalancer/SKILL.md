@@ -1,8 +1,8 @@
 ---
 name: argocd-kilic-loadbalancer
-description: argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster's ArgoCD repo - Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Use when adding or changing how traffic reaches a target cluster, a VM, or an in-cluster service. Not for ordinary workloads in a target cluster, standalone deployment repos, or chart wrappers.
+description: argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster's ArgoCD repo - Pulumi services for VM routing or direct LB routes, and the operator-lb relay that exposes a target Kubernetes cluster through it. Use when adding or changing how traffic reaches a VM or an in-cluster service on the LB cluster. Not for ordinary workloads in a target cluster, standalone deployment repos, or chart wrappers.
 disableModelInvocation: true
-argumentHint: '[workload-name or ''add route to <existing>''] - e.g. ''cluster-rubik'', ''vm-gitlab'''
+argumentHint: '[workload-name or ''add route to <existing>''] - e.g. ''vm-gitlab'''
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
@@ -40,11 +40,13 @@ This pattern is never Kargo-promoted; a routing Application syncs straight from 
 
 There are three types of routing workloads in an LB cluster:
 
-1. **`cluster-<target>`** — Routes traffic to a target Kubernetes cluster's gateway (e.g., `cluster-rubik`). Uses Backend pointing to target cluster gateway FQDN. Can have external (Cloudflare), internal (OPNSense) routes, and TCP routes. Build it as cross-cluster routing per `argocd-kilic-loadbalancer-cross-cluster`.
+1. **`vm-<name>`** — Routes traffic to a VM or host (e.g., `vm-gitlab`). Uses Backend pointing to VM FQDN. Typically external-only with Cloudflare DNS. Build it as VM/host routing per `argocd-kilic-loadbalancer-vm-routing`.
 
-2. **`vm-<name>`** — Routes traffic to a VM or host (e.g., `vm-gitlab`). Uses Backend pointing to VM FQDN. Typically external-only with Cloudflare DNS. Build it as VM/host routing per `argocd-kilic-loadbalancer-vm-routing`.
+2. **`routes`** — Direct HTTPRoutes handled by the LB cluster itself (e.g., domain redirects). No Backend needed — routes go directly to in-cluster services. Build it as direct routes per `argocd-kilic-loadbalancer-direct-routes`.
 
-3. **`routes`** — Direct HTTPRoutes handled by the LB cluster itself (e.g., domain redirects). No Backend needed — routes go directly to in-cluster services. Build it as direct routes per `argocd-kilic-loadbalancer-direct-routes`.
+3. **`monitoring`** — Routes for the monitoring stack, same shape as `routes` (verified on `argocd-sun`).
+
+**A target Kubernetes cluster is reached through the operator-lb relay**, not an LB-cluster workload. The target cluster declares relay ListenerSets (GatewayAPI, parented to the LB cluster's gateway, annotated `lb.kilic.dev/upstream`) in `cluster/<c>/argocd-<c>/src/cluster/relay.service.ts`, and its Upstreams with their DNSEndpoints in `src/cluster/operator-lb.service.ts`; the workload repos author the TLSRoutes/TCPRoutes/UDPRoutes parented to that ListenerSet plus their DNSEndpoints. The operator-lb operator on the LB cluster copies everything into the `lb-<target>` namespace and owns the Envoy Backend side. Build it per `argocd-kilic-loadbalancer-cross-cluster`.
 
 A TCP service on a dedicated gateway port (SMTP, databases) in any of these adds a listener, Backend, TCPRoute, and CNAME per `argocd-kilic-loadbalancer-tcproute`.
 
@@ -62,7 +64,7 @@ When adding to an existing service, **do NOT create a new file** — modify the 
 Ask the user:
 
 - **New or existing?** Creating a new workload service, or adding routes to an existing one?
-- **Workload type:** `cluster-<target>`, `vm-<name>`, or `routes`?
+- **Workload type:** `vm-<name>` or `routes`, or a target Kubernetes cluster (operator-lb relay, declared in the target cluster's repos)?
 - **Backend target:** What FQDN does traffic go to? (e.g., `rubik-gw.int.loki.arpa:443`, `gitlab.loki.arpa:443`)
 - **Routes needed:** What hostnames/domains need routing?
 - **External or internal (or both)?** See DNS Configuration below
@@ -111,7 +113,7 @@ Provider labels, Cloudflare and OPNSense record patterns, wildcard handling, and
 
 ## Adding Routes to an Existing Service
 
-When adding a new route to an existing workload service (e.g., adding a new domain to `cluster-rubik`):
+When adding a new route to an existing workload service (e.g., adding a new domain to `vm-gitlab`):
 
 1. **Read the existing service file** — understand current Backends, routes, and DNS configuration
 2. **Determine what's needed:**

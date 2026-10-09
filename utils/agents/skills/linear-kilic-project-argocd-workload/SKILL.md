@@ -32,7 +32,7 @@ cluster/<cluster>/argocd-<cluster>/               # Target cluster ArgoCD config
 └── apps/1-manifest/                              # Pulumi-GENERATED Application manifest
 
 cluster/<lb-cluster>/argocd-<lb-cluster>/         # Load balancer cluster (if exposure is needed)
-└── src/workloads/cluster-<target>/cluster-<target>.service.ts
+└── src/workloads/vm-<host>/vm-<host>.service.ts  # VM routes; cluster targets use the operator-lb relay
 
 infrastructure/pulumi-config-gitlab               # ArgoCD repository access (new repos only)
 Vault: secret/<cluster>/<namespace>/...           # Secrets (if needed)
@@ -122,14 +122,12 @@ Load `cluster-kilic-workload` for this issue — it owns the directory conventio
 
 **Issue 5 (Optional — if load balancer is needed): Configure Load Balancer Routes**
 
-> **Repo:** `cluster/<lb-cluster>/argocd-<lb-cluster>`
-> **Purpose:** The LB cluster acts as the ingress point. Its Pulumi services create Gateway listeners, TLSRoute/HTTPRoute resources, EnvoyGateway Backends (pointing to target cluster gateway FQDNs), and DNSEndpoint resources for DNS registration. Each target cluster that needs external/internal routing gets a dedicated service file.
+> **Repo:** `cluster/<cluster>/argocd-<cluster>` and `cluster/workloads/<workload>`
+> **Purpose:** Exposure runs through the operator-lb relay. The target cluster declares relay ListenerSets (GatewayAPI, parented to the LB cluster's gateway, annotated `lb.kilic.dev/upstream`) in `src/cluster/relay.service.ts` and its Upstreams with their DNSEndpoints in `src/cluster/operator-lb.service.ts`; the workload declares its TLSRoutes/TCPRoutes/UDPRoutes parented to that ListenerSet plus their DNSEndpoints in its own repo. The operator-lb operator on the LB cluster copies everything into `lb-<cluster>` and owns the Envoy Backends. Pattern: `argocd-kilic-loadbalancer-cross-cluster`.
 
-- Add route Pulumi service in LB cluster: `src/workloads/cluster-<target>/cluster-<target>.service.ts`
-- Define TLSRoute/HTTPRoute → Backend pointing to target cluster gateway FQDN
-- Create DNSEndpoint for DNS (Cloudflare for external, OPNSense for internal)
-- Configure target cluster gateway listener if needed
-- Repeat for each load balancer cluster if multiple are needed
+- Add the ListenerSet listeners in the relay service: `cluster/<cluster>/argocd-<cluster>/src/cluster/relay.service.ts` (hostnames for TLS/HTTP, sections with ports for TCP/UDP)
+- Author the routes parented to that ListenerSet in `cluster/workloads/<workload>/.deploy/<cluster>/`; a workload needing its own ports or hostnames adds a relay ListenerSet in `src/workloads/<workload>/<workload>.service.ts` from `ClusterRelayService.read()`
+- Create DNSEndpoints labelled `clusters.lb.kilic.dev/<lb>` for DNS (Cloudflare for external, OPNSense for internal); a new target gateway adds an Upstream and its DNSEndpoint in `src/cluster/operator-lb.service.ts`
 - **Blocked by:** Issue 4
 
 ## Namespace Convention
@@ -170,19 +168,19 @@ Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cl
 **Traffic flow for exposed services:**
 
 ```
-Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
-  → Backend (FQDN pointing to target cluster gateway) → Target cluster gateway
+Internet/LAN → LB cluster gateway → relayed TLSRoute/HTTPRoute (copied by operator-lb from the target's ListenerSet routes)
+  → Envoy Backend (owned by operator-lb on the LB cluster) → Target cluster gateway
   → HTTPRoute (target cluster) → Service
 ```
 
-**LB cluster (`argocd-<lb-cluster>`)** handles:
+**Load balancer cluster (`argocd-<lb-cluster>`)** handles:
 - Gateway definitions (`src/cluster/gateway.service.ts`) with `default` (external) and `internal` gateways
-- Per-target-cluster route services (`src/workloads/cluster-<target>/cluster-<target>.service.ts`)
-- TLSRoute/HTTPRoute → EnvoyGateway Backend pointing to target cluster gateway FQDN
-- DNSEndpoint resources for both OPNSense (internal) and Cloudflare (external)
+- VM route services and its own direct `routes` workloads
+- The operator-lb relay operator, which copies each target cluster's relay ListenerSets, routes and DNSEndpoints into `lb-<target>` (see Issue 5)
 
 **Target cluster (`argocd-<cluster>`)** handles:
 - Its own gateway definitions (`src/cluster/gateway.service.ts`) — cluster-specific gateway names/IPs
+- The relay ListenerSet and Upstream declarations (`src/cluster/operator-lb.service.ts`, `src/cluster/relay.service.ts`)
 - In-cluster HTTPRoutes from gateway to services (defined in workload's Pulumi service)
 
 **DNS providers:**
@@ -229,7 +227,8 @@ apps/1-manifest/                                  # Generated Application manife
 src/cluster/gateway.service.ts                              # Gateway definitions (default + internal)
 src/cluster/cluster.constants.ts                            # Gateway enum + IPs
 src/workloads/routes/routes.service.ts                      # Direct route definitions (on LB itself)
-src/workloads/cluster-<target>/cluster-<target>.service.ts  # Routes to target cluster services
+src/workloads/vm-<host>/vm-<host>.service.ts                # VM route services
 workloads/routes/1-manifest/                                # Generated route manifests
-workloads/cluster-<target>/1-manifest/                      # Generated target cluster route manifests
 ```
+
+Target clusters are reached through the operator-lb relay, declared in the target cluster's repos (relay ListenerSets in `src/cluster/relay.service.ts`, Upstreams in `src/cluster/operator-lb.service.ts`).

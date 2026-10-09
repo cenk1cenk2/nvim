@@ -54,7 +54,7 @@ Use GitLab MCP to analyze existing deployments for reference:
 - **ApplicationSets:** Browse `cluster/argocd-system` repo → `base/<similar-component>/applicationset.yaml` — label selectors, namespace, sync policy, values injection
 - **Labels/Annotations:** Browse `cluster/argocd-root` at `src/argocd/assets/cluster/<cluster>/labels.yml` for feature flags and `annotations.yml` for values injection patterns
 - **Pulumi:** Browse `infrastructure/pulumi-config-gitlab` repo → `src/modules/` for ArgoCD deploy key and webhook setup
-- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo → `src/cluster/gateway.service.ts` for gateway definitions, `src/workloads/cluster-<target>/` for route service patterns
+- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo → `src/cluster/gateway.service.ts` for gateway definitions; for cluster exposure, the target cluster's `src/cluster/relay.service.ts` and `src/cluster/operator-lb.service.ts`
 
 **3. Create Project and Issues:**
 
@@ -144,14 +144,12 @@ This repo commits generated output, and the generated file is what ArgoCD reads.
 
 **Issue 8 (Optional — if load balancer is needed): Configure Load Balancer Routes**
 
-> **Repo:** `cluster/<lb-cluster>/argocd-<lb-cluster>`
-> **Purpose:** Each cluster's ArgoCD repo contains Pulumi code that generates Kubernetes manifests. The LB cluster acts as the ingress point — its Pulumi services create Gateway listeners, TLSRoute/HTTPRoute resources, EnvoyGateway Backends (pointing to target cluster gateway FQDNs), and DNSEndpoint resources for DNS registration.
+> **Repo:** `cluster/<cluster>/argocd-<cluster>` and `cluster/workloads/<component>`
+> **Purpose:** Exposure runs through the operator-lb relay. The target cluster declares relay ListenerSets (GatewayAPI, parented to the LB cluster's gateway, annotated `lb.kilic.dev/upstream`) in `src/cluster/relay.service.ts` and its Upstreams with their DNSEndpoints in `src/cluster/operator-lb.service.ts`; the workload declares its TLSRoutes/TCPRoutes/UDPRoutes parented to that ListenerSet plus their DNSEndpoints in its own repo. The operator-lb operator on the LB cluster copies everything into `lb-<cluster>` and owns the Envoy Backends. Pattern: `argocd-kilic-loadbalancer-cross-cluster`.
 
-- Add route Pulumi service in LB cluster: `src/workloads/cluster-<target>/cluster-<target>.service.ts`
-- Define TLSRoute/HTTPRoute → Backend pointing to target cluster gateway FQDN
-- Create DNSEndpoint for DNS (Cloudflare for external, OPNSense for internal)
-- Configure target cluster gateway listener if needed
-- Repeat for each load balancer cluster if multiple are needed
+- Add the ListenerSet listeners in the relay service: `cluster/<cluster>/argocd-<cluster>/src/cluster/relay.service.ts` (hostnames for TLS/HTTP, sections with ports for TCP/UDP)
+- Author the routes parented to that ListenerSet in the workload's repo, `cluster/workloads/<component>/.deploy/<cluster>/`
+- Create DNSEndpoints labelled `clusters.lb.kilic.dev/<lb>` for DNS (Cloudflare for external, OPNSense for internal); a new target gateway adds an Upstream and its DNSEndpoint in `src/cluster/operator-lb.service.ts`
 - **Blocked by:** Issue 7
 
 ## Routing Architecture
@@ -161,19 +159,19 @@ Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cl
 **Traffic flow for exposed services:**
 
 ```
-Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
-  → Backend (FQDN pointing to target cluster gateway) → Target cluster gateway
+Internet/LAN → LB cluster gateway → relayed TLSRoute/HTTPRoute (copied by operator-lb from the target's ListenerSet routes)
+  → Envoy Backend (owned by operator-lb on the LB cluster) → Target cluster gateway
   → HTTPRoute (target cluster) → Service
 ```
 
-**LB cluster (`argocd-<lb-cluster>`)** handles:
+**Load balancer cluster (`argocd-<lb-cluster>`)** handles:
 - Gateway definitions (`src/cluster/gateway.service.ts`) with `default` (external) and `internal` gateways
-- Per-target-cluster route services (`src/workloads/cluster-<target>/cluster-<target>.service.ts`)
-- TLSRoute/HTTPRoute → EnvoyGateway Backend pointing to target cluster gateway FQDN
-- DNSEndpoint resources for both OPNSense (internal) and Cloudflare (external)
+- VM route services and its own direct `routes` workloads
+- The operator-lb relay operator, which copies each target cluster's relay ListenerSets, routes and DNSEndpoints into `lb-<target>` (see Issue 8)
 
 **Target cluster (`argocd-<cluster>`)** handles:
 - Its own gateway definitions (`src/cluster/gateway.service.ts`) — cluster-specific gateway names/IPs
+- The relay ListenerSet and Upstream declarations (`src/cluster/operator-lb.service.ts`, `src/cluster/relay.service.ts`)
 - In-cluster HTTPRoutes from gateway to services
 
 **DNS providers:**
@@ -216,7 +214,7 @@ System operators typically use:
 - **Sync is on by default** — base ApplicationSets ship with automated sync enabled; prune is gated by `Prune=confirm` (see `argocd-kilic` for sync/prune/Kargo mechanics)
 - **`argocd-root` commits generated output** — edit the asset file, then re-run the synth and commit the regenerated manifest
 - **Cluster labels enable selective deployment** — not all clusters need every component
-- **Load balancer cluster is separate** — routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
+- **Load balancer cluster is separate** — gateway and VM routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-<lb-cluster>`; cluster-target exposure is the operator-lb relay, declared in the target cluster's repos (see Issue 8)
 - **All routes are Pulumi-managed** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written
 - **Two DNS providers:** Cloudflare (external, `provider.kilic.dev/external-dns-cloudflare`) and OPNSense (internal, `provider.kilic.dev/external-dns-opnsense-loki`)
 - **Two LB gateways:** `default` for external traffic, `internal` for internal-only services
