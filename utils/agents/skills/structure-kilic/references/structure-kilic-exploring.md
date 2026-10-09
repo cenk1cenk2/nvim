@@ -34,7 +34,8 @@ How an agent finds the repository and file behind a change or an observation. Th
 | `cluster/workloads/<w>/.deploy/<cluster>/` | Workload kustomize root; `.deploy/base/` when multi-cluster; vendored charts under `.../charts/<chart>-<ver>/` are not edit targets |
 | ArgoCD app `cluster-<c>-system-<component>` | System component from argocd-system |
 | ArgoCD app `<c>-<workload>` | Workload from argocd-`<c>` |
-| ArgoCD app `<lb>-cluster-<c>`, `<lb>-vm-<host>`, `<lb>-routes` | LB routes on sun/moon to a downstream cluster or VM |
+| ArgoCD app `<lb>-vm-<host>`, `<lb>-routes` | LB routes on sun/moon to a VM or the LB's own routes; cluster targets are the operator-lb relay, declared in the target's own repos |
+| `cluster/operators/operator-lb` | Cross-cluster LB relay operator: LoadBalancer/Upstream CRDs, relay ListenerSets, DNSEndpoints; `charts/chart` (operator, on the LB cluster), `charts/target` (per downstream); its `CLAUDE.md` is the full manual |
 | `devops/pipelines/<package>/<template>.gitlab-ci.yml` | CI template, hidden job `.<name>`, pinned by tag `<package>@<semver>` |
 | `devops/pipes/<pipe>/<command>/flags.go`, `<pipe>/README.md` | Pipe CLI behind a template; the README lists every environment variable |
 | `ansible-playbooks/containers/<svc>/deploy.yml`, `provision/<area>/provision.yml`, `setup/<svc>/deploy.yml` | Ansible entry points; target hosts in the play's `hosts:` and `inventory.ini` |
@@ -47,7 +48,7 @@ How an agent finds the repository and file behind a change or an observation. Th
 | Which repo owns a running pod/namespace | ArgoCD app whose destination matches, then `get_application` sources | `argocd-kilic` `get_application`; reference `kilic-workload-resolution` |
 | A workload's Deployment, values, routes | `cluster/workloads/<w>/.deploy/<cluster>/` | `sourcebot grep` in that repo; ArgoCD app `<cluster>-<w>` path |
 | Add a new workload to a cluster | `cluster/workloads/<w>` + `cluster/<c>/argocd-<c>/src/workloads/<w>/` + re-run `infrastructure/pulumi-config-gitlab` for the deploy key | skills `cluster-kilic-workload`, `argocd-kilic-workload`, `linear-kilic-project-argocd-workload` |
-| Expose a workload publicly | `cluster/sun/argocd-sun` (loki side) or `cluster/moon/argocd-moon` (thor side) | skill `argocd-kilic-loadbalancer`; ArgoCD `sun-cluster-rubik` etc. |
+| Expose a workload publicly | `cluster/<c>/argocd-<c>` (relay ListenerSets, `src/cluster/relay.service.ts`) + `cluster/workloads/<w>/` (routes, DNSEndpoints), copied into `lb-<c>` by the operator-lb relay on the LB cluster | skill `argocd-kilic-loadbalancer` covers the LB cluster itself |
 | Enable a system component on a cluster | `argocd-root` `labels.yml` + regenerate | `list_clusters` labels; skill `linear-kilic-project-argocd-system` |
 | Per-cluster value for a system component | `argocd-root` `annotations.yml` + regenerate | `list_clusters` shows `values.system.feature.kilic.dev/*` annotation keys |
 | Fleet or per-env value for a system component | `cluster/argocd-system/{base,<env>}/<c>/values.yaml` | reference `kilic-resource-placement` |
