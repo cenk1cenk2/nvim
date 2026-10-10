@@ -82,6 +82,7 @@ The gap between code that works and code you think works is testing.
 - **Test behavior that can actually break**, not that a constructor sets a field. Cover the error path: a handled happy path with an ignored 500 is **the Optimistic Path**, not a finished feature.
 - **Test your own logic, not upstream's.** Behaviour a dependency, framework or the standard library already validates — a label selector matching, a predicate combinator, a fake client, a flag parser counting flags — gets no spec of its own. Test what your code decides on top of it.
 - **Hard to test is information about the design**, not permission to skip the test.
+- **Scope test helpers inside the test structure that uses them.** A helper only called within one test scope — a describe/context block, a test class, a fixture group — lives inside that scope as a local closure or nested declaration, not at file or package scope. Scope beats file: nesting is the default, file-scope is the exception. This is language-generic — ginkgo `Describe`/`Context` closures, Jest `describe` callbacks, pytest conftest fixtures, Jest `beforeAll` — wherever the framework gives tests a structure, a helper bound to one unit of that structure belongs in it. Helpers used by two or more separate top-level scopes stay shared at file scope; duplicating one to satisfy scoping is worse than sharing it. When in doubt, an AST scan (all helper functions and their call sites) settles it — the same method used to sweep a repository for violations.
 
 ## Debugging
 
