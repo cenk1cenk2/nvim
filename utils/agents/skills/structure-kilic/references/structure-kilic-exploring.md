@@ -21,7 +21,7 @@ How an agent finds the repository and file behind a change or an observation. Th
 | `infrastructure/pulumi-config-<target>` | Pulumi TS (NestJS modules under `src/modules/<concern>/`), CI `pulumi@2.0.1` (preview, up) |
 | `cluster/pulumi-config-rancher` | The only cluster-lifecycle Pulumi stack; one `create<Cluster>()` per cluster in `src/modules/clusters.service.ts` |
 | `cluster/<c>/tf-<c>` | Per-cluster Terraform bootstrap; only `tf-overseer` is live |
-| `cluster/<c>/argocd-<c>` | Pulumi generator; hand-written `src/`, generated `<dir>/1-manifest/` (`apps`, `system`, `namespaces`, `workloads/<name>`); `task` regenerates, commit output beside source |
+| `cluster/<c>/argocd-<c>` | Pulumi generator; hand-written `src/`, generated `<dir>/1-manifest/` (`apps`, `system`, `namespaces`, `workloads/<name>`); `task --yes apply` regenerates (`--yes` trusts the remote taskfile include on first run in a fresh checkout); a source change is two commits, `feat`/`fix` then a separate `chore(...) regenerate` (each repo's `CLAUDE.md` carries the convention); when the pre-commit hook fails on lint-staged missing, skip with `git commit --no-verify` (`HK=0` does not skip this hook shape) |
 | `cluster/argocd-root/src/argocd/assets/cluster/<c>/labels.yml` | Feature flags `system.feature.kilic.dev/<component>: true` and `cluster.kilic.dev/{environment,region,name}` |
 | `cluster/argocd-root/src/argocd/assets/cluster/<c>/annotations.yml` | Per-cluster Helm values, key `values.system.feature.kilic.dev/<component>` |
 | `cluster/argocd-system/base/<c>/applicationset.yaml` | One ApplicationSet per system component |
