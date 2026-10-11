@@ -39,7 +39,7 @@ Short-lived workloads and brief throttle spikes carry little weight. A Job pegge
 
 ### Discovery
 
-1. **Scope it.** Which clusters. Absent an answer, ask once — there is no fleet-wide datasource, so every cluster is a separate sweep and "all of them" is a real cost.
+1. **Scope it.** Which clusters. Absent an answer, ask once. A sizing decision is per cluster, so read each cluster on its own — its `mimir-<cluster>` uid, or `cluster="<name>"` on the federated `mimir` — never as one All-cluster pass: that costs every tenant, roughly 3–3.7x, and ranks the outlier tables across the fleet, so one cluster's candidates get crowded out of the top 25.
 2. **Read the outliers**, per `rightsize-signals`. Start from the VPA outlier tables, then pull OOM kills and throttling for the same scope. The tables cap at 25 rows, so a quiet table means nothing ranked highly, never that the cluster is clean.
 3. **Corroborate each candidate against 7d usage.** Drop the ones usage contradicts, and say how many were dropped.
 4. **Apply the materiality floors.** Below them the change is not worth a restart. Report what was skipped and why rather than dropping it silently.

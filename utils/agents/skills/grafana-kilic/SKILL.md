@@ -11,17 +11,17 @@ references:
 
 The MCP server for the monitoring stack: metrics, logs, dashboards, alert state. **Load this before the first call to it**, then route to whichever skill owns the actual task.
 
-Datasource inventory, the one-cluster-per-uid model, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`.
+Datasource inventory, the federated and per-cluster uids, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`.
 
 ## Resolve the Target First
 
 Every query tool needs a datasource uid, and picking the wrong one returns a confidently empty answer rather than an error.
 
 1. **A cluster is named** — use it. The seven are `core`, `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`.
-2. **A workload, namespace, or repository is named** — resolve which clusters run it per `kilic-workload-resolution`, then query each.
-3. **Nothing is named** — ask. Do not silently pick one, and do not sweep all seven without saying so; there is no fleet-wide datasource, so a fleet question is seven queries with a real cost.
+2. **A workload, namespace, or repository is named** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher.
+3. **Nothing is named** — ask. Do not silently pick one cluster. A fleet question is one query on the federated uid, broken out `by (cluster)`, but it costs the sum over every tenant, so say so before running it.
 
-Then pick the family: `mimir-<cluster>` for metrics, `loki-<cluster>` for logs, `alertmanager-<cluster>` for alert state.
+Then pick the family: `mimir` for metrics and `loki` for logs, both federated across the six Kubernetes clusters, with the `cluster` matcher doing the scoping; `mimir-core` and `loki-core` for core, which the federated uids exclude; `alertmanager-<cluster>` for alert state. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids remain for live tail, the ruler API, and deep single-cluster work such as rightsizing — a per-cluster sweep is optional, no longer the default.
 
 ## Route to the Owning Skill
 
@@ -43,7 +43,7 @@ Use the server's read tools freely to verify. For anything that changes what Gra
 ## Key Principles
 
 1. **Resolve the uid before the query.** A wrong datasource answers confidently and wrongly.
-2. **One datasource is one cluster; fleet questions cost seven queries.** Say so before running them.
+2. **Fleet questions go to the federated `mimir` and `loki`** — one query broken out `by (cluster)`, not seven. It still costs every tenant, so say so before running it; core is only in `mimir-core` and `loki-core`.
 3. **Read here, write in the repository.**
 4. **Route to the owning skill** rather than improvising a query, a panel, or a rule.
 5. **Retry before concluding**, and distinguish empty from broken.

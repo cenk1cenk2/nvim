@@ -17,9 +17,9 @@ Two repositories are involved and both usually change together:
 | What | Where |
 |---|---|
 | Alert and recording rules | `cluster/workloads/monitoring-ruler` |
-| Alertmanager routing and inhibition | `cluster/workloads/monitoring`, at `.deploy/rubik/mimir/es-alertmanager-slack.yaml` |
+| Alertmanager routing and inhibition | `cluster/workloads/monitoring-backbone`, at `.deploy/rubik/mimir/es-alertmanager-slack.yaml` |
 
-Alertmanager config is templated inside an ExternalSecret, so Go template braces in it are escaped as `{{ "{{" }}`. Alertmanager runs per cluster; there are six datasources and none for `core`.
+Alertmanager config is templated inside an ExternalSecret, so Go template braces in it are escaped as `{{ "{{" }}`. Alertmanager is the multi-tenant Mimir Alertmanager, with one `alertmanager-<cluster>` datasource per tenant, `core` included.
 
 ## Repository Layout
 
@@ -31,6 +31,13 @@ Alertmanager config is templated inside an ExternalSecret, so Go template braces
 ```
 
 Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino, overseer and sun are **edge**. An alert about something only rubik runs belongs in `.deploy/rubik/`, not in base with a cluster matcher.
+
+## Rules and the Federated Datasource
+
+**The ruler does not federate.** Each rule evaluates inside the tenant that owns it, and the ruler API rejects federated requests, so rule state is read per tenant through `mimir-<cluster>` or `alertmanager-<cluster>`, never through `mimir`. The federated `mimir` is still where an expression gets validated, and there every raw series carries `__tenant_id__`:
+
+- **Scope by `cluster`.** A rule for one cluster selects it literally, `cluster="rubik"`; a base rule carries no matcher because every tenant evaluates it, so add `cluster="<name>"` to the validation query rather than to the rule.
+- **Aggregate `__tenant_id__` away.** Keep `cluster` and the object labels in every `by (...)`, and match binary operators with `on (...)` including `cluster`. A bare `or`, `and` or `unless` between a raw series and an aggregate evaluates correctly in the ruler but returns doubled or missing rows on `mimir`, so a rule validated that way was not validated.
 
 ## Alert Anatomy
 
@@ -107,7 +114,7 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 
 1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition.
 2. **Decide base or cluster.** Base for anything every cluster runs; `.deploy/rubik/` for the central stack.
-3. **Validate the expression against live data**, per `grafana-kilic-read` — confirm it returns rows now, and reason about when it would not.
+3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above. Confirm it returns rows now, and reason about when it would not.
 4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.
 5. **Check what it will fire alongside.** If a root cause already pages, add an inhibit rule and verify the `equal:` labels appear in **both** expressions.
 6. **Set `dashboard_url`** to the dashboard that shows the problem, templated on cluster.

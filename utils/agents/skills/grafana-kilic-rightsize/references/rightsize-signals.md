@@ -1,6 +1,6 @@
 # Rightsize Signals
 
-The four signals, what each one is worth, the thresholds that make a candidate material, and the queries that produce them. Metrics come from the per-cluster Mimir datasources — `mimir-core`, `mimir-moon`, `mimir-nailbed`, `mimir-neutrino`, `mimir-overseer`, `mimir-rubik`, `mimir-sun`. There is no fleet-wide datasource, so every query runs per cluster.
+The four signals, what each one is worth, the thresholds that make a candidate material, and the queries that produce them. Metrics come from Mimir, one cluster at a time: the per-cluster `mimir-<cluster>` uid, or the federated `mimir` with a `cluster` matcher on every selector — both read the same data. `core` is only in `mimir-core`. Sizing is a per-cluster decision, so never size from an All-cluster query. The `grafana-kilic` skill carries the cost model and the `__tenant_id__` join trap.
 
 ## Weighting
 
@@ -33,7 +33,7 @@ Below the floors, the change is noise: it costs a merge request, a sync, and a p
 
 ## Queries
 
-`$c` is the cluster's datasource uid. Substitute the namespace and workload filters as scope requires.
+`$c` is the cluster's `mimir-<cluster>` uid; on the federated `mimir`, add `cluster="<name>"` to every selector instead. Substitute the namespace and workload filters as scope requires.
 
 **VPA recommendation versus request** — the outlier definition the dashboard uses. Under-provisioned is `request < lowerbound`; over-provisioned is `request > upperbound`. Compare against `_target` for the value to propose:
 
@@ -96,9 +96,11 @@ Join through `namespace_workload_pod:kube_pod_owner:relabel` to get `workload` a
 
 The outlier definitions are maintained as dashboards, and those are the source of truth when this reference and they disagree:
 
-- `kubernetes-autoscaling-vpa-outliers` — Autoscaling > VPA > Outliers. Under and Over-Provisioned CPU and Memory tables, plus Throttled Containers.
+- `kubernetes-autoscaling-vpa-outliers` — Autoscaling > Vertical Pod Autoscaler > Outliers. Under and Over-Provisioned CPU and Memory tables, plus Throttled Containers.
 - `kubernetes-autoscaling-mixin-vpa-jkw2` — Autoscaling > Vertical Pod Autoscaler.
 
-Their JSON lives in git at `cluster/workloads/monitoring-view/.deploy/<cluster>/dashboards/kubernetes/`. Read the panel queries from the dashboard rather than trusting a copy when a verdict is contested.
+Their JSON lives in git at `cluster/workloads/monitoring-view/.deploy/rubik/dashboards/kubernetes/`. Read the panel queries from the dashboard rather than trusting a copy when a verdict is contested.
+
+Both query the federated `mimir` with a multi-select `cluster` that **defaults to All**. Select the one cluster being sized before reading a table: under All the top 25 is ranked across the fleet, so a cluster's own outliers can be missing from it entirely.
 
 Both tables cap at the top 25 by ratio. A quiet table means nothing outside the bounds ranked highly enough, never that the cluster is correctly sized.
