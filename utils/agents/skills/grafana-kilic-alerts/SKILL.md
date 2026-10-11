@@ -39,7 +39,7 @@ Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino
   annotations:
     summary: Kubernetes job failed without a successful completion.
     description: Job {{ $labels.namespace }}/{{ $labels.job_name }} in cluster {{ $labels.cluster }} has failed, has no active pods, and has not succeeded.
-    dashboard_url: https://monitoring.kilic.dev/d/<uid>/<slug>?var-datasource=mimir-{{ $labels.cluster }}&var-cluster={{ $labels.cluster }}
+    dashboard_url: https://monitoring.kilic.dev/d/<uid>/<slug>?var-cluster={{ $labels.cluster }}
     replaces: KubeJobFailed
   expr: |
     ...
@@ -51,7 +51,7 @@ Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino
 
 - **Name** is PascalCase and subsystem-prefixed (`KubeJobFailedTerminal`, `CNPGBackupStale`, `VaultSealed`). The prefix is what inhibition matchers key on, so it is structural, not cosmetic.
 - **`summary`** is one sentence, no templating. **`description`** carries the templated specifics.
-- **`dashboard_url`** points at the dashboard that shows the problem, with `var-datasource=mimir-{{ $labels.cluster }}` so the link lands on the right cluster.
+- **`dashboard_url`** points at the dashboard that shows the problem, with `var-cluster={{ $labels.cluster }}` so the link lands on the right cluster. Never add `var-datasource`: the target dashboards query the federated `mimir` default, and `var-cluster` is what scopes them.
 - **`replaces`** names the alerts this one supersedes — see below.
 - **`severity` is `critical` or `warning`. Nothing else.** There is no info tier; an alert not worth one of those two is not worth having.
 - **`component`** groups an alert with its subsystem.
