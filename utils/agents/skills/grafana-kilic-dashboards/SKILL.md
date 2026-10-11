@@ -24,12 +24,12 @@ Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitor
 | Fleet landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `gateway/gateway`, `backups/backups`, `databases/postgresql`, `fleet/fleet` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
 | `metrics/*` | regex `/^mimir(-core)?$/`, selected `mimir` | multi-select, defaults to All |
 | `core/*` | regex `/^mimir(-core)?$/`, selected `mimir-core` | none |
-| Every other category | regex `/^mimir$/`, selected `mimir` | single-select, or multi-select defaulting to All |
+| Every other category | regex `/^mimir$/`, selected `mimir` | multi-select, defaults to All |
 
-- **A multi-select `cluster` defaults to All**, so one panel holds rows from several clusters. Drilldowns read the row's own value: `var-cluster=${__data.fields["cluster"]}` for a metrics link, `loki-${__data.fields["cluster"]}` for a log link.
+- **Every `cluster` variable is multi-select and defaults to All**, even where the data lives on one cluster today, so one panel holds rows from several clusters. Every entity-keyed `by` and `on` list carries `cluster`, timeseries quantiles aggregate `by (le, cluster)`, and tables keep a visible `cluster` column. Drilldowns read the row's own value: `var-cluster=${__data.fields["cluster"]}` for a metrics link, `loki-${__data.fields["cluster"]}` for a log link; dashboard-level links pass `${cluster:queryparam}`.
 - **A link carries `var-datasource=${datasource}` only when the target's variable admits more than one option** (`metrics/*`, `core/*`). Everywhere else omit it.
 - **Federated `mimir` puts `__tenant_id__` on every series.** Never put a bare `or`, `and`, `unless` or other unmatched binary operator between a raw series and an aggregate: the tenant label stops the sides matching and rows vanish or duplicate. Match with `on (...)` and include `cluster` in the list; give every new query a `cluster` matcher and aggregate `__tenant_id__` away.
-- **The federated `loki` spans every cluster**, so the `cluster` matcher in its selector is what scopes the query. Hub-level log buttons use `loki` with `cluster=~"${cluster:regex}"`.
+- **The federated `loki` spans every cluster**, so the `cluster` matcher in its selector is what scopes the query. Dashboard-level log buttons use `loki` with `cluster=~"${cluster:regex}"`.
 
 ## How a Dashboard Reaches Grafana
 
@@ -114,7 +114,7 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 - **Prefer one `Open workload logs` button** over separate deployment, statefulset, daemonset and job buttons. Select the kind with the indexed `workload_type` and filter the name with the `workload` structured-metadata field. A trailing `(-.*)?` keeps generated Job names matching for CronJob-like workloads.
 - **Every stream selector needs at least one matcher that cannot match empty**, such as `service_name=~".+"`. Dashboard all-values expand to `.*`, and a selector made only of empty-compatible matchers is rejected.
 - **Preserve the time range** with `range.from=${__from}` and `range.to=${__to}` in the encoded Explore state.
-- **`loki-${cluster}` as a datasource uid is only safe** where the `cluster` variable is `multi: false` and `includeAll: false`. Elsewhere it expands to a set or `.*` and yields an invalid uid — use row-level cluster recovery there.
+- **Never use `loki-${cluster}` as a datasource uid.** On a multi-select `cluster` it expands to a set or `.*` and yields an invalid uid — use row-level cluster recovery or the federated `loki`.
 - **Add log buttons only where the row has enough context to scope them.** Namespace-only and node-only links are acceptable fallbacks; a service dashboard should scope further.
 
 ## JSON Hygiene
