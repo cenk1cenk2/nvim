@@ -15,6 +15,22 @@ Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitor
 
 **`README.md` in that repo is the spec for links and drilldowns, and `CLAUDE.md` is the operational context.** Read both before touching anything. They are load-bearing, they were wrong for months, and correcting them when you prove them wrong is part of the job.
 
+## Datasources
+
+**Dashboards query the federated datasources, not the per-cluster ones.** `mimir` is the Grafana default and spans every cluster except `core`; `mimir-core` is the core tenant's datasource and the only dashboard route to core data. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids stay provisioned for Explore, the Alerting view, Node Exporter Full and Loki live tail. The full spec is in the repo's `CLAUDE.md`:
+
+| Folder | `datasource` variable | `cluster` variable |
+|---|---|---|
+| Fleet landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `gateway/gateway`, `backups/backups`, `databases/postgresql`, `fleet/fleet` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
+| `metrics/*` | regex `/^mimir(-core)?$/`, selected `mimir` | multi-select, defaults to All |
+| `core/*` | regex `/^mimir(-core)?$/`, selected `mimir-core` | none |
+| Every other category | regex `/^mimir$/`, selected `mimir` | single-select, or multi-select defaulting to All |
+
+- **A multi-select `cluster` defaults to All**, so one panel holds rows from several clusters. Drilldowns read the row's own value: `var-cluster=${__data.fields["cluster"]}` for a metrics link, `loki-${__data.fields["cluster"]}` for a log link.
+- **A link carries `var-datasource=${datasource}` only when the target's variable admits more than one option** (`metrics/*`, `core/*`). Everywhere else omit it.
+- **Federated `mimir` puts `__tenant_id__` on every series.** Never put a bare `or`, `and`, `unless` or other unmatched binary operator between a raw series and an aggregate: the tenant label stops the sides matching and rows vanish or duplicate. Match with `on (...)` and include `cluster` in the list; give every new query a `cluster` matcher and aggregate `__tenant_id__` away.
+- **The federated `loki` spans every cluster**, so the `cluster` matcher in its selector is what scopes the query. Hub-level log buttons use `loki` with `cluster=~"${cluster:regex}"`.
+
 ## How a Dashboard Reaches Grafana
 
 ```
