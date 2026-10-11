@@ -88,7 +88,7 @@ The grid is 24 columns wide. Established widths, in descending use: `12` (half),
 | `row` | `h: 1` | Collapsible grouping |
 | `bargauge` | `w: 12` | Top-N distributions |
 
-Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`. Variables are `query`, `datasource`, `custom` and `constant`.
+Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus a few `status-history`, `piechart` and `text` panels. Variables are `query`, `datasource` and `constant`.
 
 **When inserting a panel, shift the `y` of every panel at or below the insertion point**, then check for `gridPos` overlaps and duplicate panel ids.
 
