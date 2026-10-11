@@ -31,6 +31,8 @@ The kube-prometheus mixin rules are precomputed, far cheaper than the raw cadvis
 
 **Metrics are filtered aggressively at ingestion.** The collector drops everything outside an explicit allowlist, so a metric that exists upstream may simply not be here — `loki_*` internals, most `kubelet_*`, and most `container_*` beyond cpu/memory/fs/network basics are dropped. When a metric returns nothing, check it survives ingestion before assuming the target is down.
 
+**Federated `mimir` puts `__tenant_id__` on every raw series**, and aggregation drops it. Never put a bare `or`, `and`, `unless` or other unmatched binary operator between a raw series and an aggregate: the sides stop matching and rows vanish or come out exactly doubled. Match with `on (...)` including `cluster`, and aggregate `__tenant_id__` away. The per-cluster uids carry the label too, but with one value, so the trap only bites on the federated one.
+
 Use `list_prometheus_metric_names` with a `regex` to discover, and `list_prometheus_metric_metadata` for a metric's type and help text.
 
 ## Tool Behaviour
@@ -42,7 +44,7 @@ Use `list_prometheus_metric_names` with a `regex` to discover, and `list_prometh
 
 ## Process
 
-1. **Resolve the target to datasource uids** per `grafana-kilic-datasources`. Ask which clusters when the request does not say.
+1. **Resolve the target** per `grafana-kilic-datasources`: `mimir` or `loki` with a `cluster` matcher, `mimir-core` or `loki-core` for core. Ask which clusters when the request does not say.
 2. **Pick the side.** Metrics answer "how much and when", logs answer "what happened and why". Restarts, OOM kills and throttling are metrics; the reason a process died is logs.
 3. **Build the selector from stream labels only**, and put everything else after a `|`.
 4. **Verify a stream exists before trusting an empty result.** Select on namespace alone, then narrow.
@@ -57,16 +59,16 @@ Use `list_prometheus_metric_names` with a `regex` to discover, and `list_prometh
 4. **`workload_type` is lowercase.** A value from a Prometheus field needs `(?i)`.
 5. **A label in the listing may be dead.** Listings span the retention window, not current ingestion.
 6. **Prefer recording rules**, and remember metrics are allowlisted at ingestion.
-7. **One datasource is one cluster.** Fleet questions are per-cluster sweeps with a real cost.
+7. **Fleet questions are one federated query, scoped by `cluster`.** It costs every tenant, and `__tenant_id__` breaks unmatched operators between raw series and aggregates.
 8. **Report the query alongside the answer.**
 
 ## Examples
 
 **User says:** "why did mimir-ruler restart on rubik"
 
-1. One cluster: `mimir-rubik` and `loki-rubik`.
+1. One cluster: `mimir` and `loki`, scoped with `cluster="rubik"`.
 2. Metrics for the shape — restart count and last terminated reason.
-3. Logs for the cause: `{namespace="monitoring", deployment="mimir-ruler"} | container="ruler" | detected_level="error"`.
+3. Logs for the cause: `{cluster="rubik", namespace="monitoring-backbone", deployment="mimir-ruler"} | container="ruler" | detected_level="error"`.
 4. Report both, with the queries.
 
 **Result:** Restart count from Mimir, reason from Loki, and no time lost to an empty result caused by putting `container=` in the selector.
@@ -76,6 +78,6 @@ Use `list_prometheus_metric_names` with a `regex` to discover, and `list_prometh
 **User says:** "logs for the loki-write-1 pod"
 
 1. There is no `pod` stream label, so select the workload and filter the pod.
-2. `{namespace="monitoring", statefulset="loki-write"} | pod="loki-write-1"`.
+2. `{cluster="rubik", namespace="monitoring-backbone", statefulset="loki-write"} | pod="loki-write-1"`.
 
 **Result:** The right lines, instead of the empty set that `{pod="loki-write-1"}` returns.

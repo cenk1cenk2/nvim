@@ -4,26 +4,33 @@ The datasource inventory behind the `grafana-kilic` server, how a question resol
 
 ## Inventory
 
-Twenty datasources in three families, one per cluster:
+Twenty-three datasources: two federated across the fleet, and three families with one per cluster. All are provisioned from `cluster/workloads/monitoring-backbone` at `.deploy/rubik/datasources/`:
 
-| Family | Type | uid pattern | Clusters |
+| Family | Type | uid | Covers |
 |---|---|---|---|
+| Mimir, federated | `prometheus` | `mimir` — the Grafana default | moon, nailbed, neutrino, overseer, rubik, sun |
+| Loki, federated | `loki` | `loki` | moon, nailbed, neutrino, overseer, rubik, sun |
 | Mimir | `prometheus` | `mimir-<cluster>` | core, moon, nailbed, neutrino, overseer, rubik, sun |
 | Loki | `loki` | `loki-<cluster>` | core, moon, nailbed, neutrino, overseer, rubik, sun |
-| Alertmanager | `alertmanager` | `alertmanager-<cluster>` | moon, nailbed, neutrino, overseer, rubik, sun |
+| Alertmanager | `alertmanager` | `alertmanager-<cluster>` | core, moon, nailbed, neutrino, overseer, rubik, sun |
 
-**`core` is not a cluster** — it is the standalone host estate (hypervisors, routers, NAS, GitLab, Rancher and the other ansible-managed servers). **There is no `alertmanager-core`.** Core carries metrics and logs only.
+**`core` is not a cluster** — it is the standalone host estate (hypervisors, routers, NAS, GitLab, Rancher and the other ansible-managed servers). **The federated uids exclude it**: core data is reachable only through `mimir-core`, `loki-core` and `alertmanager-core`.
 
-## One datasource is exactly one cluster
+## Federated and per-cluster datasources
 
-Each datasource holds a single cluster's data: the `cluster` label on `mimir-rubik` has exactly one value, `rubik`. The label is present because dashboards template on it, not because a datasource ever mixes clusters.
+The federated `mimir` and `loki` query all six Kubernetes tenants at once; a per-cluster uid holds exactly one tenant, so the `cluster` label on `mimir-rubik` has the single value `rubik`.
 
-Two consequences that decide how every task is shaped:
+The consequences that decide how every task is shaped:
 
-- **There is no fleet-wide datasource.** A question about "the fleet" is seven queries, and the cost is real. Ask which clusters before sweeping all of them.
-- **Filtering by `cluster` inside a query buys nothing.** The uid already decided it. Keep the label only when copying a dashboard query that templates on it.
+- **A fleet question is one query on `mimir` or `loki`**, broken out `by (cluster)` — not seven. It still costs the sum over every tenant, roughly 3–3.7x a single cluster, so say so before running it and scope to the clusters the question names.
+- **On a federated uid the `cluster` matcher is what scopes the query.** Leave it out and you read every tenant. Only on a per-cluster uid is it redundant, because the uid already decided it.
+- **One cluster on `mimir` costs about the same as its per-cluster uid.** Federation visits every tenant, but the others return nothing after an index lookup; only latency grows slightly.
+- **Federated `mimir` puts `__tenant_id__` on every raw series**, and aggregation drops it. A binary operator between a raw series and an aggregate with no `on (...)` matches nothing, and a bare `or` returns both sides — totals come out exactly doubled. Match with `on (...)` and include `cluster` in it; aggregate `__tenant_id__` away with `by (...)`.
+- **The per-cluster uids stay provisioned** for what federation cannot do: Loki live tail rejects more than one tenant, the ruler API rejects federated requests so rule state is read per tenant, and Explore and the Grafana Alerting view use them. A per-cluster sweep is optional, not the default — keep it for deep single-cluster work such as rightsizing.
 
-**One datasource is one cluster, but not one backend.** Mimir and Loki are each a **single multi-tenant instance on rubik**; every other cluster runs only collectors — `opentelemetry-collector`, `grafana-alloy`, `blackbox-exporter` — that ship to them. So the fourteen `mimir-*` and `loki-*` datasources are tenant views of two stores, not fourteen deployments.
+Dashboard conventions — which folders carry a `datasource` variable, the multi-select `cluster` defaulting to All, and how links pass both — are specified in the `monitoring-view` repository's `CLAUDE.md` and summarised in `grafana-kilic-dashboards`.
+
+**Every datasource is a tenant view, not a backend.** Mimir and Loki are each a **single multi-tenant instance on rubik**, in namespace `monitoring-backbone`; every other cluster runs only collectors — `opentelemetry-collector`, `grafana-alloy`, `blackbox-exporter` — that ship to them. So the sixteen Mimir and Loki datasources, federated ones included, are tenant views of two stores, not sixteen deployments.
 
 Tenants are named `<cluster>.monitoring.int.kilic.dev`. On logs the tenant appears as `tenant` structured metadata on every line, which cross-checks that the uid you used is the cluster you meant.
 
@@ -34,9 +41,9 @@ Loki retention is **360h** (15 days), and `max_query_lookback` matches it, so a 
 
 ## Resolving a target to a uid
 
-1. **The user names a cluster** — use it directly. The seven names above are the whole set.
-2. **The user names a workload, namespace, or repository** — resolve which clusters run it per `kilic-workload-resolution`, then query each.
-3. **The user names nothing** — ask. Do not default to one cluster silently, and do not sweep all seven without saying that is what you are doing.
+1. **The user names a cluster** — query `mimir` or `loki` with `cluster="<name>"`, or its per-cluster uid. The seven names above are the whole set; `core` goes to `mimir-core` or `loki-core`.
+2. **The user names a workload, namespace, or repository** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher on the federated uid.
+3. **The user names nothing** — ask. Do not default to one cluster silently, and do not run an unscoped fleet query without saying that is what you are doing.
 
 ## The endpoints are flaky, and the failures lie
 
