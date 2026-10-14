@@ -31,6 +31,8 @@ function M.config()
       return {
         -- log_level = vim.log.levels.DEBUG,
         log_level = require("ck.log"):to_nvim_level(),
+        -- matches @popup-socket-name in tmux.conf
+        socket_name = "popup",
         inherit_vim_env = false,
         inherit_env = true,
         -- terminal overlay: near-fullscreen, larger on small screens (see nvim.ui.dimensions.overlay).
