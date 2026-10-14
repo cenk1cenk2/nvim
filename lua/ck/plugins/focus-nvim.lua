@@ -37,16 +37,29 @@ function M.config()
         {
           fn.wk_keystroke({ categories.ACTIONS, "w" }),
           function()
-            require("focus").focus_equalise()
+            vim.cmd.wincmd("=")
           end,
           desc = "balance open windows",
         },
         {
           fn.wk_keystroke({ categories.ACTIONS, "m" }),
           function()
-            require("focus").focus_max_or_equal()
+            M.toggle_maximize()
           end,
-          desc = "maximize current window",
+          desc = "toggle maximize current window",
+        },
+      }
+    end,
+    keymaps = function()
+      ---@type KeymapMappings
+      return {
+        {
+          "<C-w>m",
+          function()
+            M.toggle_maximize()
+          end,
+          desc = "toggle maximize current window",
+          mode = { "n" },
         },
       }
     end,
@@ -58,7 +71,7 @@ function M.config()
           group = "_auto_resize",
           pattern = "*",
           callback = function()
-            require("focus").focus_equalise()
+            vim.cmd.wincmd("=")
           end,
         },
         {
@@ -81,6 +94,24 @@ function M.config()
       }
     end,
   })
+end
+
+function M.toggle_maximize()
+  local win = vim.api.nvim_get_current_win()
+  local maximized = vim.t.maximized_window
+
+  if maximized then
+    vim.t.maximized_window = nil
+    vim.cmd(maximized.layout)
+
+    if maximized.win == win then
+      return
+    end
+  end
+
+  vim.t.maximized_window = { win = win, layout = vim.fn.winrestcmd() }
+  vim.cmd.wincmd("|")
+  vim.cmd.wincmd("_")
 end
 
 return M
