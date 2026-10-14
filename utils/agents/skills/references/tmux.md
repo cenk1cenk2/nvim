@@ -9,10 +9,11 @@ Two different jobs, two different tools, no overlap:
 - **Inspecting what already exists** — sessions, windows, panes, and the output sitting in them: use the `tmux__*` MCP tools. They return structured results, need no shell quoting, and cost fewer round-trips than a `tmux` CLI call parsed out of stdout.
 - **Running anything** — builds, tests, lints, git, reproductions: use the built-in `Bash` tool. The tmux MCP's write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled, so an instruction to "run it in the scratch pane" cannot execute. Run it with `Bash` and read the result there.
 
-Raw `tmux` CLI via `Bash` is correct in exactly two cases:
+Raw `tmux` CLI via `Bash` is correct in exactly three cases:
 
 1. **The MCP exposes no equivalent** — notably the *current* session/pane, which has no MCP tool: `tmux display-message -p '#S'`, or the `$TMUX` / `$TMUX_PANE` env vars.
-2. **The MCP is absent** from the session (dropped by the active profile). Fall back quietly, no ceremony.
+2. **The popup server** — the MCP talks only to the main server; popup sessions are read with `tmux -L popup`, per the Session Naming Map.
+3. **The MCP is absent** from the session (dropped by the active profile). Fall back quietly, no ceremony.
 
 Anything else — listing, finding, capturing — goes through the MCP.
 
@@ -46,11 +47,18 @@ Whether the agent runs inside Neovim (via `hyprpilot-nvim`) or directly under hy
 
 ## Session Naming Map
 
-Popup sessions are spawned by `tmux-toggle-popup`, so their names encode where they came from. As they appear in `tmux__list-sessions` (`<session>` is the captain's outer session name, commonly `root`):
+Popup sessions are spawned by `tmux-toggle-popup` on a **separate tmux server, socket `popup`**, so `tmux__*` cannot see them: `tmux__list-sessions` shows only the main server. Read them with the CLI, bounded the same way:
+
+```sh
+tmux -L popup list-sessions
+tmux -L popup capture-pane -p -t '=<name>' -S -<lines>
+```
+
+Their names encode where they came from (`<session>` is the captain's outer session name, commonly `root`). A popup-shaped name showing up on the **main** server is a leftover from before the split, not a live popup:
 
 | Session name | What it is |
 |--------------|------------|
-| `<session>` | The captain's main session — their real windows and panes. |
+| `<session>` | The captain's main session — their real windows and panes. The only one on the main server. |
 | `<session>/scratch` | **The general overlay.** A prefix-bound scratch popup, not tied to any editor instance. The default place a one-off command was run by hand. |
 | `<session>/nvim/<cwd>/nvim` | The terminal overlay of the Neovim instance rooted at `<cwd>`, toggled with `<F1>`. One per open editor. |
 | `<session>/nvim/<cwd>/<tool>` | A tool popup that instance opened — `lazygit`, `lazydocker`, `k9s`, `yazi`, `log`, and similar. |
