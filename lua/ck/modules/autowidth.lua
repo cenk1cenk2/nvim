@@ -3,7 +3,7 @@ local M = {}
 --- Share of the total columns the focused window is grown to.
 local WIDTH_RATIO = 0.25
 
----@type string?
+---@type { cmd: string, layout: table }?
 local restore = nil
 
 --- 'winwidth' is global and Neovim applies it to the window being entered only
@@ -17,17 +17,36 @@ end
 
 --- Maximizes the current window, or restores the previous sizes if it already is.
 function nvim.fn.maximize_window()
-  if restore ~= nil then
-    vim.cmd(restore)
+  --- `winrestcmd()` addresses windows by number, so the saved sizes only apply
+  --- to the split layout they were taken from; floats are not part of it.
+  if restore ~= nil and vim.deep_equal(restore.layout, vim.fn.winlayout()) then
+    vim.cmd(restore.cmd)
     restore = nil
 
     return
   end
 
-  restore = vim.fn.winrestcmd()
+  restore = { cmd = vim.fn.winrestcmd(), layout = vim.fn.winlayout() }
+
+  local fixed = vim.tbl_filter(function(win)
+    return vim.wo[win].winfixwidth or vim.wo[win].winfixheight
+  end, vim.api.nvim_tabpage_list_wins(0))
+  local sizes = vim.tbl_map(function(win)
+    return { win = win, width = vim.api.nvim_win_get_width(win), height = vim.api.nvim_win_get_height(win) }
+  end, fixed)
 
   vim.cmd("wincmd |")
   vim.cmd("wincmd _")
+
+  for _, size in ipairs(sizes) do
+    if vim.wo[size.win].winfixwidth then
+      vim.api.nvim_win_set_width(size.win, size.width)
+    end
+
+    if vim.wo[size.win].winfixheight then
+      vim.api.nvim_win_set_height(size.win, size.height)
+    end
+  end
 end
 
 --- Equalizes the sizes of all windows.
@@ -62,31 +81,23 @@ function M.setup()
           function()
             nvim.fn.maximize_window()
           end,
-          desc = "maximize current window",
+          desc = "toggle maximize current window",
         },
       }
     end,
-    -- keymaps = function(_, _)
-    --   ---@type KeymapMappings
-    --   return {
-    --     {
-    --       "<C-w><Space>",
-    --       function()
-    --         nvim.fn.equalize_windows()
-    --       end,
-    --       desc = "balance open windows",
-    --       mode = { "n", "v", "x", "t" },
-    --     },
-    --     {
-    --       "<C-w><CR>",
-    --       function()
-    --         nvim.fn.maximize_window()
-    --       end,
-    --       desc = "maximize current window",
-    --       mode = { "n", "v", "x", "t" },
-    --     },
-    --   }
-    -- end,
+    keymaps = function()
+      ---@type KeymapMappings
+      return {
+        {
+          "<C-w>m",
+          function()
+            nvim.fn.maximize_window()
+          end,
+          desc = "toggle maximize current window",
+          mode = { "n" },
+        },
+      }
+    end,
     autocmds = function()
       ---@type Autocmds
       return {
@@ -96,16 +107,6 @@ function M.setup()
           pattern = "*",
           callback = function()
             set_winwidth()
-          end,
-        },
-        {
-          -- `winrestcmd()` addresses windows by number, so a layout change
-          -- makes the saved sizes restore into the wrong windows.
-          event = { "WinNew", "WinClosed" },
-          group = "_autowidth",
-          pattern = "*",
-          callback = function()
-            restore = nil
           end,
         },
         {
