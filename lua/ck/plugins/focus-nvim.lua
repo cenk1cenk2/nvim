@@ -37,7 +37,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.ACTIONS, "w" }),
           function()
-            vim.cmd.wincmd("=")
+            require("focus.modules.resizer").equalise()
           end,
           desc = "balance open windows",
         },
@@ -71,7 +71,7 @@ function M.config()
           group = "_auto_resize",
           pattern = "*",
           callback = function()
-            vim.cmd.wincmd("=")
+            require("focus.modules.resizer").equalise()
           end,
         },
         {
@@ -110,8 +110,7 @@ function M.toggle_maximize()
   end
 
   vim.t.maximized_window = { win = win, layout = vim.fn.winrestcmd() }
-  vim.cmd.wincmd("|")
-  vim.cmd.wincmd("_")
+  require("focus.modules.resizer").maximise()
 end
 
 return M
