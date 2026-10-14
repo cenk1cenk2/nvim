@@ -116,9 +116,9 @@ function M.config()
         {
           fn.wk_keystroke({ categories.MARK, "B" }),
           function()
-            require("annotate").add_file_with_type()
+            require("annotate").pick({ scope = "buffer" })
           end,
-          desc = "annotate buffer with type",
+          desc = "annotate choose in buffer",
         },
         {
           fn.wk_keystroke({ categories.MARK, "m" }),
@@ -144,9 +144,9 @@ function M.config()
         {
           fn.wk_keystroke({ categories.MARK, "N" }),
           function()
-            require("annotate").add_repository_with_type()
+            require("annotate").pick({ scope = "repository" })
           end,
-          desc = "annotate repository with type",
+          desc = "annotate choose in repository",
         },
         {
           fn.wk_keystroke({ categories.MARK, "C" }),
@@ -176,6 +176,13 @@ function M.config()
             require("annotate").show()
           end,
           desc = "annotate show",
+        },
+        {
+          fn.wk_keystroke({ categories.MARK, "O" }),
+          function()
+            require("annotate").pick({ scope = "cursor" })
+          end,
+          desc = "annotate choose on cursor line",
         },
         {
           fn.wk_keystroke({ categories.MARK, "e" }),
