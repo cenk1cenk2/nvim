@@ -38,7 +38,7 @@ function M.config()
           pre_open = function(opts)
             require("ck.modules.flatten").pre_open(opts)
 
-            if os.execute([[tmux popup -c $(tmux display-message -pt "$TMUX_PANE" '#{client_tty}') -C]]) then
+            if vim.env["TMUX"] and require("tmux-toggle-popup").close() then
               log:info("Closed popup windows.")
             end
           end,
