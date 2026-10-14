@@ -16,7 +16,8 @@ local function set_winwidth()
 end
 
 --- Maximizes the current window, or restores the previous sizes if it already is.
-function nvim.fn.maximize_window()
+---@param full? boolean also shrinks the fixed-size windows
+function nvim.fn.maximize_window(full)
   --- `winrestcmd()` addresses windows by number, so the saved sizes only apply
   --- to the split layout they were taken from; floats are not part of it.
   if restore ~= nil and vim.deep_equal(restore.layout, vim.fn.winlayout()) then
@@ -29,7 +30,7 @@ function nvim.fn.maximize_window()
   restore = { cmd = vim.fn.winrestcmd(), layout = vim.fn.winlayout() }
 
   local fixed = vim.tbl_filter(function(win)
-    return vim.wo[win].winfixwidth or vim.wo[win].winfixheight
+    return not full and (vim.wo[win].winfixwidth or vim.wo[win].winfixheight)
   end, vim.api.nvim_tabpage_list_wins(0))
   local sizes = vim.tbl_map(function(win)
     return { win = win, width = vim.api.nvim_win_get_width(win), height = vim.api.nvim_win_get_height(win) }
@@ -83,6 +84,13 @@ function M.setup()
           end,
           desc = "toggle maximize current window",
         },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "M" }),
+          function()
+            nvim.fn.maximize_window(true)
+          end,
+          desc = "toggle maximize current window fully",
+        },
       }
     end,
     keymaps = function()
@@ -94,6 +102,14 @@ function M.setup()
             nvim.fn.maximize_window()
           end,
           desc = "toggle maximize current window",
+          mode = { "n" },
+        },
+        {
+          "<C-w>M",
+          function()
+            nvim.fn.maximize_window(true)
+          end,
+          desc = "toggle maximize current window fully",
           mode = { "n" },
         },
       }
