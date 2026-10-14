@@ -400,6 +400,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 - **Posture** — inherited by default; declare `plan-mode` only for skills that write nothing outside the internal plans directory. See Posture above.
 - **Invocation tier** — set `disableModelInvocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
 - **CLI calls** — a step that runs a CLI with a `command-<cli>` skill says **Load `command-<cli>`** where it first calls it; that skill owns the CLI's route, flags, gates and fallback, so the body names the job and leaves those out.
+- **The captain's terminals** — a step that reads a scratch terminal, an editor overlay, or any pane the captain ran something in declares `tmux` and names it inline. That reference owns the session names, which server holds them, and which terminal "scratch" means. The body never restates a session name or picks the tool itself.
 - **MCP tools** — name specific tools when the skill depends on them, per `mcp-tool-naming`. A server with a harness connector also gets its routing per `harness-connectors`.
 - **Describe the current state only**, per `current-state-only` — no deprecation notes, no compatibility shims, no history. Delete the old wording and state the new one.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.

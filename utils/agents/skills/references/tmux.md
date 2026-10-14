@@ -51,8 +51,10 @@ Popup sessions are spawned by `tmux-toggle-popup` on a **separate tmux server, s
 
 ```sh
 tmux -L popup list-sessions
-tmux -L popup capture-pane -p -t '=<name>' -S -<lines>
+tmux -L popup capture-pane -p -t '=<name>:' -S -<lines>
 ```
+
+The trailing `:` is required: without it the target fails with `can't find pane`.
 
 Their names encode where they came from (`<session>` is the captain's outer session name, commonly `root`). A popup-shaped name showing up on the **main** server is a leftover from before the split, not a live popup:
 
@@ -63,7 +65,11 @@ Their names encode where they came from (`<session>` is the captain's outer sess
 | `<session>/nvim/<cwd>/nvim` | The terminal overlay of the Neovim instance rooted at `<cwd>`, toggled with `<F1>`. One per open editor. |
 | `<session>/nvim/<cwd>/<tool>` | A tool popup that instance opened — `lazygit`, `lazydocker`, `k9s`, `yazi`, `log`, and similar. |
 
-Note the doubled slash in real names: `<cwd>` is absolute, so the nvim overlay for `/home/user/proj` reads `root/nvim//home/user/proj/nvim`.
+Two rewrites apply to `<cwd>`: it is absolute, so the slash doubles, and tmux turns `.` and `:` into `_`. The overlay for `/home/user/.config/proj` reads `root/nvim//home/user/_config/proj/nvim`. Find the overlay for the repo in play with:
+
+```sh
+tmux -L popup list-sessions -F '#S' | grep -Fx "<session>/nvim/$(pwd | tr .: __)/nvim"
+```
 
 ## Which Terminal the Captain Means
 

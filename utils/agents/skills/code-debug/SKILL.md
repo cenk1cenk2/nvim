@@ -65,7 +65,7 @@ If possible, verify before proposing the fix:
 
 - **Reproduce mentally** — walk through the code path with the failing input and confirm the hypothesis explains the actual behavior.
 - **Check related code** — does the same pattern exist elsewhere? Is it broken there too, or is there a clue about the intended usage?
-- **Run a targeted test** — if the user agrees, run a minimal reproduction with `Bash`. Always describe the command and ask before running. To read output the user produced themselves, capture their pane with `tmux__capture-pane` instead — see the `tmux` reference for which overlay holds it.
+- **Run a targeted test** — if the user agrees, run a minimal reproduction with `Bash`. Always describe the command and ask before running. To read output the user produced themselves, capture their scratch terminal instead, per `tmux`.
 
 ### Step 7: Present Findings
 

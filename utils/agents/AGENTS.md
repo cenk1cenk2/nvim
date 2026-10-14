@@ -179,7 +179,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 
 ### tmux
 
-Use tmux only for **read-only** inspection of the user's panes when they reference them; run commands with `Bash`. Read with `tmux__*` rather than the CLI (the CLI covers what the MCP does not expose, notably the _current_ session), and **bound every capture** with `lines` from the tail. Session naming and capture guidance: `~/.config/nvim/utils/agents/skills/references/tmux.md`.
+Use tmux only for **read-only** inspection of the user's panes when they reference them; run commands with `Bash`. Read with `tmux__*` rather than the CLI (the CLI covers what the MCP does not expose: the _current_ session, and the `popup` server where scratch terminals live: `root/scratch`, `root/nvim/<cwd>/nvim`), and **bound every capture** with `lines` from the tail. Session naming and capture guidance: `~/.config/nvim/utils/agents/skills/references/tmux.md`.
 
 ### decision
 
