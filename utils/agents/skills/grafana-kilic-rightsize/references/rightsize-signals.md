@@ -48,7 +48,7 @@ The sizing is tight: each value is the measured figure on the grid, with no mult
 
 `$c` is the cluster's `mimir-<cluster>` uid; on the federated `mimir`, add `cluster="<name>"` to every selector instead. Substitute the namespace and workload filters as scope requires.
 
-**VPA recommendation versus request** — the outlier definition the dashboard uses. Under-provisioned is `request < lowerbound`; over-provisioned is `request > upperbound`. VPA's `_target` points at a value; the queries below decide it:
+**VPA recommendation versus request** — the outlier definition the dashboard uses. Under-provisioned is `request < lowerbound`; over-provisioned is `request > upperbound`. VPA's `_target` points at a value; the queries below decide it. Applying requests through VPA itself (in-place, goldilocks): `rightsize-vpa-inplace`.
 
 ```promql
 max by (cluster, namespace, target_kind, target_name, container) (
