@@ -150,15 +150,9 @@ M.default_formatters = {
 }
 
 function M.register()
-  tools.register(METHOD, { "trim_whitespace", "trim_newlines" }, {
+  tools.register(METHOD, { "trim_whitespace", "trim_newlines", "trim_multiple_newlines" }, {
     "*",
     "!diff",
-  })
-
-  tools.register(METHOD, "trim_multiple_newlines", {
-    "*",
-    "!diff",
-    "!python",
   })
 
   tools.register(METHOD, "injected", {
@@ -274,7 +268,13 @@ function M.extend_tools()
       description = "Trim multiple new lines with awk.",
     },
     command = "awk",
-    args = { "!NF {if (++n <= 1) print; next}; {n=0;print}" },
+    args = function(_, ctx)
+      return {
+        "-v",
+        ("max=%d"):format(vim.bo[ctx.buf].filetype == "python" and 2 or 1),
+        "!NF {if (++n <= max) print; next}; {n=0;print}",
+      }
+    end,
   }
 end
 
