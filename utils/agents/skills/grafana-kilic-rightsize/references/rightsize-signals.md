@@ -11,12 +11,12 @@ The four signals, what each one is worth, the thresholds that make a candidate m
 | VPA bounds versus request | live | Opens the case. Never sufficient alone. |
 | Actual usage — working set, CPU rate | 7d | Confirms or kills the VPA suggestion. |
 | OOMKilled | 7d | Heavy. Memory floor. Surface it and offer to act. |
-| Sustained throttling, long-running workload | 7d | Heavy. CPU floor. |
+| Sustained throttling, long-running workload | 7d | Heavy. CPU limit floor. |
 | Brief throttle spikes, or Job/CronJob-owned pods | 7d | Low. List separately, never propose alone. |
 
 **OOM is a floor, not a veto.** A container OOMKilled in the last 7d must not have its memory reduced, whatever VPA says — but the finding is worth raising on its own, because a workload being killed is a live problem rather than an efficiency one. Surface it, name the evidence, and offer to raise memory in the same pass.
 
-**Sustained throttling is a floor the same way.** Sustained means a meaningful share of periods throttled across the window, not a spike during startup or a batch burst. A Job throttling at 100% for ninety seconds is usually working as intended.
+**Sustained throttling is a floor the same way.** Sustained means a meaningful share of periods throttled across the window by the summed figure below, not a spike during startup or a batch burst. A Job throttling at 100% for ninety seconds is usually working as intended.
 
 ## Materiality
 
@@ -27,15 +27,28 @@ A candidate is only worth proposing when the change clears both floors for its r
 | CPU | 25m | 20% of the current request |
 | Memory | 32Mi | 20% of the current request |
 
-Both apply to **requests**. Touch limits only where the workload already sets them; do not introduce a limit that did not exist, and never lower a limit below observed peak usage.
+Both apply to **requests**. Below the floors, the change is noise: it costs a merge request, a sync, and a pod restart to reclaim an amount nobody can measure. Say the candidate was skipped and why rather than dropping it silently.
 
-Below the floors, the change is noise: it costs a merge request, a sync, and a pod restart to reclaim an amount nobody can measure. Say the candidate was skipped and why rather than dropping it silently.
+## What Each Value Targets
+
+The sizing is tight: each value is the measured figure on the grid, with no multiplier on top.
+
+| Value | Target |
+|---|---|
+| `requests.memory` | 7d time-weighted average of the busiest pod per 5-minute step |
+| `requests.cpu` | the same shape on the 5m CPU rate |
+| `limits.memory` | smallest grid stop at or above the 7d max working set |
+| `limits.cpu` | smallest grid stop at or above the 7d max of the 5m CPU rate |
+
+- **A limit never drops below its 7d max**, and a limit is never added where the workload had none — a new limit can throttle or kill a workload that never had one.
+- **No bursty multiplier.** A bursty workload's memory limit is its 7d max on the grid, like every other; the 1.5x pad is not applied. What the bursty classification changes is how the max is read, per `rightsize-bursty-list`.
+- **Grid** per `rightsize-snap-grids`, including the in-between stops taken wherever they sit materially closer to the sample.
 
 ## Queries
 
 `$c` is the cluster's `mimir-<cluster>` uid; on the federated `mimir`, add `cluster="<name>"` to every selector instead. Substitute the namespace and workload filters as scope requires.
 
-**VPA recommendation versus request** — the outlier definition the dashboard uses. Under-provisioned is `request < lowerbound`; over-provisioned is `request > upperbound`. Compare against `_target` for the value to propose:
+**VPA recommendation versus request** — the outlier definition the dashboard uses. Under-provisioned is `request < lowerbound`; over-provisioned is `request > upperbound`. VPA's `_target` points at a value; the queries below decide it:
 
 ```promql
 max by (cluster, namespace, target_kind, target_name, container) (
@@ -56,21 +69,31 @@ max by (cluster, namespace, target_kind, target_name, verticalpodautoscaler) (
 )
 ```
 
-**Actual usage over the window** — the confirmation step:
+**Requests — aggregate per step, then over time:**
 
 ```promql
-# memory, peak working set
-max_over_time(container_memory_working_set_bytes{container!=""}[7d])
+# memory request, Mi
+avg_over_time(max by (container) (container_memory_working_set_bytes{namespace="<ns>", container="<name>"})[7d:5m]) / 1024 / 1024
 
-# memory, typical
-quantile_over_time(0.95, container_memory_working_set_bytes{container!=""}[7d])
-
-# cpu, typical and peak
-quantile_over_time(0.95, rate(container_cpu_usage_seconds_total{container!=""}[5m])[7d:5m])
-max_over_time(rate(container_cpu_usage_seconds_total{container!=""}[5m])[7d:5m])
+# CPU request, millicores
+avg_over_time(max by (container) (rate(container_cpu_usage_seconds_total{namespace="<ns>", container="<name>"}[5m]))[7d:5m]) * 1000
 ```
 
-Propose memory requests against the p95 and check the peak against the limit. Propose CPU requests against the p95; CPU is compressible, so peak matters less than sustained throttling.
+The inner `max by (container)` picks the busiest pod alive at each 5-minute step; the outer `avg_over_time` weights each step equally across the 7d. Every replica gets the same request, so the busiest one is the one it has to fit.
+
+**Never size a request from a per-series average** — `max by (container) (avg_over_time(...[7d]))` or `avg by (container) (avg_over_time(...))`. Each pod is its own series, and a pod that lived only through a spike averages to the spike; the outer `max` then picks it. Any workload whose pods churned in the window reads inflated. Measured on rubik: mimir's querier reads 261Mi that way against a 52.8Mi time-weighted average, store-gateway 768Mi against 510Mi, and ollama 5.1Gi over.
+
+**Limits — the max is churn-safe:**
+
+```promql
+# memory limit, Mi
+max by (container) (max_over_time(container_memory_working_set_bytes{namespace="<ns>", container="<name>"}[7d])) / 1024 / 1024
+
+# CPU limit, millicores
+max_over_time(max by (container) (rate(container_cpu_usage_seconds_total{namespace="<ns>", container="<name>"}[5m]))[7d:5m]) * 1000
+```
+
+A maximum over every series is the true peak whatever the pods did, so the per-series form is correct here.
 
 **OOM kills in the window:**
 
@@ -81,14 +104,16 @@ count by (cluster, namespace, pod, container) (
 max_over_time(kube_pod_container_status_restarts_total[7d])
 ```
 
-**Throttling, as a percentage of CFS periods:**
+**Throttling — sum the periods, then divide:**
 
 ```promql
-100 * (
-  rate(container_cpu_cfs_throttled_periods_total{container!=""}[7d])
-  / rate(container_cpu_cfs_periods_total{container!=""}[7d])
-)
+100 * sum by (container) (increase(container_cpu_cfs_throttled_periods_total{namespace="<ns>", container="<name>"}[7d]))
+    / sum by (container) (increase(container_cpu_cfs_periods_total{namespace="<ns>", container="<name>"}[7d]))
 ```
+
+Summing throttled and total periods across every pod over the window is the honest figure. A per-series ratio inflates the same way a per-series average does: a pod restarted in the window and throttled through its startup reports a high percentage over a handful of periods.
+
+Read it beside the CPU request query. A steadily throttled container shows a high summed figure with an average close to its limit, and takes a CPU **limit** raise. A container whose summed figure is high while its time-weighted average sits far below the limit is throttling in sub-second bursts at each scrape — the CFS quota working as designed. Exporters are the usual case; leave them untouched.
 
 Join through `namespace_workload_pod:kube_pod_owner:relabel` to get `workload` and `workload_type`, and use `workload_type` to separate Jobs and CronJobs from long-running controllers.
 
