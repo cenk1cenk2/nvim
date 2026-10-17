@@ -1,6 +1,6 @@
 ---
 name: argocd-kilic-loadbalancer
-description: argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster's ArgoCD repo - Pulumi services for VM routing or direct LB routes, and the operator-lb relay that exposes a target Kubernetes cluster through it. Use when adding or changing how traffic reaches a VM or an in-cluster service on the LB cluster. Not for ordinary workloads in a target cluster, standalone deployment repos, or chart wrappers.
+description: argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster's ArgoCD repo - Pulumi VM or direct LB routes, and the operator-lb relay exposing a target cluster. Use when changing how traffic reaches a VM or in-cluster service on the LB cluster. Not for target-cluster workloads, standalone deployment repos, or chart wrappers.
 disableModelInvocation: true
 argumentHint: '[workload-name or ''add route to <existing>''] - e.g. ''vm-gitlab'''
 references:
