@@ -8,9 +8,9 @@ Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plu
 
 | Tier | Model |
 |------|-------|
-| cheap | `gpt-5.6-luna` |
-| default | `gpt-5.6-terra` |
-| smart | `gpt-5.6-sol` |
+| cheap | `gpt-6-luna` |
+| default | `gpt-6.1-sol` |
+| smart | `gpt-6-astra` |
 | max | `gpt-6-astra` |
 
 `gpt-6-astra` alone carries the reasoning levels above `high`, selected by `model_reasoning_effort` in `config.toml`.
