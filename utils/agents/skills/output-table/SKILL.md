@@ -23,7 +23,7 @@ A presentation skill, not a workflow. The columns, the rules and the examples ar
 On/off mechanics per `mode-toggle`.
 
 - **On:** `/output-table on`, "keep the table", "track this as a table", "re-table as it moves".
-- **Off:** "stop the table", "normal mode", or the last row reaching `done`.
+- **Off:** "stop the table", "normal mode", or the last row finishing so the table is empty.
 - **Level:** none — on or off.
 - **Survives disengage:** nothing. Presentation only; spawns nothing and writes nothing.
 - Layers under every other mode and never turns one on or off. Under `caveman` the table stays; keep the cells terse.
@@ -52,6 +52,6 @@ While on, re-emit the table whenever a row moves, marked `[output-table]` per `m
 
 1. Acknowledge in one line: output-table on, scoped to this rollout.
 2. Each time a row moves — a merge lands, an apply finishes, a check passes — re-read that row's source and re-emit the table with one line naming what moved.
-3. When the last row is `done`, report it and stand down.
+3. When the last row finishes and the table is empty, report it and stand down.
 
 **Result:** the user always sees where the rollout stands without asking.
