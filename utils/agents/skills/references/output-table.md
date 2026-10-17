@@ -15,7 +15,7 @@ One row per step, in execution order. Core columns always appear. Optional colum
 | `Action` | core | The step, as an instruction. |
 | `Check` | core | How done is verified: the signal, the tool, the expected value. |
 | `Needs` | optional | Rows this step waits on: `2`, `2, 3a`. Blank when it waits on nothing. Add it once the order is not strictly linear. |
-| `Status` | optional | `done`, `ready`, `running`, `blocked`, `waiting`. Add it once any row has moved. |
+| `Status` | optional | `ready`, `running`, `blocked`, `waiting`. Add it once any row has moved. |
 | `Blocker` | optional | The specific unmet thing behind `blocked`: a row number, an external event, a decision. |
 
 `waiting` means its `Needs` are not done yet, the normal state of a later step. `blocked` means something outside the flow stops it, and `Blocker` names that thing.
@@ -24,6 +24,7 @@ One row per step, in execution order. Core columns always appear. Optional colum
 
 - **The table holds steps; bullets under it hold explanation.** Ordering reasons, risk windows and caveats go in short bullets below. A cell may carry one clause that changes how the step is executed ("plan only, needs 2 applied").
 - **Every identifier is a titled link**, per `identifier-legibility`. A cell carries the short linked form; a bullet below carries more when the title is long.
+- **Done rows leave the table.** The table shows what is still ahead; a finished row is removed and the remaining rows keep their numbers, so a `Needs` pointing at a removed row reads as satisfied. Done steps are listed only when the user asks, and then in a separate `Done` table placed before the ongoing one, same columns minus `Status`.
 - **A blocked row stays in place.** Mark it and name the blocker; never drop or reorder it out of sight.
 - **Re-emit when a row moves**, same numbers, same columns, one line above it naming what moved. A turn where nothing moved does not re-emit.
 - **Close with the next row to act on**: `Next: 2 (you) — merge and confirm the apply.` When several rows are ready at once, name each.
@@ -40,9 +41,10 @@ Work that is not a flow — a fleet of independent items, an agent roster — ke
 
 ### A rollout with a handoff between actors
 
+Step 1 is done and left the table.
+
 | # | Who | Action | Check | Needs | Status |
 |---|---|---|---|---|---|
-| 1 | you | Merge [#101 — Add the audit role to the shared module](https://example.invalid/pr/101), then the release PR it opens | Module `1.4.0` published in the registry | | done |
 | 2 | you | Merge [#202 — Roll the role out to the accounts stack](https://example.invalid/pr/202) and confirm the apply | Run applied: 4 adds, 8 deletes | 1 | ready |
 | 3 | me | Confirm the role exists in the target account | Role listed through the read-only profile | 2 | waiting |
 | 4 | me | Open the consumer bump to `1.4.0`; plan only, needs 2 applied | Plan: one new access entry, two changed filters | 2 | waiting |
@@ -73,12 +75,10 @@ Next: 1 (you) — merge lib!40.
 
 ### A coordinated agent run, re-emitted after a row moved
 
-`2a` finished and verified; `2b` failed its tests and was re-dispatched.
+`2a` finished and verified, so it left the table; `2b` failed its tests and was re-dispatched.
 
 | # | Who | Action | Check | Needs | Status | Blocker |
 |---|---|---|---|---|---|---|
-| 1 | me | Split the migration into three slices | Plan approved | | done | |
-| 2a | agent `slice-schema` | Migrate the schema module | Tests pass, diff reviewed | 1 | done | |
 | 2b | agent `slice-handlers` | Migrate the request handlers | Tests pass, diff reviewed | 1 | running | |
 | 2c | agent `slice-jobs` | Migrate the background jobs | Tests pass, diff reviewed | 1 | blocked | your call: keep or drop the legacy queue |
 | 3 | me | Open one MR per slice, stacked on 2a | Pipelines green | 2a, 2b, 2c | waiting | |
@@ -87,3 +87,19 @@ Next: 1 (you) — merge lib!40.
 - 2b failed on a fixture that still used the old column name; the re-dispatch carries the fix.
 
 Next: your decision on 2c — keep or drop the legacy queue.
+
+### Done steps on request
+
+The user asked what is already finished. The `Done` table comes first, the ongoing table after it unchanged.
+
+| # | Who | Action | Check | Needs |
+|---|---|---|---|---|
+| 1 | me | Split the migration into three slices | Plan approved | |
+| 2a | agent `slice-schema` | Migrate the schema module | Tests pass, diff reviewed | 1 |
+
+| # | Who | Action | Check | Needs | Status | Blocker |
+|---|---|---|---|---|---|---|
+| 2b | agent `slice-handlers` | Migrate the request handlers | Tests pass, diff reviewed | 1 | running | |
+| 2c | agent `slice-jobs` | Migrate the background jobs | Tests pass, diff reviewed | 1 | blocked | your call: keep or drop the legacy queue |
+| 3 | me | Open one MR per slice, stacked on 2a | Pipelines green | 2a, 2b, 2c | waiting | |
+| 4 | you | Review and merge the stack bottom-up | Merged in order | 3 | waiting | |
