@@ -8,12 +8,12 @@ references:
 
 ## Slack Workspace: kilic
 
-> **ABSOLUTE — kilic routes through `slack-kilic` only, never the claude.ai connector.** Workspace routing per `slack`; harness precedence per `harness-connectors`.
+> **ABSOLUTE — kilic routes through the claude.ai Slack connector when it is present and authorized for kilic; `slack-kilic` is the fallback.** Workspace routing per `slack`; harness precedence per `harness-connectors`.
 
 ## Workspace Context
 
 - **Workspace:** kilic (`kilic-dev.slack.com`).
-- **Slack MCP:** `slack-kilic` — stdio (`@modelcontextprotocol/server-slack`), bot token auth.
+- **Slack MCP:** the claude.ai connector (`mcp__claude_ai_Slack__*`, deferred) first; `slack-kilic` — stdio (`@modelcontextprotocol/server-slack`), bot token auth — as fallback.
 - **Linked SCM:** GitLab (`gitlab.kilic.dev`).
 - **Linked Linear:** `linear-kilic` (kilic-dev workspace).
 

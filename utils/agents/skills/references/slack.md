@@ -2,21 +2,21 @@
 
 ## ABSOLUTE: the workspace decides the integration
 
-**Each Slack workspace has exactly one route.** The kilic workspace is reachable only through the `slack-kilic` server; the Laravel workspace is reachable only through the claude.ai connector (`mcp__claude_ai_Slack__*`). Routing a workspace through the other integration reads or posts into the wrong workspace. See the `harness-connectors` reference for the precedence rule this mapping carves out of, and for loading deferred connector tools.
+**The connector first, within the workspace it is authorized for.** The claude.ai connector (`mcp__claude_ai_Slack__*`) serves whichever workspace it is authorized against — confirm which before the first write (a channel search lists that workspace's channels). The kilic workspace uses the connector when it is authorized for kilic and falls back to the `slack-kilic` server when the connector is absent, authorized elsewhere, or missing a capability; the Laravel workspace is reachable only through the connector. Never route a workspace through an integration authorized against another — it reads or posts into the wrong workspace. See the `harness-connectors` reference for the precedence rule and for loading deferred connector tools.
 
 ## Workspace Routing
 
-| Action | kilic (`slack-kilic`) | Laravel (`mcp__claude_ai_Slack__*`, deferred) |
-|--------|-----------------------|-----------------------------------------------|
-| Find a channel | `slack-kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
-| Read a channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
-| Read a thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
-| Find users | `slack-kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
-| Read a profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
-| Post to a channel | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
-| Reply in a thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with the thread) |
-| React | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
-| Search messages | — (no equivalent) | `mcp__claude_ai_Slack__slack_search_public` / `slack_search_public_and_private` |
+| Action | Connector (`mcp__claude_ai_Slack__*`, deferred) — kilic and Laravel | `slack-kilic` — kilic fallback |
+|--------|----------------------------------------------------------------------|--------------------------------|
+| Find a channel | `mcp__claude_ai_Slack__slack_search_channels` | `slack-kilic__slack_list_channels` |
+| Read a channel | `mcp__claude_ai_Slack__slack_read_channel` | `slack-kilic__slack_get_channel_history` |
+| Read a thread | `mcp__claude_ai_Slack__slack_read_thread` | `slack-kilic__slack_get_thread_replies` |
+| Find users | `mcp__claude_ai_Slack__slack_search_users` | `slack-kilic__slack_get_users` |
+| Read a profile | `mcp__claude_ai_Slack__slack_read_user_profile` | `slack-kilic__slack_get_user_profile` |
+| Post to a channel | `mcp__claude_ai_Slack__slack_send_message` | `slack-kilic__slack_post_message` |
+| Reply in a thread | `mcp__claude_ai_Slack__slack_send_message` (with the thread) | `slack-kilic__slack_reply_to_thread` |
+| React | `mcp__claude_ai_Slack__slack_add_reaction` | `slack-kilic__slack_add_reaction` |
+| Search messages | `mcp__claude_ai_Slack__slack_search_public` / `slack_search_public_and_private` | — (no equivalent) |
 
 The connector tools are deferred — load them via `ToolSearch` before the first call. Workspace-scoped skills decide *which* workspace and *which* channel; this table decides the tools.
 
