@@ -58,6 +58,7 @@ Headlines per runtime:
 
 - **Load the consumer skill and fetch its `<provider>` row before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
 - **Never carry one runtime's behavior to another.** Background-by-default, wake-on-completion, and permission inheritance are all Claude Code specifics.
+- **Claude Code is the preferred runtime, Codex and OpenCode are equally valid.** When the user left the runtime open, prefer Claude Code; when they named a runtime, profile or model, use it, whatever the preference. Where a Claude-specific lever has no documented Codex equivalent, say "claude preferred" rather than invent one.
 - **Explicit model names override tiers.** If the user names a model (`fable`, `kilic/glm-5.2:cloud`, `gpt-5.5`), use it verbatim — no remapping.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.
 - **Ambiguous wording → confirm.** If the user's wording is vague ("better" relative to what?), present the inferred tier with reasoning and confirm before dispatching.

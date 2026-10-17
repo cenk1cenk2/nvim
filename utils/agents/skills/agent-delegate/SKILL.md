@@ -90,7 +90,7 @@ Use it when:
 - **One task, one agent — one agent per logical unit.** Two PRs, worktrees, repos or issues are two dispatches, not one prompt with a list. Don't split or sequence here — use `/agent-plan` for multi-task DAG-scheduled work.
 - **Always propose the tier.** State it with the signal that picked it before dispatching, even when the user said nothing.
 - **User picks the tier/model.** This skill exists because the user wants control over cost/capability. Honor explicit choices.
-- **User owns the mapping outside Anthropic.** For non-Anthropic ecosystems, ask the user what cheap/default/smart resolve to.
+- **User owns the mapping for unlisted ecosystems.** Where `agent-harness` has no provider reference (Google, mixed, custom), ask the user what cheap/default/smart resolve to.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task, ask — don't silently comply.
 - **Self-contained prompt.** The agent has no context outside its prompt.
 - **Verify the result.** Don't relay agent success blindly — check the diff.
