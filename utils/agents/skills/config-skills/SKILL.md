@@ -42,7 +42,19 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 
 **Never hand-maintain a file list here.** `ls ~/.config/nvim/utils/agents/skills/references/` is the live inventory; a copy in this file is stale the moment anyone adds a reference.
 
-## Skill Ecosystem
+## ABSOLUTE — Resolve Skill Conflicts and Recurring Failures
+
+**A contradiction between composed guidance, or a repeatable failure under valid skill-guided use, can misroute work, bypass process, or waste runs. Treat it as a high-priority defect, not an ad-hoc workaround.**
+
+When guidance conflicts or skill scripts/guidance repeatedly fail under valid use:
+
+1. Stop repeating the failing path. Capture the exact failure and verify whether it is caller misuse, a runtime/tool defect, or inaccurate guidance.
+2. Identify each owner: upstream skill, local override, shared harness reference, or unrelated project/runtime configuration. Read current sources and every composing instruction.
+3. Before changing skill meaning, behavior, or scope, present the smallest proposed correction, identify its owner, and ask the user. Never silently choose between conflicting instructions.
+4. After approval, route each fix to its owner. Keep generic behavior upstream; runtime-specific behavior belongs in its local override or harness reference. Deliver changes through reviewed MRs, not direct live-tree edits.
+5. Validate each changed owner and report unresolved conflicts or failures separately. Do not weaken permission, approval, or safety gates to bypass failures.
+
+A one-off malformed call or unrelated permission refusal alone is not a skill defect. Verify repeatability and ownership first.
 
 Skills in this directory form an interconnected system. A skill may depend on or compose with other skills in the same folder. When creating or updating a skill, read related skills to understand how they connect. Document any dependencies or composition in the process steps of the skill itself.
 
