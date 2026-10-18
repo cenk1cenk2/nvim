@@ -84,7 +84,7 @@ Guidelines for the everyday intents, so the covering skill loads before the firs
 | Model-invocable (flag absent/`false`)        | When the user's intent clearly matches, mid-flow                                      | git-commit, plan-hard, agent-delegate        |
 | Auto-invoke (model-invocable, description names a workspace, URL or id trigger) | The moment its context is detected (issue IDs, workspace URLs, org repos), unprompted | linear-kilic, slack-kilic, spacelift-laravel |
 
-**Composition exception.** A Manual skill named as a step by this document or by an already-loaded skill may be loaded for that step; the tier blocks unprompted invocation for any other purpose. `hyprpilot-delegate` and `agent-labrat` are carved out (§III).
+**Composition exception.** A Manual skill named as a step by this document or by an already-loaded skill may be loaded for that step; the tier blocks unprompted invocation for any other purpose. `hyprpilot-delegate` is carved out (§III).
 
 Suggest `config-skills` for skill authoring.
 
@@ -131,7 +131,7 @@ When several independent tasks are in play — the user queued a batch of reques
 
 > **Verify a subagent's enumerations yourself; relay its binary findings.** Yes/no answers — a SHA matched, drift was zero, two strings were identical — hold up. Tables, counts and per-item lists drift: a row slides onto the wrong item, a total is off, a summary contradicts the body it summarizes, and a confident number can be wrong while every check behind it was done correctly. Pull the enumeration yourself, or hand the agent yours and make it name where the two disagree rather than reconcile silently.
 
-> **Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) or an offsite agent (`agent-labrat`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
+> **Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
 
 ### User Lingo
 
