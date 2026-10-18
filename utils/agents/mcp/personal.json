@@ -82,6 +82,18 @@
         "autoRejectTools": []
       }
     },
+    "labrat": {
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
+        "x-labrat-token": "${NVIM_LABRAT_TOKEN}"
+      },
+      "url": "https://labrat.mcp.kilic.dev/mcp",
+      "hyprpilot": {
+        "excludeTools": ["messages_send", "permissions_list_open", "permissions_respond"],
+        "autoAcceptTools": ["conversations_list", "conversation_get", "messages_read", "attachments_fetch", "events_poll", "events_wait", "channels_list"],
+        "autoRejectTools": []
+      }
+    },
     "linear-kilic": {
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_KILIC}"

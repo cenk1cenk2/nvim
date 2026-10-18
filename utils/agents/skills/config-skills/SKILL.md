@@ -180,8 +180,8 @@ How a skill *should* be invoked is declared by `disableModelInvocation`. Hyprpil
 
 Assignment guidance:
 
-- **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes and postures (`caveman`, `agent-bulldozer`, `agent-coordinator`, `agent-supervisor`), companions, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `agent-labrat`, `hyprpilot-delegate`).
-- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, `code-improve`, in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`), and CLI manuals (`command-*`).
+- **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes and postures (`caveman`, `agent-bulldozer`, `agent-coordinator`, `agent-supervisor`), companions, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `hyprpilot-delegate`).
+- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, `code-improve`, in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`), CLI manuals (`command-*`), and MCP server manuals (`grafana-kilic`, `labrat`), which load before that server's first call.
 - **Auto-invoke** — session and workspace initializers only (`hyprpilot-skills`, `hyprpilot-nvim`, `linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`).
 - **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disableModelInvocation: false` because autopilot may auto-apply it.
 
