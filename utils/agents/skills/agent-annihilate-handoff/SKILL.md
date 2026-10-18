@@ -36,9 +36,9 @@ This session is the project's owner. The user blessed creating the project by in
 6. **Build the project.** Load `linear-structure-agent` and shape the work: one parent issue per repository, one sub-issue per MR. Aim for the minimum number of MRs per repository; a second MR in a repository exists only for a dependency or a stage boundary. Mirror the graph's merge order with `blocks` relations.
 7. **Write the documents.** Load `agent-aware` first. Write every document `agent-annihilation` lists, very detailed. For the implementation reference, open the sibling repositories (for example the existing bridges for an external-service integration, the workload repositories for deployment) and cite the exact files for each integration and component, plus the estate's mechanisms the work must follow. Load `sourcebot-discovery` to find them across the estate.
 8. **Fold in investigations.** Every related idea the user raised becomes an investigation issue in the same project, outside the implementation issuesets, per `agent-annihilation`.
-9. **Make manual steps issues.** Every together-via-CLI or user-runs step not yet done is an issue assigned to the user, blocking what needs it, with the exact command or click path.
+9. **Make manual steps durable gates.** Record every unfinished together-via-CLI or user-runs step per `agent-annihilation`'s bounded-wait and apply-gate policy, with its issue assigned to the user and blocking only what needs it.
 10. **Designate delegation.** Pick the route per `agent-annihilation` and put a `Delegate:` line on every sub-issue.
-11. **Write the charter.** Fill the template in `agent-annihilation`: shape, checkpoints, ownership, the three postures, route, graph, manual steps, holds, investigations, final report.
+11. **Write the charter.** Fill the template in `agent-annihilation`: shape, checkpoints, ownership, the three postures, route, graph, apply gates, wait/retry budgets, suspension and resume conditions, holds, investigations, final report.
 12. **Review.** Load `agent-review` with `type=plan` on the manifest, the rollout document and the charter. Fold every finding back into the documents.
 13. **Kick off.** End with one sentence the user pastes into each crew session: *"Use the `agent-annihilate-pickup` skill on the Linear project `<link>` and follow its crew charter."*
 

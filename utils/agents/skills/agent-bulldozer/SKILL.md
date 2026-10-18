@@ -11,6 +11,7 @@ references:
   - ../references/agent/agent-roster.md
   - ../references/agent/agent-companion-offload.md
   - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-annihilation.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
   - ../references/harness/agent-background-harness-opencode.md
@@ -36,6 +37,7 @@ Bulldozer has no goal of its own. It rides on whatever is driving — a plain ta
 - **`agent-coordinator`** — coordinator owns the routing and the return contract; bulldozer keeps dispatch, verification and the next dispatch moving without a pause per step.
 - **`agent-supervisor`** — supervisor owns the record and its write gates; bulldozer keeps the reconcile loop turning and never builds, because supervisor never does.
 - **`agent-bohrhammer`** — bohrhammer owns the goal and the checkpoints; bulldozer fills the stretch between checkpoints, and every checkpoint is a hold it cannot push past.
+- **Annihilation pickup** — its `agent-annihilation` bounded-wait and apply-gate policy takes precedence over this skill's never-idle, retry, re-arm, hold-reset and stop-only language, including composed watcher guidance. Its durable gates and budgets survive resume; its final-table and stand-down rules apply when only human prerequisites or exhausted waits remain. Outside annihilation, this skill's flow is unchanged.
 
 ## Context
 
