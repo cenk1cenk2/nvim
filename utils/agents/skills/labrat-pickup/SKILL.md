@@ -16,7 +16,7 @@ labrat works in Slack threads and leaves its record in a Hermes session; this sk
 ## Process
 
 1. **Find the session.** A Slack permalink carries the thread ts: `p1700000000123456` is `1700000000.123456`, and searching it returns the one session. Otherwise resolve it per `labrat`; when several match, present them and ask.
-2. **Read the whole record.** `messages_read` at its cap. When `total_in_session` exceeds `count`, the oldest messages are out of reach — say so, and lean on the session's own status lines and the linked tracker for the early part. Read the gateway notifications for evidence (which watchers fired, which delegates finished) but leave them out of the narrative.
+2. **Read the whole record.** `messages_read` at its cap. When `total_in_session` exceeds `count`, the oldest messages are out of reach there; Load the workspace's Slack skill and read the thread itself — channel id and thread ts come from the session key — for the full history, files and the permalinks to cite. Read the gateway notifications for evidence (which watchers fired, which delegates finished) but leave them out of the narrative.
 3. **Extract, in this order:**
    - **The original ask** — the first human turn, quoted in its essentials, plus every later human turn as an amendment or steer.
    - **The posture** — skills and postures the ask told it to load and the agent announced, standing grants it acted under ("full-push grant"), and the guardrails it kept repeating ("no merges, no force pushes").
@@ -24,7 +24,7 @@ labrat works in Slack threads and leaves its record in a Hermes session; this sk
    - **What is waiting** — delegates still running, watchers armed, CI pending, human reviews and gates it is blocked on.
    - **Deviations** — where the work departs from the ask: scope added or dropped, order changed, an approach swapped, a claim later retracted. Also where the last messages contradict earlier plans.
 4. **Verify live.** Read every MR, pipeline, branch and issue through its platform tools: state, target, head, CI, open discussions. Mark each item verified or claimed-only, and record where the live state disagrees with the transcript. When the ask names a tracker project, Load that workspace's Linear skill to read it, and compare its issues and relations against what the agent says it reconciled.
-5. **Settle who writes.** If the session's latest activity is recent, labrat is still working and holds the same branches. No tool here stops it, so the first proceed step is the user parking it in its thread; until they do, this session stays read-only on every branch labrat touches. Two writers on one branch clobber each other.
+5. **Settle who writes.** If the session's latest activity is recent, labrat is still working and holds the same branches. No tool here stops it, and a post into its thread does not reach it, so the first proceed step is the user parking it; until they do, this session stays read-only on every branch labrat touches. Two writers on one branch clobber each other.
 6. **Write the summary**, human readable, every identifier a titled link per `identifier-legibility`:
    - **The ask** — what was requested, and the amendments.
    - **How the agent was working** — posture, grants, guardrails.
@@ -40,7 +40,7 @@ labrat works in Slack threads and leaves its record in a Hermes session; this sk
 **Trigger:** "pick up https://example.slack.com/archives/C0EXAMPLE/p1700000000123456 and finish it here"
 
 1. Thread ts `1700000000.123456` finds one session in the channel.
-2. 100 of 112 messages are readable; the first human turn asks it to run a project pickup on a tracker project and follow its crew charter.
+2. 100 of 112 messages are readable, and the Slack thread fills in the first 12; the first human turn asks it to run a project pickup on a tracker project and follow its crew charter.
 3. Posture: coordinator and bulldozer, full-push grant, no merges or force pushes. Built: four stacked MRs and a notes-sink branch. Waiting: CI on the newest stack head, one review. Deviation: the planned parallel MRs were restacked after a conflict.
 4. Live check: all four MRs open on the stated targets; one claimed green pipeline is still running.
 5. Latest activity is minutes old, so parking labrat is row 1.
