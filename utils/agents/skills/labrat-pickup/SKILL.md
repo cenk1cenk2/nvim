@@ -11,7 +11,7 @@ references:
 
 ## Context
 
-labrat works in Slack threads and leaves its record in a Hermes session; this skill moves that work back into the local session. The session transcript is the agent's own account. Everything it claims — a green pipeline, an open MR, a settled order — is a lead to verify, never a fact to relay. Load `labrat` before the first call to its server.
+labrat works in Slack threads and leaves its record in a Hermes session; this skill moves that work back into the local session, the reverse of `labrat-handoff`. The session transcript is the agent's own account. Everything it claims — a green pipeline, an open MR, a settled order — is a lead to verify, never a fact to relay. Load `labrat` before the first call to its server.
 
 ## Process
 

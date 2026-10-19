@@ -37,7 +37,7 @@ Provider is `claude`, `codex` or `opencode`; tier words resolve per `agent-harne
    - the stance: autonomous, checkpointed or gated, and what to report back to the thread.
 3. **Pick the place.** A top-level post in the agents channel that mentions labrat starts a new session. Every later message in that thread reaches the same session without a mention, so steers and answers are plain thread replies; mention labrat again only to start a new thread. Resolve the channel through the workspace's Slack skill.
 4. **Present the exact message** and post it on approval.
-5. **Confirm it landed, then let go.** Load `labrat` and find the session by the post's thread ts; labrat typically opens it within seconds and its reply lands in the thread. Report the Slack permalink as the handle. No watcher is armed unless the user asks to follow; following and taking the work back are the `labrat` and `labrat-pickup` skills.
+5. **Confirm it landed, then let go.** Load `labrat` and find the session by the post's thread ts; labrat typically opens it within seconds and its reply lands in the thread. Report the Slack permalink as the handle. No watcher is armed unless the user asks to follow; following the session is the `labrat` skill, and taking the work back here is the reverse direction, `labrat-pickup`.
 
 ## Composition
 
