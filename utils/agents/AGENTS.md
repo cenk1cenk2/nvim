@@ -2,7 +2,7 @@
 
 > **CRITICAL OVERRIDE — APPLY AT EVERY POINT OF THE CONVERSATION.**
 >
-> ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. They MUST survive any compaction or summarization — never drop, trim, or paraphrase them. After a compaction, re-read `~/.config/nvim/utils/agents/AGENTS.md` if they are not fully in context, then load and run `agent-read`.
+> ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. They MUST survive any compaction or summarization — never drop, trim, or paraphrase them. After a compaction, load and run `agent-read`; it re-reads this file.
 
 ## I. SESSION INITIALIZATION
 
@@ -31,7 +31,7 @@
 
 **Learning it is the trigger — you are not asked to go hunting.** A change you made yourself this session is not news; it does not trigger re-grounding. No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a skills change notification (`resources/updated` / `resources/list_changed`, or `prompts/list_changed` when a served system prompt such as this file moved), or the captain simply saying they changed something. It outranks finishing the thought: every later step would run on a retired rule. The changed file wins over your memory of it, always.
 
-**The skills server announces every change; track each one.** A `resources/list_changed` means the catalog itself moved — skills added, removed, renamed or merged — so re-run `list_skills` and replace the §I step 3 cache before the next routing decision. A `resources/updated` names the skill that changed: re-ground on it if you hold it, and refresh its row in the cache either way. An announcement is never background noise to finish the turn past.
+**The skills server announces every change; track each one** per `hyprpilot-skills`. An announcement is never background noise to finish the turn past.
 
 Say in one line what changed and what it altered about your approach. "Re-grounded, nothing about this task changed" is a complete answer.
 
@@ -119,7 +119,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 
 Escalate to formal plan mode with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
 
-- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load it with `read_skill` unless the user asks for a lighter pass ("quick plan", "just outline it"). Its **auto mode** — "plan with yourself", "auto", "delegate the plan" — plans the whole thing without an interview and without entering plan mode, reviews its own draft, and stands down when the plan is approved.
+- Load `plan-hard` unless the user asks for a lighter pass ("quick plan", "just outline it"); its auto mode ("plan with yourself", "auto", "delegate the plan") plans without an interview.
 - Stay in plan mode until the user gives a proceed word from §III User Lingo or requested `autopilot`.
 - Skip formal plan mode for trivial work, complete step-by-step instructions, pure research/exploration (delegate to explorers/subagents when useful), or simple named-scope doc updates.
 - **Only skills that declare the `plan-mode` reference enter plan mode.** Every other skill writes under the default posture above; none of them needs to say so.
@@ -146,7 +146,7 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 | `try`                  | Retry the action that just failed, unchanged. The blocker is fixed, so run it again rather than re-diagnosing it or routing around it. Report the new outcome; a second identical failure is reported, not retried again. |
 | `from memory`          | Answer from what this session already established — a prior check, a converged finding, a memory file — without re-running it. Also covers `from the previous check`, `what was the status on the check you did`, `<N> minutes ago is fine`. This overrides §VI's re-check rule: the user is accepting the staleness, so re-verifying spends their time to tell them what they already have. Say when the finding was taken. |
 | `blessed`              | Approval for the named action — act, do not re-ask. **`blessed for the session`** widens it to a standing grant covering the same or similar actions for the rest of the session (a class of read or write; a CLI's own grants are in its `command-*` skill), unless the user scoped it narrower. Destructive actions still gate (§V). |
-| `park`                 | Ramp down to zero, gradually and unprompted: arm nothing new, let what still serves the park target finish (**never kill what it still needs**), retire each watcher and agent as it delivers (report collected before reaping), kill outright only what serves nothing, then verify zero with a process check and say nothing remains armed. In a posture it ends the posture; nothing re-arms until the user says so. Procedure: `~/.config/nvim/utils/agents/skills/references/mode-toggle.md` → Parking. |
+| `park`                 | Ramp down to zero without killing what the park target still needs, then verify nothing remains armed; it ends any posture. Procedure: `~/.config/nvim/utils/agents/skills/references/mode-toggle.md`, section Parking. |
 
 ## IV. TOOLS AND DISCOVERY
 
@@ -175,11 +175,11 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 | Open web | the `research` server, or the runtime's search/fetch |
 | Multi-source digging or verification | the harness's deep-research mechanism, else the `research` server |
 
-`research` is one server covering all three of the last rows: context7 library documentation, exa and tavily web search and page fetch, and tavily's crawl, site-map and multi-step deep research. It is more than a search box — reach for its research and crawl tools when one query will not settle the question. Hosted behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back to the next research route (or grep and Sourcebot for symbols) and say so.
+`research` covers all three of the last rows (library docs, web search and fetch, crawl and deep research); reach for its research and crawl tools when one query will not settle the question. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back to the next research route (or grep and Sourcebot for symbols) and say so.
 
 ### tmux
 
-Use tmux only for **read-only** inspection of the user's panes when they reference them; run commands with `Bash`. Read with `tmux__*` rather than the CLI (the CLI covers what the MCP does not expose: the _current_ session, and the `popup` server where scratch terminals live: `root/scratch`, `root/nvim/<cwd>/nvim`), and **bound every capture** with `lines` from the tail. Session naming and capture guidance: `~/.config/nvim/utils/agents/skills/references/tmux.md`.
+Use tmux only for **read-only** inspection of the user's panes when they reference them, and **bound every capture**. Sessions, servers and the MCP-versus-CLI split: `~/.config/nvim/utils/agents/skills/references/tmux.md`.
 
 ### decision
 
@@ -187,11 +187,7 @@ A small, deterministic decision model. When a triage, routing, or classification
 
 ### mise — under every CLI
 
-Read this before reaching for any CLI: almost every tool here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes. It resolves in this session and in anything launched from the graphical session, so **call the tool directly**: no wrapper, no prefix, nothing to reason about.
-
-Where it does not resolve, the cause is a process that did not inherit the session environment — a systemd unit, cron, a headless or remote launch — and the fallback is `~/.local/share/mise/shims` on `PATH` the way the existing unit files do it, or `mise exec -- <command>`. The mise binary sits outside its own shims, so it is reachable from anywhere.
-
-**Diagnose before working around.** A tool that fails from a shell where `PATH` already carries the shims is not an environment problem, and wrapping the call hides whatever is actually broken. Read the error: a zsh function or completion wrapper failing before the binary runs is a shell-config bug to fix at its source, not something to route around.
+Almost every CLI here comes from **mise**, so call the tool directly — no wrapper, no prefix. Where it does not resolve, and before working around any failing tool: `~/.config/nvim/utils/agents/skills/references/mise.md`.
 
 ### CLI
 
@@ -223,9 +219,9 @@ CLI owns what no MCP server covers: local git, project scripts, tests, builds, f
 
 ### Gates
 
-**A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a session blessing, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Managing and cleaning up what this session provably created — its branches, PRs/MRs, CI, comments, issues and scratch data — is one such standing exception, scoped and proven per `~/.config/nvim/utils/agents/skills/references/agent-owned.md`. Treat anything you cannot confirm is reversible as irreversible.
+**A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a session blessing, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, making private content public or cutting a public release. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Managing and cleaning up what this session provably created — its branches, PRs/MRs, CI, comments, issues and scratch data — is one such standing exception, scoped and proven per `~/.config/nvim/utils/agents/skills/references/agent-owned.md`. Treat anything you cannot confirm is reversible as irreversible.
 
-**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write, or explicitly invoked the skill that performs it (`/name` or by name). Resources this session provably created are exempt per `agent-owned`. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **`kubectl` against a live cluster gates per `command-kubectl`**, loaded before its first call per §IV CLI. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
+**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), route through the catalog skill that covers the write; its posture decides — present-first if it declares it, otherwise act and report. A write no skill covers summarizes and waits, unless the user already gave autopilot/proceed authorization for that class of write. An explicit invocation (`/name` or by name) approves the run, not text drafted for other people. What this session provably created is managed per `agent-owned`. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **`kubectl` against a live cluster gates per `command-kubectl`**, loaded before its first call per §IV CLI. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
 ## VI. COMMUNICATING
 
