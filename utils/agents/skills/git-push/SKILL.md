@@ -1,10 +1,11 @@
 ---
 name: git-push
-description: 'git-push Push the current branch - invoking it is the approval. Asks only on a real blocker: diverged, behind, a force push, or a protected branch. Use on "push", "push to origin". Not for committing, creating a branch, or opening a PR/MR.'
+description: 'git-push Push the current branch - invoking it is the approval. Asks only on a real blocker: behind, diverged from commits you did not author, or a protected branch. Use on "push", "push to origin". Not for committing, creating a branch, or opening a PR/MR.'
 argumentHint: '[optional: remote, or a safety flag such as ''--force-with-lease'']'
 references:
   - ../references/scm/scm-detect.md
   - ../references/scm/release-convention.md
+  - ../references/scm/scm-own-branch.md
 ---
 
 ## Git Push
@@ -26,7 +27,8 @@ references:
    - **No upstream (new branch):** plan a first push with `-u <remote> <branch>`. No extra confirmation needed.
    - **Ahead only:** plan a fast-forward push. No extra confirmation needed.
    - **Behind only:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first (suggest `code-pull`). Do NOT auto-pull.
-   - **Diverged (ahead + behind):** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`. When the divergence is your own rewritten history (you amended or rebased your own commits on this non-protected branch), `--force-with-lease` is the normal, safe choice — it aborts if the remote moved unexpectedly. Lead with rebase/merge instead when the remote may carry commits you did not author. Execute `--force-with-lease` only on the user's explicit choice (step 5).
+   - **Diverged on an own branch** (per `scm-own-branch`) — your own rewritten history: plan `--force-with-lease`. No extra confirmation needed.
+   - **Diverged otherwise:** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`; lead with rebase/merge, since the remote carries commits you did not author.
    - **Up to date:** inform the user there is nothing to push and stop.
 
 4. **List pending commits.**
@@ -36,11 +38,11 @@ references:
 
 5. **Safety checks (only these gate the push).**
    - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
-   - **`--force-with-lease` is allowed on your own non-protected branch** — it is the safe way to push history you rewrote yourself (amend/rebase), because it aborts if the remote moved unexpectedly. Confirm once with a one-line note on what gets overwritten, then execute. Do NOT force-push a protected branch, and prefer rebase/merge when the remote may carry commits you did not author.
+   - **`--force-with-lease` on an own branch runs without asking**, per `scm-own-branch`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
    - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push.
 
 6. **Report and execute in a single step.**
-   - On the happy path (no blocker, no protected branch, no force), print a short report block and immediately run the push:
+   - On the happy path (no blocker, no protected branch), print a short report block and immediately run the push:
 
      ```
      branch:    <current-branch>
@@ -49,7 +51,7 @@ references:
      commits:   <N>
                 - <subject-1>
                 - <subject-2>
-     flags:     <none | -u>
+     flags:     <none | -u | --force-with-lease (old..new)>
      ```
 
    - Run `git push [flags] <remote> <branch>` via the built-in `Bash` tool (no tmux needed — the push is a quick operation with no long-running output to observe). On first push, include `-u` to set the upstream.
@@ -66,10 +68,10 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
 ## Key Principles
 
 - **Invoking the skill is the approval.** Do NOT ask for a separate "are you sure?" on the happy path — just report and push.
-- **Ask only on real blockers.** Behind, diverged, `--force-with-lease`, protected-branch pushes. Everything else is automatic.
-- **Never plain `--force`.** Use `--force-with-lease` — fine on your own non-protected branch (e.g. after amending or rebasing your own commits), since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
+- **Ask only on real blockers.** Behind, diverged from someone else's work, a force push off an own branch, protected-branch pushes. Everything else is automatic.
+- **Never plain `--force`.** `--force-with-lease` is free on an own branch per `scm-own-branch`, since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
 - **Always list pending commits** in the report so the user sees what landed on remote.
-- **Never auto-pull, auto-rebase, or auto-merge.** On divergence, ask.
+- **Never auto-pull, auto-rebase, or auto-merge a branch that is not own.** On a foreign divergence, ask.
 - **Push only — no PR creation.** Suggest a PR skill after success; never auto-invoke.
 
 ## Examples
@@ -123,7 +125,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
 
 **User says:** "push, my branch diverged"
 
-1. Branch is 2 ahead and 3 behind. **Blocker — stop and ask.**
+1. Branch is 2 ahead and 3 behind, and the 3 remote commits are not yours. **Blocker — stop and ask.**
 2. Report without executing:
 
    > Branch is 2 commits ahead and 3 commits behind `origin/fix/auth-boundary`. A plain push will fail. How would you like to proceed?

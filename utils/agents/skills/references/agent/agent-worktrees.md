@@ -34,7 +34,7 @@ Keep names ≤ 64 chars total and use only letters, digits, dots, underscores, d
 
 ## Cleanup
 
-Once the agent's work is merged back to the original branch (or discarded), remove the worktree per `command-wt`.
+Once the agent's work is merged back to the original branch and its report collected, remove the worktree and delete its branch per `command-wt` — no confirmation, per `scm-own-branch`. Discarding unmerged work still gates.
 
 For `agent-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agent-delegate`, cleanup happens after the user's completion-handoff choice.
 

@@ -3,6 +3,7 @@ name: command-wt
 description: command-wt Worktrunk (wt) is the default for creating, opening, listing, removing and pruning git worktrees, with raw git worktree as the fallback. Load before running `wt` or `git worktree`, or before creating or cleaning up a worktree for any task. Not for a plain branch without a worktree, or for committing, pushing or merging.
 references:
   - ../references/agent/agent-worktrees.md
+  - ../references/scm/scm-own-branch.md
 ---
 
 ## Route
@@ -28,15 +29,16 @@ references:
 ## Gates
 
 - **Reads never gate** — `list`, `config show`, a prune `--dry-run`.
-- **Prune presents its dry-run first** and runs on approval — it removes trees and deletes branches in bulk.
-- **Destructive flags need their own approval naming the target:** `-D` (unmerged branch), `-f` (dirty tree), `--clobber` (stale path at the target), and a lowered `--min-age`.
+- **Own and merged runs free** per `scm-own-branch` — removing an own tree, `-D` on an own branch whose PR/MR merged, and a prune whose candidates are all own.
+- **Any other prune presents its dry-run first** and runs on approval — it removes trees and deletes branches in bulk.
+- **Otherwise destructive flags need their own approval naming the target:** `-D` (unmerged branch), `-f` (dirty tree), `--clobber` (stale path at the target), and a lowered `--min-age`.
 - **Project hooks run repository-supplied shell.** On an approval prompt or an `(approval required)` skip, show the commands and let the captain approve; `--yes`, `wt config approvals add` and `--no-hooks` only on their word.
 
 ## Failure Modes
 
 - **No `--base`** — `--create` branches from the default branch, not `HEAD`. `@` is the current branch, `^` the default.
 - **Background removal** — without `--foreground`, `wt remove` and `wt step prune` return before the tree is gone and failures land in `.git/wt/logs/`. Pass it whenever you verify or report.
-- **Unmerged branch on remove** — kept; deleting it is `-D`, gated above.
+- **Unmerged branch on remove** — kept; a squash-merged own branch looks unmerged too, and deleting it is `-D`, gated above.
 - **Dirty tree on remove** — fails; surface it.
 - **Processes in the tree** — `wt remove --reap` stops detached ones under it; terminal-holding processes are spared.
 - **Prune skips a candidate** — younger than `--min-age` (default `1d`), dirty, locked, or awaiting hook approval. The age guard keeps a fresh tree that only looks merged; leave it.

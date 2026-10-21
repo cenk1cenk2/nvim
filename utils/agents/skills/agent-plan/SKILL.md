@@ -14,6 +14,7 @@ references:
   - ../references/agent/agent-conventions.md
   - ../references/agent/agent-completion.md
   - ../references/agent/agent-plan-split.md
+  - ../references/scm/scm-own-branch.md
   - ../references/linear/linear-chunk-issues.md
   - ../references/linear/linear-state-transitions.md
   - ./references/agent-merge-review.md

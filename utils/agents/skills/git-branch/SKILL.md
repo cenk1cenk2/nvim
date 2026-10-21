@@ -8,6 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/scm/scm-linear-follow-up.md
   - ../references/delivery-decisions.md
+  - ../references/scm/scm-own-branch.md
 ---
 
 ## Git Branch
@@ -49,7 +50,7 @@ Posture: `present-first`.
    - **Cascading work — base off the branch you depend on, not trunk.** When the change builds on a branch that is still open in review, branch from *that* branch. Basing on the default instead drags the prerequisite's commits into your diff, so the review re-covers work already reviewed next door and the two changes cannot be read apart.
      - The PR/MR then targets that same branch (`github-pr-create` / `gitlab-mr-create`), and both platforms retarget it to trunk once the prerequisite merges — the stack unwinds itself, so nothing has to be rebased by hand.
      - Fast-forward does not apply to a non-default base. Fetch and pull the prerequisite branch instead, so you stack on its current tip rather than a stale local copy.
-     - **A squash-merged prerequisite strands the stack.** Squash rewrites the commits the dependent branch is built on, so its PR/MR would propose them again. Replay only its own commits onto trunk as a new branch (`git rebase --onto <trunk> <old prerequisite tip>` in a fresh worktree), open the PR/MR from that branch, and delete the old one. Never force-push a pushed branch to repair a stack.
+     - **A squash-merged prerequisite strands the stack.** Squash rewrites the commits the dependent branch is built on, so its PR/MR would propose them again. On an own branch per `scm-own-branch`, replay only its own commits in place (`git rebase --onto <trunk> <old prerequisite tip>`) and push with `--force-with-lease`, so the PR/MR stays. On a branch that is not own, replay onto a new branch in a fresh worktree, open the PR/MR from it, and leave the old one to its owner.
      - Say in the plan which branch is the prerequisite and that the PR/MR will target it — the base is the whole point of the branch here, not a detail.
 
 5. **Present the plan.**
