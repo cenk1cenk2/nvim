@@ -35,7 +35,7 @@ It is injected by an **unscoped entry in the root `patches:` list** of `~/.confi
 6. **Validate.** Run the `current-state-only` check — no deprecation notes, no record of what a rule replaced. Then conciseness: AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
 7. **Iterate.** Refine based on user feedback until approved.
 8. **Apply changes.** After explicit approval, edit the file.
-9. **Commit and push.** Per `commit-push-scoped`, stage ONLY `AGENTS.md` and nothing else in the repo, then compose with `git-commit` (scope `agents`, e.g. `fix(agents): ...`) and `git-push` targeting `rolling`.
+9. **Commit and push.** Per `commit-push-scoped`, stage ONLY `AGENTS.md` and nothing else in the repo, then compose with `git-commit` (scope `agents`, e.g. `fix(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 

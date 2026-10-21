@@ -6,6 +6,7 @@ references:
   - ../references/reconcile-state.md
   - ../references/agent-owned.md
   - ../references/current-state-only.md
+  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -15,6 +16,8 @@ argumentHint: '[local] [optional: what changed or focus area]'
 ## Repository Knowledge Base
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
+
+Posture: `present-first`.
 
 **Target: `CLAUDE.md` / `AGENTS.md` in the repository being worked on.** The repo's Obsidian note is a separate artifact that `obsidian-repository` owns.
 
@@ -28,20 +31,22 @@ Maintain a structured knowledge base file in the repository root that helps futu
 
 The skill runs in two invocation modes. Classify before proceeding.
 
-- **Explicit invocation** (user typed `/config-repository` or asked to update the knowledge base): write the change, then report it per `output-diff`.
+- **Explicit invocation** (user typed `/config-repository` or asked to update the knowledge base): follow the full present-and-approve flow below.
 - **Proactive invocation** (assistant self-triggered per AGENTS.md §VII "Knowledge Base Updates (Proactive)"): write directly on the fast path below; otherwise present the change per `output-diff` and write once the user approves it.
 
 **Proactive — fast-path criteria (write directly):**
 
 ALL of the following must hold:
 
-1. The user already approved a `config-repository` write this session, invoked it explicitly, gave `autopilot` or `blessed for the session`, or the session runs under `/loop`/cron.
+1. The user already approved a `config-repository` write this session, gave `autopilot` or `blessed for the session`, or the session runs under `/loop`/cron.
 2. Change is **additive only** — pure append to a list-shaped section (`Approaches Tried`, `Gotchas`, `Tools & MCP Usage`).
 3. Change does **not** touch `Decision Log`, `Overview`, `Conventions`, or `Stack & Structure`.
 4. Change does **not** conflict with, reshape, or partially overlap existing content.
 5. Target file is a per-repo `CLAUDE.md`/`AGENTS.md` (NOT the central `~/.config/nvim/utils/agents/AGENTS.md` — that file is always manual via `/config-agents`).
 
 When all five hold: apply the edit, report the change in one sentence (section + summary), continue the session.
+
+If any one fails: fall through to the full present-and-approve flow below.
 
 ## File Detection
 
@@ -66,8 +71,10 @@ When no knowledge base file exists yet:
    - What approaches were tried and failed?
    - What tools (MCP or otherwise) were used and how?
 
-3. **Write the full document** following the Document Structure below, per the invocation mode above.
-4. **Report it** per `output-diff`, and iterate on feedback.
+3. **Draft the full document** following the Document Structure below.
+4. **Present the draft** in chat per `output-diff` for approval.
+5. **Iterate** based on user feedback.
+6. **After approval**, create the file.
 
 ## Revise Mode
 
@@ -87,11 +94,12 @@ When the knowledge base file already exists:
    - Identify information that is now outdated or wrong — **mark for deletion**.
    - Identify new information that should be added.
 
-4. **Apply the changes** per the invocation mode above. Delete outdated content without hesitation — this file must stay accurate and lean.
-5. **Report them** per `output-diff`, and iterate on feedback:
-   - For each change, show what existed and what replaced it.
-   - Explicitly call out deletions — explain why the content was outdated.
+4. **Present proposed changes** to the user per `output-diff`:
+   - For each change, show what exists and what you propose.
+   - Explicitly call out deletions — explain why the content is outdated.
    - Group changes by section.
+5. **Iterate** based on user feedback.
+6. **After approval**, apply the changes. Delete outdated content without hesitation — this file must stay accurate and lean.
 
 ## Document Structure
 
@@ -185,7 +193,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 
 ## Key Principles
 
-- **Session-aware.** The primary input for revisions is the current conversation — what was learned, what was decided, what failed. Read the session carefully before changing anything.
+- **Session-aware.** The primary input for revisions is the current conversation — what was learned, what was decided, what failed. Read the session carefully before proposing changes.
 - **Destructive updates are fine.** This is not a changelog. If a section is wrong, rewrite it. If a convention no longer holds, replace it — do not leave the old one struck through or annotated.
 - **Constraints matter most.** Knowing what does not work here, and why, saves more time than any other section. Prioritize it over everything except correctness of the current state.
 - **Tools section prevents tool misuse.** Documenting which MCP tools work well (and which don't) in this repo prevents future sessions from fumbling with wrong tools or missing useful ones.

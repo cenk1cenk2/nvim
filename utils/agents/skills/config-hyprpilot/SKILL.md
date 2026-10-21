@@ -4,6 +4,7 @@ description: config-hyprpilot Edit or review the hyprpilot launcher config - pro
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
+  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -12,6 +13,8 @@ argumentHint: '[what to change or review]'
 ---
 
 ## Hyprpilot Launcher Config
+
+Posture: `present-first`.
 
 **Target: `~/.dotfiles/hyprpilot/.config/hyprpilot/config.yaml`** — the launcher config. It is stowed,
 so `~/.config/hyprpilot/config.yaml` is a symlink to it; edit the dotfiles path, which is the one git
@@ -95,14 +98,14 @@ stops at `exec()`; everything after belongs to the vendor.
 2. Locate the layer. A knob for one profile goes on the profile; a knob shared by a family goes in a
    `$match`ed patch; a knob that must beat an unscoped patch has to be a later patch.
 3. Walk the fold order and name which patch wins each field being set.
-4. Apply to the dotfiles path. Keep real hostnames, tokens and account ids out of the config and its
+4. Present the edit per `output-diff`, stating the resolution consequence: which profiles change, and
+   what they will resolve to. Keep real hostnames, tokens and account ids out of the config and its
    examples per `redact-private-data`.
-5. Verify. `hyprpilot profiles` loads and validates the whole config, so a clean listing proves the
+5. After approval, apply to the dotfiles path.
+6. Verify. `hyprpilot profiles` loads and validates the whole config, so a clean listing proves the
    edit parses and every cross-reference resolves; `--json` gives the machine-readable form and
-   `--log-level debug` prints the resolve narrative.
-6. Report the edit per `output-diff` with what verification actually said, stating the resolution
-   consequence — which profiles change, and what they now resolve to — and that it lands on the next
-   launch.
+   `--log-level debug` prints the resolve narrative. Report what it actually said.
+7. Say the change lands on the next launch.
 
 ### Review
 
@@ -133,7 +136,9 @@ Two repositories can be in play; they are separate commits.
 | the config file | `~/.dotfiles` | `master` | `hyprpilot` |
 | this skill file | `~/.config/nvim` | `rolling` | `agents` |
 
-Commit and push each per `commit-push-scoped`, with the branch and scope above.
+Commit and push each per `commit-push-scoped`, with the branch and scope above. Both branches are
+protected, so `git-push` stops for an ack — the captain's push blessing is that ack. Ask once before
+committing unless the request already blessed the push.
 
 ## Key Principles
 

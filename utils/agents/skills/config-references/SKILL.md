@@ -4,6 +4,7 @@ description: config-references Create, update, or review the shared reference fi
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
+  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -15,7 +16,7 @@ argumentHint: '[create|update|review] [reference-name] [context]'
 
 ## Reference Management
 
-Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
+Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`; ask before committing unless the request already blessed the push.
 
 **Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits.
 
@@ -86,17 +87,19 @@ Loading mechanics — manifest rows, fetch by path, `bundle: true`, the loaded-p
    - Skill-specific: `<topic>.md` inside `<skill-name>/references/`.
 5. Draft the reference content following the format above, current state only per `current-state-only`.
 6. Identify which skills should declare this reference in their frontmatter.
-7. Write the file and update skill frontmatter as needed, then report both per `output-diff`.
-8. **Confirm the new path appears** in `list_skill_references { slug }` for a consumer. The server watches the roots, so a written declaration is rescanned on its own; a path still absent is a typo or an unresolvable file, since both look identical here.
+7. Present the draft and the list of skills to update.
+8. After approval, write the file and update skill frontmatter as needed.
+9. **Confirm the new path appears** in `list_skill_references { slug }` for a consumer. The server watches the roots, so a written declaration is rescanned on its own; a path still absent is a typo or an unresolvable file, since both look identical here.
 
 ### Update
 
 1. Read the existing reference at `~/.config/nvim/utils/agents/skills/references/<family>/<name>.md`, or at the references root when it is cross-cutting.
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
 3. Identify what needs to change based on conversation context.
-4. Apply the changes — replacing the old wording rather than annotating it, per `current-state-only` — and report them per `output-diff`.
-5. If the update changes the reference's scope or contract, notify about affected skills.
-6. When any consumer's frontmatter changed, verify the manifest picked it up — see Create step 8.
+4. Present proposed changes per `output-diff`.
+5. After approval, apply the changes — replacing the old wording rather than annotating it, per `current-state-only`.
+6. If the update changes the reference's scope or contract, notify about affected skills.
+7. When any consumer's frontmatter changed, verify the manifest picked it up — see Create step 9.
 
 ### Review
 
@@ -108,7 +111,7 @@ Loading mechanics — manifest rows, fetch by path, `bundle: true`, the loaded-p
    - Identify orphaned references (declared by no skill). **The `<consumer>-harness-<provider>` files are declared by every consumer in the family on purpose** — all providers are declared, one body is fetched. A missing declaration is the defect, not an extra one.
    - Identify stale content, and any compat note or history the `current-state-only` check forbids.
    - Check for duplication across references.
-3. Report the findings and apply the fixes they settle.
+3. Present findings and propose improvements; apply them after approval.
 
 ## Naming Conventions
 

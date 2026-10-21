@@ -4,6 +4,7 @@ description: config-mcp Add, remove, or modify MCP server entries in the hyprpil
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
+  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -13,6 +14,8 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 ---
 
 ## MCP Server Configuration Manager
+
+Posture: `present-first`.
 
 **Target: the MCP catalog under `~/.config/nvim/utils/agents/mcp/`** — three files, picked by which profiles should see the server. The hyprpilot launcher config that wires them into a launch is `config-hyprpilot`'s.
 
@@ -151,10 +154,13 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
    - Suggest write / destructive tools as candidates for `excludeTools`.
    - Suggest read-only / safe tools as candidates for `autoAcceptTools`.
    - Do not assume defaults — the captain decides both lists.
-7. **Apply the configuration.**
+7. **Present the configuration.**
+   - Show the complete JSON entry in chat per `output-diff`.
+   - Explain each field briefly.
+   - Wait for user approval.
+8. **Apply the configuration.**
    - Read the chosen catalog file, add the new entry under `mcpServers`, and write the file.
    - Validate that the resulting JSON is well-formed.
-   - Report the complete JSON entry per `output-diff`, explaining each field briefly.
    - Remind the captain that the MCP catalog is read once per launch. There is no daemon and no reload command — hyprpilot resolves the config, projects it onto the vendor CLI, and `exec()`s into it. A catalog edit reaches an agent on the **next** `hyprpilot <profile>`; a session already running keeps the catalog it launched with.
 
 ### Remove
@@ -170,11 +176,12 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 2. Ask the user what they want to change (or apply the change they described).
 3. If the change involves new variables or auth, follow the prompting steps from the Add flow.
 4. If the user asks to change `hyprpilot.autoAcceptTools` or `autoRejectTools`, prompt for those specifically. Otherwise, do not re-prompt for tool approvals unless relevant to the modification.
-5. Apply and write the file, then report the updated entry per `output-diff`.
+5. Present the updated entry per `output-diff` and wait for approval.
+6. Apply and write the file.
 
 ## Validation
 
-Before writing any edit, run the `current-state-only` check: no compat entries kept "just in case", no note of what a server was called before, no migration history. State the config as it is now.
+Before presenting any edit, run the `current-state-only` check: no compat entries kept "just in case", no note of what a server was called before, no migration history. State the config as it is now.
 
 ## Key Principles
 
