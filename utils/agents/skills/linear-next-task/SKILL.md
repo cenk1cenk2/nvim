@@ -120,8 +120,8 @@ Ask the user:
 Once the user agrees on the selection:
 
 1. **Confirm the status transitions** — present exactly what will change:
-   - `backlog → todo` for issues planned for the session.
-   - `backlog → in progress` or `todo → in progress` for the immediate task.
+   - `backlog` to `todo` for issues planned for the session.
+   - `backlog` or `todo` to `in progress` for the immediate task.
 2. **Wait for explicit approval** before making any changes.
 3. **Apply status changes** using parallel tool calls where possible.
 4. **Execution handoff** — if the user wants the selected work picked up immediately, Load `linear-pickup` for the selected issues, project, or slice; `agent-pickup` only when the user wants agents to execute it.
@@ -132,22 +132,22 @@ Once the user agrees on the selection:
 ## Project: <name>
 
 ### Active Work (In Review / In Progress)
-- <issue-id>: <title> — already being worked on, complete this first if applicable
+- [<issue-id> — <title>](<url>) — already being worked on, complete this first if applicable
 
 ### Ready to Pick Up
-1. <issue-id>: <title> (priority: <P>, estimate: <E>)
-   → Blocks: <list of issues this unblocks, if any>
-   → Why: <brief reasoning>
+1. [<issue-id> — <title>](<url>) (priority: <P>, estimate: <E>)
+   Blocks: <linked list of issues this unblocks, if any>
+   Why: <brief reasoning>
 
-2. <issue-id>: <title> (priority: <P>, estimate: <E>)
-   → Why: <brief reasoning>
+2. [<issue-id> — <title>](<url>) (priority: <P>, estimate: <E>)
+   Why: <brief reasoning>
 
 ### Not Yet Ready
-- <issue-id>: <title> — waiting on <blocking-issue-id> (<status>)
+- [<issue-id> — <title>](<url>) — waiting on [<blocking-issue-id> — <title>](<url>) (<status>)
 
 ### Suggested Session Plan
-- Start with: <issue-id> (<reasoning>)
-- Then: <issue-id> (if time permits)
+- Start with: [<issue-id> — <title>](<url>) (<reasoning>)
+- Then: [<issue-id> — <title>](<url>) (if time permits)
 ```
 
 ## Key Rules

@@ -3,8 +3,6 @@ name: cluster-kilic-chart
 description: cluster-kilic-chart Create a Helm chart wrapper in the charts group - scaffolds the repo with its upstream dependency, values, optional custom templates, and standard boilerplate. Use when wrapping an upstream chart for this setup. Not for deployment repos, ArgoCD workload services, or load balancer routing.
 disableModelInvocation: true
 argumentHint: '[chart-name] - e.g. ''goldilocks'', ''velero'''
-references:
-  - ../references/output-diff.md
 ---
 
 ## Cluster Chart Creator
@@ -45,15 +43,11 @@ Ask the user:
 
 1. **Find the upstream chart** — Use `research` to find the Helm chart repository URL, chart name, and latest version
 2. **Read a similar existing chart** — Use GitLab MCP to browse `cluster/charts/chart-<similar>` for reference. Pick the closest match by type:
-   - Pure wrapper → read `chart-goldilocks`
-   - With ExternalSecret → read `chart-external-dns` or `chart-velero`
-   - With custom resources → read `chart-envoy-gateway`
-   - Standalone CRs → read `chart-cilium-l2-announcement`
+   - Pure wrapper: read `chart-goldilocks`
+   - With ExternalSecret: read `chart-external-dns` or `chart-velero`
+   - With custom resources: read `chart-envoy-gateway`
+   - Standalone CRs: read `chart-cilium-l2-announcement`
 3. **Check upstream values** — Understand what the upstream chart exposes so you can set sensible defaults
-
-## Present Before Writing
-
-Scaffolding a chart creates a repository's worth of files. Present the plan per `output-diff` — chart name, upstream dependency and version, and the files to create — and write only on approval.
 
 ## Repository Structure
 

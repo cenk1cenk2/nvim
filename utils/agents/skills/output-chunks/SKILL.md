@@ -81,7 +81,7 @@ When a chunk compares options, use a table:
 
 ## Boundaries
 
-- **External writes are `output-diff`, not this.** Any create/update to Linear, GitHub, GitLab, Obsidian, Slack, or Notion follows the `output-diff` conventions — reasoning plus content block, all chunks presented before approval is requested. This skill covers conversational analysis where the user decides item by item.
+- **Presenting a write for approval is `output-diff`, not this.** This skill covers conversational analysis where the user decides item by item.
 - **Not for single-item answers.** One finding is one answer, not `### Chunk 1`.
 - **Not for plan files.** Plans have their own structure.
 

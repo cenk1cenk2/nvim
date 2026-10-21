@@ -188,7 +188,7 @@ min_width = text.length × fontSize × 0.6 + fontSize
 
 - `textAlign: "center"` + `verticalAlign: "middle"` for centered labels.
 - The plugin auto-adjusts text position within the container — `x`/`y` are approximate.
-- Convention: use a related 8-char ID for bound text (e.g., container `box1Hj6t` → label `bx1lHj6t`).
+- Convention: use a related 8-char ID for bound text (e.g., container `box1Hj6t`, label `bx1lHj6t`).
 
 ### Arrow
 
@@ -231,7 +231,7 @@ Same as arrow but `"type": "line"` and no arrowheads.
 - **Gaps**: 30–50px between elements.
 - **Padding**: 80–100px margin around the entire diagram.
 - **Font sizes**: 28+ for titles, 20 for labels, 16 for annotations. Never below 14.
-- **Z-order**: array order = z-order (first = back). Draw zones → shapes → arrows.
+- **Z-order**: array order = z-order (first = back). Draw zones, then shapes, then arrows.
 - **ID naming**: 8-char alphanumeric. Use 3-4 char descriptive prefix + 4-5 char random suffix: `rctApSv3` (rectangle), `txtDb4Wq` (text), `arwXk9Pn` (arrow), `zonBe2Lm` (zone).
 
 ## Wire Routing Conventions

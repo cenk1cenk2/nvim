@@ -13,7 +13,7 @@ references:
 
 Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitoring`. Datasource uids and the per-cluster model: `grafana-kilic-datasources`. The Loki label model behind every log drilldown is in `loki-label-model` — indexed stream label versus structured metadata decides whether a button returns lines or nothing.
 
-**`README.md` in that repo is the spec for links and drilldowns, and `CLAUDE.md` is the operational context.** Read both before touching anything. They are load-bearing, they were wrong for months, and correcting them when you prove them wrong is part of the job.
+**`README.md` in that repo is the spec for links and drilldowns, and `CLAUDE.md` is the operational context.** Read both before touching anything. They are load-bearing; correct them when you prove them wrong.
 
 ## Datasources
 
@@ -48,7 +48,7 @@ Adding a dashboard means three edits, not one: the JSON, its CR, and a `configMa
 
 ## ABSOLUTE — Establish What the Frame Contains Before Touching a Link
 
-**Six merged commits each rewrote link interpolation syntax to fix broken drilldowns, and each failed.** They swapped between forms — raw brackets, then `.labels`, then back — while the real cause was that the referenced field did not exist in the frame after its transforms. Changing syntax against a frame you have not inspected is how that happens six times.
+**Rewriting link interpolation syntax does not fix a broken drilldown.** Swapping between forms — raw brackets, `.labels` — fails every time when the real cause is that the referenced field does not exist in the frame after its transforms. Changing syntax against a frame you have not inspected repeats that failure.
 
 So: **read the panel's transforms and work out the resulting field names first.** Only then decide the link.
 

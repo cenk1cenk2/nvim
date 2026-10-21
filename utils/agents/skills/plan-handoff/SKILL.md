@@ -12,20 +12,15 @@ references:
 
 ## Cross-Session / Cross-Repository Planning
 
-State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
+Write state that spans turns durably per `long-running-work`.
 
-When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state`.
 
-> **ALWAYS enter plan mode** — per `plan-mode`, unless the user asked you to plan with yourself.
->
-> - Enter plan mode immediately.
-> - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`. Resolve the directory and filename default for the active runtime via `provider-paths`; never hardcode a path.
-> - Present the plan to the user and iterate based on feedback.
-> - Do NOT implement — the plan is consumed by a different session or agent.
+Posture: strict plan mode per `plan-mode`, unless the user asked you to plan with yourself. Do NOT implement — the plan is consumed by a different session or agent.
 
 ## Context
 
-This skill produces **self-contained plan files** that can be loaded by a future Claude Code session — either in the same repository or a different one. The plan must include everything the consuming session needs to understand the goal, the context, and the approach without access to the current conversation.
+This skill produces **self-contained plan files** that can be loaded by a future agent session — either in the same repository or a different one. The plan must include everything the consuming session needs to understand the goal, the context, and the approach without access to the current conversation.
 
 ## Process
 
@@ -128,7 +123,7 @@ Integration points between the two repositories.]
 
 ## After Completion
 
-1. Write the plan file to your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
+1. Write the plan file to your internal plans directory, path and filename per `provider-paths`.
 2. **Open the final response with one plain-English sentence telling the next session what to do**, and nothing above it:
 
    > Use the `plan-pickup` skill to read the file at `<plans-dir>/YYYY-MM-DD-<project>-<name>.md` and go through the instructions.

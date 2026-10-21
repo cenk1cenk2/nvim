@@ -1,6 +1,6 @@
 ---
 name: obsidian-repository
-description: obsidian-repository Document what is true about a repository - architecture, conventions, gotchas - in its vault note. Always proposes, never writes unasked. Use on "document this repo", "update the repo note", or when the note has drifted from reality. Not for general notes, todos, or sorting the backlog.
+description: obsidian-repository Document what is true about a repository - architecture, conventions, gotchas - in its vault note. Use on "document this repo", "update the repo note", or when the note has drifted from reality. Not for general notes, todos, or sorting the backlog.
 disableModelInvocation: true
 argumentHint: '[repository name or path] [optional: what to document]'
 references:
@@ -57,13 +57,12 @@ If the current working directory is under `~/development/`, derive the folder pa
 
 2. **Draft the note.**
    - Follow the note structure below for `README.md`.
-   - Present the draft in chat for approval per `output-diff`.
-   - After approval, create the repository folder and `README.md`.
+   - Create the repository folder and `README.md`, then report what was written.
 
 3. **Identify sub-note candidates (optional).**
-   - If exploration revealed detailed standalone topics (migration analyses, architecture decisions, research findings), propose creating sub-notes.
+   - If exploration revealed detailed standalone topics (migration analyses, architecture decisions, research findings), create them.
    - Each sub-note should have its own context — if it needs the README for context, it belongs in the README instead.
-   - Draft sub-notes and present for approval alongside or after the README.
+   - Report them with the README.
 
 ### Update (note already exists)
 
@@ -74,11 +73,9 @@ If the current working directory is under `~/development/`, derive the folder pa
    - Identify outdated information (changed structure, removed components, new patterns).
    - Identify missing information (new components, changed conventions).
    - Identify oversized sections that could be extracted to sub-notes (standalone topics with their own context, references, or findings).
-5. **Present deviations to the user** per `output-diff`.
-   - For each outdated section, show what changed and ask: "Is this still relevant, or should I update it?"
-   - For oversized sections, propose extracting to a sub-note and replacing with a brief summary + link in the README.
-   - Wait for the user to confirm which updates to apply.
-6. **Apply approved updates** and present the final note.
+5. **Apply the updates the repository confirms**, and extract oversized sections to a sub-note, leaving a brief summary and link in the README.
+   - For sections whose relevance only the user can judge, present the deviation per `output-diff` and ask: "Is this still relevant, or should I update it?"
+6. **Report what changed.**
 
 ## Sub-Notes
 
@@ -182,7 +179,7 @@ Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, found
 #### Implementation
 
 - PR #3909 (ent-foundry canary) and #3913 (remaining 4).
-- Single-line change per cluster: `karpenter-version: karpenter-v0.3.6` → `v0.5.0`.
+- Single-line change per cluster: `karpenter-version: karpenter-v0.3.6` to `v0.5.0`.
 - Verified via `kubectl` on all 5 clusters: ArgoCD synced, controller pods healthy, NodePools on 300Gi disks, no errors.
 
 #### Caveats
@@ -193,7 +190,7 @@ Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, found
 ## Key Principles
 
 - **Explore before writing.** Read the repository thoroughly. Do not guess about structure or conventions.
-- **Ask before overwriting.** When updating, always present deviations and let the user decide what to change.
+- **Overwrite only what the repository contradicts.** Ask about content only the user can judge.
 - **Concise and practical.** These are reference notes, not documentation. Focus on what helps someone navigate and contribute.
 - **Extract when it grows.** If a README section becomes a standalone topic with its own references and context, extract it to a sub-note.
 - **Match the obsidian-note style.** Flat structure (`##` headers), kebab-case filenames, minimal prose, action-oriented.

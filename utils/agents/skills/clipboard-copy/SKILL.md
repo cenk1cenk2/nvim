@@ -24,6 +24,6 @@ This skill is a **modifier**. It intercepts the final output of a companion skil
 
 ## Key Principles
 
-- **No confirmation.** Draft → clipboard. No review step.
+- **No confirmation.** Draft straight to the clipboard. No review step.
 - **Never execute the companion skill's write action.** No commits, no PR updates, no issue creates, no messages sent.
-- **Ask when ambiguous.** Multiple skills or unclear target → ask before doing anything.
+- **Ask when ambiguous.** Multiple skills or an unclear target: ask before doing anything.

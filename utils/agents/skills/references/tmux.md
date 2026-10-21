@@ -56,7 +56,7 @@ tmux -L popup capture-pane -p -t '=<name>:' -S -<lines>
 
 The trailing `:` is required: without it the target fails with `can't find pane`.
 
-Their names encode where they came from (`<session>` is the captain's outer session name, commonly `root`). A popup-shaped name showing up on the **main** server is a leftover from before the split, not a live popup:
+Their names encode where they came from (`<session>` is the captain's outer session name, commonly `root`). A popup-shaped name on the **main** server is a stale leftover, not a live popup:
 
 | Session name | What it is |
 |--------------|------------|

@@ -23,9 +23,9 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Plan Compact — In-Session Compaction Anchor
 
-State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
+Write state that spans turns durably per `long-running-work`.
 
-When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state`.
 
 ## Context
 
@@ -63,7 +63,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Methodology & approach** — *how* we are doing it: the working method, sequencing, conventions adopted, tooling/agent decisions, verification commands. The habits that would be silently dropped by a summary.
 - **Source documents** — every authoritative external context, each as `identifier — what it holds` (Linear project/issue URLs+IDs and their attachments, Obsidian note paths, plan/handoff/internal-plan file paths, PR/MR URLs, key repo paths).
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
-- **External state — one record per kind, not one list.** Linear (issues with live `statusType`, projects, documents), PRs/MRs (draft/CI/threads/description-drift), branches (pushed, divergence, work that exists nowhere else), notes and knowledge bases, and anything else that outlives the turn. Trackers (Linear issues, projects, documents), PRs/MRs with their draft/CI/thread state, branches and their divergence, and anything else that outlives the turn. **Notes and knowledge bases get their own record** — Obsidian repo notes, a repo `CLAUDE.md` touched during the work, the plan file — because they carry no state to report, only whether they still match reality. Per entry: what it is, its state now, whether it is **ours** — created this session or handed to us, which decides reconcile versus surface — and what is outstanding. Notes are the ones most often missed: nothing fails when one goes stale. A resuming agent that rebuilds this board by querying misses whatever it does not know to look for.
+- **External state — one record per kind, not one list.** Linear (issues with live `statusType`, projects, documents), PRs/MRs (draft/CI/threads/description-drift), branches (pushed, divergence, work that exists nowhere else), notes and knowledge bases, and anything else that outlives the turn. **Notes and knowledge bases get their own record** — Obsidian repo notes, a repo `CLAUDE.md` touched during the work, the plan file — because they carry no state to report, only whether they still match reality. Per entry: what it is, its state now, whether it is **ours** — created this session or handed to us, which decides reconcile versus surface — and what is outstanding. Notes are the ones most often missed: nothing fails when one goes stale. A resuming agent that rebuilds this board by querying misses whatever it does not know to look for.
 - **Subagents — every one spawned this session, live or finished.** Record **why it was spawned** (the reason the main loop did not do it itself), its brief and scope, the tier it ran at, its state, what it returned, and what is still outstanding with it. A compaction erases the transcript that proved the work already ran; without this the resuming agent re-dispatches it, or reads a quiet agent as a failed one and destroys a pending report.
 - **Scratchpad scripts & watchers — INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
   - **Inline the body, not a reference to it.** A script *mentioned* but not inlined is unrecoverable — and it reads as recorded, which is worse than an obvious gap.
@@ -204,7 +204,7 @@ Bulldozer is momentum, so the anchor carries *how* the push was running, not jus
 - **Agreed scope:** [what the posture was engaged over — work outside it is a question,
   not an extension.]
 - **Routing rule:** [what gets dispatched vs kept in-house, and at which tier.]
-- **Bulldozer queue** (when ON): in flight → next → after. [An empty queue on resume means
+- **Bulldozer queue** (when ON): in flight, then next, then after. [An empty queue on resume means
   it was lost, not finished.] Tried and rejected: [so the resume does not re-attempt it.]
 - **Trust:** [whether subagent/tool claims get re-verified before being acted on.]
 - **Standing holds / pre-approvals:** [gate — release condition; what the user already
@@ -274,9 +274,8 @@ is the drift most often carried straight through a compaction.]
 
 **Obsidian repository notes** — derive the folder from the repo path relative to
 `~/development/` and read `<folder>/README` with `obsidian__vault_read`. Treat what it says
-as established context. Updates go through `obsidian-repository`, which **always proposes
-and never auto-writes**, so an intended note change survives compaction only if it is
-recorded here as outstanding.
+as established context. Updates go through `obsidian-repository`, so an intended note
+change survives compaction only if it is recorded here as outstanding.
 
 Also covers a repo `CLAUDE.md` / `AGENTS.md` touched during the work — those route through
 `config-repository` — the internal plan file, and any Linear document authored here.

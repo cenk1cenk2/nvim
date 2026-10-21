@@ -32,7 +32,7 @@ While on, re-emit the table whenever a row moves, marked `[output-table]` per `m
 
 ## Boundaries
 
-- **Presenting a write is `output-diff`**, not this. A row can name a write; its content is still presented per `output-diff` before it runs.
+- **Presenting a write for approval is `output-diff`**, not this. A row can name a write; the skill that performs it decides whether it is presented first.
 - **A full status report embeds the table.** When the user asks "where are we", load `output-status`; the flow table becomes its current-state section.
 - **Not for unordered items.** Independent findings or a fleet of unrelated items are a plain table or a list.
 

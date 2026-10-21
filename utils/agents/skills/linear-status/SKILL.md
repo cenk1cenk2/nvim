@@ -113,8 +113,8 @@ For each issue, collect every matching signal — a direct id match, or a weaker
 Per `output-diff`, one chunk per issue — the evidence, then the transition:
 
 ````
-### K-123 — Add cert-manager to the cluster
-Evidence: merged MR https://gitlab.example.com/.../merge_requests/42 (closes K-123). Issue is currently In Progress.
+### [K-123 — Add cert-manager to the cluster](https://linear.app/<workspace>/issue/K-123/add-cert-manager-to-the-cluster)
+Evidence: [merged MR !42 — Add cert-manager](https://gitlab.example.com/.../merge_requests/42) (closes K-123). Issue is currently In Progress.
 
 ```diff
 - state: In Progress
@@ -135,15 +135,15 @@ Group by target state — Done, In Review, In Progress, Canceled candidates need
 ## Project Status Applied: <project-name>
 
 ### Applied transitions
-- K-123 → Done (was In Progress). Evidence: MR !42.
-- K-125 → Canceled (was Todo). Evidence: user stated "dropped this week". [User-confirmed.]
+- [K-123 — <title>](<url>) moved to Done (was In Progress). Evidence: [MR !42 — <title>](<url>).
+- [K-125 — <title>](<url>) moved to Canceled (was Todo). Evidence: user stated "dropped this week". [User-confirmed.]
 
 ### Unchanged
-- K-130, K-131: no evidence found this run.
+- [K-130 — <title>](<url>), [K-131 — <title>](<url>): no evidence found this run.
 
 ### Still needs user attention
-- K-127: keyword-match candidate to PR #89 — user declined.
-- K-128: MR !50 closed without merging — user decision needed.
+- [K-127 — <title>](<url>): keyword-match candidate to [PR #89 — <title>](<url>) — user declined.
+- [K-128 — <title>](<url>): [MR !50 — <title>](<url>) closed without merging — user decision needed.
 ```
 
 ## Key Rules

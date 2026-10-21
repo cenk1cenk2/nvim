@@ -1,6 +1,6 @@
 # Release Convention Detection
 
-Detect the repository's automated release method and follow the convention it consumes, so a merge publishes the intended version and bump. Used by `git-push`, `github-pr-create`, `gitlab-mr-create`, `project-facts`.
+Detect the repository's automated release method and follow the convention it consumes, so a merge publishes the intended version and bump.
 
 **semantic-release is the default.** The estate releases with it, so a repository that has release automation at all is semantic-release until the files say otherwise. That is a starting assumption, not a conclusion — confirm it from the repo (via `github__get_file_contents` / `gitlab__get_file_contents`, or local `Read` / `git` on a checked-out branch) before acting on it. Different repos configure differently, and CI-driven tools often have no standalone config file.
 

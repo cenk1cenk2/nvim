@@ -101,17 +101,17 @@ For a single issue that belongs to a project, add a brief project pulse: how man
 - [Deviations from prior understanding, or "No changes detected."]
 
 ### Status Buckets                                                [project and issueset]
-- **In Progress:** <issue-id> — <title> (<updated N days ago>). [Flag if stale.]
+- **In Progress:** [<issue-id> — <title>](<url>) (<updated N days ago>). [Flag if stale.]
 - **In Review:** ...
 - **Todo:** ...
 - **Recently Done:** <recent wins since last revisit>
 - **Newly Actionable:** <issues whose blockers are now Done>
 
 ### Comment Highlights
-- <issue-id>: <significant decision / blocker / question>
+- [<issue-id> — <title>](<url>): <significant decision / blocker / question>
 
 ### Relation Updates
-- <related-issue-id>: <title> — <what changed or was discovered>
+- [<related-issue-id> — <title>](<url>): <what changed or was discovered>
 - [Flag anything newly unblocked or newly blocked.]
 
 ### Project Pulse                                                 [single issue in a project]
@@ -121,7 +121,7 @@ For a single issue that belongs to a project, add a brief project pulse: how man
 - [Records whose timestamps suggest the user's knowledge is more current than Linear's.]
 
 ### Recommended Next Actions
-- [What to look at first — e.g., "Review the stuck In Review issue K-45", "Confirm whether K-67 is still being worked on", "Newly unblocked: K-89".]
+- [What to look at first — e.g., "Review the stuck In Review issue [K-45 — <title>](<url>)", "Confirm whether [K-67 — <title>](<url>) is still being worked on", "Newly unblocked: [K-89 — <title>](<url>)".]
 ```
 
 Omit sections that have no findings. Keep bullets short — this is a survey, not an audit.

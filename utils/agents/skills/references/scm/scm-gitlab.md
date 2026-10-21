@@ -7,6 +7,7 @@
 - Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs); Load `command-glab` before the first call.
 - Determine project path from the git remote URL.
 - Determine the current branch from local git state via `git status`.
+- **Most merge-request writes are opt-in.** Notes, discussion replies, draft notes, MR versions, approve and merge sit in the `merge_requests` category; when one is not exposed, activate it with `gitlab__discover_tools` (`category: merge_requests`). Other categories (`issues`, `releases`, `tags`, `projects`) activate the same way.
 
 ## Finding an Unknown GitLab Repository
 
@@ -123,10 +124,6 @@ A draft note stages a diff-positioned or general comment without notifying anyon
 | `gitlab__list_namespaces` | List available namespaces. |
 | `gitlab__get_namespace` | Get namespace details. |
 | `gitlab__verify_namespace` | Verify a namespace exists. |
-
-### Local Git Operations
-
-Raw `git` CLI commands via `Bash` (there is no git MCP server) — the command table lives in the `scm-detect` reference.
 
 ## CLI Fallback
 

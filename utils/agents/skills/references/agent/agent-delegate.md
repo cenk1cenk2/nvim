@@ -1,6 +1,6 @@
 # Agent Delegation
 
-Shared logic for creating and dispatching subagents via the active runtime's dispatch mechanism. Used by all `agent-*` skills.
+Shared logic for creating and dispatching subagents via the active runtime's dispatch mechanism. Used by every skill that dispatches subagents.
 
 **This file is runtime-agnostic on purpose.** It covers what every dispatch needs — parameters, prompt shape, reaping discipline. Every mechanic that varies per runtime (permission handling, background defaults, how a result reaches you, limits) lives in `agent-delegate-harness-<provider>` and is authoritative there. When the two disagree, the harness reference wins.
 
@@ -105,7 +105,7 @@ Say which state you found. "Re-ran it" and "finished the remaining four files be
 >
 > **A quiet agent is a candidate for COLLECTION, not for reaping.** Quiet usually means the work is done and only the delivery is pending. Collect first — read its result, or message it. On runtimes where a completed agent can be resumed by message, killing it is the one move that forecloses that. Steering is reversible; reaping is not.
 
-**Order, always:** collect → confirm you have what you need → *then* reap.
+**Order, always:** collect, confirm you have what you need, *then* reap.
 
 Genuinely safe to reap:
 

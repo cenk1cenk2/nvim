@@ -34,7 +34,6 @@ The whole lifecycle — the split test, tier selection, the spawn shape, the bri
 
 **What the companion holds is the reasoning the plan file cannot carry.** A plan records decisions; it does not record which decisions were load-bearing, what was considered and rejected, or which task's assumptions quietly depend on another task's shape. That is exactly what makes a deviation expensive: the plan still reads fine after reality diverges from it, and nothing in the file knows that task 7 was only correct because task 3 chose one of two options. A companion that sat through the design holds that; a fresh reader of the file does not.
 
-
 State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its plan path, its tier, and the open design questions. Reconcile drift per `reconcile-state`.
 
 > **PREREQUISITE:** A plan must exist before the companion is spawned. Load `plan-hard` and write it first; the plan file's absolute path goes in the brief, resolved per `provider-paths`. The companion inherits a design; it does not invent one.

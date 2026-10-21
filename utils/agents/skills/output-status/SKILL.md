@@ -39,13 +39,13 @@ While on, mark the posture in each report per `mode-toggle` — `[output-status]
 
 ## While the toggle is on
 
-- **Report at milestones, not at turns.** The trigger is the `output-status` reference's converged-state rule. A watcher firing, one agent reporting, or a single check landing is a terse update.
+- **Report at milestones, not at turns.** The trigger is the `output-status` reference's converged-state rule.
 - **A user asking for status still gets one immediately**, milestone or not.
 - **Say when a milestone passed without a report** and why — usually the state had not settled. Silence reads as no progress.
 
 ## Boundaries
 
-- **Presenting a write is `output-diff`**, not this. A create or update to a file or an external resource follows that convention.
+- **Presenting a write for approval is `output-diff`**, not this.
 - **Answering a question is not a report.** One question gets one answer, in the conversation's own register.
 - **A mode that already reports every turn does not need this.** Coordinator and supervisor carry the shape in their own process steps; engaging this on top adds a marker and nothing else.
 

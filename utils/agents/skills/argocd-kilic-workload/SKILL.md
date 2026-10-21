@@ -3,8 +3,6 @@ name: argocd-kilic-workload
 description: argocd-kilic-workload Create a workload service in the current cluster's ArgoCD repo - scaffolds the Pulumi service, registers it in the workloads module, optionally configures gateway listeners. Use when a cluster needs to start deploying something new. Not for load balancer routing, standalone deployment repos, or chart wrappers.
 disableModelInvocation: true
 argumentHint: '[workload-name] - e.g. ''my-app'', ''notifications'''
-references:
-  - ../references/output-diff.md
 ---
 
 ## Cluster Workload Creator
@@ -23,7 +21,7 @@ Key files:
 
 ## After It Syncs
 
-Once merged, ArgoCD syncs the Application automatically — `newApplication()` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate (verified against a rendered manifest in `apps/1-manifest/`). Removing a resource from `.deploy/<cluster>/` in the workload repository therefore deletes it on the cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
+Once merged, ArgoCD syncs the Application automatically — `newApplication()` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate. Removing a resource from `.deploy/<cluster>/` in the workload repository therefore deletes it on the cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
 
 A workload Application syncs straight from its own repository's `HEAD`. When the workload repository promotes its pins with Kargo (a registered `.promote/` folder, as `monitoring-backbone` does), its Stages sync this Application by name, so it must list each of them in `kargo.akuity.io/authorized-stage`. Load `argocd-kilic` to check sync status or investigate after merge.
 
@@ -46,10 +44,6 @@ Ask the user:
 4. **A similar existing workload service** — Use as the template
 
 This is mandatory because **each cluster has different constants and gateway names**.
-
-## Present Before Writing
-
-The scaffold writes several files at once. Present the plan per `output-diff` — workload name, target cluster, namespace, and the files to create — and write only on approval.
 
 ## Workload Service Pattern
 

@@ -4,7 +4,6 @@ description: cluster-kilic-workload Create a workload deployment repo in the wor
 disableModelInvocation: true
 argumentHint: '[workload-name] - e.g. ''seafile'', ''immich'''
 references:
-  - ../references/output-diff.md
   - ./references/kilic-argocd-pvc-restore.md
   - ./references/cluster-kilic-workload-kustomization.md
   - ./references/cluster-kilic-workload-external-secret.md
@@ -91,10 +90,6 @@ Ask the user:
 | Kustomize base/overlay                      | `cluster/workloads/rustfs`                                                                              |
 
 Read the `.deploy/<cluster>/` tree and key files from the reference repo to match patterns exactly.
-
-## Present Before Writing
-
-The scaffold writes several files at once. Present the plan per `output-diff` — workload name, target cluster, namespace, components, and the files to create — and write only on approval.
 
 ## Kustomization Patterns
 

@@ -33,7 +33,6 @@ The generic entry point to the companion shape: one named subagent that lives fo
 
 The lifecycle is the `agent-companion` reference. This skill adds the fit test and the domain definition the dedicated skills get for free.
 
-
 State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its domain, its tier, and the open ledger. Reconcile drift per `reconcile-state`.
 
 ## Toggle

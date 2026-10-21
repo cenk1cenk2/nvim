@@ -40,9 +40,9 @@ A single-cluster workload has no `base/` and should not gain one for a single ch
 ## Choosing the layer
 
 1. **Establish the spread** — how many clusters run this application.
-2. **Same change in the same direction everywhere** → the common layer. `chart-*/values.yaml` for a system component, `.deploy/base/` for a workload.
-3. **One or two clusters differ** → leave the common layer and override: `argocd-system/<env>/<c>/values.yaml`, the cluster annotation (a git edit in `argocd-root`), or `.deploy/<cluster>/`.
-4. **Single-cluster application** → its only layer. No override question exists.
+2. **Same change in the same direction everywhere**: the common layer. `chart-*/values.yaml` for a system component, `.deploy/base/` for a workload.
+3. **One or two clusters differ**: leave the common layer and override in `argocd-system/<env>/<c>/values.yaml`, the cluster annotation (a git edit in `argocd-root`), or `.deploy/<cluster>/`.
+4. **Single-cluster application**: its only layer. No override question exists.
 
 Cover the common case in the common layer and treat the rest as overrides. An override that duplicates the common value is drift waiting to happen.
 

@@ -174,8 +174,8 @@ finish that never happened.
 
 Most real waits are a chain, and each link is its own watcher:
 
-1. PR merged → 2. its pipeline or tracked run settled → 3. the human confirmed → 4. the apply finished →
-5. the deploy converged → 6. post-verification queries are meaningful.
+1. PR merged; 2. its pipeline or tracked run settled; 3. the human confirmed; 4. the apply finished;
+5. the deploy converged; 6. post-verification queries are meaningful.
 
 Arm link N+1 **on waking from link N**, after re-verifying. Never arm the whole chain up front: the
 later run ids do not exist yet, and a watcher keyed on a guess fires on the wrong thing.

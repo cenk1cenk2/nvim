@@ -51,10 +51,10 @@ Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-<cluster>` and
 Use GitLab MCP to analyze existing deployments for reference:
 
 - **Charts:** Browse `cluster/charts` group for `chart-<similar-component>` repos — check `Chart.yaml` (upstream dependency), `values.yaml` (defaults), `Taskfile.yml` (release automation), `renovate.json` (dependency updates)
-- **ApplicationSets:** Browse `cluster/argocd-system` repo → `base/<similar-component>/applicationset.yaml` — label selectors, namespace, sync policy, values injection
+- **ApplicationSets:** Browse `cluster/argocd-system` repo, then `base/<similar-component>/applicationset.yaml` — label selectors, namespace, sync policy, values injection
 - **Labels/Annotations:** Browse `cluster/argocd-root` at `src/argocd/assets/cluster/<cluster>/labels.yml` for feature flags and `annotations.yml` for values injection patterns
-- **Pulumi:** Browse `infrastructure/pulumi-config-gitlab` repo → `src/modules/` for ArgoCD deploy key and webhook setup
-- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo → `src/cluster/gateway.service.ts` for gateway definitions; for cluster exposure, the target cluster's `src/cluster/relay.service.ts` and `src/cluster/operator-lb.service.ts`
+- **Pulumi:** Browse `infrastructure/pulumi-config-gitlab` repo, then `src/modules/` for ArgoCD deploy key and webhook setup
+- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo, then `src/cluster/gateway.service.ts` for gateway definitions; for cluster exposure, the target cluster's `src/cluster/relay.service.ts` and `src/cluster/operator-lb.service.ts`
 
 **3. Create Project and Issues:**
 
@@ -145,7 +145,7 @@ This repo commits generated output, and the generated file is what ArgoCD reads.
 **Issue 8 (Optional — if load balancer is needed): Configure Load Balancer Routes**
 
 > **Repo:** `cluster/<cluster>/argocd-<cluster>` and `cluster/workloads/<component>`
-> **Purpose:** Exposure runs through the operator-lb relay. The target cluster declares relay ListenerSets (GatewayAPI, parented to the LB cluster's gateway, annotated `lb.kilic.dev/upstream`) in `src/cluster/relay.service.ts` and its Upstreams with their DNSEndpoints in `src/cluster/operator-lb.service.ts`; the workload declares its TLSRoutes/TCPRoutes/UDPRoutes parented to that ListenerSet plus their DNSEndpoints in its own repo. The operator-lb operator on the LB cluster copies everything into `lb-<cluster>` and owns the Envoy Backends. Pattern: `argocd-kilic-loadbalancer-cross-cluster`.
+> **Purpose:** Exposure runs through the operator-lb relay. The target cluster declares relay ListenerSets (GatewayAPI, parented to the LB cluster's gateway, annotated `lb.kilic.dev/upstream`) in `src/cluster/relay.service.ts` and its Upstreams with their DNSEndpoints in `src/cluster/operator-lb.service.ts`; the workload declares its TLSRoutes/TCPRoutes/UDPRoutes parented to that ListenerSet plus their DNSEndpoints in its own repo. The operator-lb operator on the LB cluster copies everything into `lb-<cluster>` and owns the Envoy Backends. Pattern: the cross-cluster reference of the `argocd-kilic-loadbalancer` skill.
 
 - Add the ListenerSet listeners in the relay service: `cluster/<cluster>/argocd-<cluster>/src/cluster/relay.service.ts` (hostnames for TLS/HTTP, sections with ports for TCP/UDP)
 - Author the routes parented to that ListenerSet in the workload's repo, `cluster/workloads/<component>/.deploy/<cluster>/`

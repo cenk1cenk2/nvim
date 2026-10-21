@@ -36,7 +36,6 @@ One Linear scope gets one standing project manager: a subagent that lives for th
 
 The whole lifecycle — the split test, tier selection, the spawn shape, the brief, steering, collection, the roster row, and the user-gated retirement — is `agent-companion`. This skill supplies the Linear domain on top of it.
 
-
 State that spans turns must be written durably per `long-running-work` — the PM's name and spawn id, its scope, its tier, the armed watchers, and the open ledger. Reconcile drift per `reconcile-state`.
 
 > **PREREQUISITE:** A Linear workspace skill MUST be active before the PM is spawned — workspace detection per `linear-prerequisite`. The PM needs the workspace named in its brief; it cannot deduce one from a fresh context.

@@ -21,7 +21,7 @@ Always do an initial exploration phase before starting implementation:
 2. Inspect the target repository or repositories enough to know current branch state, origin provider, default branch, existing open PRs/MRs, and likely verification commands.
 3. Check prerequisites and blockers. Treat `In Review` blockers as mostly complete, but verify whether the linked PR/MR exists and is healthy when the next task depends on it.
 4. Detect stale or out-of-whack descriptions. If the issue/project says details are not finalized, or comments contradict the description, ask early.
-5. When explicitly requested, use `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. For broad or unknown-repo investigations, that discovery starts with Sourcebot when available and escalates to GitLab/GitHub for live SCM state.
+5. When explicitly requested, use `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. The tools it uses follow its Discovery Ladder.
 6. Use `agent-delegate` with a cheap or default Explore agent for unclear project details when it materially reduces risk.
 7. Use a private `plan-hard` style self-interview to resolve design branches.
 8. Use `agent-review` for a cheap review of task splits, prerequisite assumptions, file collisions, and stale external claims when the task is complicated or the user requests deeper research.
@@ -78,7 +78,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Use `linear-update` for description changes only when an autonomous agent workflow needs the updated description to keep future agents aligned, or when the issue requires a huge rewrite because the old description is materially out of whack.
 - Use `linear-status` to reflect completed or explicitly canceled checklist items.
 - Update project documents via the workspace `save_document` tool when deviations or findings are shared across multiple issues.
-- When PRs/MRs are opened, ensure referenced issues advance to `In Review` through the PR/MR skill or explicit state transition.
+- When PRs/MRs are opened, referenced issues advance to `In Review` through Linear's integration from the PR/MR trailers; verify the issue moved and report it.
 - At wrap-up, if all issues in a project are done, close or complete the project by default unless evidence says it should stay open. Executing the project is managing it, so this needs no per-change approval under `linear-absolute-approval`.
 
 ## Git, Branching, Commits, and PRs

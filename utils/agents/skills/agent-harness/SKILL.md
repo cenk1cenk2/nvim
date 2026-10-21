@@ -25,7 +25,7 @@ The second one is where runs get destroyed. A skill body describes intent ("disp
 
 **Max is never inferred.** It runs only when the user asks for it — a max-row word below or the max model by name. Difficulty, stakes, a failed smart attempt or a "next tier up" rule all stop at smart; propose max and wait for the user to say it.
 
-## User Wording → Tier
+## User Wording to Tier
 
 | User says | Tier |
 |-----------|------|
@@ -45,7 +45,7 @@ Harness mechanics are **references**, named **`<consumer>-harness-<provider>`** 
 | `agent-delegate` — dispatch, and every skill built on it | `agent-delegate-harness-claude` | `agent-delegate-harness-opencode` | `agent-delegate-harness-codex` |
 | `agent-background` — waiting and waking | `agent-background-harness-claude` | `agent-background-harness-opencode` | `agent-background-harness-codex` |
 
-Tier → model tables live in the **`agent-delegate`** file for each runtime.
+Tier-to-model tables live in the **`agent-delegate`** file for each runtime.
 
 Headlines per runtime:
 
@@ -61,7 +61,7 @@ Headlines per runtime:
 - **Claude Code is the preferred runtime, Codex and OpenCode are equally valid.** When the user left the runtime open, prefer Claude Code; when they named a runtime, profile or model, use it, whatever the preference. Where a Claude-specific lever has no documented Codex equivalent, say "claude preferred" rather than invent one.
 - **Explicit model names override tiers.** If the user names a model (`fable`, `kilic/glm-5.2:cloud`, `gpt-5.5`), use it verbatim — no remapping.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.
-- **Ambiguous wording → confirm.** If the user's wording is vague ("better" relative to what?), present the inferred tier with reasoning and confirm before dispatching.
+- **Confirm ambiguous wording.** If the user's wording is vague ("better" relative to what?), present the inferred tier with reasoning and confirm before dispatching.
 - **A tier belongs to a task, not to a run.** Choose one per unit of work and state it with the signal behind it before dispatching. A generic user preference ("cheap agents please") is weighed per unit, not stamped across a fan-out; only a tier the user named FOR that task is fixed.
 - **In-harness: resolve, do not discover.** The runtime's tier-to-model table is in its `agent-delegate-harness-<provider>` reference — you already know which agent suits the task, so propose it. Discovery is a separate-session concern: a hyprpilot session's available profiles and models are runtime state, listed with `hyprpilot-harness__list_profiles` before any tier is proposed.
 - **Version claims decay.** The references carry version markers and explicit "unverified" flags. When behavior contradicts a reference, verify against the running build's own tool schemas and docs, then fix the reference — do not special-case the runtime inside a skill body.

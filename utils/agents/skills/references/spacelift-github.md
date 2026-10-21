@@ -103,11 +103,11 @@ When `get_stack_run_changes` returns empty (common during APPLYING and after FIN
 2. Logs contain **ANSI escape codes** — strip them with `sed 's/\x1b\[[0-9;]*m//g'` before parsing.
 3. Look for `Terraform will perform the following actions:` as the start marker.
 4. Parse resource actions:
-   - `# <address> will be created` → Added.
-   - `# <address> will be updated in-place` → Updated.
-   - `# <address> must be replaced` (shown as `-/+`) → Recreated.
-   - `# <address> will be destroyed` → Deleted.
-   - `# <address> has moved to <new-address>` → Moved.
+   - `# <address> will be created`: Added.
+   - `# <address> will be updated in-place`: Updated.
+   - `# <address> must be replaced` (shown as `-/+`): Recreated.
+   - `# <address> will be destroyed`: Deleted.
+   - `# <address> has moved to <new-address>`: Moved.
 5. Attribute diffs follow each resource block as `~ attribute = old -> new`, `+ attribute = value`, `- attribute = value`.
 6. The summary line `Plan: N to add, N to change, N to destroy.` confirms totals.
 

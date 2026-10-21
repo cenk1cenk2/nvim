@@ -93,7 +93,7 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 ## Pickup: <project | issueset | issue(s)> — <name>
 
 ### Selected Scope
-- <issue-id>: <title> — <why included, status/readiness>
+- [<issue-id> — <title>](<url>) — <why included, status/readiness>
 
 ### Shared Context
 - Repo: <path/url>

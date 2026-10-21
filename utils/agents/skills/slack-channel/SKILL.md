@@ -101,11 +101,11 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
    The response method depends on whether you processed a single message or a batch:
 
-   **Single message** → reply in thread:
+   **Single message** — reply in thread:
    - Use `slack-kilic__slack_reply_to_thread` on the message you processed.
    - Add `:dark_sunglasses:` reaction to that message.
 
-   **Batch of messages** → post channel-level summary:
+   **Batch of messages** — post channel-level summary:
    - Use `slack-kilic__slack_post_message` to post a summary to the channel.
    - Add `:dark_sunglasses:` reaction to **each message that was included in the summary**.
    - Group findings by channel type logic above.

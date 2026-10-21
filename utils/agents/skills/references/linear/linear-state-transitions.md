@@ -12,7 +12,7 @@ Linear issue (pickup, worker dispatch, MR/PR creation, merge,
 post-merge comment). The issue itself does not drive state — the
 **action** does.
 
-## Trigger → target table
+## Trigger and target table
 
 | Trigger | Target state | Applied by |
 |---|---|---|
@@ -43,13 +43,13 @@ Both keyword lists, per platform, are `commit-trailers-linear`.
 trigger here is a **monotonic forward move**. Before calling
 `save_issue`, skills MUST check the current `statusType`:
 
-- `statusType: "completed"` (Done) → skip the transition entirely. A
+- `statusType: "completed"` (Done): skip the transition entirely. A
   `save_issue` would downgrade.
-- `statusType: "canceled"` → skip. The issue is terminal.
+- `statusType: "canceled"`: skip. The issue is terminal.
 - `statusType: "started"` (`In Progress` or `In Review`) vs the
-  target state → only write if the target is the same or higher in
+  target state: only write if the target is the same or higher in
   the hierarchy from `linear-issue-states.md`.
-- `statusType: "unstarted"` or `"backlog"` → always safe to advance.
+- `statusType: "unstarted"` or `"backlog"`: always safe to advance.
 
 Pseudocode the calling skill should apply:
 

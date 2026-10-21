@@ -70,11 +70,11 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 **User says:** `slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
 
-1. Parse URL → channel `C123`, timestamp `456`.
+1. Parse URL to channel `C123`, timestamp `456`.
 2. Fetch thread via `slack-kilic__slack_get_thread_replies`.
 3. Resolve user IDs to names.
 4. Summarize: "Alice reported a DNS resolution bug in cluster-rubik. Bob confirmed it affects all pods."
-5. Invoke `linear-kilic` → compose with issue creation using thread context.
+5. Invoke `linear-kilic`, then compose with issue creation using thread context.
 
 **Result:** Linear issue created with thread summary, participants, and relevant details.
 

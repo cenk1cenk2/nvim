@@ -109,7 +109,7 @@ This fails silently and in the direction that feels productive. The turn ends wi
 Three rules that close it:
 
 1. **Arm before you report it.** Write "watcher armed" only after the launch returned a handle you can quote. A report is narration of what you did, never a substitute for doing it.
-2. **Quote the handle.** A watcher announced without its task id is unverifiable and usually was not armed. If you cannot name the handle, you have not armed it.
+2. **Hold the handle.** A watcher whose task id is not in its ledger row is unverifiable and usually was not armed. If you cannot name the handle, you have not armed it.
 3. **If you decide not to arm one, say that instead** — "not watching the pipeline; it finishes in under a minute and I will check it directly". A deliberate non-watch is a fine answer. An implied one is not.
 
 The same applies to re-arming. Noticing that a watcher expired, or that a proxy proved unreliable, creates an obligation to re-arm **now**, in this turn — not a note that it should be re-armed.
@@ -173,7 +173,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 2. **Pick a shell-reachable signal**, per `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. For the domain's concrete signal and check, Load `agent-watcher-recipes`. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes, and take the tight end.** 10 s for a machine signal, 30 s for a human action, held throughout a long job rather than one check near its expected finish — an early failure should wake you early. The only floors are how fast the state can plausibly move and a remote API's documented rate limit; band-by-signal table in `agent-watchers`, where a tighter cadence also buys a proportionally bigger cap.
-5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle** and did not exit non-zero on the spot; anything less means you detached instead of arming, and nothing will wake you. Note that id, announce the watch in one plain sentence, and record its ledger row per `agent-watchers`, which owns that split, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
+5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle** and did not exit non-zero on the spot; anything less means you detached instead of arming, and nothing will wake you. Note that id, announce the watch in one plain sentence, and record its ledger row per `agent-watchers`, which owns that split, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. Write the ledger row plus the command to re-arm it to durable state per `long-running-work` — verbatim into the anchor's Scratchpad Scripts & Watchers section when `plan-compact` is active. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
 8. **REAP IT.** A watcher is not finished when its condition is met — it is finished when it is **stopped**. Kill it the moment it stops earning its keep, which is **not only on success**:
@@ -201,7 +201,7 @@ If no shell-reachable signal exists at all, drop to a deferred wakeup or a monit
 
 ## Example
 
-**Two-stage wait (proxy → authoritative), e.g. a human merge that triggers a slower convergence:**
+**Two-stage wait (proxy, then authoritative), e.g. a human merge that triggers a slower convergence:**
 
 1. Arm a background loop polling the shell-visible proxy; announce it in one plain sentence and record its ledger row per `agent-watchers` — watching for, cadence, cap, on-wake action, handle.
 
@@ -218,7 +218,7 @@ If no shell-reachable signal exists at all, drop to a deferred wakeup or a monit
    ```
 
 2. On wake: proxy says merged — but the downstream apply/convergence is only visible via an MCP tool. Check that state now on the main loop.
-3. Still settling → arm a short follow-on wait; re-check on wake.
-4. Converged → run verification, do the follow-on work.
+3. Still settling: arm a short follow-on wait; re-check on wake.
+4. Converged: run verification, do the follow-on work.
 
 **Result:** one silent watcher per blocking condition, one wake each — no per-cycle noise and no "ping me when it's done."

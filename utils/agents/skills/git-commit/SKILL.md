@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: git-commit Commit current changes as conventional commits, or split them into scoped commits on this branch; analyses the diff and commits after approval, or straight away on a branch the session owns. Use on "commit this", "split into commits". Not for splitting work across separate branches or PRs, writing a PR/MR description, or resolving conflicts.
+description: git-commit Commit current changes as conventional commits, or split them into scoped commits on this branch; analyses the diff, commits, and reports the hash. Use on "commit this", "split into commits". Not for splitting work across separate branches or PRs, writing a PR/MR description, or resolving conflicts.
 argumentHint: '[optional: type or message hint - e.g. ''fix'', ''feat: add retry'']'
 references:
   - ../references/scm/scm-detect.md
@@ -40,10 +40,10 @@ references:
       - File proximity (same directory or module).
       - Change purpose (feature vs fix vs refactor).
       - User-provided grouping hints.
-    - Present the proposed groups to the user for approval. Adjust grouping based on feedback.
+    - Present the proposed groups per `output-diff` and wait for approval. Adjust grouping based on feedback.
     - For each approved group:
       1. Stage only that group's files via `git add` with individual file paths.
-      2. Continue to step 3 (analyze) → step 4 (draft message) → step 5 (present) → step 6 (commit).
+      2. Continue with step 3 (analyze), step 4 (draft message) and step 5 (commit).
       3. After committing, return here for the next group.
     - Repeat until all groups are committed.
 
@@ -73,7 +73,7 @@ references:
      - The user explicitly requests a description/body (e.g., "commit with description", "add details", "verbose commit").
      - The change is a security fix, data migration, or revert (per `commit-style`).
      - The user explicitly flags a breaking change (see below).
-   - **Breaking changes** — include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"), or when the repo has commit-driven release automation and the change is genuinely breaking (flag it and propose the markers — an unmarked breaking change ships as a wrong version bump). When flagged:
+   - **Breaking changes** — include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"), or when the repo has commit-driven release automation and the change is genuinely breaking (add the markers and say so in the report — an unmarked breaking change ships as a wrong version bump). When flagged:
      - Append `!` after the scope in the subject line: `feat(api)!: rename /v1/orders to /v1/checkout`.
      - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
@@ -83,20 +83,11 @@ references:
      - **Linear on GitLab ignores commit messages entirely** — a `closes K-123` in a commit links nothing, moves nothing, closes nothing. On GitHub with commit linking enabled, a magic word in a commit does link and move the issue. Put the id in the commit only as a human-readable note if the repo does that, and never rely on it. The link and the close come from the **PR/MR title and description** (`github-pr-create` / `gitlab-mr-create`).
      - GitHub and GitLab **native** issues DO close from commit messages — `closes #42` there works. Do not generalise either way.
      - If the user also requested an extended description, weave relevant issue context into the body.
-   - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
 
-5. **Present the draft to the user.**
-   - Show the full commit message per `output-diff`:
-     - Reasoning: brief explanation of why you chose this type, scope, and message.
-     - Content: the full commit message in a fenced code block.
-   - Ask for approval or feedback, and iterate until the user is satisfied.
-   - **On an owned branch** (per `agent-owned`) inside work the user already cleared, skip the wait: commit, then show the message with the hash. Grouping proposals in step 2a still wait.
-
-6. **Commit.**
-   - After explicit user approval, or straight away on an owned branch per step 5, commit via `git commit`.
+5. **Commit and report.**
+   - Commit via `git commit`.
    - **Amend (owned branch only):** if the change is a fixup to the commit you just made, or the user asks to amend, use `git commit --amend` instead of a new commit; pushing the rewrite is `--force-with-lease` via `git-push`. Never amend on a branch that is not owned per `agent-owned`.
-   - Confirm success by reporting the commit hash from the output.
-   - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
+   - Report the commit hash and the full message in a fenced block, with one line on the type and scope chosen.
 
 ## Key Principles
 
@@ -107,7 +98,7 @@ references:
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
 - **New commits by default; amend your own work when it fits.** Default to a fresh commit (and separate commits for separate concerns). Amend or rewrite only on an owned branch — a fixup to the commit you just made, or tidying its history — or when the user asks; pushing the rewrite uses `--force-with-lease` via `git-push`.
-- **Different tasks → different commits.** Don't collapse unrelated work into one commit; keep a branch's distinct commits (squash is decided in `github-pr-create` / `gitlab-mr-create`).
+- **Different tasks, different commits.** Don't collapse unrelated work into one commit; keep a branch's distinct commits (squash is decided in `github-pr-create` / `gitlab-mr-create`).
 
 ## Composing with Other Skills
 
@@ -120,8 +111,7 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
 1. Check status — 3 files staged.
 2. Read staged diff — adds retry logic to API client.
 3. Draft: `feat(api): add retry logic for transient failures`.
-4. Present to user with reasoning.
-5. User approves → commit.
+4. Commit and report the hash with the message.
 
 **User says:** "commit" (nothing staged, 2 files modified)
 
@@ -129,14 +119,14 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
 2. Stage all with `.`.
 3. Read staged diff — fixes typo in config parsing.
 4. Draft: `fix(config): correct typo in parser validation`.
-5. Present to user → approve → commit.
+5. Commit and report the hash with the message.
 
 **User says:** "commit fix"
 
 1. Check status — changes staged.
 2. Read staged diff — corrects off-by-one in pagination.
 3. Draft: `fix(pagination): correct off-by-one in page offset calculation`.
-4. Present to user → approve → commit.
+4. Commit and report the hash with the message.
 
 **User says:** "commit with description"
 
@@ -150,7 +140,7 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
    Access tokens expire after 15 minutes; refresh tokens are stored in
    httpOnly cookies with 7-day TTL.
    ```
-4. Present to user → iterate → approve → commit.
+4. Commit and report the hash with the message.
 
 **User says:** "commit with description, closes https://github.com/org/repo/issues/42"
 
@@ -166,7 +156,7 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
 
    Closes #42
    ```
-5. Present to user → iterate → approve → commit.
+5. Commit and report the hash with the message.
 
 **User says:** "commit this, breaking change"
 
@@ -181,7 +171,7 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
    BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
    before 2026-06-01. Old route returns 410 after that date.
    ```
-4. Present to user → iterate → approve → commit.
+4. Commit and report the hash with the message.
 
 **User says:** "commit this" with `https://linear.app/kilic-dev/issue/K-219/...`
 
@@ -194,15 +184,15 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
 
    closes K-219
    ```
-5. Present to user → approve → commit.
+5. Commit and report the hash with the message.
 
 **User says:** "commit these separately" (nothing staged, 6 files modified across auth and config)
 
 1. Check status — nothing staged, 6 files modified.
 2. Analyze changes — 3 files are auth-related, 3 are config cleanup.
 3. Propose groups:
-   - Group 1: `src/auth/token.ts`, `src/auth/middleware.ts`, `test/auth.test.ts` → auth changes.
-   - Group 2: `config/app.yaml`, `config/routes.yaml`, `config/defaults.yaml` → config cleanup.
-4. User approves grouping.
-5. Stage group 1 files individually → draft: `feat(auth): add token refresh mechanism` → present → approve → commit.
-6. Stage group 2 files individually → draft: `chore(config): clean up route and default configs` → present → approve → commit.
+   - Group 1, auth changes: `src/auth/token.ts`, `src/auth/middleware.ts`, `test/auth.test.ts`.
+   - Group 2, config cleanup: `config/app.yaml`, `config/routes.yaml`, `config/defaults.yaml`.
+4. User approves the grouping.
+5. Stage group 1 files individually and commit `feat(auth): add token refresh mechanism`.
+6. Stage group 2 files individually and commit `chore(config): clean up route and default configs`, then report both hashes.

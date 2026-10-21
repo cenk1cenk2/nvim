@@ -26,7 +26,7 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
    - Otherwise, **propose tones before narrating.** Offer a generous, varied handful to spark ideas, then invite the user to name their own.
-   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended/wildcard tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Treat the **Wildcard palette** in Tone Guides as a springboard, not a script: remix it, combine it with the day's content, or invent adjacent ones — don't recite the same handful run after run. Always keep **vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
+   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended/wildcard tones with several invented on the spot that riff on the day's content (a rough day suggests therapy session; a shipping day suggests launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Treat the **Wildcard palette** in Tone Guides as a springboard, not a script: remix it, combine it with the day's content, or invent adjacent ones — don't recite the same handful run after run. Always keep **vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
      ```
      What tone? A few to spark ideas:
      - late-night talk show
@@ -54,8 +54,8 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 When the check-in has both buckets, distinguish them through tense and a natural paragraph break — no headers or labels needed. **Never write literal labels** like "Today:", "Tomorrow:", "Done:", "Up next:" — in vanilla or any tone. Say it as natural flowing prose; tense plus the paragraph break alone must carry the split. The line between them should be unmistakable:
 
-- **Done** → past tense, settled, triumphant or grim-but-finished. The kill is made, the case is closed, the front has passed.
-- **Tomorrow** → future tense, anticipatory, foreshadowing. The hunt ahead, the storm moving in, the next job, uncharted space.
+- **Done**: past tense, settled, triumphant or grim-but-finished. The kill is made, the case is closed, the front has passed.
+- **Tomorrow**: future tense, anticipatory, foreshadowing. The hunt ahead, the storm moving in, the next job, uncharted space.
 
 If only one bucket exists, narrate just that one. Never let a planned item read as already done.
 

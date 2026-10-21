@@ -65,7 +65,7 @@ Present a recommendation covering:
 **Present recommendations as a concise block per issue**, formatted per `output-diff`, before writing anything to Linear. Example:
 
 ```
-### K-123: Fix authentication timeout on mobile
+### [K-123 — Fix authentication timeout on mobile](<url>)
 
 - **Project:** Authentication Overhaul (fits the scope)
 - **Priority:** 3 (Medium) — not blocking other work

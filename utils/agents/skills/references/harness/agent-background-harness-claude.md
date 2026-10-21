@@ -7,7 +7,7 @@ Runtime mechanics for the `agent-background` skill on Claude Code: how to wait o
 | Need | Mechanism | Notes |
 |------|-----------|-------|
 | Wake once when a condition holds | `Bash` with **`run_in_background: true`** and a command that exits when satisfied | The default watcher. Exit delivers a task-notification that re-invokes the session. |
-| One notification per occurrence | `Monitor` | Each stdout line becomes an event. `timeout_ms` defaults to 300000 and is capped at 1800000; at expiry it is killed with one notice, so a long watch sets the maximum and re-arms on each expiry (v2.1.283, which has no `persistent` parameter). Also accepts a `ws` WebSocket source. |
+| One notification per occurrence | `Monitor` | Each stdout line becomes an event. `timeout_ms` defaults to 300000 and is capped at 1800000; at expiry it is killed with one notice, so a long watch sets the maximum and re-arms on each expiry (v2.1.306, which has no `persistent` parameter). Also accepts a `ws` WebSocket source. |
 | No bash-reachable signal | `ScheduleWakeup` (dynamic `/loop`) | Deferred re-invocation; delay clamped to 60–3600 s. |
 | Genuinely recurring cadence | `CronCreate` / the `/schedule` skill | Outlives the session. Never for a one-shot wait. |
 | Work you dispatched yourself | **nothing — do not poll** | `Agent` and `Workflow` completion re-invokes the session automatically. Scoped to those two: an agent process owned by an MCP server is not dispatched work and needs a watcher like any other external condition. |
@@ -83,7 +83,7 @@ Rules that bite on this pattern:
 
 ## Reading and stopping
 
-- **`TaskStop <task-id>`** stops a watcher. It also accepts a named background agent's name or a teammate's `name@team`.
+- **`TaskStop <task-id>`** stops a watcher. It also accepts a named background agent's name or a teammate's agent ID or bare name (v2.1.306).
 - **Background *shell* output:** read the output file path returned at launch (`Read`, or `TaskOutput`). This is safe for shells.
 - **Never read a local *agent* task's output file** — it is a symlink to the full subagent transcript (JSONL) and will overflow the lead's context.
 - **`run_in_background` shells do not appear in `TaskList`** — that lists the task-management system, not local shells. Track the returned id yourself.

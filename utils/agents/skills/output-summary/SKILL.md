@@ -74,7 +74,7 @@ Only when the scope implies a user action, one bullet per concrete action. Prere
 ## Boundaries
 
 - **The live picture of in-flight work is `output-status`**, not this. A summary looks back over a settled scope; anything in the scope still moving is named under `Open`.
-- **Presenting a write is `output-diff`.** A summary may say a write is pending; its content is presented per `output-diff` before it runs.
+- **Presenting a write for approval is `output-diff`.** A summary may say a write is pending; the skill that performs it decides whether it is presented first.
 
 ## Examples
 

@@ -22,7 +22,11 @@ LB clusters are sun (loki region) and moon (thor region). Each keeps its own gat
 4. Workloads author **TLSRoutes/TCPRoutes/UDPRoutes** parented to the relay ListenerSet, with a `backendRef` to the Upstream (the operator's webhook defaults a missing one from `lb.kilic.dev/upstream` and rejects hostname and port collisions on the LB gateway), plus DNSEndpoints labelled `clusters.lb.kilic.dev/<lb>`.
 5. operator-lb on the LB cluster copies the ListenerSets, routes and DNSEndpoints into `lb-<target>` and owns the Envoy Backend side: one Backend per Upstream and port.
 
-Traffic: client -> LB gateway -> relayed route in `lb-<target>` -> Envoy Backend -> Upstream FQDN (target gateway) -> in-cluster route -> Service.
+Traffic path:
+
+```
+client, LB gateway, relayed route in lb-<target>, Envoy Backend, Upstream FQDN (target gateway), in-cluster route, Service
+```
 
 ## rubik Example
 

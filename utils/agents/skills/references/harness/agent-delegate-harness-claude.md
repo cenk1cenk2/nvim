@@ -1,21 +1,21 @@
 # Harness: Claude Code — agent-delegate
 
-Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `agent-background-harness-claude`. Facts below come from the official subagent docs and the live tool schemas; version markers say which build each claim was read from, because an older CLI behaves differently.
+Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier-to-model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `agent-background-harness-claude`. Facts below come from the official subagent docs and the live tool schemas; version markers say which build each claim was read from, because an older CLI behaves differently.
 
 **Dispatch:** the built-in `Agent` tool.
 
-## Tier → model
+## Tier to model
 
 | Tier | Model |
 |------|-------|
 | cheap | `haiku` |
 | default | `sonnet` |
 | smart | `opus` |
-| max | `fable` (`claude-fable-5`) |
+| max | `fable` |
 
 Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
 
-## `Agent` tool parameters (v2.1.283)
+## `Agent` tool parameters (v2.1.306)
 
 | Param | Required | Purpose |
 |-------|----------|---------|
@@ -25,10 +25,11 @@ Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in 
 | `model` | no | `haiku`, `sonnet`, `opus`, or `fable` — nothing else. Overrides the agent definition's model; omitted, the definition's model applies, else the default subagent model, else the parent's. Ignored for a fork. |
 | `isolation` | no | `worktree` — an isolated git worktree for the agent, auto-removed if it changes nothing. `remote` — a remote cloud environment, always background, availability gated. |
 | `name` | no | Makes the agent addressable by `SendMessage` while it runs and after it finishes. |
+| `effort` | no | `low`, `medium`, `high`, `xhigh` or `max`. Set it only when the user or a skill explicitly asks for that effort; omitted, the agent runs at its definition's usual effort. Ignored for a fork. |
 | `mode` | — | **Deprecated and ignored.** See Permissions below. |
 | `team_name` | — | **Deprecated and ignored.** The session has one implicit team. |
 
-**What the dispatch cannot set (v2.1.283):** there is no `run_in_background` and no `effort` parameter. Reasoning effort and the tool set come from the agent type's definition (`.claude/agents/*.md` frontmatter, or SDK `agents`), so a task that needs a different effort or tool set needs a different agent type, not a parameter.
+**What the dispatch cannot set (v2.1.306):** there is no `run_in_background` parameter, and the tool set comes from the agent type's definition (`.claude/agents/*.md` frontmatter, or SDK `agents`), so a task that needs a different tool set needs a different agent type, not a parameter.
 
 ## Permissions — inherited, NOT set on the dispatch
 
@@ -84,11 +85,11 @@ Tools are fixed by the agent type, not by the dispatch. Two things follow:
 - Structured JSON is reserved for the `shutdown_request` / `plan_approval_response` protocol. Progress and findings go as prose.
 - **Never ask a peer to run something your own session blocked.** Permission boundaries are per-session, and routing blocked work sideways launders the user's decision. Send it back to the lead instead.
 
-Whether a named agent's final report still arrives through `SubagentHandback`, or needs a `SendMessage` as it did on v2.1.221, is **unverified on v2.1.283** — the handback was observed from inside a dispatched subagent whose name was not visible to it.
+Whether a named agent's final report still arrives through `SubagentHandback` is **unverified**. Observed on v2.1.306 inside a named teammate: no `SubagentHandback` in its tool list, `SendMessage` loaded rather than deferred, and a system prompt saying both that plain text reaches no teammate and that the final message is what the parent reads.
 
 ### Teams
 
-`team_name` on the dispatch is **deprecated and ignored** — the session has one implicit team — and there is **no team create or delete tool**. A team is just named agents: `name` is the whole mechanism. `TaskStop` accepts a teammate's `name@team` form alongside a plain name or task id (v2.1.283).
+`team_name` on the dispatch is **deprecated and ignored** — the session has one implicit team — and there is **no team create or delete tool**. A team is just named agents: `name` is the whole mechanism. `TaskStop` accepts a teammate's agent ID or bare name alongside a task id (v2.1.306).
 
 ## A quiet agent — steer it, never mark it failed
 
@@ -105,7 +106,7 @@ Report a delegation as failed only after the channel itself produced nothing acr
 
 ## Reaping
 
-`TaskStop { task_id }` accepts the task id, a named background agent's name, or a teammate's `name@team` (v2.1.283). Stopping ends the run, so **collect before you reap** — though a completed agent can still be resumed by `SendMessage`, so "quiet" is never itself a reason to kill one. Reap when the work is genuinely done, superseded, or about to be replaced (reap *before* re-dispatching over the same target, or two writers clobber each other).
+`TaskStop { task_id }` accepts the task id, a named background agent's name, or a teammate's agent ID or bare name (v2.1.306). Stopping ends the run, so **collect before you reap** — though a completed agent can still be resumed by `SendMessage`, so "quiet" is never itself a reason to kill one. Reap when the work is genuinely done, superseded, or about to be replaced (reap *before* re-dispatching over the same target, or two writers clobber each other).
 
 ## Limits
 
@@ -133,4 +134,4 @@ The on-disk location is in `provider-paths`, for recognising a tree it created.
 - A subagent starts with a **fresh, isolated context window** — no conversation history, no files already read, no skills already loaded. Only a fork inherits the parent conversation, and a fork keeps its tool output out of the lead's context.
 - Since v2.1.198 subagents inherit the main conversation's **extended thinking** setting; there is no per-subagent thinking control.
 - The built-in `Explore` agent inherits the main model, capped at Opus on the Claude API (v2.1.198+).
-- Reasoning effort is per agent type, set in its definition — not per dispatch (v2.1.283).
+- Reasoning effort defaults to the agent type's definition; the dispatch's `effort` overrides it when a user or skill asks (v2.1.306).

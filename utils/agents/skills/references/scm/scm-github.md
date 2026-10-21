@@ -53,10 +53,6 @@
 | `github__list_tags` | List tags for version discovery. |
 | `github__get_tag` | Get a specific tag. |
 
-### Local Git Operations
-
-Raw `git` CLI commands via `Bash` (there is no git MCP server) — the command table lives in the `scm-detect` reference.
-
 ## CLI Fallback
 
 When MCP tools lack the needed capability, use `gh` CLI via `Bash`:

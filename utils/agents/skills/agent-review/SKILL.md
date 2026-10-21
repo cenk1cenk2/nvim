@@ -74,7 +74,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - Artifact type(s) — one or more of `plan` / `dag` / `facts` / `freeform`.
    - Artifact content or file path.
    - Tier override (if any).
-   - "Hard" / "deep" / "thorough" keyword → upgrade tier.
+   - "Hard" / "deep" / "thorough" keyword, which upgrades the tier.
 
 2. **For each artifact:**
    - Read the artifact content (from file, or inline from the user's message). When the review needs git context — a diff or a historical change — resolve the platform per `scm-detect`.

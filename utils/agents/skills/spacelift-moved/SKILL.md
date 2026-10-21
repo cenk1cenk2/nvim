@@ -5,7 +5,6 @@ references:
   - ../references/scm/scm-detect.md
   - ../references/scm/scm-github.md
   - ../references/spacelift-github.md
-  - ../references/output-diff.md
   - ../references/identifier-legibility.md
 argumentHint: '[PR, branch, commit, or Actions link]'
 ---
@@ -14,10 +13,7 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Spacelift Moved Block Analysis
 
-## Prerequisite
-
-> **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill.
+Load `spacelift-laravel` before the first Spacelift call when the session holds no Spacelift workspace context.
 
 ## Process
 
@@ -35,7 +31,7 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
    - A pair is a candidate when:
      - Same resource **type** appears in both a delete and a create action.
      - The resource **attributes** are identical or nearly identical (minor drift is acceptable).
-     - The address changed — e.g., renamed, moved to a different module path, index key changed (`count` → `for_each`), or refactored into a child module.
+     - The address changed — e.g., renamed, moved to a different module path, index key changed (`count` to `for_each`), or refactored into a child module.
    - Also look for **standalone deletes** where the resource type still exists elsewhere in the plan under a new address — these may be moves that Terraform could not automatically detect.
    - Exclude pairs where the resource is genuinely being replaced due to an immutable attribute change (e.g., AWS `name_prefix`, `ami`, `engine_version`). These are real recreations, not address changes.
 
@@ -64,8 +60,7 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 7. **Generate `moved.tf`:**
    - Ask the user where to place the file — suggest the repository root or the relevant module directory.
    - Generate `moved` blocks for approved candidates only.
-   - Present the file content per `output-diff` — show the full content, wait for explicit approval.
-   - After approval, write the file.
+   - Write the file and show its full content.
 
 ## Report Format
 
@@ -141,7 +136,7 @@ moved {
 4. Classify: 2 high confidence (module rename), 1 medium (index key change with tag drift), 1 not a move (AMI change).
 5. Present reasoning report.
 6. User approves — generate `moved.tf` with 3 moved blocks.
-7. Present file content, wait for approval, write the file.
+7. Write the file and show its content.
 
 **Result:** Reasoning report + `moved.tf` written to the repository.
 

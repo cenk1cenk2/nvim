@@ -1,6 +1,6 @@
 ---
 name: code-pull
-description: code-pull Pull changes from a reference repository and adapt them to this one. Use on "pull this from upstream", "port that change here", or when given a reference repo and refs. Not for reviewing code, debugging, or writing a PR description.
+description: code-pull Port selected changes from a work branch or a reference repository and adapt them to this one. Use on "port that change here", "bring that over from the other branch", or when given a reference repo and refs. Not for a plain git pull or fast-forward, reviewing code, debugging, or writing a PR description.
 disableModelInvocation: true
 references:
   - ../references/scm/scm-detect.md
@@ -9,12 +9,12 @@ references:
 argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
 ---
 
-## Code Pull: Adapt Changes from a Reference Repository
+## Code Pull: Adapt Changes from a Work Branch or Reference Repository
 
 ## Core Requirements
 
-- Determine the source platform (GitHub or GitLab) from the provided URL or remote origin — detection per `scm-detect`, provider-specific tools per `scm-github` or `scm-gitlab`.
-- The current repository and the reference repository are similar but NOT identical. Changes must be adapted, not blindly copied.
+- A source that is another branch of this repository is read with local git. For a reference repository, determine its platform (GitHub or GitLab) from the provided URL or remote origin — detection per `scm-detect`, provider-specific tools per `scm-github` or `scm-gitlab`.
+- The source and the current branch are similar but NOT identical. Changes must be adapted, not blindly copied.
 
 ## Process
 
@@ -26,6 +26,7 @@ argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
    - **PR/MR:** Read the diff and commit list via `github__pull_request_read` (method `get_diff`) or `gitlab__get_merge_request_diffs`.
    - **Specific commits:** Read each commit via `github__get_commit` or `gitlab__get_commit_diff`.
    - **Branch:** List recent commits via `github__list_commits` or `gitlab__list_commits` and read relevant diffs.
+   - **Work branch in this repository:** `git log <base>..<branch>` for the commits, `git show` or `git diff` for the parts in scope.
 3. **Understand the reference changes.** Read the full diff and affected files in the reference repository. Summarize what each change does logically — not just file-by-file, but the intent behind the changes.
 4. **Analyze the current repository.** Read the corresponding files in the current repository. Identify structural differences: naming conventions, file layout, framework differences, language idioms, existing patterns.
 5. **Plan the adaptation.** For each reference change, determine how it maps to the current repository:

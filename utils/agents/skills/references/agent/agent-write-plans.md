@@ -39,7 +39,7 @@ Each step should be a single action:
 - "Create `src/auth/validate.ts` with the validation function" — good.
 - "Add the validation function, wire it up to the router, update the tests, and handle errors" — too many things in one step.
 
-If the project has tests in the area being changed, steps should include writing/updating tests. If the project doesn't have tests, don't force TDD — follow implement → verify → commit.
+If the project has tests in the area being changed, steps should include writing/updating tests. If the project doesn't have tests, don't force TDD — follow implement, verify, commit.
 
 ## File Structure First
 

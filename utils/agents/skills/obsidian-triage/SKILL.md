@@ -11,6 +11,7 @@ references:
 ## Obsidian Triage
 
 Posture: `present-first`.
+
 ## Context
 
 Vault location, tool access, file naming, frontmatter, and writing style: `obsidian`.

@@ -90,25 +90,25 @@ Present findings as a structured summary, not a raw dump:
 - [project or parent issue: status/description/label/estimate changes if any]
 
 ### Priority Violations
-- <issue-id>: priority <current> to <recommended> (blocks <blocked-issue-id> which is priority <X>)
+- [<issue-id> — <title>](<url>): priority <current> to <recommended> (blocks [<blocked-issue-id> — <title>](<url>) which is priority <X>)
 
 ### Estimate Issues
-- <issue-id>: [missing | needs adjustment] — <reasoning>
+- [<issue-id> — <title>](<url>): [missing | needs adjustment] — <reasoning>
 
 ### Missing Relations
-- <issue-id> should block <issue-id> — <reasoning>
+- [<issue-id> — <title>](<url>) should block [<issue-id> — <title>](<url>) — <reasoning>
 
 ### Status Corrections
-- <issue-id>: <current-status> to <recommended-status> — <reasoning>
+- [<issue-id> — <title>](<url>): <current-status> to <recommended-status> — <reasoning>
 
 ### Stale Descriptions
-- <issue-id>: <brief note on what's outdated>
+- [<issue-id> — <title>](<url>): <brief note on what's outdated>
 
 ### Label Inconsistencies
-- <issue-id>: [missing | wrong] label — <recommendation>
+- [<issue-id> — <title>](<url>): [missing | wrong] label — <recommendation>
 
 ### Out of Scope
-- <issue-id>: <what looks wrong> — outside this scope, flagged only
+- [<issue-id> — <title>](<url>): <what looks wrong> — outside this scope, flagged only
 ```
 
 Omit sections that have no findings.

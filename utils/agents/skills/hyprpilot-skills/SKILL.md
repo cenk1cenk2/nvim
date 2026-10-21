@@ -63,7 +63,7 @@ A skill's metadata block is its whole frontmatter minus the three keys another f
 
 **Track the set of reference paths you have loaded this session. Before any `read_skill_references` call, drop every path already in that set. Never fetch a path you already hold.**
 
-This is what makes the shared corpus free after first use. `output-diff` is declared by 57 skills and `scm-detect` by 31 — under this rule a session pays for each of them once instead of dozens of times. Path identity is exactly what makes it mechanical rather than a judgement call: two citations either resolve to the same path or they do not.
+This is what makes the shared corpus free after first use. `output-diff` and `scm-detect` are each declared by dozens of skills — under this rule a session pays for each of them once instead of dozens of times. Path identity is exactly what makes it mechanical rather than a judgement call: two citations either resolve to the same path or they do not.
 
 The set survives everything except the file itself changing, which `modified` tells you about; drop that path from the set and re-fetch it, per the re-read above.
 

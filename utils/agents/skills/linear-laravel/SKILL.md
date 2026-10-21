@@ -31,4 +31,8 @@ The current user is on multiple teams (`Infrastructure Foundations`, `Infrastruc
 
 ## After Initialization
 
-Once context is established, proceed with the user's request. If the user wants to create issues, follow the `linear-issue-create` skill workflow.
+Once context is established, proceed with the user's request.
+
+**Issue-creation invariant:** every `linear-laravel__save_issue` call — including ad-hoc creates made WITHOUT the `linear-issue-create` skill — sends an explicit `state` and the required fields per `linear-mandatory-fields`.
+
+If the user wants to create issues, follow the `linear-issue-create` skill workflow.

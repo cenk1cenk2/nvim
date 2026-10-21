@@ -29,7 +29,7 @@ argumentHint: '[optional: specific instructions]'
 - **CRITICAL:** Do NOT "correct" words that are already valid technical terms, product names, project names, or domain-specific jargon. Many technical words look unusual but are correct as-is. Before changing any word, verify it is actually a misspelling and not a legitimate term. Examples: `Grafana Alloy`, `Cilium`, `Istio`, `Envoy`, `Pulumi`, `Traefik`, `Velero`, `Falco`, `Loki`, `Mimir`, `Tempo`, `Thanos`, `Longhorn`, `Knative`, `Dapr`, `Crossplane`, `Kyverno`, `Buildah`, `Podman`, `Talos`. If a word is already a recognized technical term and fits the context, leave it alone — do not replace it with a more common English word.
 - Only correct a word when it is clearly garbled or makes no sense even as a technical term in context. The test is: "Could this word be a real product, tool, library, or technical concept?" If yes, preserve it.
 - Preserve non-English words, proper nouns, and personal names that fit the context (e.g., `Cenk`, `Kilic`, or other names/words from any language). These are not typos — infer from context whether a word is a name or foreign term before attempting correction.
-- When words or phrases make no sense in context, aggressively try to decode them as mangled technical/programming terms using phonetic similarity and surrounding context (e.g., "nook shed" → `NuxtJS`, "react hocks" → React hooks, "pie test" → `pytest`, "dango" → `Django`, "terra form" → `Terraform`, "answer bowl" → `Ansible`). It is better to make a reasonable technical guess than to leave nonsensical words in the output.
+- When words or phrases make no sense in context, aggressively try to decode them as mangled technical/programming terms using phonetic similarity and surrounding context (e.g., "nook shed" becomes `NuxtJS`, "react hocks" becomes React hooks, "pie test" becomes `pytest`, "dango" becomes `Django`, "terra form" becomes `Terraform`, "answer bowl" becomes `Ansible`). It is better to make a reasonable technical guess than to leave nonsensical words in the output.
 - Remove duplicate words or obviously repeated phrases.
 
 ## Markdown Formatting
@@ -39,8 +39,8 @@ argumentHint: '[optional: specific instructions]'
 - Actively break longer text into paragraphs. Err on the side of MORE paragraph breaks rather than fewer — a wall of text is always worse than slightly over-separated text. Insert a blank line when the text:
   - Shifts to a new topic or subtopic.
   - Makes a new point or argument.
-  - Transitions from one idea to another (e.g., problem → solution, context → action, observation → conclusion).
-  - Moves between different aspects of the same subject (e.g., "what it does" → "why it matters" → "how to use it").
+  - Transitions from one idea to another (e.g., problem to solution, context to action, observation to conclusion).
+  - Moves between different aspects of the same subject (e.g., "what it does", then "why it matters", then "how to use it").
   - Changes addressee or perspective.
 - Keep a single continuous argument or closely connected chain of thought as one paragraph — only avoid splitting mid-sentence or mid-thought.
 - When outputting markdown elements (lists, blockquotes, code blocks), surround them with blank lines for proper rendering.

@@ -65,13 +65,13 @@ Four MRs are open and green. The table is the order they must land in.
 | 1 | you | Merge [lib!40 — Extract the retry policy](https://example.invalid/lib/-/merge_requests/40) | Tag `v2.3.0` released | | ready | |
 | 2a | me | Bump [api!118 — Use the shared retry policy](https://example.invalid/api/-/merge_requests/118) to `v2.3.0`, push | Pipeline green | 1 | waiting | |
 | 2b | me | Bump [worker!77 — Use the shared retry policy](https://example.invalid/worker/-/merge_requests/77) to `v2.3.0`, push | Pipeline green | 1 | waiting | |
-| 3 | you | Merge api!118 and worker!77, any order | Both merged | 2a, 2b | waiting | |
+| 3 | you | Merge [api!118](https://example.invalid/api/-/merge_requests/118) and [worker!77](https://example.invalid/worker/-/merge_requests/77), any order | Both merged | 2a, 2b | waiting | |
 | 4 | you | Merge [deploy!9 — Raise the retry budget](https://example.invalid/deploy/-/merge_requests/9) | Rollout healthy on staging | 3 | blocked | review: one open change request |
 
 - 2a and 2b are independent; merge whichever goes green first.
 - 4 merges last because it raises a budget only the new policy reads.
 
-Next: 1 (you) — merge lib!40.
+Next: 1 (you) — merge [lib!40 — Extract the retry policy](https://example.invalid/lib/-/merge_requests/40).
 
 ### A coordinated agent run, re-emitted after a row moved
 

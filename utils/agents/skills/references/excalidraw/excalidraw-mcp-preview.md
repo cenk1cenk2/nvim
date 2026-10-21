@@ -67,7 +67,7 @@ Read the elements per `excalidraw-template`, prepend a `cameraUpdate` framing th
 
 Emit elements progressively for the best streaming experience:
 
-- **Good**: zone → shape1 → its bound text → its arrows → shape2 → its bound text → its arrows
-- **Bad**: all shapes → all text → all arrows
+- **Good**: zone, then shape1, its bound text, its arrows, then shape2, its bound text, its arrows
+- **Bad**: all shapes, then all text, then all arrows
 
 This matters because elements stream in one by one with draw-on animations.

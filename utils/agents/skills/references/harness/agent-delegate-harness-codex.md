@@ -1,10 +1,10 @@
 # Harness: Codex — agent-delegate
 
-Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `agent-background-harness-codex`.
+Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the tier-to-model mapping. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `agent-background-harness-codex`.
 
 **Dispatch:** Codex's own task/subagent spawning. Set the resolved `gpt-*` model.
 
-## Tier → model
+## Tier to model
 
 | Tier | Model |
 |------|-------|

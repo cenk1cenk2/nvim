@@ -6,7 +6,6 @@ argumentHint: '[topic or description]'
 references:
   - ../references/reconcile-state.md
   - ../references/obsidian.md
-  - ../references/output-diff.md
 ---
 
 ## Obsidian Note: Structured Knowledge Management
@@ -33,13 +32,11 @@ Additional tools beyond the obsidian reference:
 2. **Explore the vault:**
    - Follow the vault exploration steps in `obsidian`.
 
-3. **Draft the note:**
+3. **Write the note:**
    - Match the patterns discovered in step 2.
-   - Present the full draft in chat per `output-diff`.
-   - Iterate based on user feedback.
+   - Write the file in the correct category directory.
 
-4. **Create the note:**
-   - After approval, write the file in the correct category directory.
+4. **Report** the note's path and what it covers.
 
 ## Related Skills
 

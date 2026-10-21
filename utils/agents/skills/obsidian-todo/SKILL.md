@@ -5,14 +5,13 @@ disableModelInvocation: true
 argumentHint: '[the task or thought]'
 references:
   - ../references/obsidian.md
-  - ../references/output-diff.md
 ---
 
 ## Obsidian Todo: Quick Capture & Task Tracking
 
 ## Context
 
-Vault location and tool access: `obsidian`. Present the note in chat per `output-diff` before writing it.
+Vault location and tool access: `obsidian`. Write the note, then report its path.
 
 You capture the user's unstructured thoughts, mumbling, and ideas into structured notes in `Todo/`. The user talks — you organize. Notes are **temporary working memory**, not permanent reference material.
 

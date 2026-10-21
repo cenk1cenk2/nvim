@@ -8,7 +8,6 @@ references:
   - ../references/excalidraw/excalidraw-elements.md
   - ../references/excalidraw/excalidraw-template.md
   - ../references/obsidian.md
-  - ../references/output-diff.md
 ---
 
 ## Excalidraw Drawing — Revise or Understand
@@ -80,11 +79,10 @@ If the user wants to revise the drawing:
 
 8. **Iterate.** Based on user feedback, continue refining with checkpoints. Repeat until satisfied.
 
-9. **Export to Obsidian.** Once approved:
+9. **Export to Obsidian.** Once the user is satisfied:
    - Strip pseudo-elements.
    - Preserve the original appState, except a drawing authored dark, which converts to the light palette per Key Principles.
    - Wrap per `excalidraw-template`: frontmatter, text elements section, drawing section.
-   - Present changes per `output-diff`.
    - Overwrite the original file (or write to a new file if the user prefers).
 
 ## Conventions
@@ -92,7 +90,7 @@ If the user wants to revise the drawing:
 - **MCP preview is mandatory.** Always render the drawing before and after changes. The user must see both states.
 - **Preserve existing style.** When revising, match the drawing's existing color scheme, font sizes, and layout patterns unless the user asks to change them.
 - **Author light** per `excalidraw-elements` — white canvas, dark strokes; the plugin inverts it to match the dark vault. A drawing authored dark (dark `viewBackgroundColor`, light strokes) renders light in the vault; convert it to the light palette when revising.
-- **Overwrite carefully.** Always present changes and get approval before overwriting the vault file.
+- **Overwrite carefully.** The preview has shown both states; overwrite the vault file only once the user is satisfied with it.
 
 ## Composing with Obsidian Skills
 

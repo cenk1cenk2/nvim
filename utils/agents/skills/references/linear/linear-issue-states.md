@@ -27,13 +27,13 @@ Triage → Backlog → Todo → In Progress → In Review → Done
 
 **NEVER move an issue to a lower state** — only promote forward in the hierarchy.
 
-- `In Progress` → `Todo` is **forbidden**.
-- `Todo` → `Backlog` is **forbidden**.
+- `In Progress` to `Todo` is **forbidden**.
+- `Todo` to `Backlog` is **forbidden**.
 - If an issue needs to be deprioritized, leave its state and remove it from the cycle instead.
 
 ### State Floor
 
-- **Triage → Backlog** is the minimum transition. Issues leaving triage must reach at least `Backlog`.
+- **Triage to Backlog** is the minimum transition. Issues leaving triage must reach at least `Backlog`.
 - Skills that process triage queues (e.g., triage skill) enforce this floor.
 
 ### Dependency Resolution
@@ -48,9 +48,9 @@ Triage → Backlog → Todo → In Progress → In Review → Done
 
 Ask the user about timing: "Do you want to work on this issue in the current cycle?"
 
-- YES → `state: "Todo"`.
-- NO or UNSURE → `state: "Backlog"` (default).
-- If user says nothing about timing → `state: "Backlog"`.
+- YES: `state: "Todo"`.
+- NO or UNSURE: `state: "Backlog"` (default).
+- If user says nothing about timing: `state: "Backlog"`.
 
 ### Picking Up Work
 
@@ -60,8 +60,8 @@ When a user starts working on an issue, move it to `In Progress` immediately —
 
 When assigning issues to a cycle:
 
-- `Triage` or `Backlog` → promote to `Todo`.
-- `Todo`, `In Progress`, or beyond → **do not change the state**. Preserve current state.
+- `Triage` or `Backlog`: promote to `Todo`.
+- `Todo`, `In Progress`, or beyond: **do not change the state**. Preserve current state.
 
 ### Triage Processing
 

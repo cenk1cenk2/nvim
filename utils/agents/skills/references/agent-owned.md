@@ -22,12 +22,13 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 | Owned thing | Free |
 |---|---|
 | Branch | Rebase, `rebase --onto` to repair a stack, amend, squash fixups; resolve the conflicts the rebase raises, then run the project's checks; push with `--force-with-lease=<branch>:<last SHA you pushed>` and report the old and new head. |
-| PR/MR | Retarget its base after a stack moves, close it when a replacement supersedes it. Opening one, its title and description, and draft or ready status stay gated on the user's approval of the draft. |
+| PR/MR | Retarget its base after a stack moves, close it when a replacement supersedes it. Opening one, its title and description, and draft or ready status always wait for the user's approval of the draft — an explicit skill invocation does not clear it; a completion skill such as `agent-bohrhammer` that the user invoked does. |
 | CI on an owned branch | Retry a failed job or pipeline, cancel pipelines a newer push made obsolete, stop or delete its review-app environment. |
 | Comment (PR/MR, Linear, Slack) | Edit it; delete it while it has no replies. |
 | Stash entry | Pop or drop it. |
 | Linear issue | Fix its fields, relink it, cancel it as a duplicate you made. |
-| Worktree, scratch file, plan, tmux window, watcher | Remove or stop it. |
+| Worktree, scratch file, plan | Remove it, once the cleanup rule below holds. |
+| tmux window, watcher | Stop it. |
 | Artifact, Obsidian note, Notion page | Edit it; delete it while nobody else has opened, edited or commented on it. |
 
 **Cleanup waits for merged and finished.** Delete a branch (`-D` included, since a squash merge looks unmerged to git), its worktree, its plan and its scratch data only once its PR/MR merged and its agent delivered and was collected.
@@ -37,7 +38,8 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 - **Plain `--force`.** Never.
 - **A conflict whose resolution is a design choice** — stop and present both sides.
 - **Discarding uncommitted work** — a dirty-tree force-remove, `reset --hard` over local changes.
-- **Merging a PR/MR**, and any Linear project or initiative status update. Local merges of the run's own branches, as in a plan layer, are free.
+- **Merging a PR/MR.** Local merges of the run's own branches, as in a plan layer, are free.
+- **Linear project and initiative writes** follow `linear-absolute-approval`.
 - **Deleting an owned thing before its work merged** — branch, worktree or data of work still open, closed unmerged, or never opened.
 - **A bulk operation that also reaches what is not owned** — present the dry-run.
 - **Live clusters** — Kubernetes and ArgoCD resources gate per their own skills, owned or not.

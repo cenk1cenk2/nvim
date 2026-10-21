@@ -6,20 +6,17 @@ references:
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/harness/provider-paths.md
+  - ../references/tmux.md
 argumentHint: '[optional: plan file, and what changed]'
 ---
 
 ## Plan Revise — Going Back to the Drawing Board
 
-State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
+Write state that spans turns durably per `long-running-work`.
 
-When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state`.
 
-> **ALWAYS enter plan mode** — per `plan-mode`, unless the user asked you to plan with yourself.
->
-> - Enter plan mode immediately.
-> - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.
-> - Do NOT undo, revert, or modify any implementation code during this skill. Revision happens in the plan file only.
+Posture: strict plan mode per `plan-mode`, unless the user asked you to plan with yourself. Do NOT undo, revert, or modify any implementation code during this skill — revision happens in the plan file only.
 
 ## Context
 
@@ -31,7 +28,7 @@ This skill composes with `plan-hard` — the interview protocol is the same, but
 
 1. **Locate the plan file.**
    - If the user provides a file path or name, use it directly.
-   - Otherwise, list recent plan files in your internal plans directory (resolved for the active runtime via `provider-paths`; never hardcode a path) filtered to the current project (prefix match on project name), sorted by modification time, and ask the user to pick one.
+   - Otherwise, list recent plan files in your internal plans directory (per `provider-paths`) filtered to the current project (prefix match on project name), sorted by modification time, and ask the user to pick one.
    - If the current working directory has a matching recent plan, offer it as the default.
 
 2. **Read the plan file completely.** Do not skim. Understand the original problem statement, requirements, approach, and implementation steps. Note any existing `## Revision History` section.
@@ -124,7 +121,7 @@ Extra sources specific to `plan-revise`:
 
 - `git log --since=<plan-date>` — what has been done since the plan.
 - `git diff` — concrete changes on the branch.
-- Build / test output — run it with `Bash`, or capture what the user already ran with `tmux__capture-pane` — to confirm whether the current approach actually fails.
+- Build / test output — run it, or read what the user already ran per `tmux` — to confirm whether the current approach actually fails.
 
 ## Stop Conditions
 
@@ -153,7 +150,7 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 2. Locate `2026-04-15-myapp-jwt-auth.md`. Read it.
 3. Confirm failure: "The plan assumed httpOnly cookie storage for refresh tokens. Mobile SDK can't read them. Is that the blocker?"
 4. Check implementation state: `git log` shows 3 commits against this plan. Report: "You've shipped access token generation and the login endpoint. Refresh endpoint is unbuilt. Want to keep the first two and reshape refresh storage?"
-5. Interview: "Recommended: store refresh tokens in secure device storage (Keychain/Keystore) on mobile, httpOnly cookie on web, dispatched by a platform header. Alternative: symmetric refresh-token-rotation via response body. Depends on: whether the mobile SDK can send a platform header at login." → user answers.
+5. Interview: "Recommended: store refresh tokens in secure device storage (Keychain/Keystore) on mobile, httpOnly cookie on web, dispatched by a platform header. Alternative: symmetric refresh-token-rotation via response body. Depends on: whether the mobile SDK can send a platform header at login." The user answers.
 6. Continue walking new branches (rotation policy, revocation).
 7. Write revision to plan file. Present. Stop.
 
@@ -173,9 +170,3 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 - **`plan-pickup`** — if the revised plan is to be executed immediately after revision, the user may invoke `plan-pickup` next.
 - **`plan-handoff`** — if the revised plan needs to be handed to a different session or repository, compose with `plan-handoff` after revision.
 - **`code-deviations`** — when the revision trigger was a discovered deviation between plan and reality, apply the code-deviations handling pattern to record the learning.
-
-## Related Skills
-
-- **`plan-hard`** — build a plan from scratch via interview.
-- **`plan-pickup`** — load and execute an existing plan file.
-- **`plan-handoff`** — produce a self-contained plan for another session or repository.

@@ -38,8 +38,8 @@ Subagents are tracked separately, per `agent-roster`.
 8. **Reap what you armed**, and reap *before* re-arming a replacement, or duplicates double-wake and can
    contradict each other. Reap when: the condition fired and you acted, you learned the answer another
    way, the signal proved unreliable, or the work was superseded.
-9. **Account for every live watcher in each report** — what it polls, its cadence, its handle. An
-   unexplained live watcher at the end of a flow is a bug, not diligence.
+9. **Account for every live watcher in each report** — named in the report, its ledger row (what it
+   polls, its cadence, its handle) kept internal per the announce section below. An unexplained live watcher at the end of a flow is a bug, not diligence.
 
 **A wake is the runtime's own notification firing on a watcher you launched through its background-exec
 facility. Nothing else is one.** Two things that look like wakes and are not:
@@ -229,13 +229,13 @@ row below is the ledger entry, recorded the moment it fires, expires, or is reap
 | Watcher | Outcome | What the condition actually said | Re-arm? | Next / deviation |
 |---|---|---|---|---|
 | `pr-4821` | fired | merged at 14:02, CI green | no - done | resumed the rollout; moved the issue to In Review |
-| `deploy-prod` | expired at cap | 6 of 8 jobs settled, 2 still queued | yes, cadence 10m | runner capacity looks like the holdup |
+| `deploy-prod` | expired at cap | 6 of 8 jobs settled, 2 still queued | yes, cap doubled | runner capacity looks like the holdup |
 | `ci-lint` | reaped | superseded, branch was force-pushed | replaced | new watcher armed on the new head |
 
 - **Fired means the condition was met and verified** — not merely that the loop exited. A loop can exit
   on its own backstop, or on a broken filter; check the artifact before writing "fired".
 - **Expired is never silently dropped.** Every expiry ends in an explicit choice: re-arm with a longer
-  cadence or cap, escalate, or abandon the wait and say so. Leaving it off the table reads as
+  cap, escalate, or abandon the wait and say so. Leaving it off the table reads as
   "it completed".
 - **Deviation is the valuable column** — the condition met late, partially, or in a way you did not
   predict. That is what changes the next step, and the first thing lost when a watcher is reported as a

@@ -24,13 +24,13 @@ Two things still differ, and both bite silently:
 Correct:
 
 ```logql
-{namespace="monitoring", deployment="mimir-ruler"} | container="ruler" | detected_level="error"
+{namespace="monitoring-backbone", deployment="mimir-ruler"} | container="ruler" | detected_level="error"
 ```
 
 Wrong, and **returns an empty result rather than an error**:
 
 ```logql
-{namespace="monitoring", container="ruler"}
+{namespace="monitoring-backbone", container="ruler"}
 ```
 
 An empty result is indistinguishable from "there are no logs", which is why this mistake survives repeatedly. **Treat an empty Loki result as a query bug until proven otherwise** — check every name in the selector against the stream-label list, then confirm the stream exists by selecting on namespace alone before narrowing.
@@ -48,7 +48,7 @@ Pod names are the most churning identifier in Kubernetes: every rollout mints a 
 There is no `pod` stream label, so a pod-scoped query needs a stream label in the braces and the pod after the pipe. `namespace` is always present and always cheap, which makes this the standard shape rather than a workaround:
 
 ```logql
-{namespace="monitoring", statefulset="loki-write"} | pod="loki-write-1"
+{namespace="monitoring-backbone", statefulset="loki-write"} | pod="loki-write-1"
 {namespace="sourcebot"} | pod="sourcebot-db-8" | container="postgres"
 ```
 
@@ -85,7 +85,7 @@ Pass the Prometheus value literally and add the flag. Do not normalise it.
 
 ## A `cluster` matcher is redundant on a per-cluster uid
 
-Each `loki-<cluster>` datasource holds exactly one cluster, so the uid already decided it; there, keep the matcher only when copying a dashboard query that templates on it. On the aggregated `loki` uid the `cluster` matcher is what scopes the query, so use it whenever the question names clusters.
+Each `loki-<cluster>` datasource holds exactly one cluster, so the uid already decided it; there, keep the matcher only when copying a dashboard query that templates on it. On the federated `loki` uid the `cluster` matcher is what scopes the query, so use it whenever the question names clusters.
 
 ## A label in the listing is not proof anything writes it
 

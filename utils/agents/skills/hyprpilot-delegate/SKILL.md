@@ -132,8 +132,8 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - Call `list_profiles` first, every time. Profile ids are captain-defined and change; a hardcoded id silently breaks.
    - **The listing is the whole available set, and a profile can be missing for either of two reasons.** The harness is opt-in per profile (`[profiles.harness]`), and separately the *launching* profile's `[mcp.harness].includeProfiles` / `excludeProfiles` globs scope who it may delegate to. Both gates also refuse `spawn`, with distinct messages — read the refusal rather than guessing, because the fixes differ: one is the target profile opting in, the other is this launcher's scope. If the user names a profile that is missing, say it is not reachable from here rather than guessing a neighbour.
    - **Match the user's phrasing loosely.** Ids are path-like (`personal/claude/opus`, `work/claude/sonnet`, `personal/codex/gpt-6.1-sol`, `personal/kilic/glm-5.2:cloud`) and users say them in fragments. "delegate this to hyprpilot personal glm-5.2" means the id containing both `personal` and `glm-5.2`.
-   - **No profile named → prefer a `claude` profile.** The `personal/codex/*` and `work/codex/*` profiles (`gpt-6-astra`, `gpt-6.1-sol`, `gpt-6-luna`) are equally valid, and an explicit runtime, profile or model from the user always wins.
-   - **Ambiguous match → ask.** If a fragment matches two profiles, list the candidates and ask; do not guess. If it matches none, show what is available.
+   - **No profile named: prefer a `claude` profile.** The `personal/codex/*` and `work/codex/*` profiles (`gpt-6-astra`, `gpt-6.1-sol`, `gpt-6-luna`) are equally valid, and an explicit runtime, profile or model from the user always wins.
+   - **Ambiguous match: ask.** If a fragment matches two profiles, list the candidates and ask; do not guess. If it matches none, show what is available.
    - **A row carrying an `error` field failed to resolve — do not launch it.** Report the error instead.
    - **What the listing returns is `id`, `agent`, `provider`, `model`, `effort`, `mode`, `cwd`, `headless`, `harnessEnabled`, `isDefault`, and `error` on a row that failed to resolve.** `model`, `effort`, `mode` and `cwd` are **omitted when the profile does not set them**, so an absent key means unset rather than unsupported — do not read one missing row as proof the field does not exist. Use what is there to sanity-check the pick and to warn the user when a profile is `headless` (it cannot be driven interactively). A listed `cwd` is the profile's own; the directory actually launched into is `sessionInfo.cwd` in the `spawn` result, which is what a relative or absent `cwd` resolves to.
 
@@ -190,8 +190,8 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
 
 9. **Finish deliberately with `session_kill`.**
-   - **Running** → `action: "terminated"`. The agent and everything it started is stopped, and **the transcript is kept** so you can still read why.
-   - **Already finished** → `action: "reaped"`. The transcript and the handle both go, and any later read fails with `unknown session`.
+   - **Running** returns `action: "terminated"`. The agent and everything it started is stopped, and **the transcript is kept** so you can still read why.
+   - **Already finished** returns `action: "reaped"`. The transcript and the handle both go, and any later read fails with `unknown session`.
    - Calling it twice is the natural stop-then-clean-up. Read anything you care about before the reap.
    - **Two jobs, and redirecting is neither.** Kill a runaway session you want no further turns from; reap a finished one to free a slot when `spawn` reports the concurrency ceiling. To change a working agent's course, `session_send { steer: true }` — a kill throws away the conversation along with the turn.
    - **Reaping the session deletes the directory the watcher tests, so reap the watcher too.** A loop left on a reaped session's `turnDir` fires on the missing-directory half and reports a finish that is really a cleanup. Stop the watcher through the runtime facility and record its ending row before or with the `session_kill`.
@@ -259,10 +259,10 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 **User says:** "delegate this to hyprpilot personal glm-5.2 — refactor the retry logic in src/api/client.ts"
 
-1. `list_profiles` → the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
+1. `list_profiles`: the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
 2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
-3. Present the profile, cwd, and prompt → user approves.
-4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
+3. Present the profile, cwd, and prompt; the user approves.
+4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
 5. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Record the armed row — session handle, watched path, watcher handle — then tell the user in one sentence that the refactor is delegated and watched, with the session handle.
 6. On wake, `session_status` reports `exited` / `hasResult: true`; read `hyprpilot://sessions/3b5ce010-…/result`, reap the watcher, then report the answer and the handle.
 
@@ -286,7 +286,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 2. Returns instantly: handle `9c4de0a8-…`, `status: running`, plus turn 1's `turnDir`.
 3. Arm the `done.json` watcher on that exact path through the runtime's background exec, and confirm it returned watcher handle `task_01H…`. Nothing wakes you here, so without a handle the session finishes into silence.
 4. Report it running in one plain sentence — what it is looking at and that you will pick it up on completion — with the session handle; the watched path and watcher handle sit in the armed row.
-5. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`, and not a read of the watcher's own log.
+5. On wake: `session_status` reports `exited`, `hasResult: true`. **Not** a second `spawn`, and not a read of the watcher's own log.
 6. Read `hyprpilot://sessions/9c4de0a8-…/result` — one read covers the answer and any upstream error — relay it, reap the watcher, and only then send any further turn.
 
 **Result:** Long job tracked to completion without abandoning it, duplicating it, or burying its result under a later turn.

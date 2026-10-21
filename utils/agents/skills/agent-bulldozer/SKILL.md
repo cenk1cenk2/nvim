@@ -114,7 +114,7 @@ Bulldozing fast is dangerous if you fire work in the wrong order. The plan belon
 4. **Prep ahead speculatively** wherever it is cheap and reversible. While the blocker settles: draft the next change, branch and scaffold the follow-on work, write the commit/PR description, pre-write the rollout or cutover runbook for the remaining stages, pre-compute or pre-fetch what the next step needs, stage the verification commands. The goal is that the moment the blocker clears, the next step fires instead of starting cold. Prep is drafts and staging — it does not cross Boundaries.
 5. **On wake, verify then advance.** When a watcher fires, re-verify the real state (proxies lag), execute the staged next step, and re-arm for the following blocker. One stage completing is a trigger for the next stage, not a stopping point.
 6. **A dead watcher is NOT a stop.** If a watcher exits without the goal met — backstop cap exhausted, the signal broke, the process was killed, an error — DIAGNOSE why (did the condition never hold? wrong or broken signal? cadence too short? process died?), fix the cause, and RE-ARM (adjust the signal, cadence, or cap as needed). You are a bulldozer: never sit idle because a watcher gave up, and never silently drop the goal because the watch lapsed. **But when the cause needs the driver** — a permission/auth failure, a broken credential, a genuinely unknown breakage you can't resolve, or the work has drifted out of the agreed scope — STOP and report it to the user clearly, stating exactly what you need, before pushing further. You are a bulldozer, but you have a driver: surface the blocker instead of thrashing or wandering off-scope.
-7. **Report momentum tersely each turn.** Three lines max: what just finished, what is now in flight (including armed watchers and their task ids), what is queued next. No essays. When anything is prepped-but-blocked, add the prep board below those lines — it replaces describing the same items in prose.
+7. **Report momentum tersely each turn.** Three lines max: what just finished, what is now in flight (including armed watchers), what is queued next. No essays. When anything is prepped-but-blocked, add the prep board below those lines — it replaces describing the same items in prose.
 8. **Stop only when stopped.** Keep the loop running across turns until the user says "stop", "hold", "pause bulldozer", or "normal mode" — or the stated scope is fully done, in which case report completion and stand down. Hitting a Boundary pauses that action for approval, not the whole mode: surface it, keep pushing on everything else.
 
 ## The Prep Board — what is built but not fired
@@ -123,7 +123,7 @@ A bulldozer converts every blocking wait into prep, so at any moment there is wo
 
 | Prepped | How far | Blocked on | Clears when | Fires |
 |---|---|---|---|---|
-| MR for K-244 | drafted, not opened | K-243 must merge first | watcher `pr-4821` fires | open the MR, request review |
+| MR for [K-244 — Rotate the signing key](<url>) | drafted, not opened | [K-243 — Add the key store](<url>) must merge first | its merge watcher fires | open the MR, request review |
 | immich values bump | patch written, not applied | driver decision on the target version | driver answers | apply, push, watch the pipeline |
 | runner capacity fix | diagnosed, no change made | out of agreed scope | driver widens scope | raise as a follow-up issue |
 
@@ -149,7 +149,7 @@ Hard stops that survive bulldozer mode — pause and get explicit approval befor
 
 - **Destructive or irreversible actions** — deletes, force-pushes over others' work, dropping data, retiring live resources.
 - **Credentials and secrets** — creating, rotating, or exposing them.
-- **External writes that need sign-off** — merging others' PRs, production applies/deploys, messaging third parties, anything with an established approval gate.
+- **External writes that need sign-off** — merging a PR/MR, production applies/deploys, messaging third parties, anything with an established approval gate.
 - **Direction-changing ambiguity** — when the next step could go two materially different ways and picking wrong wastes the push, ask the one question; do not guess and bulldoze down the wrong road. Keep pushing on unblocked tracks while waiting.
 
 Stopping the mode, a bare "stop", and what counts as a toggle signal: per `mode-toggle`.

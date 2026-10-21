@@ -16,6 +16,7 @@ references:
   - ./references/rightsize-throttling-alert.md
   - ./references/rightsize-slack-alert.md
   - ./references/rightsize-database-discovery.md
+  - ./references/rightsize-vpa-inplace.md
   - ../references/output-diff.md
 ---
 
@@ -61,6 +62,7 @@ Scopes with their own arithmetic:
 | Chart repositories in `cluster/charts/*` — one version on every cluster, so the cross-cluster maximum | `rightsize-charts-cross-cluster` |
 | CNPG `walStorage`, a WAL PVC filling up, with its backup-health gate | `rightsize-cnpg-walstorage` |
 | The VPA recommender's own `extraArgs` percentiles | `rightsize-vpa-percentiles` |
+| Applying requests through VPA itself — in-place resize, goldilocks | `rightsize-vpa-inplace` |
 | A sweep over every database — CNPG and MariaDB CRs are often generated, not source | `rightsize-database-discovery` |
 | A `CPUThrottlingHigh` alert, or a Slack thread carrying one — the alert is the specification | `rightsize-slack-alert`; already-changed limits per `rightsize-throttling-alert` |
 
@@ -70,7 +72,7 @@ The renovate KubeJob's `activeDeadlineSeconds` stays 600s. It is a run budget, n
 
 ### Discovery
 
-1. **Scope it.** Which clusters. Absent an answer, ask once. A sizing decision is per cluster, so read each cluster on its own — its `mimir-<cluster>` uid, or `cluster="<name>"` on the federated `mimir` — never as one All-cluster pass: that costs every tenant, roughly 3–3.7x, and ranks the outlier tables across the fleet, so one cluster's candidates get crowded out of the top 25.
+1. **Scope it.** Which clusters. Absent an answer, ask once. A sizing decision is per cluster, so read each cluster on its own — its `mimir-<cluster>` uid, or `cluster="<name>"` on the federated `mimir` — never as one All-cluster pass: that costs every tenant and ranks the outlier tables across the fleet, so one cluster's candidates get crowded out of the top 25.
 2. **Read the outliers**, per `rightsize-signals`. Start from the VPA outlier tables, then pull OOM kills and throttling for the same scope. The tables cap at 25 rows, so a quiet table means nothing ranked highly, never that the cluster is clean.
 3. **Corroborate each candidate against 7d usage.** Drop the ones usage contradicts, and say how many were dropped.
 4. **Apply the materiality floors.** Below them the change is not worth a restart. Report what was skipped and why rather than dropping it silently.

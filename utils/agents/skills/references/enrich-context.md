@@ -29,10 +29,10 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 | MR | `gitlab__get_merge_request` | MR URL from response. |
 | Issue | `gitlab__get_issue` | Issue URL from response. |
 | Commit | `gitlab__get_commit` | Commit URL from response. |
-| Code file/line | `gitlab__get_file_contents` to verify file and line exist | `https://gitlab.com/<project_path>/-/blob/<sha>/<path>#L<line>-<end_line>` |
+| Code file/line | `gitlab__get_file_contents` to verify file and line exist | `<project web_url>/-/blob/<sha>/<path>#L<line>-<end_line>` |
 | Pipeline | `gitlab__get_pipeline` | Pipeline URL from response. |
 | Pipeline job | `gitlab__get_pipeline_job` | Job URL from response. Use `gitlab__get_pipeline_job_output` for logs. |
-| Release | `gitlab__list_releases` | Release URL from response. |
+| Release | `gitlab__get_project` for its `web_url` | `<project web_url>/-/releases/<tag_name>` |
 | Project | `gitlab__get_project` | Project URL from response. |
 
 ### Spacelift
@@ -52,12 +52,12 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 
 | Entity | MCP tool | Link format |
 |--------|----------|-------------|
-| Issue | `linear_*__get_issue` | Issue URL from response. |
-| Project | `linear_*__get_project` | Project URL from response. |
-| Document | `linear_*__get_document` | Document URL from response. |
-| Milestone | `linear_*__get_milestone` | Milestone URL from response. |
-| Initiative | `linear_*__get_initiative` | Initiative URL from response. |
-| Team | `linear_*__get_team` | Team URL from response. |
+| Issue | `linear-<workspace>__get_issue` | Issue URL from response. |
+| Project | `linear-<workspace>__get_project` | Project URL from response. |
+| Document | `linear-<workspace>__get_document` | Document URL from response. |
+| Milestone | `linear-<workspace>__get_milestone` | Milestone URL from response. |
+| Initiative | `linear-<workspace>__get_initiative` | Initiative URL from response. |
+| Team | `linear-<workspace>__get_team` | Team URL from response. |
 
 ### Grafana
 

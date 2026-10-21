@@ -77,8 +77,8 @@ Slack does NOT render standard markdown. It uses its own format called **mrkdwn*
 
 ### Thread vs Channel
 
-- **Single message** → reply in the thread ("Reply in a thread" above).
-- **Batch of messages** → post a channel-level summary ("Post to a channel" above).
+- **Single message** — reply in the thread ("Reply in a thread" above).
+- **Batch of messages** — post a channel-level summary ("Post to a channel" above).
 - Default to thread replies. Only use channel-level messages when there is no existing thread or the user explicitly asks.
 
 ### `:dark_sunglasses:` Reaction

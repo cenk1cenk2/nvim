@@ -11,7 +11,7 @@ references:
 
 ## Plan Pickup — Loading and Executing Existing Plans
 
-State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
+Write state that spans turns durably per `long-running-work`.
 
 ## Context
 
@@ -63,7 +63,7 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
 ## During Implementation
 
 - Follow the plan steps sequentially.
-- **Update the plan file** with any discoveries or deviations during implementation.
+- **Update the plan file** with any discoveries or deviations during implementation, per `reconcile-state`.
 - If you encounter something that contradicts the plan, pause and inform the user before proceeding.
 
 ## Key Principles

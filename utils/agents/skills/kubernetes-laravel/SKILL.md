@@ -23,7 +23,9 @@ An expired SSO session makes every call fail with a credential error. Say so and
 
 ## Read-Only
 
-The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools and nothing else, and no mutating tool is registered. **The exact registered list is not recorded here** — this server is absent from the profile where it could be verified. Check the live tool list before writing a step against a specific tool name; do not assume the kilic surface, which differs.
+The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools and nothing else, and no mutating tool is registered.
+
+Registered surface, 16 tools, all reads: `configuration_contexts_list`, `configuration_view`, `events_list`, `helm_list`, `namespaces_list`, `nodes_log`, `nodes_stats_summary`, `nodes_top`, `pods_get`, `pods_list`, `pods_list_in_namespace`, `pods_log`, `pods_top`, `projects_list`, `resources_get`, `resources_list`. Anything else is absent. The kilic surface differs, so a step written against it does not carry over.
 
 ## Catalog Entry — Keep the Target Filter Off
 

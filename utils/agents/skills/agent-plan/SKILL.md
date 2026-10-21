@@ -91,7 +91,7 @@ Present both resolutions in the plan summary. If either is ambiguous, default to
 
 ### Steps 1–4 — Planning
 
-Follow the `agent-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
+Follow the `agent-plan-split` reference steps 1–5: understand the goal, discover tooling, establish conventions, write the plan, split it into tasks. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
 - Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: a code-discovery MCP when the active profile has one, otherwise the workspace SCM tools, saying which. When that MCP is Sourcebot, load `sourcebot-discovery` before the first call.
 - SCM platform detection and raw `git` CLI usage: `scm-detect`.

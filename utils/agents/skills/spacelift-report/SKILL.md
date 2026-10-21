@@ -14,10 +14,7 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Spacelift Infrastructure Impact Report
 
-## Prerequisite
-
-> **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill.
+Load `spacelift-laravel` before the first Spacelift call when the session holds no Spacelift workspace context.
 
 ## Process
 

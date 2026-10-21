@@ -48,7 +48,7 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 4. **Compose the summary (default).**
    - **Default: title + description.** Every post carries a short title stating what was done, followed by an extended description of the goal.
    - **Title (what was done):** one short bold line summarizing the change. Combine the PR title with contextual detail — when the conversation, commits, or PR body give you a clearer picture of what is being done, fold that in so the title is more descriptive than the raw PR title alone. Keep it to one line.
-   - **Extended description (the goal):** ONE terse line stating what the change does — the goal, nothing else. Use a light touch of the `caveman` skill's lingo: drop articles and filler, fragments fine, keep technical terms exact. Strip prior-phase history, canary/drift/verification notes, lockfile/provider-version minutiae, and parenthetical sub-detail. A phase label may prefix it if it adds clarity (e.g. "Control-plane module `<version>` + k8s `<old>` → `<new>`, all `<N>` prod control-planes.").
+   - **Extended description (the goal):** ONE terse line stating what the change does — the goal, nothing else. Use a light touch of the `caveman` skill's lingo: drop articles and filler, fragments fine, keep technical terms exact. Strip prior-phase history, canary/drift/verification notes, lockfile/provider-version minutiae, and parenthetical sub-detail. A phase label may prefix it if it adds clarity (e.g. "Control-plane module `<version>` + k8s `<old>` to `<new>`, all `<N>` prod control-planes.").
    - **State the goal, not a changelog.** Do NOT itemize incidental resource changes in the prose (addon/AMI/policy tweaks, a single SQS ARN variant, etc.) — the Spacelift delta line and the PR diff already carry those. Reviewers want the intent, not a per-resource list.
    - **Avoid listing sibling PRs.** Do NOT paste links to related/prior PRs of the same wave, environment, or cluster-type. If continuity genuinely helps the reviewer, mention *where* the change is being applied in prose (e.g. "same change as the earlier prod waves") — without the PR URLs. Prefer omitting even that unless it adds real context.
    - If the PR description is empty, derive the title and goal from the PR title, commit messages, and rollout context.
@@ -88,8 +88,8 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
      _Spacelift: <N> stacks, +<a> ~<c> <r> each (<in-place upgrade, node roll; no replacements>), all planned clean._
      ```
    - Example (brevity — shrink the goal to ONE terse line):
-     - Too long: "Phase 1 of the control-plane rollout: adopt control-plane module `<v>` (parameters-sourced add-on versions + the `<repo>#<n>` CNI node-role grant) and step k8s `<old>` → `<new>` on all `<N>` prod control-planes in one apply. ArgoCD decoupled in P0 so no helm op runs behind the node roll; canary-verified on `<region>`, drift cleared, lockfiles regenerated to `<provider> <ver>`."
-     - Right: "Control-plane module `<v>` + k8s `<old>` → `<new>`, all `<N>` prod control-planes."
+     - Too long: "Phase 1 of the control-plane rollout: adopt control-plane module `<v>` (parameters-sourced add-on versions + the `<repo>#<n>` CNI node-role grant) and step k8s `<old>` to `<new>` on all `<N>` prod control-planes in one apply. ArgoCD decoupled in P0 so no helm op runs behind the node roll; canary-verified on `<region>`, drift cleared, lockfiles regenerated to `<provider> <ver>`."
+     - Right: "Control-plane module `<v>` + k8s `<old>` to `<new>`, all `<N>` prod control-planes."
    - Example (title-only — very rare):
      ```
      [github.com/<owner>/<repo>/pull/<number>](https://github.com/<owner>/<repo>/pull/<number>) :review:
@@ -104,7 +104,7 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 
      <Paragraph explaining the core intended change and its effect — e.g. what a cutover does, what service replaces what. Use backticks for service URLs and resource names.>
 
-     <Paragraph covering module-bump / incidental side effects — new resources, recreated secrets, addon/AMI version bumps. Name the specific resources, versions, and values so the reviewer sees the blast radius, e.g. `<module> <old-version> → <new-version>`, `<addon> <old> → <new>`, `<old-ami> → <new-ami>`.>
+     <Paragraph covering module-bump / incidental side effects — new resources, recreated secrets, addon/AMI version bumps. Name the specific resources, versions, and values so the reviewer sees the blast radius, e.g. `<module> <old-version> to <new-version>`, `<addon> <old> to <new>`, `<old-ami> to <new-ami>`.>
      ```
 
 6. **Present for approval — unless the user already told you to post.**
@@ -124,9 +124,6 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 
 ## Key Principles
 
-- **Present before posting — unless told to post.** Default to presenting for approval; when the user has explicitly said to post (e.g., "post this/these", "this has to be posted"), post directly without re-asking.
-- **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.
-- **Review line is exact:** `[{pr_url_no_protocol}]({pr_url}) :review:` — link first, then the `:review:` emoji.
 - **Default carries title + description.** Every post leads with the review line, then a bold one-line title of what was done (PR title blended with contextual detail), then ONE terse line stating the goal. Title-only is a very rare opt-out (bulk waves, "just the link").
 - **Use standard markdown.** Bold is `**text**`; mrkdwn `*text*` renders literally through the connector.
 - **No link previews — every link, not just the PR.** Label each link with its own URL minus the protocol, per `slack` — clickable, no card. Never set `unfurl_app_links: true`.

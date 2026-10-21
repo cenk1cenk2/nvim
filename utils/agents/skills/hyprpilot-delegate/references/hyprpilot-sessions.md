@@ -88,7 +88,7 @@ Served on the same server for clients that declare `io.modelcontextprotocol/task
 
 | | Session tools | Tasks |
 | --- | --- | --- |
-| Start | `spawn` → `session` handle | `spawn` → `resultType: "task"`, `taskId` |
+| Start | `spawn` returns a `session` handle | `spawn` returns `resultType: "task"`, `taskId` |
 | Poll | `session_status` | `tasks/get` |
 | Stop | `session_kill` | `tasks/cancel` |
 | Read output | `/result` resource, `session_read`, or `jq` | `/result` resource, or the `result` inside a `completed` task |
@@ -273,7 +273,7 @@ jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 
 ### Where a failure hides
 
-**Launch failure → `stderr.log`, transcript empty. Runtime failure → transcript `error` event, `stderr.log` empty.** A real 402 from the model provider produced exactly the second shape, with a zero-byte `stderr.log`.
+**Launch failure: `stderr.log`, transcript empty. Runtime failure: transcript `error` event, `stderr.log` empty.** A real 402 from the model provider produced exactly the second shape, with a zero-byte `stderr.log`.
 
 `/result` already checks both and names which happened, which is the reason to prefer it over a hand-rolled query that can only see one. When you are working from the files instead, check both before reporting an exit code — and note that each turn's `stderr.log` is its own, so a non-empty one always refers to the turn you are looking at.
 

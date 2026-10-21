@@ -162,10 +162,10 @@ Dependencies and nesting go through Linear fields — `blockedBy`, `blocks`, `pa
 
 This matters most under the agent postures — `agent-coordinator`, `agent-supervisor`, `agent-bulldozer`, `agent-pickup`, and any delegated agent working the tree. Those run for many turns and produce a steady stream of write-worthy findings. Without a blessing on file, every one of them is either an interruption or an unauthorized write into someone else's tracker.
 
-1. **Ask at structure time, not mid-flight.** One line: `Is K-123 and its sub-issues ours to keep updated as we go?` Asking after four agents have finished is asking too late.
+1. **Ask at structure time, not mid-flight.** One line: `Is [K-123 — <title>](<url>) and its sub-issues ours to keep updated as we go?` Asking after four agents have finished is asking too late.
 2. **Record the answer durably** per `long-running-work`. Ownership held only in the transcript is gone at the next compaction, and the session that resumes cannot tell whether it may write.
 3. **Ours** — reconcile on by default, no re-asking per write. Corrections to your own artifacts are corrections, not new decisions. Project and initiative prose follows `linear-absolute-approval`: free only when the user asked this run to create or manage it, or the session created it.
-4. **Not ours** — never write. Surface drift in one line and let the user decide: `K-402 contradicts what we just implemented — not ours to edit, want me to?`
+4. **Not ours** — never write. Surface drift in one line and let the user decide: `[K-402 — <title>](<url>) contradicts what we just implemented — not ours to edit, want me to?`
 5. **The blessing is scoped to that set.** One issueset, or a project plus its issues. A different project needs its own blessing; a general `g` / `yolo` / autopilot does not supply one.
 6. **An opt-out suppresses the write, never the question.** "Don't touch the tracker" gets honored and reported.
 
@@ -200,7 +200,7 @@ Prefer comments over description edits for ordinary deviations. Edit a descripti
 
 **Checkpoint per task, not once at the end** per `long-running-work` — the checkpoint you skip is the one before the compaction, and a note living only in the transcript is already gone.
 
-Reconcile in the same rhythm, per `reconcile-state`: when implementation departs from what the parent claims, bring the parent back in line in one batched pass rather than a write per realization, and report each one — `Reconciled K-123 — parent now reflects the vendored-path variant found in three repos.`
+Reconcile in the same rhythm, per `reconcile-state`: when implementation departs from what the parent claims, bring the parent back in line in one batched pass rather than a write per realization, and report each one — `Reconciled [K-123 — <title>](<url>) — parent now reflects the vendored-path variant found in three repos.`
 
 ## Manual Tasks
 

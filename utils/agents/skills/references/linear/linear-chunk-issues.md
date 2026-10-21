@@ -18,7 +18,7 @@ If no Linear context is detected, skip this reference entirely.
 
 ## Chunking Rules
 
-### One issue → one task (default)
+### One issue, one task (default)
 
 Map each Linear issue to exactly one agent task. This is the cleanest path — each agent commits with a trailer referencing its issue.
 
@@ -27,7 +27,7 @@ Map each Linear issue to exactly one agent task. This is the cleanest path — e
 - Include the issue ID in the agent's prompt (see Agent Prompt Addition below).
 - If the task will create the single PR/MR that fully completes the issue, the final commit and PR/MR description should use `closes <ID>`.
 
-### One issue → multiple tasks (large issue)
+### One issue, multiple tasks (large issue)
 
 When a single issue is too large for one agent:
 
@@ -36,7 +36,7 @@ When a single issue is too large for one agent:
 - The final task uses `closes <ID>` only if all work for that issue is complete.
 - Note in the task split table which tasks share an issue.
 
-### Multiple issues → one task (small issues)
+### Multiple issues, one task (small issues)
 
 When several issues are small enough for a single agent:
 

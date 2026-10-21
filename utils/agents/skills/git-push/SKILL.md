@@ -15,7 +15,7 @@ references:
 1. **Assess local state.**
    - Detect the platform and run local git per `scm-detect`.
    - Use `git status` to get the current branch.
-   - Detect the upstream via the built-in `Bash` tool (there is no git MCP tool for this): `git rev-parse --abbrev-ref --symbolic-full-name @{u}`. A non-zero exit means the branch has no upstream yet.
+   - Detect the upstream with `git rev-parse --abbrev-ref --symbolic-full-name @{u}`. A non-zero exit means the branch has no upstream yet.
    - If the working tree is dirty, note it in the report — `git push` carries only committed history. Do NOT prompt on this; just report. **Skip this note when invoked immediately after `git-commit` in the same turn** (see "Composing with Other Skills").
 
 2. **Determine the remote target.**
@@ -39,7 +39,7 @@ references:
 
 5. **Safety checks (only these gate the push).**
    - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
-   - **`--force-with-lease` on an own branch runs without asking**, per `agent-owned`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
+   - **`--force-with-lease` on an own branch runs without asking**, with the lease pinned per `agent-owned`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
    - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push.
 
 6. **Report and execute in a single step.**
@@ -55,7 +55,7 @@ references:
      flags:     <none | -u | --force-with-lease (old..new)>
      ```
 
-   - Run `git push [flags] <remote> <branch>` via the built-in `Bash` tool (no tmux needed — the push is a quick operation with no long-running output to observe). On first push, include `-u` to set the upstream.
+   - Run `git push [flags] <remote> <branch>`. On first push, include `-u` to set the upstream.
    - Capture the command output. On success, report the pushed ref and any hints printed by git (e.g., a GitHub/GitLab "create PR" URL). On failure, report the exact git error and stop — do not retry with different flags on your own.
 
 7. **Confirm and suggest.**
@@ -79,11 +79,11 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
 
 **User says:** "push"
 
-1. `git status` → branch `feat/token-refresh-logic`, clean tree. Upstream is `origin/feat/token-refresh-logic`. Branch is 2 commits ahead, 0 behind.
+1. `git status`: branch `feat/token-refresh-logic`, clean tree. Upstream is `origin/feat/token-refresh-logic`. Branch is 2 commits ahead, 0 behind.
 2. Default remote: `origin`. No divergence blocker. No protected branch.
 3. Report + execute in one go:
 
-   > Pushing `feat/token-refresh-logic` → `origin` (fast-forward, 2 commits).
+   > Pushing `feat/token-refresh-logic` to `origin` (fast-forward, 2 commits).
    >
    > ```
    > branch:    feat/token-refresh-logic
@@ -95,7 +95,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
    > flags:     none
    > ```
 
-4. Run `git push origin feat/token-refresh-logic` via `Bash`. Success.
+4. Run `git push origin feat/token-refresh-logic`. Success.
 5. Confirm: "Pushed 2 commits to `origin/feat/token-refresh-logic`. Want to open a PR? (`github-pr-create`)"
 
 ---
@@ -119,7 +119,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
    > flags:     -u
    > ```
 
-3. Run `git push -u origin feat/webhook-retries` via `Bash`. Success.
+3. Run `git push -u origin feat/webhook-retries`. Success.
 4. Confirm: "Pushed and set upstream. 4 commits on `origin/feat/webhook-retries`."
 
 ---
@@ -154,14 +154,14 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
    >            - fix: patch critical typo in README
    > ```
 
-3. User confirms → execute push via `Bash` → confirm.
+3. User confirms. Push, then confirm.
 
 ---
 
 **User says:** "commit and push this"
 
 1. Both `git-commit` and `git-push` load.
-2. `git-commit` runs its full workflow: status check → stage → diff analysis → draft message → approve → commit.
+2. `git-commit` runs its full workflow: status check, stage, diff analysis, draft message, commit.
 3. After `git-commit` reports the new commit hash, control hands off.
 4. `git-push` starts at step 1. Skips the dirty-tree note (same turn as commit). No blockers.
 5. Report + execute in one go (no separate approval — the initial "commit and push" already said push).

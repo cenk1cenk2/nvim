@@ -1,10 +1,10 @@
 # Harness: OpenCode — agent-delegate
 
-Runtime mechanics for delegation on OpenCode — how subagent dispatch behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on OpenCode. For waiting and waking, see `agent-background-harness-opencode`.
+Runtime mechanics for delegation on OpenCode — how subagent dispatch behaves, plus the tier-to-model mapping. Read this before the first dispatch of a session running on OpenCode. For waiting and waking, see `agent-background-harness-opencode`.
 
 **Dispatch:** the OpenCode `task` tool (subagent dispatch, allowed in `opencode.jsonc`). Set the subagent's model to the resolved `kilic/*` slug.
 
-## Tier → model
+## Tier to model
 
 | Tier | Model |
 |------|-------|

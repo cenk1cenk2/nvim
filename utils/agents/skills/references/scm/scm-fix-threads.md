@@ -32,8 +32,8 @@ Process threads one at a time. For each open thread:
 
 For each thread with a clear action:
 
-1. **Read the target file** using the built-in Read tool.
-2. **Apply the fix** using the built-in Edit tool.
+1. **Read the target file.**
+2. **Apply the fix.**
 3. **Verify** — read the edited area to confirm the change is correct and doesn't break surrounding code.
 4. **Track the fix** — note which thread was addressed and what was changed.
 

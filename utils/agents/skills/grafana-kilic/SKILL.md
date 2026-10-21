@@ -21,7 +21,7 @@ Every query tool needs a datasource uid, and picking the wrong one returns a con
 2. **A workload, namespace, or repository is named** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher.
 3. **Nothing is named** — ask. Do not silently pick one cluster. A fleet question is one query on the federated uid, broken out `by (cluster)`, but it costs the sum over every tenant, so say so before running it.
 
-Then pick the family: `mimir` for metrics and `loki` for logs, both federated across the six Kubernetes clusters, with the `cluster` matcher doing the scoping; `mimir-core` and `loki-core` for core, which the federated uids exclude; `alertmanager-<cluster>` for alert state. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids remain for live tail, the ruler API, and deep single-cluster work such as rightsizing — a per-cluster sweep is optional, no longer the default.
+Then pick the family: `mimir` for metrics and `loki` for logs, both federated across the six Kubernetes clusters, with the `cluster` matcher doing the scoping; `mimir-core` and `loki-core` for core, which the federated uids exclude; `alertmanager-<cluster>` for alert state. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids remain for live tail, the ruler API, and deep single-cluster work such as rightsizing — a per-cluster sweep is optional.
 
 ## Route to the Owning Skill
 

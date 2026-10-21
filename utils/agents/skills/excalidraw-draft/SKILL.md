@@ -8,7 +8,6 @@ references:
   - ../references/excalidraw/excalidraw-elements.md
   - ../references/excalidraw/excalidraw-template.md
   - ../references/obsidian.md
-  - ../references/output-diff.md
 ---
 
 ## Excalidraw Diagram Drafting
@@ -19,8 +18,6 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 1. **Draft visually** using the Excalidraw MCP server — live interactive preview in chat. Iterate until the user is happy.
 2. **Export** — either to the Obsidian vault (`.excalidraw.md`) or as a shareable excalidraw.com URL.
-
-**Author light.** White canvas, dark strokes, light fills per `excalidraw-elements` — the plugin inverts it to match the dark vault.
 
 **Tool selection for vault:** per `obsidian` — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
@@ -54,7 +51,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
    - Call `excalidraw__create_view` with file-format elements per `excalidraw-elements` — 8-char IDs, bound text via `containerId` / `boundElements` — plus `cameraUpdate` for viewport.
    - Draw progressively: zones → shapes with their bound text → arrows.
 5. **Iterate.** Based on user feedback, refine using checkpoints. Call `excalidraw__create_view` again. Repeat until satisfied.
-6. **Export.** Present the diagram summary per `output-diff`, then once approved choose output mode per the decision rules above:
+6. **Export.** Once the user is satisfied, choose output mode per the decision rules above:
    - **Obsidian**: strip pseudo-elements, wrap the same elements per `excalidraw-template`, write to vault.
    - **URL**: strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array, build the scene JSON (`{type, version, source, elements, appState, files}`), call `excalidraw__export_to_excalidraw` with the serialized JSON. Return the URL to the user.
    - **If ambiguous**: ask the user before exporting.

@@ -15,7 +15,7 @@ The posture, its approval conditions, and what survives being switched off are a
 
 On/off mechanics per `mode-toggle`.
 
-- **On:** the default. Also `/present-first`, "gate the writes", "ask before writing".
+- **On:** the default for every declaring skill. Also `/present-first`, "gate the writes", "ask before writing".
 - **Off:** "just write it", "skip the gates", "stop presenting", "no gates". Lasts the session.
 - **Level:** none — on or off.
 - **Survives disengage:** nothing. Posture only; spawns nothing and writes nothing itself.

@@ -13,15 +13,11 @@ references:
 
 ## Plan Hard — Interview-Driven Design-Tree Traversal
 
-State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
+Write state that spans turns durably per `long-running-work`.
 
-When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state`.
 
-> **ALWAYS enter plan mode** — per `plan-mode`, unless auto mode is engaged (see Modes).
->
-> - Enter plan mode immediately.
-> - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).
-> - When in doubt about whether the user wants implementation, ASK. Do not assume.
+Posture: strict plan mode per `plan-mode`, unless auto mode is engaged (see Modes).
 
 ## Core Disposition
 
@@ -35,7 +31,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 **Auto mode.** Triggered when the user says "plan with yourself", "auto", "delegate the plan", "review and refine the plan", or similar. Plan the whole thing yourself, hand back a plan and a summary, and stand down. It replaces the interview, never the gate on implementation.
 
-**No plan mode at all** — the "plan with yourself" carve-out in `plan-mode` applies. An interview and an approval gate are exactly what this mode exists to avoid.
+**No plan mode at all** — the "plan with yourself" carve-out in `plan-mode` applies. An interview and a mode to exit are exactly what this mode exists to avoid.
 
 1. **Research the whole question before answering any of it.** Self-answer per the Self-Answering Rule, and widen past it when the question reaches outside this repo: load `sourcebot-discovery` for cross-repo prior art, a docs MCP for any library or API in play, and the runtime's search or deep-research facility for the rest. Route per the Discovery table in `AGENTS.md` §IV.
 2. **Build the design tree and self-answer aggressively** from the codebase (Self-Answering Rule) to produce a complete DRAFT plan — choose your recommended answer for every branch that is not pure user intent.
@@ -91,7 +87,7 @@ On/off mechanics per `mode-toggle`. Interview mode is unaffected and has no togg
 
    **Opt-out:** even when the trigger condition applies, the user can skip this step by saying "skip fact-check" / "no review" / "skip review" in the same turn as the stop signal. When skipped, proceed directly to step 8.
 
-8. **Write the plan file** to your internal plans directory (resolved for the active runtime via `provider-paths`; never hardcode a path) as `YYYY-MM-DD-<project>-<name>.md`, using the standard structure from `AGENTS.md` Section II. Include:
+8. **Write the plan file** to your internal plans directory, path and filename per `provider-paths`, using the plan contents from `AGENTS.md` §VII. Include:
    - Context, Requirements, Approach, Implementation Steps, Risks, Verification.
    - A **Design Decisions** subsection under Approach that records every decision reached during the interview, each with a one-line "Why".
    - If step 7 produced unresolved concerns, include them under Design Decisions with the reviewer's evidence.
@@ -176,7 +172,7 @@ Keep going until a stop condition is met.
 - **Self-answer aggressively.** The user's time is expensive; codebase reads are cheap.
 - **Accept deviations gracefully.** The user knows things you don't. If their answer holds, move on.
 - **Flag, don't gate.** When you notice a pitfall, raise it as information. Let the user decide whether to explore it as a branch.
-- **Stay in plan mode.** The strict plan-mode directive is non-negotiable — only a direct, explicit proceed signal exits plan mode.
+- **Stay in plan mode in interview mode.** Only a direct, explicit proceed signal exits it.
 
 ## Composition with Other Skills
 
@@ -184,7 +180,7 @@ Keep going until a stop condition is met.
 
 - **`plan-handoff`** — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
 - **`plan-pickup`** — after the plan file is written, the user runs `plan-pickup` to load and execute it.
-- **`agent-review`** — used two ways: (1) in **Auto mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
+- **`agent-review`** — refines the draft in Auto mode (step 3), and fact-checks in interview mode on an explicit rigour phrase (step 7).
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
@@ -207,9 +203,3 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 3. Ask both in sequence (one per turn).
 4. User says "good, plan it" after the second answer.
 5. Write minimal plan file. Present. Stop.
-
-## Related Skills
-
-- **`plan-handoff`** — produce self-contained plans for other sessions or repositories.
-- **`plan-pickup`** — load and execute an existing plan file.
-- **`agent-review`** — refines the draft in Auto mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.

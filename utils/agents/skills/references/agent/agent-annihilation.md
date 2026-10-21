@@ -129,7 +129,7 @@ One table in merge/rollout order: every created or planned MR, base branch, sour
 ## Reporting
 
 - **Tables only at checkpoints.** Between checkpoints a turn carries at most one line of momentum and no table.
-- **At each checkpoint**: load `output-status` for the report and `output-table` for the flow; update the charter's progress section on Linear.
+- **At each checkpoint**: the report per `output-status`, the flow per `output-table`; update the charter's progress section on Linear.
 - **At completion or stand-down**: one detailed final table, every row in the order the user acts. Stand-down with only gates or suspended tracks remaining is a checkpoint, not a claim that everything is finished.
   - every created or planned MR a row: link and title when it exists, repository, base branch, source-check evidence and separate preview/pipeline status; mark an MR not yet created rather than inventing a link;
   - distinguish code/source verified, merge-ready, user-gated, failed preview, unverified and not-yet-created work; a green source check does not make an unmet required preview green or prove merge-readiness;

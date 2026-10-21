@@ -4,7 +4,6 @@ description: argocd-kilic-loadbalancer Create or extend routing workloads in a l
 disableModelInvocation: true
 argumentHint: '[workload-name or ''add route to <existing>''] - e.g. ''vm-gitlab'''
 references:
-  - ../references/output-diff.md
   - ./references/argocd-kilic-loadbalancer-dns.md
   - ./references/argocd-kilic-loadbalancer-cross-cluster.md
   - ./references/argocd-kilic-loadbalancer-tcproute.md
@@ -30,7 +29,7 @@ Key files:
 
 ## After It Syncs
 
-Once merged, ArgoCD syncs the Application automatically — the same `newApplication()` pattern used by `argocd-kilic-workload` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate (verified against a rendered manifest in a target-cluster `apps/1-manifest/`). Removing a route or resource from `.deploy/<cluster>/` therefore deletes it on the LB cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
+Once merged, ArgoCD syncs the Application automatically — the same `newApplication()` pattern used by `argocd-kilic-workload` sets `syncPolicy.automated.prune: true` with the cascade-delete finalizer already attached and no `Prune=confirm` gate. Removing a route or resource from `.deploy/<cluster>/` therefore deletes it on the LB cluster on the next automated sync, with no human confirmation step — the opposite of `argocd-system`'s own chart-pin components, which hold every prune for a human to confirm in the ArgoCD UI. Do not assume that gate applies here.
 
 This pattern is never Kargo-promoted; a routing Application syncs straight from its own repository's `HEAD`. Load `argocd-kilic` to check sync status or investigate after merge.
 
@@ -81,10 +80,6 @@ Ask the user:
 
 This is mandatory because **each LB cluster has different gateway names, IPs, and OPNSense configurations**.
 
-## Present Before Writing
-
-Routing workloads span DNS, certificates, and cross-cluster services, and the scaffold writes many files at once. Present the plan per `output-diff` — service name, target cluster, hostnames, and the files to create — and write only on approval.
-
 ## DNS Configuration
 
 ### How DNS Works in This System
@@ -99,13 +94,13 @@ Provider labels, Cloudflare and OPNSense record patterns, wildcard handling, and
 
 **The `loki.kilic.dev` pivot point:** The DEFAULT gateway has annotation `external-dns.alpha.kubernetes.io/target: 'loki.kilic.dev'`. This tells external-dns: "when creating Cloudflare DNS records for routes on this gateway, point them at `loki.kilic.dev`". `loki.kilic.dev` resolves to the WAN/public IP that NATs to the DEFAULT gateway's Cilium LB IP. The INTERNAL gateway has **no such annotation** — routes on it don't get Cloudflare records through this mechanism.
 
-### Gateway ↔ DNS Decision Matrix
+### Gateway and DNS Decision Matrix
 
 | Traffic Type | Gateway | DNS Mechanism | Provider Labels on Route | Annotations on Route | Separate DNSEndpoint? |
 |-------------|---------|--------------|--------------------------|---------------------|-----------------------|
 | External, proxied | `DEFAULT` | Route-based (auto) | `external-dns-cloudflare` | `cloudflare-proxied: "true"` | No |
 | External, direct | `DEFAULT` | Route-based (auto) | `external-dns-cloudflare` | None | No |
-| External, TCP | `DEFAULT` | Explicit DNSEndpoint | None on route | None | Yes (CNAME → `loki.kilic.dev`) |
+| External, TCP | `DEFAULT` | Explicit DNSEndpoint | None on route | None | Yes (CNAME to `loki.kilic.dev`) |
 | Internal service | `INTERNAL` | Explicit DNSEndpoint | None on route | None | Yes (A record, OPNSense loki/thor) |
 | L2 announcement | N/A | Explicit DNSEndpoint | N/A | N/A | Yes (A record, OPNSense loki) |
 

@@ -22,8 +22,8 @@ When the type is unclear, treat it as external (read-only) and ask.
 
 ## In Practice
 
-- **Read mode:** glimpse → summarize what's relevant → flag stale/contradicted docs with their timestamps → recommend (don't perform) any follow-up edits.
-- **Update mode:** glimpse → classify each document → for plan-like ones, propose edits that reflect the agreed conversation → get agreement → write. Leave external docs untouched unless told otherwise.
+- **Read mode:** glimpse, summarize what's relevant, flag stale/contradicted docs with their timestamps, recommend (don't perform) any follow-up edits.
+- **Update mode:** glimpse, classify each document, for plan-like ones propose edits that reflect the agreed conversation, get agreement, write. Leave external docs untouched unless told otherwise.
 
 ## Also Reconcile Relations
 

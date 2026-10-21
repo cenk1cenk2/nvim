@@ -3,8 +3,6 @@ name: notion-pull
 description: notion-pull Pull a Notion page into the editor as markdown - title becomes the heading, metadata becomes frontmatter. Use on "pull this from Notion", or when handed a Notion URL to open. Not for pushing changes back, or for session setup.
 disableModelInvocation: true
 argumentHint: '[Notion URL or search terms]'
-references:
-  - ../references/output-diff.md
 ---
 
 ## Notion Pull: Page to Markdown
@@ -44,21 +42,13 @@ Parse the fetched page content into markdown format:
    - Preserve Notion's markdown formatting (bold, italic, code, lists, toggles, callouts).
    - Convert Notion-specific blocks to closest markdown equivalents.
 
-**Step 3: Present for approval.**
-
-Present the converted markdown (frontmatter and body) in chat per `output-diff` before writing anything:
-
-- Page title and number of properties converted.
-- If the current buffer has existing content, say so explicitly and ask: write to the current buffer (replacing content) or create a new file?
-- Wait for explicit approval before proceeding.
-
-**Step 4: Determine the target.**
+**Step 3: Determine the target.**
 
 - Use `hyprpilot-nvim__editor_status` to check the current buffer.
 - If the buffer is empty or unnamed, write the markdown content there.
-- If the buffer has existing content, use the user's answer from Step 3.
+- If the buffer has existing content, ask: write to the current buffer (replacing content) or create a new file?
 
-**Step 5: Write the file.**
+**Step 4: Write the file.**
 
 - Use the built-in `Edit` (or `Write` for new files) tool to write the converted markdown to the target buffer.
 - Confirm to the user: page title, number of properties converted, and where the file was written.
@@ -84,7 +74,7 @@ Body content here...
 
 ## Key Principles
 
-- **Always present before writing** — show the converted markdown per `output-diff` and wait for approval, especially when it would overwrite existing buffer content.
+- **Ask before overwriting** — existing buffer content is replaced only on the user's say-so.
 - **Always include `notion-url` in frontmatter** — enables round-trip with `notion-push`.
 - **Search requires approval** — never auto-select a search result.
 - **Preserve fidelity** — convert as much Notion formatting as possible to markdown equivalents.
