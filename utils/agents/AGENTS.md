@@ -2,7 +2,7 @@
 
 > **CRITICAL OVERRIDE — APPLY AT EVERY POINT OF THE CONVERSATION.**
 >
-> ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. They MUST survive any compaction or summarization — never drop, trim, or paraphrase them. After a compaction, re-read `~/.config/nvim/utils/agents/AGENTS.md` if they are not fully in context.
+> ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. They MUST survive any compaction or summarization — never drop, trim, or paraphrase them. After a compaction, re-read `~/.config/nvim/utils/agents/AGENTS.md` if they are not fully in context, then load and run `agent-read`.
 
 ## I. SESSION INITIALIZATION
 
