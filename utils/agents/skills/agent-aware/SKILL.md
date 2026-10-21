@@ -31,7 +31,7 @@ Pasting a skill body into a prompt forks it: the skill gets fixed next week, you
 6. **State intent and acceptance, not keystrokes.** Give what done looks like and how to prove it; leave method selection to the target. When a program parses the final answer, the brief follows `agent-parsed-answer`.
 7. **Name prerequisites and ordering.** Workspace skills that must be active first, skills that must load before an action, holds and sequencing gates.
 8. **Add a degradation line.** One sentence on what to do if a named skill or server is missing — do it manually, or stop and report. The artifact must fail loudly, not silently improvise.
-9. **Present the draft**, iterate, then write.
+9. **Write it, then report** what it assumes and points at.
 
 ## Conventions
 
@@ -58,7 +58,7 @@ Don't:
 1. Confirm target: subagent in this harness, aware on skills and MCP.
 2. `list_skills` confirms `git-branch` and `git-commit` exist.
 3. Draft prompt: declaration line, goal, owned paths, "load `git-branch` for naming and `git-commit` for the message format", acceptance criteria, degradation line.
-4. Present prompt, dispatch after approval.
+4. Dispatch it and announce the dispatch.
 
 **Result:** a short prompt that stays correct as the skills evolve, because it carries no copy of them.
 

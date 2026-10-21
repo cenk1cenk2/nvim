@@ -3,6 +3,7 @@ name: linear-triage
 description: linear-triage Work through every Linear issue sitting in triage, recommending project, priority, team, and refinements interactively. Use on "triage the issues", "process the triage queue". Not for planning a cycle, or for choosing a single next task.
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md

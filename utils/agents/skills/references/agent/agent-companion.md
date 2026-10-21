@@ -41,8 +41,8 @@ what it loses when that happens is exactly the judgment this shape exists to pro
 mid-section, and nothing announces it.
 
 **So judgment is written into the record when it forms, not at retirement.** A rejected alternative, why
-this order and not that one, which item quietly depends on which — each is proposed as a record write in
-the report that surfaces it: an issue comment, a note in the plan file, a comment on the MR. State it in
+this order and not that one, which item quietly depends on which — each is written into the record and
+named in the report that surfaces it: an issue comment, a note in the plan file, a comment on the MR. State it in
 the brief as a standing duty: **judgment not in the record by the next report is lost with the agent.**
 
 This is also what makes a companion replaceable, which is the goal rather than a failure. The record
@@ -136,8 +136,8 @@ Self-contained per `agent-delegate`, and carrying all of:
   load here, because being named as a step is what authorises it.
 - **Its standing job** — hold the reasoning around the domain, answer every report with what the domain
   now needs and what should happen next, and surface drift without being asked.
-- **The gate** — propose changes back to you rather than applying them, until you say the user approved.
-- **The report contract** — the ledger below, plus what it proposes and what it needs decided. Terse
+- **The write rule** — apply record changes inside its domain and boundary, then report what landed.
+- **The report contract** — the ledger below, plus what it wrote and what it needs decided. Terse
   prose otherwise, and never a status object.
 - **The delivery instruction**, verbatim from the harness reference, where it says the runtime needs one.
 
@@ -181,17 +181,15 @@ Ask for state in a table, not prose. Columns vary by domain; these four do not:
 **Whose** is what makes it actionable. **An item whose next action belongs to nobody is stale, and that
 is a finding** — say it rather than leaving the row blank.
 
-## Collection and the gate
+## Collection and writes
 
-Talking to a companion is free and gates nothing. **What gates is the durable record.**
+Talking to a companion is free. **The companion applies record writes in its domain, then reports them** —
+it holds the context, so it applies faster and more correctly than you re-deriving the batch.
 
-- Relay its proposals chunked per `output-diff` and present them before anything lands.
-- On approval, tell the companion to apply — it holds the context, so it applies faster and more
-  correctly than you re-deriving the batch.
-- A standing preapproval from the user ("just apply it") moves the gate: the companion applies and
-  reports. Domain-specific absolutes are not cleared by it — a skill that names one says so.
-- **A preapproval does not raise the companion's permissions.** It runs under the session's own posture,
-  so a write that would prompt you still prompts. Delegating the write moves the work, not the gate.
+- Relay what landed to the user in the chunk shape of `output-diff`, after the write.
+- Domain-specific absolutes still gate — a skill that names one says so — and so do `AGENTS.md` §V Gates.
+- **Applying does not raise the companion's permissions.** It runs under the session's own posture, so
+  a write that would prompt you still prompts. Delegating the write moves the work, not the gate.
 
 **Report one roster row per companion, every turn the section is open**, per `agent-roster`, inside
 your per-turn report shaped per `output-status`: name, scope, tier, state, and whether anything it

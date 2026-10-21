@@ -26,6 +26,7 @@ Use the embedded `obsidian` MCP tools for vault operations. Tool names below use
 | Append note | `obsidian__vault_append` | Creates the file if it does not exist. |
 | Patch note section | `obsidian__vault_patch` | Target a heading, block, or frontmatter key. Use idempotency guards for repeated appends. |
 | Move/rename note | `obsidian__vault_move` | Preserves Obsidian links and file history. |
+| Copy note | `obsidian__vault_copy` | Duplicates a note to a new vault-relative path. |
 | Delete note | `obsidian__vault_delete` | Only delete after explicit confirmation unless the invoking skill says otherwise. |
 | List directory | `obsidian__vault_list` | Use for top-level folders and known directories like `Todo/` or `Drawings/`. |
 | Inspect note structure | `obsidian__vault_get_document_map` | Use before targeted reads or patches. |
@@ -39,7 +40,6 @@ Use the embedded `obsidian` MCP tools for vault operations. Tool names below use
 | Search by metadata/path | `obsidian__search_query` | Use JsonLogic for tags, frontmatter, backlinks, or path globs. |
 | List tags | `obsidian__tag_list` | Read-only tag inventory. |
 | Get active file | `obsidian__active_file_get_path` | Use only when the user references the currently open Obsidian note. |
-| Get periodic note | `obsidian__periodic_note_get_path` | Use for daily/weekly/monthly/quarterly/yearly notes. |
 
 ### Command Execution
 

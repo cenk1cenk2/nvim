@@ -9,7 +9,7 @@ argumentHint: '[on|off]'
 
 ## Present-First Toggle
 
-The posture, its approval conditions, and what survives being switched off are all defined in `present-first`, which arrives with this skill and with every skill that declares it. Nothing needs loading for it to apply — this skill only changes its state.
+The posture, its approval conditions (an invocation approves the run, not text drafted for other people), and what survives being switched off are all defined in `present-first`, which arrives with this skill and with every skill that declares it. Nothing needs loading for it to apply — this skill only changes its state.
 
 ## Toggle
 

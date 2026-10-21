@@ -16,9 +16,13 @@ Catalog root: <root>. Each skill is a directory holding `SKILL.md`, at any depth
 Read these in full before touching anything. They define "correct":
 <numbered list: the authoring skills, the loader skill, current-state-only, and the central guidance sections that own cross-cutting rules>
 
+## Context: what changed recently (do not undo it)
+
+<bullets: the rule, gate and structure changes since the last reconcile, each in one line>
+
 ## The checks
 
-Run `<check_catalog path> <root>` and filter the output to your files. WARN rows are heuristics; judge each one.
+Run `<check_catalog path> <root>` by executing the path, never `python3 <path>`, and filter the output to your files. WARN rows are heuristics; judge each one.
 
 1. **Wiring.** Declared paths resolve. Every cited reference is declared, or reached by loading the skill that declares it. Every declaration is used. Branch-only declarations of a composed skill are dropped. Per-harness families are declared in full.
 2. **Staleness.** Names, paths, tools and flows that were renamed, moved, merged, or now belong to another file. Verify against the live tree and the live tool list; never assume.
@@ -28,16 +32,18 @@ Run `<check_catalog path> <root>` and filter the output to your files. WARN rows
 6. **Descriptions** meet the checklist.
 7. **Mechanisms.** Tool names, parameters, paths and config keys match the live source. Flag what you cannot confirm.
 
+Also: no emoji or arrow glyphs (`→`, `->`, `=>`) in prose or user-facing templates (code blocks and literal command strings are fine); no bare issue/MR ids in templates the agent shows the user.
+
 ## Apply vs propose
 
-Apply directly (meaning-preserving): wiring fixes, replacing a restatement with a name, removing history, tightening, reshaping a description without changing its trigger scope, fixing stale names and paths.
+Apply directly (meaning-preserving): wiring fixes, replacing a restatement with a name, removing history, tightening, reshaping a description without changing its trigger scope, fixing stale names and paths, replacing arrow glyphs in prose.
 
 Propose only: anything that changes a rule, behaviour, default, gate or invocation tier; deleting, merging, splitting or renaming a skill or reference; moving content across the slice boundary; any file outside your slice. When unsure, propose.
 
 ## Discipline
 
 - Match the voice of the neighbouring skills. Smallest diff; never reformat, re-wrap or realign what you did not change. No commentary about the edit in the file.
-- No commits, no staging, no formatters over the tree. Other agents are editing other slices concurrently.
+- No commits, no staging, no formatters over the tree. Other agents are editing other slices concurrently; `git diff --stat` shows their files too, so ignore them.
 - Open nothing in the user's browser or editor.
 
 ## Before reporting
@@ -49,13 +55,15 @@ Re-run the linter. Then run `git diff --stat` and confirm every changed file is 
 Status: DONE | DONE_WITH_CONCERNS | BLOCKED.
 
 1. **Applied**: one line per file, with what changed and which check drove it.
-2. **Proposed (meaning changes)**: ranked, each with the file, current behaviour, proposed behaviour and why.
+2. **Proposed (meaning changes)**: ranked, each with file:line, current behaviour, proposed behaviour and why.
 3. **Deletion / merge candidates**, with evidence. Delete nothing.
 4. **Cross-slice issues**: the file, the issue and the suggested fix.
-5. **Unverified**.
+5. **Improvement ideas**: up to 5 concrete ideas that would make this slice work better for an agent (gaps, missing flows, friction), each one line with the file it would touch.
+6. **Unverified**.
 ```
 
 ## Filling it
 
 - **The standard** is the catalog's own authoring skills. Here: `config-skills`, `config-references`, `hyprpilot-skills`, `current-state-only`, and the `AGENTS.md` sections for skills, posture and tools. For a different catalog, name that catalog's equivalents; when it has none, the reconcile has nothing to reconcile against, so ask the user before continuing.
-- **The central-guidance slice** gets one override line: "This slice is READ-ONLY; everything you find goes into the report as a proposal." Its edits need the captain to name the file and bless the change, per `config-targets`.
+- **What changed recently** comes from `git log` over the catalog since the last reconcile: the rule, gate and structure changes a slice agent could mistake for drift.
+- **The standards slice** gets one override line: "The `config-*` skills are writable for meaning-preserving edits only; the central guidance is READ-ONLY, and everything you find there goes into the report as a proposal." Central-guidance edits need the captain to name the file and bless the change, per `config-targets`.

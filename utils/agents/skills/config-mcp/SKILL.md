@@ -1,6 +1,6 @@
 ---
 name: config-mcp
-description: config-mcp Add, remove, or modify MCP server entries in the hyprpilot catalog; researches the server, prefers official HTTP sources, prompts for variables and auth. Use on "add an MCP server", "remove that server". Not for skills, agent guidelines, repo knowledge bases, or launcher settings, which are edited in the hyprpilot config directly.
+description: config-mcp Add, remove, or modify MCP server entries in the hyprpilot catalog; researches the server, prefers official HTTP sources, prompts for variables and auth. Use on "add an MCP server", "remove that server". Not for skills, agent guidelines, repo knowledge bases, or launcher settings.
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
@@ -13,7 +13,6 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 ---
 
 ## MCP Server Configuration Manager
-
 
 **Target: the MCP catalog under `~/.config/nvim/utils/agents/mcp/`** — three files, picked by which profiles should see the server. The hyprpilot launcher config that wires them into a launch is `config-hyprpilot`'s.
 
@@ -120,7 +119,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
   | `includeProfiles` / `excludeProfiles` | unset | Globs scoping which profiles *this* launcher may delegate to. They AND with each profile's own `harness:` opt-in, so a glob can never promote a profile that never opted in. Exclude beats include. |
   | `mcp` | unset | An `mcp:`-shaped overlay every delegate receives, folded **per leaf** over the delegate's own resolved block — a key you set wins, a key you leave unset inherits. This is what narrows a delegate's MCP reach. |
 
-  **Write a seeded key the way the seed writes it.** Both casings parse, but patches merge by key string before anything is typed — so writing `maxDepth` against the seeded `max_depth` reaches serde as a duplicate field and fails config load. The seed spelling is read from the local clone (v3.20.0-2), behind the installed 3.22.0 — **Unverified** against the installed version; check `defaults.toml` at the matching tag.
+  **Write a seeded key the way the seed writes it.** Both casings parse, but patches merge by key string before anything is typed — so writing `maxDepth` against the seeded `max_depth` reaches serde as a duplicate field and fails config load. The seed spelling is read from the local clone (v3.20.0-2), behind the installed 4.0.1 — **Unverified** against the installed version; check `defaults.toml` at the matching tag.
 
 ## Process
 
@@ -152,19 +151,16 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
    - Suggest write / destructive tools as candidates for `excludeTools`.
    - Suggest read-only / safe tools as candidates for `autoAcceptTools`.
    - Do not assume defaults — the captain decides both lists.
-7. **Present the configuration.**
-   - Show the complete JSON entry in chat per `output-diff`.
-   - Explain each field briefly.
-   - Wait for user approval.
-8. **Apply the configuration.**
+7. **Apply the configuration.**
    - Read the chosen catalog file, add the new entry under `mcpServers`, and write the file.
    - Validate that the resulting JSON is well-formed.
+   - Report the complete JSON entry per `output-diff`, explaining each field briefly.
    - Remind the captain that the MCP catalog is read once per launch. There is no daemon and no reload command — hyprpilot resolves the config, projects it onto the vendor CLI, and `exec()`s into it. A catalog edit reaches an agent on the **next** `hyprpilot <profile>`; a session already running keeps the catalog it launched with.
 
 ### Remove
 
 1. Read the three catalog files and list available servers if no specific server is named.
-2. Confirm with the user which server to remove.
+2. When the request does not name one server unambiguously, ask which.
 3. Remove the entry and write the file.
 4. Remind the captain that the removal applies to the next launched session — a session already running keeps the catalog it launched with.
 
@@ -174,12 +170,11 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 2. Ask the user what they want to change (or apply the change they described).
 3. If the change involves new variables or auth, follow the prompting steps from the Add flow.
 4. If the user asks to change `hyprpilot.autoAcceptTools` or `autoRejectTools`, prompt for those specifically. Otherwise, do not re-prompt for tool approvals unless relevant to the modification.
-5. Present the updated entry per `output-diff` and wait for approval.
-6. Apply and write the file.
+5. Apply and write the file, then report the updated entry per `output-diff`.
 
 ## Validation
 
-Before presenting any edit, run the `current-state-only` check: no compat entries kept "just in case", no note of what a server was called before, no migration history. State the config as it is now.
+Before writing any edit, run the `current-state-only` check: no compat entries kept "just in case", no note of what a server was called before, no migration history. State the config as it is now.
 
 ## Key Principles
 

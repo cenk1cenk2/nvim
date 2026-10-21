@@ -87,8 +87,8 @@ Slack does NOT render standard markdown. It uses its own format called **mrkdwn*
 
 ### Approval Rules
 
-- **Summaries and reactions** are automatic — post them without asking.
-- **Other thread replies** require explicit user confirmation of the draft content before sending.
+- **Reactions** are automatic — add them without asking.
+- **Drafted posts** — thread replies and channel summaries — are presented before sending in a skill that declares `present-first`. Invoking such a skill approves the run, not the text drafted for other people.
 - Never send ad-hoc replies without approval.
 
 ### Large Results

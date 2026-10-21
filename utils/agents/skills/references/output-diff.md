@@ -19,6 +19,7 @@ Reasoning sits on top so the user can decide whether to read the block below it.
 - Omit unchanged fields entirely. For long-form edits, show a concise diff of what moved, was added, or was removed — never dump unchanged surrounding text.
 - Group short metadata fields (title, priority, labels, estimate, team) into one chunk; give long-form sections (description body, analysis) their own.
 - **On a create, show the full content that will be written** — the concise-diff rule above is for edits. A new description presented in summary is not reviewable.
+- A skill that acts without presenting reports what it wrote in the same chunk shape, after the write.
 - Language tag by content: `diff` for field changes, `markdown` for prose, `yaml` for structured config, plain for short field groups.
 - Wait for explicit approval before the write — unless the request already blessed it, in which case act and report.
 

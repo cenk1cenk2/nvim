@@ -38,7 +38,7 @@ Both assume the issue's work is still open. A follow-up to a Linear issue that i
 
 Applied to delivery shape, on any platform:
 
-- Single PR/MR completing one issue → `closes`.
-- Multiple PRs/MRs for one issue → non-final ones use `refs`; only the final completing PR/MR uses `closes`.
+- Single PR/MR completing one issue: `closes`.
+- Multiple PRs/MRs for one issue: non-final ones use `refs`; only the final completing PR/MR uses `closes`.
 - One PR/MR can close multiple independent issues. **The syntax differs per platform** — see each platform's "Multiple issues" rule.
 - Mix `closes` and `refs` when some linked issues are closed and others are only related.

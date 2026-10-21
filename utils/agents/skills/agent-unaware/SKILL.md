@@ -28,8 +28,8 @@ So the artifact carries the **content itself** and the **exact method**. Where a
 5. **Restate every decision made in conversation.** No "as discussed", no "the approach we picked".
 6. **Give runnable verification** — the exact command and what passing output looks like. If the target cannot run anything, say so and give a review checklist instead.
 7. **Define the blocked path.** It cannot consult anything, so state plainly: report what is missing and stop, do not invent. Say where the output goes and in what format; when a program parses it, per `agent-parsed-answer`.
-8. **Redact.** Sweep for private specifics before presenting.
-9. **Present the draft**, iterate, then write.
+8. **Redact.** Sweep the draft for private specifics.
+9. **Write it, then report** what it inlines and what it assumes.
 
 ## Pointer Translation
 

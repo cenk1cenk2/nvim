@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[topic or description]'
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/obsidian.md
 ---
 

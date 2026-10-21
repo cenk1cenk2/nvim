@@ -7,6 +7,7 @@ references:
   - ../references/long-running-work.md
   - ../references/agent/agent-watchers.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/agent/agent-delegate.md
   - ../references/mode-toggle.md
   - ../references/harness/provider-paths.md

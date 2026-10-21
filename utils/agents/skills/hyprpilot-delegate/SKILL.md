@@ -139,7 +139,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 2. **Brief the agent properly.** The spawned agent has NO access to this conversation. Its prompt must be self-contained: the goal, the repo/paths, the constraints, and what "done" looks like. If it writes code, carry the local patterns from `agent-conventions` and the verification commands from `project-tooling` into the prompt. A thin prompt produces a thin result and costs a whole session.
 
-3. **Present, then spawn.** Show the resolved profile, the working directory, and the prompt. `spawn` runs the profile's `command` as this user, so it is never a silent action — present it and wait for approval. On approval call `spawn { profile, prompt|file, cwd?, mode?, wait?, timeout_seconds?, args?, with_config? }`.
+3. **Spawn, then announce.** `spawn` runs the profile's `command` as this user, so it is never a silent action — announce the resolved profile, the working directory, and the task in the same turn. Call `spawn { profile, prompt|file, cwd?, mode?, wait?, timeout_seconds?, args?, with_config? }`.
    - **Use the dedicated parameters first.** `cwd`, `mode`, `file`, and `args` are all top-level parameters — reach for them directly. `with_config` is the last resort, for the settings that have no dedicated parameter of their own (`model`, `effort`). (`wait` / `timeout_seconds` are also top-level, but they describe how *you* wait, not the agent — see below.)
    - **`wait` defaults `false` — detached — and that is the right default. Leave it alone.** Opting into `wait: true` returns the **entire raw event stream inline**, every `tool_use` payload included, with no `tail` and no `cursor` to trim it: the same trivial three-item read-only task produced a **14 kB** transcript on opencode and a **121 kB** one on claude, all of it pushed through your context to deliver three lines of answer. It does not even buy certainty — a turn outliving `timeout_seconds` (default `45`, under opencode's 60 s tool-call cut-off) comes back `running` anyway. Reserve it for a genuinely short turn whose full trace you actually want; otherwise detach and collect just the answer (step 6).
    - **`prompt` and `file` are mutually exclusive.** `file` takes a path (`~` and `$VAR` expanded) whose contents become the prompt — prefer it for a long brief instead of inlining one.
@@ -253,7 +253,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `[mcp.harness].maxDepth` bounds nesting at **1** by default (stamped as `HYPRPILOT_SPAWN_DEPTH`), so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot by reaping a finished session with `session_kill`, rather than retrying blindly. That is the reaping job, not a general-purpose route: a reap frees a slot, a steer redirects an agent already holding one.
 - **Detaching removes the natural brake on breadth.** A blocking `spawn` could not overrun the concurrency ceiling because it finished before you called the next one. Detached calls return instantly, so a fan-out of nine is nine calls in one turn and the ninth is refused. Count what is already running — `session_list` — before firing a batch, and reap finished ones to free slots.
 - **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, per `agent-fan-out`, where `session_list` sees them and `session_kill` can stop them.
-- **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is manual, requested by the user, and presented before it spawns.
+- **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is manual, requested by the user, and announced as it spawns.
 
 ## Examples
 
@@ -261,10 +261,9 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 1. `list_profiles`: the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
 2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
-3. Present the profile, cwd, and prompt; the user approves.
-4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
-5. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Record the armed row — session handle, watched path, watcher handle — then tell the user in one sentence that the refactor is delegated and watched, with the session handle.
-6. On wake, `session_status` reports `exited` / `hasResult: true`; read `hyprpilot://sessions/3b5ce010-…/result`, reap the watcher, then report the answer and the handle.
+3. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
+4. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Record the armed row — session handle, watched path, watcher handle — then tell the user in one sentence that the refactor is delegated and watched, with the session handle.
+5. On wake, `session_status` reports `exited` / `hasResult: true`; read `hyprpilot://sessions/3b5ce010-…/result`, reap the watcher, then report the answer and the handle.
 
 **Result:** Work done in a separate opencode session; handle available for follow-ups.
 
@@ -282,7 +281,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 **User says:** "delegate this to hyprpilot and check on it later"
 
-1. Resolve the profile — an opencode one here — present, then `spawn { …, mode: "plan" }`: detached by default, and read-only through opencode's own lever because the job only needs to look.
+1. Resolve the profile — an opencode one here — then `spawn { …, mode: "plan" }`: detached by default, and read-only through opencode's own lever because the job only needs to look.
 2. Returns instantly: handle `9c4de0a8-…`, `status: running`, plus turn 1's `turnDir`.
 3. Arm the `done.json` watcher on that exact path through the runtime's background exec, and confirm it returned watcher handle `task_01H…`. Nothing wakes you here, so without a handle the session finishes into silence.
 4. Report it running in one plain sentence — what it is looking at and that you will pick it up on completion — with the session handle; the watched path and watcher handle sit in the armed row.
@@ -310,5 +309,5 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **A clean exit is not a finished task.** `exitCode: 0` and `hasResult: true` describe the turn, not the brief. Check the answer against what you asked.
 - **`/result` already checks both failure locations** — launch failures land in `stderr.log`, runtime ones as an `error` event in the transcript, and it names which happened. A bare exit code is never the report.
 - **Self-contained prompts, absolute paths.** The agent cannot see this conversation.
-- **Present before spawning.** It runs commands as this user.
+- **Announce the spawn.** It runs commands as this user.
 - **Report the handle.** A handle the user does not have is a session they cannot steer.

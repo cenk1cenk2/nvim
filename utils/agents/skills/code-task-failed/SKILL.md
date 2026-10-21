@@ -74,15 +74,15 @@ Based on the failure category and user context, investigate using available tool
 
 If the root cause isn't immediately clear:
 
-- **Narrow the scope** — re-run the failing command with `Bash`, targeting a single file or test. Execution never goes through the tmux MCP; that server only reads panes the user already ran things in.
+- **Narrow the scope** — re-run the failing command, targeting a single file or test. Execution never goes through the tmux MCP; that server only reads panes the user already ran things in.
 - **Check if it reproduces** — sometimes failures are flaky. Run the command again before deep-diving.
 - **Binary search recent changes** — if the failure is new, use `git log` and `git diff` to identify the introducing commit.
 
-Always consult the user before running commands — describe what you want to run and why.
+Say what you ran and why in the report.
 
-### Step 6: Present Findings
+### Step 6: Fix and Report
 
-Present a concise report:
+Apply the fix, re-run the failing command, then report:
 
 ```
 ## Failure Analysis: <brief description>
@@ -96,23 +96,20 @@ Present a concise report:
 ### Evidence
 <What you found — file paths, diffs, upstream issues, etc.>
 
-### Proposed Fix
-<Specific steps to resolve the issue.>
+### Fix
+<The changes made, and the re-run result.>
 
 ### Alternative Approaches (if applicable)
-<Other options considered and why the proposed fix is preferred.>
+<Other options considered and why the applied fix is preferred.>
 ```
-
-Wait for user approval before applying any fix.
 
 ## Key Rules
 
 - **Capture first, investigate second** — always start by reading the actual error output.
 - **Never guess the error** — read it from the terminal. Don't assume what failed based on the user's description alone.
-- **Consult the user before running commands** — describe the command and its purpose, wait for approval.
 - **Consult the user before assuming external causes** — don't blame dependencies or upstream without evidence and user agreement.
-- **Don't fix before understanding** — the investigation must produce a clear root cause before proposing a fix.
-- **Present findings first** — present findings and proposed fix, let the user decide when to proceed.
+- **Don't fix before understanding** — the investigation must produce a clear root cause before any fix.
+- **Fix only the root cause** — when the cause is external, or the fix is a design choice, report the findings instead of changing code.
 
 ## Related Skills
 

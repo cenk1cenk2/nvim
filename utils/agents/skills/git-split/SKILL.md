@@ -87,8 +87,8 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 8. **Execute per slice in dependency order.**
    - **Branch** — delegate to `git-branch`. Pass the slice name and base. Sticky-style applies — slices share a prefix across the run.
    - **Apply content:**
-     - Commit-based input → cherry-pick the slice's commit SHAs onto the new branch.
-     - Tree-based input → checkout slice files from the source branch (`git checkout <source-branch> -- <paths>`) or apply hunks via a saved patch (`git apply`). Partial-file splits use targeted patches built from the diff analysis.
+     - Commit-based input: cherry-pick the slice's commit SHAs onto the new branch.
+     - Tree-based input: checkout slice files from the source branch (`git checkout <source-branch> -- <paths>`) or apply hunks via a saved patch (`git apply`). Partial-file splits use targeted patches built from the diff analysis.
    - **Commit** — delegate to `git-commit`. For cherry-pick paths where messages already exist, reuse them and skip the draft step unless the user requested a rewrite.
    - **Push** — delegate to `git-push` only when the slice opted in.
    - **PR/MR** — delegate to `github-pr-create` / `gitlab-mr-create` only when the slice opted in. Platform is routed via `scm-detect`.
@@ -118,7 +118,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 1. Detect: clean commit history, dirty tree, no PR. Branch `main`.
 2. Surface state: "6 modified files: 3 in `src/auth/`, 2 in `config/`, 1 in `test/`. No commits ahead. No open PR. Slice axis?"
 3. User: "by concern".
-4. Group: auth feature (3 files) → config cleanup (2 files) → tests-for-auth (1 file).
+4. Group: auth feature (3 files), then config cleanup (2 files), then tests-for-auth (1 file).
 5. Present plan with 3 chunks. Ask: "push + PR all?" User: "branch and commit only".
 6. User approves.
 7. Pre-flight: stash unsaved hunks, record HEAD SHA.
@@ -133,7 +133,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 
 1. Detect: 8 commits ahead, clean tree, no PR.
 2. Surface state. User confirms axis: by concern.
-3. Read each commit via `git show`. Group: 3 commits = refactor → 4 commits = feature → 1 commit = docs.
+3. Read each commit via `git show`. Group: 3 commits = refactor, then 4 commits = feature, then 1 commit = docs.
 4. Present 3 slices. User opts in for `push` globally, declines PRs. Approve.
 5. Slice 1: `git-branch refactor/extract-token-validator` from `main`, cherry-pick 3 commits, reuse messages, `git-push`.
 6. Slice 2: `git-branch feat/token-refresh` from `main`, cherry-pick 4 commits, `git-push`.
@@ -147,9 +147,9 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 1. Detect: GitHub, open PR #142, 12 commits, 14 files.
 2. Read PR diff via `github__pull_request_read get_diff`. Surface state.
 3. User confirms 3-way split by concern.
-4. Group commits and files into 3 slices, ordered: refactor → feature → tests.
+4. Group commits and files into 3 slices, ordered: refactor, feature, tests.
 5. Present plan. User opts in for push + PR globally. Approve.
-6. Slice 1: `git-branch` → cherry-pick refactor commits → `git-commit` (reuse messages) → `git-push` → `github-pr-create` (drafts and presents title + description, user approves, PR created).
+6. Slice 1: `git-branch`, cherry-pick refactor commits, `git-commit` (reuse messages), `git-push`, then `github-pr-create` (drafts and presents title + description, user approves, PR created).
 7. Slice 2: same flow for the feature.
 8. Slice 3: same flow for tests.
 9. Final report: 3 new PRs with URLs. PR #142 left untouched. Suggest marking #142 as draft or closing it as superseded.

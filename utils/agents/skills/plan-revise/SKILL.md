@@ -4,6 +4,7 @@ description: plan-revise Revise a plan whose direction turned out wrong - gather
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/plan-mode.md
   - ../references/harness/provider-paths.md
   - ../references/tmux.md
@@ -50,15 +51,13 @@ This skill composes with `plan-hard` — the interview protocol is the same, but
    - What new branches open up as a result?
    - What is the new end state?
 
-6. **Draft the revised plan** and present it in chat before writing.
-
-7. **Write the revision back to the plan file.** Update the file in place:
+6. **Write the revision back to the plan file.** Update the file in place:
    - Add or update a `## Revision History` section at the top (after the title). Prepend a dated entry — newest first.
    - Update the body sections (Context, Requirements, Approach, Implementation Steps, Risks, Verification) to reflect the revised plan.
    - Do NOT delete the original sections wholesale — rewrite them. The plan file is the living source of truth.
    - In the Revision History entry, list: date, trigger/reason, decisions that changed, decisions that still hold, impact on implemented work (keep/revert/reshape).
 
-8. **Present the revised plan** in chat and stop. Wait for the user to signal next steps (implement, further revise, hand off).
+7. **Present the revised plan** in chat and stop. Wait for the user to signal next steps (implement, further revise, hand off).
 
 ## Revision History Entry Format
 
@@ -115,7 +114,7 @@ Same Recommendation Format as `plan-hard`:
 
 ## Self-Answering Rule
 
-Same as `plan-hard`: before asking the user, check if the codebase answers the question. Use `hyprpilot-nvim` MCP (LSP + editor + diagnostics), `git` CLI via Bash, `Grep`, `Glob`, `Read`, `github__*` / `gitlab__*`, and `research` for documentation. Only escalate to the user for intent, preference, or unknowable-from-code decisions.
+Same as `plan-hard`: before asking the user, check if the codebase answers the question. Use the editor's language server and diagnostics through `hyprpilot-nvim`, local `git` for history, the platform's PR/MR server for remote repository details, file search and direct reads for the tree, and a docs server for library documentation. Only escalate to the user for intent, preference, or unknowable-from-code decisions.
 
 Extra sources specific to `plan-revise`:
 

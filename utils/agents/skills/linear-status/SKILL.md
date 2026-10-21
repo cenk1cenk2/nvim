@@ -4,6 +4,7 @@ description: linear-status Move Linear state forward on evidence and keep checkl
 argumentHint: '[issue id, project, or URL] [target state, items, or evidence: PR/MR URLs, repos, ''recent merged'', notes]'
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issue-states.md
   - ../references/linear/linear-state-transitions.md
@@ -12,7 +13,6 @@ references:
   - ../references/scm/scm-detect.md
   - ../references/scm/scm-github.md
   - ../references/scm/scm-gitlab.md
-  - ../references/output-diff.md
   - ../references/identifier-legibility.md
 ---
 
@@ -66,19 +66,19 @@ Set `Triage` only when the user explicitly asks for it.
 1. **Identify the issue** from an id or Linear URL in the prompt or active context, and fetch it per the Scope table. If none is identifiable, ask for the id.
 2. **Resolve the target state** from explicit user wording first, per the Verbal State Mapping. When the state is only inferred from the situation, apply the monotonic transitions (`In Progress`, `In Review`, `Done`) when the evidence is clear; otherwise ask.
 3. **Apply guardrails.** Never downgrade — explain the rule and leave the state as is. `Canceled` is terminal and needs explicit wording or confirmation. Skip issues already `Done` or `Canceled` unless the user explicitly requests a supported change.
-4. **Update the state.** An explicitly requested state is applied directly and reported. An inferred one is presented per `output-diff` and applied only when the evidence is clear or the user confirms. Report with the `linear-state-transitions` line.
+4. **Update the state.** An explicitly requested state is applied directly and reported. An inferred one is applied when the evidence is clear, otherwise ask. Report with the `linear-state-transitions` line.
 5. **Close out** per the Close-Out section when the target is `In Review` or `Done`.
 
 ## Process — Checklist Scope
 
 1. **Fetch the issue and its comments** per the Scope table, and extract the current checklist from the description.
-2. **Present the checklist** per `output-diff` and confirm which items to update. The Close-Out exception skips this confirmation.
-3. **Apply** only after confirmation, as a `patch` touching only the checklist lines — done, canceled, and pending markup and the patch rules per `linear-description-structure`. Preserve all other issue content.
+2. **Pick the items** the user named or the evidence clearly completes; ask about ambiguous ones.
+3. **Apply** as a `patch` touching only the checklist lines — done, canceled, and pending markup and the patch rules per `linear-description-structure`. Preserve all other issue content.
 4. **Hand off state** per the Close-Out section when the update completes the implementation or puts it into review.
 
 ## Process — Project Scope
 
-Linear drifts from reality: an MR merges but the issue stays `In Progress`, a task is silently dropped but sits in `Todo`, the user finishes three issues in an afternoon and never clicks Done. This scope pulls outside evidence, correlates it with the project's open issues, and proposes the transitions that bring Linear in line.
+Linear drifts from reality: an MR merges but the issue stays `In Progress`, a task is silently dropped but sits in `Todo`, the user finishes three issues in an afternoon and never clicks Done. This scope pulls outside evidence, correlates it with the project's open issues, and applies the transitions that bring Linear in line.
 
 ### Step 1: Baseline the project
 
@@ -99,37 +99,21 @@ Use only the sources the user named. If none is named, ask — never fall back t
 - Extract ids and their kind (reference vs closing) from each MR/PR per the extraction rules in `linear-state-transitions`, closing keywords per `commit-trailers-linear`. Dedupe per MR/PR and record `{url, state, referenced-issue-ids, closing-issue-ids, title}`.
 - A statement naming work but no issue ("I finished the auth migration") is matched against issue titles by keyword, and the match is confirmed with the user before use.
 
-### Step 3: Correlate and propose
+### Step 3: Correlate
 
 For each issue, collect every matching signal — a direct id match, or a weaker keyword match on title.
 
-- **MR/PR signals** map to a target per the trigger table in `linear-state-transitions`: a closing keyword on merged work proposes `Done`, an open MR/PR proposes `In Review`, a contributing-only merge or a closed-unmerged MR/PR proposes nothing and is flagged.
+- **MR/PR signals** map to a target per the trigger table in `linear-state-transitions`: a closing keyword on merged work targets `Done`, an open MR/PR targets `In Review`, a contributing-only merge or a closed-unmerged MR/PR targets nothing and is flagged.
 - **User statements and notes** map per the Verbal State Mapping. A `Done` from a statement still needs the user's confirmation.
-- **Keyword-only matches** propose nothing; surface them as candidates.
+- **Keyword-only matches** target nothing; surface them as candidates.
 - **No evidence** — skip silently.
 
-### Step 4: Present the proposal
+### Step 4: Apply
 
-Per `output-diff`, one chunk per issue — the evidence, then the transition:
+- Apply the transitions the evidence clears in parallel `save_issue` calls, then close out each issue per the Close-Out section.
+- Ask before writing a `Canceled` candidate, a `Done` that rests only on a user statement, and any ambiguous or keyword-only match; the user may redirect a target inline ("K-123 should be In Review, not Done — haven't deployed yet").
 
-````
-### [K-123 — Add cert-manager to the cluster](https://linear.app/<workspace>/issue/K-123/add-cert-manager-to-the-cluster)
-Evidence: [merged MR !42 — Add cert-manager](https://gitlab.example.com/.../merge_requests/42) (closes K-123). Issue is currently In Progress.
-
-```diff
-- state: In Progress
-+ state: Done
-```
-````
-
-Group by target state — Done, In Review, In Progress, Canceled candidates needing confirmation, flagged ambiguities — and close with the unchanged issues and the skipped would-be downgrades.
-
-### Step 5: Iterate and apply
-
-- The user approves all, some, or none, and may edit targets inline ("K-123 should be In Review, not Done — haven't deployed yet").
-- Confirm each `Canceled` once more before writing it.
-- Apply the approved transitions in parallel `save_issue` calls, then close out each issue per the Close-Out section.
-- Report:
+### Step 5: Report
 
 ```
 ## Project Status Applied: <project-name>

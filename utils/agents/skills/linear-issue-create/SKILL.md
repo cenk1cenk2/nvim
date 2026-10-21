@@ -3,6 +3,7 @@ name: linear-issue-create
 description: linear-issue-create Create Linear issues with the analysis and research behind them, always setting the state explicitly rather than letting it fall into triage. Use on "create an issue", "file a bug", "open a ticket". Not for editing an existing issue, commenting on one, or preparing one for work.
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md
   - ../references/linear/linear-issue-states.md
@@ -10,7 +11,6 @@ references:
   - ../references/linear/linear-research-documentation.md
   - ../references/linear/linear-project-documents.md
   - ../references/linear/linear-scm-discovery.md
-  - ../references/output-diff.md
   - ../references/identifier-legibility.md
 ---
 
@@ -33,7 +33,7 @@ Additional rules for issue creation:
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
 - If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-status` immediately after creation.
 
-Present the drafted issue in logical chunks for user approval per `output-diff` before writing to Linear.
+Create the issue once the draft is complete, then report it with its title and link.
 
 When an issue points an implementation agent at files, screenshots, examples, or other context that may not be available from the issue text alone, package it into Linear documents or comments per `linear-project-documents`.
 
@@ -59,7 +59,7 @@ Research process, analysis, appendix, and link conventions per `linear-research-
 2. Research cert-manager deployment patterns via `research` — library docs and web search in one server.
 3. Fetch labels and team from Linear workspace.
 4. Draft the issue with checklist, analysis, and appendix links.
-5. Present the draft to the user for review before writing.
+5. Create the issue and report it.
 
 **Result:** Linear issue created in backlog with labels, estimate, priority, and research appendix.
 
@@ -70,6 +70,6 @@ Research process, analysis, appendix, and link conventions per `linear-research-
 1. Auto-invoke workspace skill based on repo context.
 2. Research the webhook handler in the codebase.
 3. Draft the bug issue with reproduction steps and checklist.
-4. Present the draft to the user before writing.
+4. Create the issue and report it.
 
 **Result:** Bug issue created in backlog with clear reproduction steps and fix checklist.

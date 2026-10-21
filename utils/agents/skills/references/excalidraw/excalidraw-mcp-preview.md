@@ -10,7 +10,6 @@
 
 - **`excalidraw__read_me`** — call once per conversation to load the MCP element format (color palettes, element types, camera controls, examples). Do NOT call again after the first time.
 - **`excalidraw__create_view`** — call to render diagrams. Returns an interactive preview and a `checkpointId` for iterating.
-- **`excalidraw__export_to_excalidraw`** — uploads diagram JSON to excalidraw.com, returns a shareable URL. Use for URL output mode. Pass the complete scene JSON (elements + appState) with pseudo-elements stripped.
 
 ## One Element Format
 
@@ -44,20 +43,13 @@ The preview adds three pseudo-elements that are stripped before writing:
    - Append new/replacement elements.
    - Call `excalidraw__create_view` again.
 5. **Repeat** until the user is satisfied.
-6. **Only then** export — either write to the vault, OR upload to excalidraw.com for a shareable URL. See the skill's Output Modes section for decision rules.
+6. **Only then** write to the vault.
 
 ## Export Paths
 
 ### To Obsidian (`.excalidraw.md`)
 
 Strip the pseudo-elements and wrap the array per `excalidraw-template`. The elements themselves do not change.
-
-### To excalidraw.com URL
-
-1. Strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array.
-2. Build the scene JSON: `{type: "excalidraw", version: 2, source: "...", elements: [...], appState: {...}, files: {}}`.
-3. Call `excalidraw__export_to_excalidraw` with the serialized JSON string.
-4. Returns a shareable URL. From the URL, users can export SVG/PNG via the excalidraw.com UI.
 
 ### From Obsidian
 

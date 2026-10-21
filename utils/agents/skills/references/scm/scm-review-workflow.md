@@ -4,7 +4,7 @@ Shared workflow for an autonomous code review of the current PR/MR with inline c
 
 This workflow is **autonomous**: it does NOT draft findings for user approval. It reviews the code and posts annotations and a summary directly.
 
-The full run is: identify the PR/MR → detect previous reviews → determine scope → resolve previous threads → analyze → post inline annotations → post summary. Identifying the PR/MR and posting inline annotations are platform-specific (see the skill's "Platform specifics"); the steps below are shared.
+The full run is: identify the PR/MR, detect previous reviews, determine scope, resolve previous threads, analyze, post inline annotations, post summary. Identifying the PR/MR and posting inline annotations are platform-specific (see the skill's "Platform specifics"); the steps below are shared.
 
 ## Detect previous reviews
 

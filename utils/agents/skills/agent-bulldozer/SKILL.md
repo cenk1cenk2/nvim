@@ -6,6 +6,7 @@ argumentHint: '[scope of the push]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md

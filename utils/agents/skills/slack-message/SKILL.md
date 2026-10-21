@@ -18,7 +18,7 @@ Posture: `present-first`.
 
 ## Context
 
-Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the `slack-kilic__*` tools, kilic's fallback: kilic routes through the claude.ai Slack connector when it is present and authorized for kilic, and the Laravel workspace always uses it. On the connector, use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
+Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name actions; that reference's routing table maps each to its tool, connector or kilic fallback. Load the deferred connector tools via `ToolSearch` first.
 
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
@@ -28,10 +28,10 @@ The user provides a Slack message URL and a task. This skill reads the message a
    - Parse the Slack message URL to identify the channel ID and message timestamp.
 
 2. **Extract the message.**
-   - Use `slack-kilic__slack_get_channel_history` to fetch the message if only the channel and timestamp are known.
-   - If the message is part of a thread, use `slack-kilic__slack_get_thread_replies` to read the **entire thread** (all replies).
-   - Resolve user IDs to real names using `slack-kilic__slack_get_users` or `slack-kilic__slack_get_user_profile` for a readable summary.
-   - If the URL contains a channel name instead of an ID, use `slack-kilic__slack_list_channels` to resolve it.
+   - Read the channel to fetch the message if only the channel and timestamp are known.
+   - If the message is part of a thread, read the **entire thread** (all replies).
+   - Resolve user IDs to real names with the user and profile lookups for a readable summary.
+   - If the URL contains a channel name instead of an ID, find the channel to resolve it.
    - If the thread references other channels or messages, note them but do not fetch unless the user asks.
 
 3. **Summarize the context.**
@@ -50,9 +50,9 @@ The user provides a Slack message URL and a task. This skill reads the message a
      - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
      - **Research a topic** — use `research` (docs, web search, deep research) or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
-     - **Summarize** — reply in thread via `slack-kilic__slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
-     - **Reply** — draft a response and present it for approval per `output-diff`. **Always use `slack-kilic__slack_reply_to_thread`** to keep conversations in threads. Only use `slack-kilic__slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.
-     - **React** — add an emoji reaction via `slack-kilic__slack_add_reaction` when the user asks.
+     - **Summarize** — draft the summary as a thread reply, present it per `output-diff`, then post it and add the `:dark_sunglasses:` reaction to the message.
+     - **Reply** — draft a response and present it for approval per `output-diff`. **Always reply in the thread** to keep conversations in threads. Only post a new channel-level message when there is no thread context or the user explicitly asks.
+     - **React** — add an emoji reaction when the user asks.
 
 5. **Compose with other skills.**
    - When delegating to another skill, pass the thread context as input — do not make the other skill re-fetch it.
@@ -71,7 +71,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
 **User says:** `slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
 
 1. Parse URL to channel `C123`, timestamp `456`.
-2. Fetch thread via `slack-kilic__slack_get_thread_replies`.
+2. Read the thread.
 3. Resolve user IDs to names.
 4. Summarize: "Alice reported a DNS resolution bug in cluster-rubik. Bob confirmed it affects all pods."
 5. Invoke `linear-kilic`, then compose with issue creation using thread context.
@@ -85,7 +85,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
 1. Parse URL, fetch full thread.
 2. Resolve user names.
 3. Present summary in chat.
-4. Reply in thread with summary via `slack-kilic__slack_reply_to_thread`.
-5. Add `:dark_sunglasses:` reaction.
+4. Present the thread reply draft per `output-diff`.
+5. On approval, reply in the thread and add the `:dark_sunglasses:` reaction.
 
 **Result:** Summary posted in thread, reaction added.

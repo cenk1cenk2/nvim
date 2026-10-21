@@ -39,7 +39,7 @@ met = state in ("MERGED", "CLOSED")
 # GitLab: glab mr view <N> --repo <project> -F json, then .state in ("merged", "closed")
 ```
 
-Cadence 30 s; cap sized to how long the human plausibly takes — hours, not minutes, when they may merge
+Cadence 10 s; cap sized to how long the human plausibly takes — hours, not minutes, when they may merge
 after a meeting or overnight. On wake, **the merge is a proxy**: the thing you actually care about is
 usually what the merge triggers, so re-verify and arm the follow-on rather than declaring done.
 

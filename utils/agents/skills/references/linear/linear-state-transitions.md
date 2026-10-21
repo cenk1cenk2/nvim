@@ -91,7 +91,7 @@ and — on GitHub only — commit messages:
   close it. On GitHub, a keyword before the id in a commit message links
   and moves the issue when the workspace has commit linking enabled; a
   bare id in a commit still does not.
-- **Regex target:** `/(?:^|\s)(K|CLOUD|INFFND)-\d+/i` — match the team
+- **Regex target:** `/(?:^|\s)(K|CLOUD|INFFND|INFRA)-\d+/i` — match the team
   prefixes the current workspace supports. The Laravel default team key
   is `INFFND`, unless the workspace or user overrides it. Check `linear-prerequisite`
   for the active workspace's id prefix.

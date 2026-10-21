@@ -4,6 +4,7 @@ description: plan-hard Interview-driven plan mode - walks the design tree one de
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/plan-mode.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -137,12 +138,12 @@ Escalate to the user **only** when:
 
 Self-answer for everything else. Use:
 
-- `hyprpilot-nvim` MCP LSP tools (`lsp_workspace_symbols`, `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`) for code navigation.
-- raw `git` CLI (via `Bash`) for history, diffs, and blame.
-- `github__*` / `gitlab__*` for remote repository details.
-- `Grep` / `Glob` for pattern and file search.
-- `research` for library documentation.
-- `Read` for direct file inspection.
+- The editor's language server through `hyprpilot-nvim` for code navigation.
+- Local `git` for history, diffs, and blame.
+- The platform's PR/MR server for remote repository details.
+- File search for patterns and paths.
+- A docs server for library documentation.
+- Direct reads for file inspection.
 
 When you self-answer, **report the finding briefly** so the user sees what you decided and why. Example:
 

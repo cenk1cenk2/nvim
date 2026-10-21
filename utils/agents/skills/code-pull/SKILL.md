@@ -33,13 +33,11 @@ argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
    - Direct applicability — the change maps cleanly.
    - Deviation needed — the change requires a different approach. Explain why.
    - Not applicable — the change does not apply to this repository. Explain why.
-6. **Present the plan.** Output the full plan in chat:
+6. **Apply changes.** Implement the adapted changes in the current repository.
+7. **Report.**
    - List each reference change and its corresponding adaptation.
    - Clearly list all deviations with rationale.
-   - Highlight anything that does not apply and why.
-   - Ask the user to review and approve.
-7. **Iterate.** Refine the plan based on user feedback until approved.
-8. **Apply changes.** After explicit approval, implement the adapted changes in the current repository.
+   - Highlight anything that did not apply and why.
 
 ## Key Principles
 
@@ -47,7 +45,7 @@ argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
 - **List all deviations.** If a change needs a different approach in the current repository, explain what differs and why the adaptation is necessary.
 - **Ask when ambiguous.** If the user's intent is unclear — which commits, which files, which approach — ask before proceeding.
 - **Preserve local conventions.** The current repository's patterns, naming, and structure take priority over the reference repository's style.
-- **Be thorough in analysis.** Read both the reference and local files before proposing any changes. Do not assume files are identical.
+- **Be thorough in analysis.** Read both the reference and local files before making any changes. Do not assume files are identical.
 
 ## Related Skills
 

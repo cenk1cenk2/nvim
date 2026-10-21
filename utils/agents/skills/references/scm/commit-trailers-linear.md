@@ -13,7 +13,7 @@ Do not generalise across platforms here: GitHub and GitLab *native* issues DO cl
 | Workspace | Pattern | Example |
 |-----------|---------|---------|
 | kilic-dev | `K-<number>` | `K-219` |
-| Laravel | `CLOUD-<number>` | `CLOUD-4298` |
+| Laravel | `INFFND-<number>` (default team), `INFRA-<number>`, `CLOUD-<number>` | `INFFND-112`, `CLOUD-4298` |
 
 ## Closing Keywords
 
@@ -101,5 +101,5 @@ When the user provides a Linear reference, detect the issue ID from:
 
 Fetch issue context via the appropriate Linear MCP tool:
 
-- `K-` prefix → `linear-kilic__get_issue`.
-- `CLOUD-` prefix → `linear-laravel__get_issue`.
+- `K-` prefix: `linear-kilic__get_issue`.
+- `INFFND-`, `INFRA-` or `CLOUD-` prefix: `linear-laravel__get_issue`.

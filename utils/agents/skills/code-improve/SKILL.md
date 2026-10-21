@@ -179,7 +179,7 @@ Ranked by value, highest first. **Where** is a concrete path, never "several pla
 
 1. User says "code improve, whole repo".
 2. Dispatch 5 audit subagents in parallel (`cheap` tier): architecture, testability, consistency, dead code, clarity.
-3. Collate 12 candidates → rank. Offer a second opinion; user accepts, so dispatch `agent-review` over the top candidates and fold in its verdicts.
+3. Collate 12 candidates and rank them. Offer a second opinion; user accepts, so dispatch `agent-review` over the top candidates and fold in its verdicts.
 4. Present top 10 with 1-liners. Recommend top 3.
 5. User picks #2 ("Extract DB session management from handlers"). Route to single opinionated proposal (not enough architectural ambiguity to justify 3 design subagents).
 6. Present Problem / Proposal / Trade-offs / Effort. Suggest `plan-hard` for implementation.

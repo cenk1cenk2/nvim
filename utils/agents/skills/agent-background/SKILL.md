@@ -9,6 +9,7 @@ scripts:
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/identifier-legibility.md
   - ../references/agent/agent-watchers.md
   - ../references/harness/agent-background-harness-claude.md
@@ -45,7 +46,7 @@ Launch a loop through the runtime's own background-exec facility (per `agent-bac
 **Reach for this skill's own `scripts/watch.py` first.** It is the tested version of the loop below, resolved against the `bundleDir` in this skill's metadata (the `scripts` frontmatter key lists the relative path). One condition per invocation, taken as a subcommand:
 
 ```sh
-"<bundleDir>/scripts/watch.py" --label <name> --interval 30 --max-polls 360 \
+"<bundleDir>/scripts/watch.py" --label <name> --interval 10 --max-polls 1080 \
   command --json-path state --expect merged -- glab mr view 4821 --output json
 ```
 
@@ -172,7 +173,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 1. **Confirm it's external state.** Work dispatched through the runtime's **own** subagent or workflow mechanism is not — it re-invokes you on completion where the runtime supports it, so do not poll it. **Everything else is external, including another server's agent process.** A separate vendor agent session started over MCP runs outside your runtime's knowledge and pushes nothing to you, so it is watched exactly like a CI run or a merge; treating it as dispatched work is how it finishes into silence.
 2. **Pick a shell-reachable signal**, per `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. For the domain's concrete signal and check, Load `agent-watcher-recipes`. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
-4. **Choose cadence by how fast the state changes, and take the tight end.** 10 s for a machine signal, 30 s for a human action, held throughout a long job rather than one check near its expected finish — an early failure should wake you early. The only floors are how fast the state can plausibly move and a remote API's documented rate limit; band-by-signal table in `agent-watchers`, where a tighter cadence also buys a proportionally bigger cap.
+4. **Choose cadence by how fast the state changes, and take the tight end.** 10 s for a machine signal or a merge, 30 s for any other human action, held throughout a long job rather than one check near its expected finish — an early failure should wake you early. The only floors are how fast the state can plausibly move and a remote API's documented rate limit; band-by-signal table in `agent-watchers`, where a tighter cadence also buys a proportionally bigger cap.
 5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle** and did not exit non-zero on the spot; anything less means you detached instead of arming, and nothing will wake you. Note that id, announce the watch in one plain sentence, and record its ledger row per `agent-watchers`, which owns that split, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. Write the ledger row plus the command to re-arm it to durable state per `long-running-work` — verbatim into the anchor's Scratchpad Scripts & Watchers section when `plan-compact` is active. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
@@ -208,12 +209,12 @@ If no shell-reachable signal exists at all, drop to a deferred wakeup or a monit
    ```python
    python3 -c '
    import subprocess, sys, time
-   for i in range(1, 361):
+   for i in range(1, 1081):
        if <cli-check for merged>:
            print(f"RESULT: merged after {i} cycle(s)")
            sys.exit(0)
-       time.sleep(30)
-   print("RESULT: not merged after 360 cycles")
+       time.sleep(10)
+   print("RESULT: not merged after 1080 cycles")
    '
    ```
 

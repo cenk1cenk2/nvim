@@ -3,6 +3,7 @@ name: linear-project-create
 description: linear-project-create Create a Linear project with the research, planning, and issue breakdown behind it. Use on "create a project", "plan a new project". Not for auditing a project that exists, or for status updates.
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md

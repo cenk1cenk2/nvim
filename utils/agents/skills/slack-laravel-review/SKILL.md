@@ -107,9 +107,7 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
      <Paragraph covering module-bump / incidental side effects — new resources, recreated secrets, addon/AMI version bumps. Name the specific resources, versions, and values so the reviewer sees the blast radius, e.g. `<module> <old-version> to <new-version>`, `<addon> <old> to <new>`, `<old-ami> to <new-ami>`.>
      ```
 
-6. **Present for approval — unless the user already told you to post.**
-   - **If the user explicitly instructed the message(s) be posted** (e.g., "post this", "post these", "this has to be posted", "go ahead and post"), skip approval and post directly (Step 7).
-   - Otherwise, show the formatted message(s) in chat per `output-diff` and wait for explicit approval before posting.
+6. **Present for approval.** Invoking this skill approves the run, not the text drafted for other people. Show the formatted message(s) in chat per `output-diff` and post (Step 7) on approval.
 
 7. **Post to Slack.**
    - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.

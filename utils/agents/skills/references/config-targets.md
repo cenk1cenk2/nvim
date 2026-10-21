@@ -58,10 +58,11 @@ it lands.
 
 1. **The captain names it** — "update `config-skills`", "fix `config-repository`", a `/config-*`
    invocation aimed at the file, or a correction pointing at the file's own content.
-2. **The captain blesses the change** — the presented edit is approved, per `present-first`.
+2. **The captain blesses the change** — naming the file to edit is that run's approval, per
+   `present-first`.
 
-Naming it without a blessing means present and wait. A blessing for other work never reaches this
-file. Once both hold, edit it and commit the result like any other target, per the calling skill's
+What `config-agents` drafts for `AGENTS.md` still presents first; that skill declares `present-first`.
+A blessing for other work never reaches this file. Once both hold, edit it and commit the result like any other target, per the calling skill's
 own commit directive.
 
 **`config-hyprpilot` carries one carve-out.** It documents an external binary's schema, so drift

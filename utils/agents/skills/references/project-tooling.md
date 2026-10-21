@@ -25,16 +25,13 @@ For `package.json`, read the `scripts` section to find exact script names — do
 2. **Read the runner config** to extract available commands.
 3. **Categorize** what's available: lint, test, build, type-check, format-check.
 4. **If no runner is found** — propose manual commands based on the language/framework and **ask the user to confirm** before proceeding. Do not assume.
-5. **Present to the user** for confirmation:
+5. **Report what was found and proceed** — the user may override at any point:
    ```
    Discovered project tooling:
    - Lint: task lint
    - Test: task test
    - Build: task build
-
-   These will run for verification. Confirm or adjust?
    ```
-6. The user approves or overrides. Do not proceed without confirmation.
 
 ## Usage
 

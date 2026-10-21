@@ -7,7 +7,7 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/output-diff.md
+  - ../references/agent-owned.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
   - ../references/output-table.md
@@ -111,7 +111,7 @@ Watchers per `agent-companion` — you arm them, never the companion. Its half i
 
 4. **Report to it as work lands**, per `agent-companion`'s steering rules: you pushed, a pipeline went green or red, a reviewer commented, an MR merged, you made a fix it suggested and it did or did not work. A wake burst that resolves one chain — a merge and the rebase it unblocked — is the causal group that shares a message.
 
-5. **Collect, present, release.** Its answers come back as a per-MR ledger — the shape below. Present anything that writes to the platform chunked per `output-diff`.
+5. **Collect and report.** Its answers come back as a per-MR ledger — the shape below. Record writes in its domain land first and are reported after, per `agent-companion`; the never list below still holds.
 
 6. **Report the companion and its watchers every turn**, shaped per `output-status`, with the MR ledger below as its current state, per `agent-companion` and `agent-watchers` otherwise, and retire it only on the user's word. Before it goes, get its final read of the merge order and record it wherever the section's work lives — the tracker issue, the plan file — because the graph is the thing you cannot rebuild from the MRs alone.
 

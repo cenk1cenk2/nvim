@@ -53,8 +53,8 @@ If none match, there is no release automation to satisfy — use the normal conv
 
 Commits — and, on a squash-merge repo, the **PR/MR title** — MUST be valid Conventional Commits: `type(scope): subject`.
 
-- `feat:` → **minor**; `fix:` / `perf:` → **patch**. Other types (`docs`, `chore`, `refactor`, `test`, …) do not trigger a release by default.
-- **Squash vs merge decides what the tool reads.** Squash-merge → the PR/MR title becomes the release commit, so the title must carry the right type and breaking marker. Merge / rebase → every commit on the branch must be conventional. (GitLab uses the MR title as the squash commit subject when "Squash commits" is on — see `gitlab-mr-create`'s squash logic.)
+- `feat:` bumps **minor**; `fix:` / `perf:` bump **patch**. Other types (`docs`, `chore`, `refactor`, `test`, …) do not trigger a release by default.
+- **Squash vs merge decides what the tool reads.** On squash-merge the PR/MR title becomes the release commit, so the title must carry the right type and breaking marker. On merge / rebase every commit on the branch must be conventional. (GitLab uses the MR title as the squash commit subject when "Squash commits" is on — see `gitlab-mr-create`'s squash logic.)
 
 ### Breaking changes — get the MAJOR bump right
 

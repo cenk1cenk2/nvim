@@ -22,8 +22,8 @@ GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect`
 5. **Pin the latest version**, taken from the newest `<package>@*` tag or release, per `kilic-ci-pipelines`.
 6. **Find the variables** in the pipe's generated `README.md` in `devops/pipes`, falling back to `flags.go` and the task lists `main.go` combines. Never guess a variable.
 7. **Offer a reference implementation.** Ask whether a repository or `.gitlab-ci.yml` should be the base, or find one on the same package with `sourcebot-kilic__grep` for `ref: <package>@`. Adapt it to this repository's conventions.
-8. **Draft the pipeline.** Present the complete `.gitlab-ci.yml` in chat. Explain each include and job, and list the variables the user can customise.
-9. **Write it after approval.** CI lint checks syntax; the merge request pipeline is the runtime check.
+8. **Write the pipeline** to `.gitlab-ci.yml`. CI lint checks syntax; the merge request pipeline is the runtime check.
+9. **Report** each include and job, and list the variables the user can customise.
 
 ## Migration Guidance
 

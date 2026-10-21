@@ -22,11 +22,11 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Absolute approval required at project and initiative scope — see `linear-absolute-approval`.** Those writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` / `save_initiative` before the user approves the drafted change. At issue scope, the drafted change still waits for the user's approval.
+> **Absolute approval required at project and initiative scope — see `linear-absolute-approval`.** Those writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` / `save_initiative` before the user approves the drafted change. At issue scope the skill writes, then reports what changed.
 
 ## Core Principle
 
-> **THE RECORD IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. This skill applies deviations from the conversation back to the record's **prose**: when its `updatedAt` is older than the current conversation, update it to match, always confirming with the user before applying.
+> **THE RECORD IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. This skill applies deviations from the conversation back to the record's **prose**: when its `updatedAt` is older than the current conversation, update it to match and report what changed.
 
 Attached, linked, and project documents follow `linear-document-handling`.
 
@@ -46,15 +46,15 @@ Attached, linked, and project documents follow `linear-document-handling`.
 1. **Fetch the scope** per the Scope table. Note each target's `updatedAt`.
 2. **Check timestamps** — if the description or a plan-like document is older than the current session context, ask the user what has changed before assuming the stored content is current.
 3. **Review the conversation** for deviations from the recorded intent — changed requirements or goals, shifted priorities, rejected approaches, new decisions, corrected assumptions, scope shifts.
-4. **Flag outdated or contradicted sections** — warn the user about parts that are stale, inapplicable, or contradicted by the conversation, and get explicit approval before modifying or removing them. Leave external documents read-only.
-5. **Draft the updates**, section shape per `linear-description-structure`, and present them per `output-diff` — one chunk per target (description, each document, each initiative field set), highlighting what changed and why.
-6. **Iterate** based on user feedback until the prose accurately reflects the current understanding.
+4. **Flag outdated or contradicted sections** — name the parts that are stale, inapplicable, or contradicted by the conversation and rewrite them; at project and initiative scope get explicit approval first. Leave external documents read-only.
+5. **Draft the updates**, section shape per `linear-description-structure`, and at project and initiative scope present them per `output-diff` — one chunk per target (description, each document, each initiative field set), highlighting what changed and why.
+6. **Iterate** at project and initiative scope based on user feedback until the prose accurately reflects the current understanding.
 7. **Initiative scope: review project alignment** once the updated initiative is agreed. This step is mandatory at initiative scope.
    - **Misaligned projects** — a linked project that does not fit the updated goals: warn the user and recommend removal.
    - **Orphan candidates** — a project with no initiative that now fits the updated goals: present it and ask whether to link it.
    - **Better fits** — a linked project that fits better under a different initiative: suggest the move.
    - Be specific: explain why a project does not fit, or why an orphan does, referencing the updated goals.
-8. **Apply changes** only after approval, each as a `patch` against a fresh fetch per `linear-description-structure`:
+8. **Apply changes** — at project and initiative scope only after approval — each as a `patch` against a fresh fetch per `linear-description-structure`:
 
    | Scope | Write with |
    |---|---|
@@ -62,7 +62,7 @@ Attached, linked, and project documents follow `linear-document-handling`.
    | Project | `save_project` for the description, `save_document` for each approved document |
    | Initiative | `save_initiative` with the initiative `id`; `save_project` with `addInitiatives` / `removeInitiatives` for project links |
 
-9. **Present results** and wait for user direction.
+9. **Report** what changed, with titled links.
 
 ## What to Update
 
@@ -87,7 +87,7 @@ Only include deviations that matter for future readers understanding *why* the r
 ## Key Rules
 
 - **An owned issue is yours to fix** per `agent-owned` — its fields, its links, or cancelling a duplicate you made, without asking.
-- **Never modify without user approval** outside an owned issue — and at project and initiative scope, explicit per-change approval per `linear-absolute-approval`.
+- **Project and initiative writes need explicit per-change approval** per `linear-absolute-approval`; issue-scope writes are reported after.
 - **Preserve content that hasn't changed** — only update what deviated.
 - **The Thoughts section documents *why*, not *what*** — the description itself reflects the *what*.
 - **Prefer comments for small issue deviations** — in autonomous agent workflows, rewrite an issue description only when future agents need it to stay aligned, or when it is materially out of whack.

@@ -35,9 +35,8 @@ This skill performs an autonomous code review on a GitHub pull request using nat
 Collect all findings and submit a single review via `github__pull_request_review_write` (create a pending review, add each comment via `github__add_comment_to_pending_review`, then submit the pending review).
 
 **Review event type:**
-- `COMMENT` — informational, no issues or only nits.
+- `COMMENT` — informational, only nits, or clean code. Never submit `APPROVE`.
 - `REQUEST_CHANGES` — bugs or risks found.
-- `APPROVE` — no issues, code is clean.
 
 **Inline comment targeting:**
 

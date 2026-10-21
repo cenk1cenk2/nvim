@@ -36,16 +36,15 @@ references:
 2a. **Grouped commits (multi-commit workflow).**
     - Triggered when the user explicitly asks to split changes into multiple commits (e.g., "commit these separately", "group into multiple commits", "split this into commits by concern").
     - **Different tasks are different commits.** Changes serving unrelated concerns belong in separate commits, not one blob — group by task/concern and give each its own conventional message.
-    - Analyze all unstaged/untracked changes and propose logical groups based on:
+    - Analyze all unstaged/untracked changes and group them based on:
       - File proximity (same directory or module).
       - Change purpose (feature vs fix vs refactor).
       - User-provided grouping hints.
-    - Present the proposed groups per `output-diff` and wait for approval. Adjust grouping based on feedback.
-    - For each approved group:
+    - For each group:
       1. Stage only that group's files via `git add` with individual file paths.
       2. Continue with step 3 (analyze), step 4 (draft message) and step 5 (commit).
       3. After committing, return here for the next group.
-    - Repeat until all groups are committed.
+    - Repeat until all groups are committed, then report each group's files, hash, and message.
 
 3. **Analyze the staged changes.**
    - Read the staged diff via `git diff --staged`.
@@ -87,7 +86,7 @@ references:
 5. **Commit and report.**
    - Commit via `git commit`.
    - **Amend (owned branch only):** if the change is a fixup to the commit you just made, or the user asks to amend, use `git commit --amend` instead of a new commit; pushing the rewrite is `--force-with-lease` via `git-push`. Never amend on a branch that is not owned per `agent-owned`.
-   - Report the commit hash and the full message in a fenced block, with one line on the type and scope chosen.
+   - Report the commit hash and the full message per `output-diff`, with one line on the type and scope chosen.
 
 ## Key Principles
 
@@ -190,9 +189,9 @@ On "commit and push", chain into `git-push` after the commit lands; this skill n
 
 1. Check status — nothing staged, 6 files modified.
 2. Analyze changes — 3 files are auth-related, 3 are config cleanup.
-3. Propose groups:
+3. Group:
    - Group 1, auth changes: `src/auth/token.ts`, `src/auth/middleware.ts`, `test/auth.test.ts`.
    - Group 2, config cleanup: `config/app.yaml`, `config/routes.yaml`, `config/defaults.yaml`.
-4. User approves the grouping.
-5. Stage group 1 files individually and commit `feat(auth): add token refresh mechanism`.
-6. Stage group 2 files individually and commit `chore(config): clean up route and default configs`, then report both hashes.
+4. Stage group 1 files individually and commit `feat(auth): add token refresh mechanism`.
+5. Stage group 2 files individually and commit `chore(config): clean up route and default configs`.
+6. Report both groups with their files, hashes, and messages.

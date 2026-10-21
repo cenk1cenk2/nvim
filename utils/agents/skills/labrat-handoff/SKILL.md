@@ -6,7 +6,11 @@ argumentHint: '[what to hand off] [provider: claude|codex|opencode] [tier: cheap
 references:
   - ../references/agent/agent-target-capability.md
   - ../references/identifier-legibility.md
+  - ../references/present-first.md
+  - ../references/output-diff.md
 ---
+
+Posture: `present-first`.
 
 ## Context
 

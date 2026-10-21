@@ -31,10 +31,34 @@ DESCRIPTION_CEILING = 380
 # trailing triggers, which is the whole reason the ceiling exists.
 DESCRIPTION_HARD_CEILING = 420
 
-# Pictographs, dingbats, arrows and stars. The narrow BMP ranges matter as much
-# as the astral ones: the absolute rule names "star" explicitly, and U+2B50 sits
-# outside the emoji planes.
+# Pictographs, dingbats and stars. The narrow BMP ranges matter as much as the
+# astral ones: the absolute rule names "star" explicitly, and U+2B50 sits
+# outside the emoji planes. The U+2190 arrow block is ARROW's.
 EMOJI = re.compile("[\u2300-\u23ff\u2600-\u27bf\u2b00-\u2bff\ufe0f\U0001f000-\U0001faff]")
+
+# Arrows in prose: the glyph block and the ASCII spellings. Prose says the
+# relation in words; a code fence or span holding one is literal data.
+ARROW = re.compile("[\u2190-\u21ff]|->|=>")
+CODE_SPAN = re.compile(r"`[^`]*`")
+HTML_COMMENT = re.compile(r"<!--.*?-->")
+
+# An issue or MR id as a reader would see it: `K-219`, `INFFND-12`, `!262`, `#41`.
+BARE_ID = re.compile(r"(?<![\w/.-])(?:[A-Z][A-Z0-9]*-\d+|![0-9]+|#[0-9]+)\b")
+MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\([^)]*\)")
+# Fence languages that hold code or config, where a bare id is machine-read.
+CODE_FENCE_LANGUAGES = {"sh", "bash", "zsh", "shell", "console", "json", "yaml", "yml", "toml", "python", "py", "lua"}
+
+# A present-then-approve flow, which only a skill declaring `present-first` runs.
+PRESENT_FIRST_FLOW = re.compile(
+    r"\b(?:after (?:explicit |user )?approval|wait (?:for|on) (?:the )?(?:user'?s? |explicit )?approval"
+    r"|present-and-approve|present(?:ed)? (?:the )?(?:draft|proposed changes))\b",
+    re.IGNORECASE,
+)
+POSTURE_LINE = re.compile(r"^Posture: `present-first`\.", re.MULTILINE)
+PRESENT_FIRST = "present-first"
+
+# The Invocation Tiers assignment bullets in `config-skills`, and the tier each one names.
+TIER_BULLET = re.compile(r"^- \*\*(Manual|Model-invocable|Auto-invoke)\*\* \u2014")
 
 # The closed set of trigger phrasings the catalog uses. Enumerated, not a loose
 # pattern: `Use on`, `Use when`, `Use first after`, `Load before`, `Load the
@@ -179,6 +203,62 @@ def parse_skill(path: Path, root: Path) -> tuple[Skill | None, list[Finding]]:
     )
 
 
+def fenced_lines(text: str, start: int) -> list[tuple[int, str, str | None]]:
+    """Each line with its number and, inside a code fence, the fence's language ('' when untagged)."""
+    out: list[tuple[int, str, str | None]] = []
+    fence: str | None = None
+    for offset, line in enumerate(text.splitlines(), start=start):
+        stripped = line.lstrip()
+        if stripped.startswith("```"):
+            fence = stripped[3:].strip().lower() if fence is None else None
+            continue
+        out.append((offset, line, fence))
+    return out
+
+
+def arrow_findings(label: str, text: str, start: int) -> list[Finding]:
+    """No arrow glyphs in prose; a fence or a code span holding one is literal data."""
+    out: list[Finding] = []
+    for offset, line, fence in fenced_lines(text, start):
+        if fence is not None:
+            continue
+        prose = CODE_SPAN.sub("", HTML_COMMENT.sub("", line))
+        match = ARROW.search(prose)
+        if match:
+            out.append(Finding(Level.WARN, "arrow", label, f"arrow in prose: {match.group(0)!r}", offset))
+    return out
+
+
+def bare_id_findings(label: str, text: str, start: int) -> list[Finding]:
+    """AGENTS.md §VI: a template the agent shows the user links every id with its title."""
+    out: list[Finding] = []
+    for offset, line, fence in fenced_lines(text, start):
+        if fence is None or fence in CODE_FENCE_LANGUAGES:
+            continue
+        match = BARE_ID.search(CODE_SPAN.sub("", MARKDOWN_LINK.sub("", line)))
+        if match:
+            out.append(Finding(Level.WARN, "bare-id", label, f"bare id in a template: {match.group(0)!r}", offset))
+    return out
+
+
+def emoji_findings(label: str, text: str, start: int, *, fences_are_data: bool = False) -> list[Finding]:
+    """With `fences_are_data`, a fence holds a literal a file format requires, such as a template header."""
+    return [
+        Finding(Level.FAIL, "emoji", label, "emoji or pictograph", offset)
+        for offset, line, fence in fenced_lines(text, start)
+        if EMOJI.search(line) and not (fences_are_data and fence is not None)
+    ]
+
+
+def history_findings(label: str, text: str, start: int) -> list[Finding]:
+    return [
+        Finding(Level.WARN, "history", label, f"history wording: {match.group(0)!r}", offset)
+        for offset, line in enumerate(text.splitlines(), start=start)
+        for match in [HISTORY.search(line)]
+        if match
+    ]
+
+
 class Checks:
     """Each method is one rule. `config-skills` is cited so a failure is traceable to its source."""
 
@@ -190,11 +270,16 @@ class Checks:
         "declared_paths_exist",
         "load_lines_resolve",
         "no_emoji",
+        "no_arrows",
+        "no_bare_ids",
         "no_mcp_wire_names",
         "no_h1",
         "cited_references_declared",
         "declared_references_cited",
         "no_history",
+        "posture_matches_declaration",
+        "present_first_flow_declared",
+        "auto_invoke_is_model_invocable",
     )
 
     def __init__(self, root: Path, slugs: set[str]):
@@ -243,12 +328,50 @@ class Checks:
 
     def no_history(self, skill: Skill) -> list[Finding]:
         """current-state-only: this system's own past is deleted, not annotated."""
+        return history_findings(skill.slug, skill.body, skill.body_offset + 1)
+
+    def no_arrows(self, skill: Skill) -> list[Finding]:
+        return arrow_findings(skill.slug, skill.body, skill.body_offset + 1)
+
+    def no_bare_ids(self, skill: Skill) -> list[Finding]:
+        return bare_id_findings(skill.slug, skill.body, skill.body_offset + 1)
+
+    @staticmethod
+    def declares_present_first(skill: Skill) -> bool:
+        return any(Path(entry).stem == PRESENT_FIRST for entry in skill.reference_paths)
+
+    def posture_matches_declaration(self, skill: Skill) -> list[Finding]:
+        """config-skills Posture: a declaring skill opens with the line, and no other skill carries it."""
+        if skill.slug == PRESENT_FIRST:
+            return []
+        line = POSTURE_LINE.search(skill.body)
+        declared = self.declares_present_first(skill)
+        if line and not declared:
+            offset = skill.body_offset + 1 + skill.body.count("\n", 0, line.start())
+            return [
+                Finding(Level.FAIL, "posture", skill.slug, "Posture line without declaring `present-first`", offset)
+            ]
+        if declared and not line:
+            return [Finding(Level.WARN, "posture", skill.slug, "declares `present-first` without the Posture line")]
+        return []
+
+    def present_first_flow_declared(self, skill: Skill) -> list[Finding]:
+        """Only a skill declaring `present-first` presents before writing; every other one acts, then reports."""
+        if self.declares_present_first(skill):
+            return []
         return [
-            Finding(Level.WARN, "history", skill.slug, f"history wording: {match.group(0)!r}", offset)
-            for offset, line in enumerate(skill.body.splitlines(), start=skill.body_offset + 1)
-            for match in [HISTORY.search(line)]
+            Finding(Level.WARN, "present-flow", skill.slug, f"present-then-approve wording: {match.group(0)!r}", offset)
+            for offset, line, fence in fenced_lines(skill.body, skill.body_offset + 1)
+            if fence is None
+            for match in [PRESENT_FIRST_FLOW.search(line)]
             if match
         ]
+
+    def auto_invoke_is_model_invocable(self, skill: Skill) -> list[Finding]:
+        """config-skills Invocation Tiers: auto-invoke is a model-invocable sub-case."""
+        if is_manual(skill) and "Auto-invoked" in skill.frontmatter.get("description", ""):
+            return [Finding(Level.FAIL, "tier-auto", skill.slug, "Auto-invoked description on a Manual skill")]
+        return []
 
     def name_matches_directory(self, skill: Skill) -> list[Finding]:
         """config-skills Conventions: directory name must match `name`, both kebab-case."""
@@ -342,11 +465,7 @@ class Checks:
 
     def no_emoji(self, skill: Skill) -> list[Finding]:
         """Absolute across this catalog: no emoji or pictograph anywhere."""
-        out: list[Finding] = []
-        for offset, line in enumerate(skill.raw.splitlines(), start=1):
-            if EMOJI.search(line):
-                out.append(Finding(Level.FAIL, "emoji", skill.slug, "emoji or pictograph", offset))
-        return out
+        return emoji_findings(skill.slug, skill.raw, 1)
 
     def no_mcp_wire_names(self, skill: Skill) -> list[Finding]:
         """A body writes `server__tool`; the `mcp__` wire form is the runtime's, not the catalog's."""
@@ -417,11 +536,73 @@ def orphan_references(root: Path, skills: list[Skill]) -> list[Finding]:
     return out
 
 
+def is_manual(skill: Skill) -> bool:
+    return skill.frontmatter.get("disableModelInvocation", "").strip("'\"").lower() == "true"
+
+
+def tier_examples(skills: list[Skill]) -> list[Finding]:
+    """config-skills Invocation Tiers: every slug named as a tier's example carries that tier."""
+    by_slug = {skill.slug: skill for skill in skills}
+    out: list[Finding] = []
+    for skill in skills:
+        for offset, line, fence in fenced_lines(skill.body, skill.body_offset + 1):
+            match = TIER_BULLET.match(line) if fence is None else None
+            if not match:
+                continue
+            tier = match.group(1)
+            for slug in CITED_NAME.findall(line):
+                example = by_slug.get(slug)
+                if example is None:
+                    continue
+                if (tier == "Manual") != is_manual(example):
+                    actual = "Manual" if is_manual(example) else "Model-invocable"
+                    out.append(
+                        Finding(Level.FAIL, "tier-example", skill.slug, f"{tier} example `{slug}` is {actual}", offset)
+                    )
+                elif tier == "Auto-invoke" and "Auto-invoked" not in example.frontmatter.get("description", ""):
+                    out.append(
+                        Finding(
+                            Level.WARN,
+                            "tier-example",
+                            skill.slug,
+                            f"Auto-invoke example `{slug}` has no Auto-invoked description",
+                            offset,
+                        )
+                    )
+    return out
+
+
+def guidance_files(root: Path, guidance: tuple[str, ...]) -> list[Path]:
+    """The shared references, plus the central guidance: named, or `AGENTS.md` beside the catalog."""
+    files = sorted((root / "references").rglob("*.md")) if (root / "references").is_dir() else []
+    named = [Path(entry).expanduser().resolve() for entry in guidance]
+    if not named and (root.parent / "AGENTS.md").is_file():
+        named = [root.parent / "AGENTS.md"]
+    return files + named
+
+
+def lint_guidance(root: Path, paths: list[Path]) -> list[Finding]:
+    """Files no manifest parses, held to the catalog's prose rules: emoji, arrows, history."""
+    out: list[Finding] = []
+    for path in paths:
+        label = str(path.relative_to(root)) if path.is_relative_to(root) else str(path)
+        text = path.read_text(encoding="utf-8", errors="replace")
+        out.extend(emoji_findings(label, text, 1, fences_are_data=True))
+        out.extend(arrow_findings(label, text, 1))
+        out.extend(history_findings(label, text, 1))
+    return out
+
+
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.argument("root", required=False)
 @click.option("--warnings/--no-warnings", default=True, help="Show warnings as well as failures.")
+@click.option(
+    "--guidance",
+    multiple=True,
+    help="Central guidance file to lint for emoji, arrows and history (default: AGENTS.md beside ROOT).",
+)
 @click.option("-v", "--verbose", is_flag=True, help="Debug logging on stderr.")
-def cli(root: str | None, warnings: bool, verbose: bool) -> None:
+def cli(root: str | None, warnings: bool, guidance: tuple[str, ...], verbose: bool) -> None:
     """Lint the skill catalog at ROOT (default: this script's own catalog root)."""
     create_logger(verbose, "check-catalog")
     catalog = Path(root).expanduser().resolve() if root else Path(__file__).resolve().parents[2]
@@ -435,6 +616,10 @@ def cli(root: str | None, warnings: bool, verbose: bool) -> None:
     if not skills and not findings:
         emit(f"error: no SKILL.md found under {catalog}")
         raise SystemExit(ExitCode.USAGE)
+    missing = [entry for entry in guidance if not Path(entry).expanduser().is_file()]
+    if missing:
+        emit(f"error: no such guidance file: {missing[0]}")
+        raise SystemExit(ExitCode.USAGE)
 
     slugs = {skill.slug for skill in skills}
     checks = Checks(catalog, slugs)
@@ -445,6 +630,8 @@ def cli(root: str | None, warnings: bool, verbose: bool) -> None:
         for method in methods:
             findings.extend(method(skill))
     findings.extend(orphan_references(catalog, skills))
+    findings.extend(tier_examples(skills))
+    findings.extend(lint_guidance(catalog, guidance_files(catalog, guidance)))
 
     by_skill: dict[str, list[Finding]] = defaultdict(list)
     for finding in findings:

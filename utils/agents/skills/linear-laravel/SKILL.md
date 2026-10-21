@@ -1,6 +1,6 @@
 ---
 name: linear-laravel
-description: linear-laravel Auto-invoked on Laravel context - INFFND-xxx or CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM. Not for kilic-dev work or K-xxx ids.
+description: linear-laravel Auto-invoked on Laravel context - INFFND-xxx, INFRA-xxx or CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM. Not for kilic-dev work or K-xxx ids.
 references:
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md

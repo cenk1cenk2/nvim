@@ -7,6 +7,7 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -22,7 +23,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the plan file, per `agent-companion`.
+Invoking this skill is the standing blessing to spawn the companion and to talk to it; it applies plan-file revisions and reports what landed, per `agent-companion`.
 
 Issues, MRs and plan tasks carry their title and link where one exists, per `identifier-legibility`.
 
@@ -110,7 +111,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 
 4. **Report each deviation as it happens**, in the shape above. Also report: a task finished and verified, a design question you hit, a task that turned out to be impossible as written.
 
-5. **Collect, present, release.** Revisions come back as edits to named tasks; present them chunked per `output-diff` before they land in the plan file.
+5. **Collect and relay.** The companion applies revisions to named tasks in the plan file and reports them; relay what landed chunked per `output-diff`.
 
 6. **Report the companion every turn**, shaped per `output-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection goes into the plan file: open questions, what it would tell the next implementer, and which decisions turned out to be load-bearing. That file is what survives the session.
 
@@ -129,7 +130,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 2. No tier named, so stated: smart — a DAG with cross-repo dependencies and two rejected alternatives in the design. Spawned as `arch-auth-migration`, briefed with the plan path, the done set, `agent-write-plans`, the never list, and the delivery line.
 3. Task 4 deviates: the plan said to add a middleware, but the framework resolves middleware after the session loads, so the check had to move into the session factory. Reported with all four lines.
 4. It answers: tasks 6 and 8 both assumed the middleware position, task 6 is now wrong and task 8 is unaffected. It drafts the revision to task 6 and flags that the plan's original rejected alternative was rejected for the same reason that just bit us — worth recording.
-5. Presented the revision, applied on approval, implemented task 6 against the new shape, sent the verification command and its exit code.
+5. It applied the revision and reported it; relayed it, implemented task 6 against the new shape, sent the verification command and its exit code.
 6. Plan finishes. Asked whether to retire `arch-auth-migration`; the user says yes. Collected its final read — one open question about the session factory's lifetime — wrote that into the plan file, reaped it, and reported that it is gone.
 
 **Result:** a deviation in task 4 was caught reaching task 6 before task 6 was written, and the reasoning behind it lives in the plan file rather than in a transcript.

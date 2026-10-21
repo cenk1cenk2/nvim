@@ -15,6 +15,7 @@ references:
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-fan-out.md
   - ../references/agent/agent-worktrees.md
+  - ../references/agent-owned.md
   - ../references/agent/agent-target-capability.md
   - ../references/harness/provider-paths.md
   - ../references/output-status.md
@@ -66,7 +67,7 @@ Cheap, bounded, or judgment-bearing — keep these:
 - **Dispatch and routing.** Which agent, which tier, what scope, what order, what runs in parallel — and how many: one agent per logical unit (PR, worktree, repo, issue), never one agent handed a list, per `agent-delegate`.
 - **Status checks on others' work.** `git status`, `git log --oneline -5`, `git diff --stat`, task list state, watcher output, a job's status field. Bounded output by construction.
 - **Targeted verification of a claimed change.** One file's diff, one grep for the symbol that should exist, one test command with the output tailed. Confirming a claim is cheap; discovering the truth from scratch is not.
-- **Decisions, trade-offs, and boundaries.** Anything destructive, credential-touching, or externally visible stays with you and goes to the user.
+- **Decisions, trade-offs, and boundaries.** Anything destructive or credential-touching, and any external write outside `agent-owned`, stays with you and goes to the user.
 - **User communication.** Terse synthesis of agent reports. Never a verbatim paste.
 - **The state file.** Plan or scratch notes recording what is done, in flight, and queued — so the run survives your context filling up.
 - **Trivial edits** where dispatch overhead exceeds the work: a one-line fix, a rename you already have open.
@@ -132,7 +133,7 @@ Coordinator is not a refusal to work. Break posture when:
 
 - **Delegation overhead exceeds the task** — a one-line change, a single command.
 - **The context transfer is the expensive part** — the prompt would be longer than the work, because everything needed lives in this conversation.
-- **It is a judgment call or a boundary** — destructive action, credentials, external write, a decision only you and the user can make.
+- **It is a judgment call or a boundary** — destructive action, credentials, an external write outside `agent-owned`, a decision only you and the user can make.
 - **Two agents have already failed on it** — a third identical dispatch is waste. Take it over, or split it smaller and re-route.
 - **The user asks you to.** Their call, always.
 

@@ -63,7 +63,6 @@ Use it when:
    - For implementation: a general-purpose agent type, include verification and write scope. Where the runtime fixes tools and effort per agent type, pick a type that has what the task needs.
    - When the delegated task involves git operations, resolve the platform per `scm-detect` and state it in the prompt.
    - **Carry the delivery instruction, naming the recipient**, only where the runtime does not deliver the report on its own — the agent cannot look up who to send it to. Whether it is needed, and the wording, per `agent-delegate-harness-<provider>`.
-   - Present the prompt to the user for review before launching.
 
 6. **Transition linked Linear issue to `In Progress` (when applicable).**
    - If the user's request mentions a Linear id (`K-xxx` / `CLOUD-xxx`) or a Linear URL, move it to `In Progress` before dispatch per `linear-state-transitions`.
@@ -74,7 +73,7 @@ Use it when:
 7. **Launch the agent — background by default.**
    - **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — the dispatch parameters, whether blocking exists at all, and how a detached result actually reaches you all differ per runtime.
    - Dispatch mode per `agent-delegate` Dispatch Mode: detached where the runtime delivers the result; when you need the answer to continue, hold for it — blocking where the runtime offers it, otherwise by collecting its completion before the dependent step.
-   - **A task that modifies files gets its own worktree** — offer, confirm with the user, then create it and dispatch into it per `agent-worktrees`. Never pass the runtime's isolation flag.
+   - **A task that modifies files gets its own worktree** — create it and dispatch into it per `agent-worktrees`. Never pass the runtime's isolation flag.
    - **Settle the permission context FIRST**, per `agent-delegate` — it is never a dispatch parameter. If the task needs more autonomy than the session has, raise it with the user; do not dispatch and hope.
    - **Collect deliberately**, per the collection ladder in `agent-delegate` (including its two-failed-attempts rule) and the harness reference.
 

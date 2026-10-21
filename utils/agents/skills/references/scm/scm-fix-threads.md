@@ -43,11 +43,11 @@ Apply fixes file by file to minimize context switching. If multiple threads targ
 
 After applying fixes, update each thread on the PR/MR. See the skill's "Platform specifics" for how to reply to a thread and the resolve mechanism.
 
-- **Fixed threads (obvious fix or suggestion applied)** — reply in one line ("Fixed in <short-sha>."), then resolve. Every thread gets a reply, so the skill's ledger has none unreplied.
+- **Fixed threads (obvious fix or suggestion applied)** — reply in one line ("Fixed in <short-sha>."), then resolve.
 - **Fixed threads (non-obvious custom fix)** — reply in one line, adding the explanation when the fix deviates from the request. Then resolve.
 - **Answered threads** (explanation, no code change) — post the explanation, then resolve.
 - **Stale threads** (code already changed, concern no longer applies) — after the user confirms per Triage, reply in one line and resolve.
-- **Deferred threads** (awaiting user input) — leave open. Do not reply or resolve.
+- **Deferred threads** (awaiting user input) — leave open, with no holding reply. Every other thread gets a reply.
 
 ## Report to user
 

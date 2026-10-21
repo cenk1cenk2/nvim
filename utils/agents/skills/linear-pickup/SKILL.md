@@ -1,10 +1,11 @@
 ---
 name: linear-pickup
-description: linear-pickup Prepare Linear work for implementation - a project or slice, a parent issue with its sub-issues, or one or more issues - context, blockers, documents, execution shape - then wait for an explicit go. Use on "pick up this project", "pick up K-123", or a Linear URL. Not for execution by subagents, a read-only refresh, or choosing what to work on next.
+description: linear-pickup Pick up Linear work for implementation - a project or slice, a parent issue with its sub-issues, or one or more issues - context, blockers, documents, execution shape - then hand off. Use on "pick up this project", "pick up K-123", or a Linear URL. Not for execution by subagents, a read-only refresh, or choosing what to work on next.
 argumentHint: '[project, parent issue, issue id(s), or URL] [optional: slice or filter]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
   - ../references/linear/linear-issuesets.md
@@ -13,7 +14,6 @@ references:
   - ../references/linear/linear-chunk-issues.md
   - ../references/linear/linear-state-transitions.md
   - ../references/scm/commit-trailers-linear.md
-  - ../references/output-diff.md
   - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---
@@ -30,7 +30,7 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 > **THE RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Record vs conversation authority per `linear-issue-philosophy`, applied before treating a project, a parent, or an issue as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the issue says…".
 
-Scope resolution, early questions, issue selection, state updates, and handoff to `agent-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
+Scope resolution, early questions, issue selection, state updates, and handoff to `agent-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`.
 
 Load `linear-structure-agent` before implementation — picking up is one of its two modes.
 
@@ -84,8 +84,7 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 
 6. **State update and handoff.**
    - Move actionable picked-up issues to `In Progress` per `linear-state-transitions`, unless suppressed by the user, and report the transitions.
-   - **Prepare only by default — do NOT begin implementing.** Present the pickup summary per `output-diff` and wait for an explicit go (`go`, "implement", "start") before writing any code.
-   - When the user already asked to implement in the same request, or gives the go, hand off to `agent-pickup` for execution — or implement directly when the scope is a small single issue.
+   - Report the pickup summary, then hand off to `agent-pickup` for execution — or implement directly when the scope is a small single issue.
 
 ## Output Shape
 
@@ -115,7 +114,7 @@ This skill turns a scope of Linear work into an execution-ready issue set. It do
 
 ## Key Principles
 
-- **Prepare, then wait.** Gather context and stop. Do not start implementing until the user explicitly confirms — unless the pickup request itself said to implement or go.
+- **Prepare, then hand off.** Gather context, report the summary, and proceed to execution.
 - **Pickup is not refresh.** For a read-only survey, use `linear-read`.
 - **Records are inputs, not truth.** The user's prompt and recent comments can supersede them.
 - **Move state when work starts.** `In Progress` for picked-up issues, respecting the never-downgrade guard.

@@ -7,7 +7,7 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/output-diff.md
+  - ../references/agent-owned.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
   - ../references/output-table.md
@@ -26,7 +26,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Invoking this skill is the standing blessing to spawn the PM and to talk to it; the gate is Linear, per `agent-companion`.
+Invoking this skill is the standing blessing to spawn the PM and to talk to it; the PM applies tracker writes in its domain and reports them, per `agent-companion`; project and initiative writes follow `linear-absolute-approval`.
 
 Issues, projects and MRs carry their title and link, per `identifier-legibility`.
 
@@ -105,7 +105,7 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
 
 4. **Report to it as work lands**, per `agent-companion`'s steering rules. In Linear terms that is: an MR merged, a piece of work finished, a deviation from what the issue said, a blocker, or a question about what is next.
 
-5. **Collect, present, release.** Its proposals come back as a change ledger; present them chunked per `output-diff`, and on approval tell the PM to apply.
+5. **Collect, relay, release.** It applies its record writes and reports what landed as a change ledger; relay the ledger to the user. A project or initiative write comes back as a proposal and waits for explicit approval per `linear-absolute-approval`.
 
 6. **Report the PM every turn the section is open**, shaped per `output-status`, and retire it only on the user's word — both otherwise per `agent-companion`. The final collection is written into Linear before the agent goes, because Linear is what survives the session.
 
@@ -114,10 +114,10 @@ Watchers per `agent-companion` — you arm them, never the PM. **A PM who does n
 **Trigger:** "/linear-companion manage the argocd-system rollout project"
 
 1. Scope resolved: a project, 14 issues, two issuesets inside it. Scope line: the rollout project only; the cluster repo's own backlog is out.
-2. No tier named, so stated: smart — two issuesets with cross-cutting sequencing. Spawned as `pm-argocd-system`, named and backgrounded, briefed with the workspace skill, the project id, the `linear-*` skills, the propose-don't-apply gate, the status-update absolute, and the delivery line.
+2. No tier named, so stated: smart — two issuesets with cross-cutting sequencing. Spawned as `pm-argocd-system`, named and backgrounded, briefed with the workspace skill, the project id, the `linear-*` skills, the apply-then-report write rule, the status-update absolute, and the delivery line.
 3. An MR merges. One message to the PM: what merged, the MR link, and that the approach deviated from the issue description on the sync-wave ordering.
-4. PM reports back: three status corrections, one dead `blockedBy`, one description now factually wrong, and the next issue to pick up with its reason. Presented chunked; the user approves two status moves and rejects the description edit.
-5. Told the PM the approved set and the rejection with the user's reasoning. It applies the two, records the deviation as an issue comment, and holds the description question open.
+4. PM reports back: three status corrections, one dead `blockedBy`, one description now factually wrong, and the next issue to pick up with its reason. It had already applied all four fixes and reported them as a ledger.
+5. The user disagrees with the description edit and gives the reasoning. Told the PM; it reverts the edit, records the deviation as an issue comment, and holds the description question open.
 6. Section finishes. Asked whether to retire `pm-argocd-system`; the user says keep it, more work coming. It stays alive and reported in the roster each turn.
 
 **Result:** the tracker matched reality throughout, the section's reasoning lives in Linear rather than in a transcript, and the lead's context stayed on the work instead of on issue bookkeeping.

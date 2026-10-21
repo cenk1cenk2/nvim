@@ -7,6 +7,7 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -21,7 +22,7 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
-Invoking this skill is the standing blessing to run the fit test, define the domain, and spawn once the domain is agreed; the gate is the record, per `agent-companion`.
+Invoking this skill is the standing blessing to run the fit test, define the domain, and spawn once the domain is agreed; record writes follow `agent-companion`.
 
 The domain's objects carry their title and link where one exists, per `identifier-legibility`.
 
@@ -103,7 +104,7 @@ The dedicated skills hardcode this. Here you establish it with the user, and it 
    Name it `<domain>-<scope-slug>`.
 4. **Write the brief** with the reference's contract, filled in from step two — including the re-read rule, the observed/reported labels, and the filing duty. These matter more here than anywhere, because a domain with no dedicated skill has no other guardrail.
 5. **Arm the watchers yourself**, per the reference. Most domains have conditions that change without anyone telling the companion.
-6. **Report to it as work lands**, and **collect, present, release** — both per the reference.
+6. **Report to it as work lands**, and **collect what it wrote** — both per the reference.
 7. **Report one roster row every turn** the section is open, and **retire only on the user's word**.
 
 ## Example

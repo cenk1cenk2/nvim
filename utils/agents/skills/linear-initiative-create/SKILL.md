@@ -3,6 +3,7 @@ name: linear-initiative-create
 description: linear-initiative-create Create a Linear initiative with its description and goals, pulling in orphan projects that belong under it. Use on "create an initiative", "group these projects". Not for revising one that exists, or for posting its status.
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-description-structure.md

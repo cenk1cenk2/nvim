@@ -15,15 +15,15 @@ During read and update flows, list and skim the attached/linked documents for co
 
 When the type is unclear, treat it as external (read-only) and ask.
 
-## Editing Requires Explicit Agreement — Every Time
+## Who May Edit
 
 - **Read skills never edit.** They only surface relevant document content and flag staleness (quote `updatedAt`). For anything actionable, hand off to the matching update skill.
-- **Update skills may edit — but only after the user agrees.** Even for plan-like documents: present the proposed change via the `output-diff` convention, name which document and why, and wait for approval before calling `save_document`. Never edit an external document without the user explicitly saying to.
+- **Update skills edit plan-like documents, then report** which document changed and why. A project's documents wait on explicit per-change approval per `linear-absolute-approval`. Never edit an external document without the user explicitly saying to.
 
 ## In Practice
 
 - **Read mode:** glimpse, summarize what's relevant, flag stale/contradicted docs with their timestamps, recommend (don't perform) any follow-up edits.
-- **Update mode:** glimpse, classify each document, for plan-like ones propose edits that reflect the agreed conversation, get agreement, write. Leave external docs untouched unless told otherwise.
+- **Update mode:** glimpse, classify each document, for plan-like ones write the edits that reflect the agreed conversation and report them. Leave external docs untouched unless told otherwise.
 
 ## Also Reconcile Relations
 
@@ -32,4 +32,4 @@ Reading or reconciling a Linear issue or project is not only about descriptions 
 - **Issueset structure** — resolve the issue's parent and its sub-issues. Flag orphaned sub-issues, a parent missing children, and wrong or missing `parentId` links. This is missed a lot — check it explicitly every time you read or reconcile.
 - **Blocks / blockedBy** — resolve dependency relations; flag missing or stale ones.
 
-Surface relation gaps the same way you surface doc drift: recommend in read mode; propose-then-write (with agreement) in update mode.
+Surface relation gaps the same way you surface doc drift: recommend in read mode; fix and report in update mode.

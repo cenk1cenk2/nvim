@@ -29,18 +29,18 @@ references:
    - **Behind only on an own branch** (per `agent-owned`): run `git pull --rebase` yourself, then continue.
    - **Behind only otherwise:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first with raw `git pull --rebase`. Do NOT auto-pull.
    - **Diverged on an own branch** (per `agent-owned`) — your own rewritten history: plan `--force-with-lease`. No extra confirmation needed.
-   - **Diverged otherwise:** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`; lead with rebase/merge, since the remote carries commits you did not author.
+   - **Diverged otherwise:** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`; lead with rebase/merge, since the remote carries commits you did not author. On rebase or merge, run it yourself (`git pull --rebase` or `git pull --no-rebase`) and continue; stop and present both sides on a conflict whose resolution is a design choice.
    - **Up to date:** inform the user there is nothing to push and stop.
 
 4. **List pending commits.**
    - Use `git log` to list commits between the upstream (or, for a new branch, an inferred base like the default branch) and `HEAD`.
    - Include commit count and subject lines in the final report.
-   - **Release-convention check (advisory).** Detect the repo's release automation per `release-convention` — semantic-release is the default. If it is commit-driven (semantic-release / release-please / commitlint) and a pending commit is not a valid Conventional Commit — or a breaking change is missing its `!` / `BREAKING CHANGE:` marker — flag it in the report and offer to reword it via `git-commit`'s amend (your own branch) before pushing. If the repo uses changesets and no changeset is present for user-facing changes, note it. Advisory only — never block the push.
+   - **Release-convention check (advisory).** Detect the repo's release automation per `release-convention` — semantic-release is the default. If it is commit-driven (semantic-release / release-please / commitlint) and a pending commit is not a valid Conventional Commit — or a breaking change is missing its `!` / `BREAKING CHANGE:` marker — push anyway, then flag it in the report and offer the fix: on an own branch, reword it via `git-commit`'s amend (or a rebase for an older commit) and push with the lease. If the repo uses changesets and no changeset is present for user-facing changes, note it. Advisory only — never block the push.
 
 5. **Safety checks (only these gate the push).**
    - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
    - **`--force-with-lease` on an own branch runs without asking**, with the lease pinned per `agent-owned`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
-   - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push.
+   - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push. A push blessing that names the target branch is that ack; do not ask a second time.
 
 6. **Report and execute in a single step.**
    - On the happy path (no blocker, no protected branch), print a short report block and immediately run the push:
@@ -72,7 +72,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
 - **Ask only on real blockers.** Behind, diverged from someone else's work, a force push off an own branch, protected-branch pushes. Everything else is automatic.
 - **Never plain `--force`.** `--force-with-lease` is free on an own branch per `agent-owned`, since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
 - **Always list pending commits** in the report so the user sees what landed on remote.
-- **Never auto-pull, auto-rebase, or auto-merge a branch that is not own.** On a foreign divergence, ask.
+- **Never auto-pull, auto-rebase, or auto-merge a branch that is not own.** On a foreign divergence, ask, then run what the user picks.
 - **Push only — no PR creation.** Suggest a PR skill after success; never auto-invoke.
 
 ## Examples
@@ -136,7 +136,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
    > - **`--force-with-lease`** — overwrite remote with your local branch (destroys the 3 remote commits).
    > - **Abort** — do nothing.
 
-3. Wait for user choice. If rebase/merge, note this skill does not rebase/merge — ask the user to do it locally and invoke `git-push` again. If `--force-with-lease`, confirm once (safety check), then execute with the flag.
+3. Wait for user choice. On rebase or merge, run it, stop if a conflict needs a design choice, then push. If `--force-with-lease`, confirm once (safety check), then execute with the flag.
 
 ---
 

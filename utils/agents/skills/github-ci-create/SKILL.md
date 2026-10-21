@@ -25,8 +25,8 @@ argumentHint: '[optional: what the workflow should do]'
 4. **Search for existing actions.** Use `github__search_repositories` and `github__search_code` to find well-maintained actions for the job. Evaluate candidates by: stars, recent activity, maintenance status, and community adoption. Prefer official actions (`actions/*`) and verified creators.
 5. **Fetch latest versions.** For every action to be used, fetch its latest release via `github__get_latest_release` or `github__list_tags` from the action's repository. Use the latest stable version tag, never `@master` or `@main`.
 6. **Consult documentation.** Read the action's `README.md` via `github__get_file_contents` to understand all available inputs, outputs, and configuration options. Do not guess at configuration — verify from the source.
-7. **Draft the workflow.** Write the complete workflow YAML and present it in chat. Explain the purpose of each job and step. Highlight any decisions or trade-offs made.
-8. **Ask to implement.** After approval, write the workflow file to `.github/workflows/`.
+7. **Write the workflow** to `.github/workflows/`.
+8. **Report** the file, the purpose of each job and step, and any decisions or trade-offs made.
 
 ## Key Principles
 

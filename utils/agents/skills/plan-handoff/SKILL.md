@@ -6,6 +6,7 @@ argumentHint: '[same-repo|other-repo] [goal]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/plan-mode.md
   - ../references/harness/provider-paths.md
 ---

@@ -6,6 +6,7 @@ argumentHint: '[project, scope, or tracker target to supervise]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-project-documents.md
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
@@ -38,7 +39,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates gate per `linear-absolute-approval`.
+Invoking supervisor IS a standing blessing to investigate, verify, reconcile, and report: tracker writes are applied, then reported as what landed. Linear project and initiative writes gate per `linear-absolute-approval`.
 
 > **PREREQUISITE:** A Linear workspace skill MUST be active before any Linear operation — workspace detection per `linear-prerequisite`.
 
@@ -67,7 +68,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 - **Investigation.** The real state of the work — tracker, repo, branches, pipelines, PRs/MRs, conversation history.
 - **Research.** Docs, prior art, options and trade-offs — enough to inform a decision, never enough to start building it.
 - **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, issueset structure per `linear-issuesets`, stale descriptions.
-- **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Presented before they land, unless preapproved; then apply and report.
+- **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Applied, then reported.
 - **Verification of claims.** Somebody reports done; you check the artifact.
 - **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.
 - **Awareness of every open condition.** One armed watcher per thing you are waiting on — merges, pipelines, deploys, approvals — so state changes reach you as events instead of as surprises.
@@ -124,7 +125,7 @@ Agents per `agent-roster` and watchers per `agent-watchers`, both reported every
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
 2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, one agent per independent question or repo rather than one agent given the whole sweep list, fanned out per `agent-fan-out`, each with its own proposed tier, tiers resolved by loading `agent-harness`; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
-4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full audit of a project or an issue tree, compose `linear-reconcile` rather than re-implementing it.
+4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Apply them, then report what landed. For a full audit of a project or an issue tree, compose `linear-reconcile` rather than re-implementing it.
 5. **Arm a watcher for every open condition — supervision is event-driven.** See below.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
@@ -170,7 +171,7 @@ Supervisor-specific rule on top of the reference's discipline: **on wake, reconc
 1. Scope: tracker truth and verification for the migration project; no code written here.
 2. Orient: project issues and relations from Linear, `git log --oneline -5`, open MRs, last pipeline states. One delegated agent sweeps CI logs and returns 12 lines.
 3. Mismatches found: two issues in `In Review` whose MRs merged, one `blockedBy` pointing at a completed issue, one estimate invalidated by the approach change (description untouched for three weeks).
-4. Present the reconciliation chunked; apply on approval. Offer a project status update, do not post it.
+4. Apply the reconciliation and report what landed. Offer a project status update, do not post it.
 5. User adds "and fix the failing token test". Hand it to `agent-coordinator` with scope, holds, issue id, and the evidence contract. Verify the returned diff and the test exit code, move the issue, report.
 6. The fix opens an MR — arm a merge watcher immediately, plus one for its pipeline. On the pipeline wake: green, reported. On the merge wake: re-verify the merge, move the issue to `Done` per the closing trailer, arm a watcher on the downstream deploy, reap the two that fired.
 7. Report: 2 states corrected, 1 relation dropped, 1 fix merged and reconciled, 1 deploy watcher live, 1 estimate needs the user's call.
@@ -183,7 +184,7 @@ Supervisor-specific rule on top of the reference's discipline: **on wake, reconc
 - Supervising is reading, asking, and routing — the moment you build, you are no longer supervising.
 - Implementation goes through `agent-coordinator`, always, with scope, holds, ids, and an evidence contract.
 - Delegate anything that returns more than a screenful; keep the cheap status checks and every decision.
-- Tracker corrections are monotonic; present them before they land unless preapproved. Status updates are offered, never auto-posted — no blessing clears that one, outside the exception in `linear-absolute-approval`.
+- Tracker corrections are monotonic; apply them, then report. Status updates are offered, never auto-posted — no blessing clears that one, outside the exception in `linear-absolute-approval`.
 - Route the record by shape: comments for decisions and findings, documents for plans and investigations, descriptions only for what is now wrong. Never invent a description section.
 - Watch, don't wonder: every open condition gets a watcher the moment it opens — an MR you asked for is a merge you must learn about, not a question for the user next turn.
 - A watcher wake is a supervision cycle, not a notification: re-verify authoritatively, reconcile the tracker, report, re-arm for the next condition.

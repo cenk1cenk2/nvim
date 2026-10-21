@@ -34,7 +34,7 @@ During agent execution, capture durable findings as their own documents so they 
 
 - Create or update documents with `project`, `title`, and `content`.
 - When updating, list or fetch existing documents first and update by `id`.
-- Present document drafts via the `output-diff` convention before writing.
+- Writes to a project's documents follow `linear-absolute-approval`; report every document written.
 - Create project documents after the project exists and before creating repetitive issues when possible.
 - For a single issue, attach the document to the issue or add a top-level issue comment that packages the needed reference context.
 - Prefer repository, MR, PR, and dashboard links as Linear attachments when they are authoritative and available.

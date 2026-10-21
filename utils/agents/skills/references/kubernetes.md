@@ -6,11 +6,9 @@ Conventions shared by both cluster MCP servers — `kubernetes-kilic` and `kuber
 
 **The MCP servers carry a standing blessing. Call them as the work needs.** Both run read-only, every registered tool is a read, and reads do not gate (`AGENTS.md` §V) — so a cluster read through the server needs no offer and no wait.
 
-**`kubectl` needs explicit approval, every invocation.** It is the lane that can write, and it runs against the local kubeconfig, which is scoped to nothing — every estate, every cluster. No general go reaches it — not `g` / `go` / `yolo`, not autopilot, not approval of an earlier command. Name the cluster and the exact command, then wait. The permission lane may or may not prompt: the gate holds because you ask, not because a prompt fires.
+**`kubectl` gates per `command-kubectl`, which owns the approval rules and grants.** It is the lane that can write, and it runs against the local kubeconfig, which is scoped to nothing — every estate, every cluster. Where the server can answer a read, use the server and skip the ask entirely.
 
-**A read-only `kubectl` is gated too.** The lane decides, not the verb — `kubectl get` waits the same as `kubectl delete`. The one exception is a `blessed for the session` grant covering reads, per `command-kubectl`. Where the server can answer it, use the server and skip the ask entirely.
-
-**An approval covers the command it named and no other.** A different cluster, or a different command against the same cluster, is a new ask. A candidate context you resolved yourself — from the repository, from ArgoCD, from a name that looked close — goes into that ask as a candidate for the captain to confirm.
+**Name the cluster and the exact command in the ask.** A candidate context you resolved yourself — from the repository, from ArgoCD, from a name that looked close — goes into that ask as a candidate for the captain to confirm.
 
 ## Every Call Carries `context`
 

@@ -5,7 +5,6 @@ disableModelInvocation: true
 argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero is noisy'''
 references:
   - ../references/kilic/grafana-kilic-datasources.md
-  - ../references/output-diff.md
 ---
 
 ## Alerting
@@ -118,7 +117,7 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.
 5. **Check what it will fire alongside.** If a root cause already pages, add an inhibit rule and verify the `equal:` labels appear in **both** expressions.
 6. **Set `dashboard_url`** to the dashboard that shows the problem, templated on cluster.
-7. **Present the rule and any Alertmanager change together** per `output-diff` — they are one change even across two repos.
+7. **Report the rule and any Alertmanager change together** — they are one change even across two repos.
 
 ## Key Principles
 

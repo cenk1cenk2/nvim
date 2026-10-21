@@ -142,7 +142,7 @@ Genuinely safe to reap:
 
 ## Announce the dispatch in plain language
 
-Announce every dispatch per `AGENTS.md` §VI. Where the flow presented the prompt for review before launch, the announcement is not a second copy of it.
+Announce every dispatch per `AGENTS.md` §VI.
 
 ## Model Selection
 

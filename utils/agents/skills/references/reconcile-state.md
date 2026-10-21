@@ -4,13 +4,13 @@ For skills that own a **durable artifact** — a Linear issue or project, a PR/M
 
 ## First: is it yours to touch?
 
-**Reconcile only what this session created, or what the user explicitly handed you.** That is the whole permission.
+**Reconcile only what this session created, proven per `agent-owned`, or what the user explicitly handed you.** That is the whole permission.
 
 | Yours — reconcile it | Not yours — do not write |
 |---|---|
 | The PR/MR you opened this session | A PR/MR someone else opened |
 | Issues you created this session | Issues that already existed, or belong to someone else |
-| A Linear document you authored | A document authored by someone else |
+| A Linear document you authored this session | A document authored by someone else |
 | A plan file you wrote | Anything outside the work you were given |
 
 The user pointing you at an artifact and asking you to work it — "pick up K-219", "update this MR" — hands it over. Merely *reading* one does not.

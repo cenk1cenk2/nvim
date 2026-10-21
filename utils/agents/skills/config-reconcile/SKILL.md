@@ -5,8 +5,6 @@ disableModelInvocation: true
 argumentHint: '[catalog root] [focus]'
 references:
   - ./references/slice-brief.md
-  - ../references/present-first.md
-  - ../references/output-diff.md
   - ../references/current-state-only.md
   - ../references/config-targets.md
   - ../references/scm/commit-push-scoped.md
@@ -30,7 +28,7 @@ Agents apply only edits that preserve meaning; every change of meaning, deletion
    - one slice per skill family;
    - each shared-reference folder owned by exactly one slice;
    - the root cross-cutting references in their own slice;
-   - the central guidance plus the `config-*` skills as a read-only slice.
+   - the `config-*` skills as a standards slice, writable for meaning-preserving edits only, with the central guidance read-only inside it.
 
    Split a family whose bodies run past roughly 200 KB. Stay under the session's agent budget. Pick a tier per slice: smart where the slice holds doctrine, default where it is mostly wiring.
 4. **Brief.** Copy `slice-brief` to the scratchpad and fill it. Each dispatch prompt carries only its slice: the writable files, the read-only neighbours, and the focus areas you already suspect, such as overlapping siblings, a stale example, or a family that should be symmetric.
@@ -61,7 +59,7 @@ Agents apply only edits that preserve meaning; every change of meaning, deletion
 
 - **One owner per rule.** A rule lives in one skill or reference; every other file names it. The central guidance keeps only what must hold when no skill has loaded.
 - **Live source beats the catalog.** A tool list, a script's flags, or a config file outranks any skill that describes them. Flag what cannot be checked rather than guessing.
-- **Meaning moves only on approval.** Wiring, dedup to a name, history removal and tightening are applied directly: invoking this skill is the approval for those meaning-preserving edits, per `present-first`. Rules, gates, tiers, deletions and merges are proposed.
+- **Meaning moves only on approval.** Wiring, dedup to a name, history removal and tightening are applied directly: invoking this skill is the approval for those meaning-preserving edits. Rules, gates, tiers, deletions and merges are proposed.
 - **Current state only**, per `current-state-only`, on every edit.
 
 ## Example
@@ -69,7 +67,7 @@ Agents apply only edits that preserve meaning; every change of meaning, deletion
 **User says:** "go through all skills, references and AGENTS.md and make them consistent"
 
 1. Name the root and the standard. The baseline `check_catalog.py` run shows 13 failures.
-2. Nine slices: agent core; harness and hyprpilot; linear; scm; code and plan; posture and root references; infra; comms; central guidance (read-only). Dispatch runs in parallel.
+2. Nine slices: agent core; harness and hyprpilot; linear; scm; code and plan; posture and root references; infra; comms; standards (the `config-*` skills, with the central guidance read-only). Dispatch runs in parallel.
 3. The reports arrive. 80 files have meaning-preserving edits. Proposals: one harness reference contradicts the live dispatch schema; one workflow calls a tool the server does not register; two skills are fully absorbed by others.
 4. The user approves the list. The same agents apply their items, the deletions land with their content moved, and `check_catalog.py` shows no FAIL rows.
 

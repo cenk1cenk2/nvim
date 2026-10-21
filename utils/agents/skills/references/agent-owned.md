@@ -31,7 +31,7 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 | tmux window, watcher | Stop it. |
 | Artifact, Obsidian note, Notion page | Edit it; delete it while nobody else has opened, edited or commented on it. |
 
-**Cleanup waits for merged and finished.** Delete a branch (`-D` included, since a squash merge looks unmerged to git), its worktree, its plan and its scratch data only once its PR/MR merged and its agent delivered and was collected.
+**Cleanup waits for merged and finished.** Delete a branch (`-D` included, since a squash merge looks unmerged to git), its worktree, its plan and its scratch data only once its PR/MR merged and its agent delivered and was collected. Scratch data tied to no PR/MR is free once its agent was collected.
 
 ## Still gated
 
@@ -40,6 +40,6 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 - **Discarding uncommitted work** — a dirty-tree force-remove, `reset --hard` over local changes.
 - **Merging a PR/MR.** Local merges of the run's own branches, as in a plan layer, are free.
 - **Linear project and initiative writes** follow `linear-absolute-approval`.
-- **Deleting an owned thing before its work merged** — branch, worktree or data of work still open, closed unmerged, or never opened.
+- **Deleting an owned thing before its work merged** — branch, worktree or data of work still open, closed unmerged, or never opened, except scratch data tied to no PR/MR.
 - **A bulk operation that also reaches what is not owned** — present the dry-run.
 - **Live clusters** — Kubernetes and ArgoCD resources gate per their own skills, owned or not.

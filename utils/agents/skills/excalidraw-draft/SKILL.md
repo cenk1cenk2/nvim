@@ -1,6 +1,6 @@
 ---
 name: excalidraw-draft
-description: excalidraw-draft Draft a hand-drawn Excalidraw diagram and export it to the vault or a shareable URL. Use on "draw a diagram", "sketch this", "make an architecture diagram". Not for revising a drawing that already exists.
+description: excalidraw-draft Draft a hand-drawn Excalidraw diagram and export it to the vault. Use on "draw a diagram", "sketch this", "make an architecture diagram". Not for revising a drawing that already exists.
 disableModelInvocation: true
 argumentHint: '[what to draw]'
 references:
@@ -17,30 +17,9 @@ references:
 You draft Excalidraw diagrams using a two-phase workflow:
 
 1. **Draft visually** using the Excalidraw MCP server — live interactive preview in chat. Iterate until the user is happy.
-2. **Export** — either to the Obsidian vault (`.excalidraw.md`) or as a shareable excalidraw.com URL.
+2. **Export** — to the Obsidian vault as `.excalidraw.md`: strip pseudo-elements, wrap per `excalidraw-template`, write it.
 
 **Tool selection for vault:** per `obsidian` — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
-
-## Output Modes
-
-| Mode | Tool | When to Use |
-|------|------|-------------|
-| **Obsidian** | Strip pseudo-elements, wrap per `excalidraw-template`, write `.excalidraw.md` to vault. | Combined with obsidian skills, user says "save", "vault", "obsidian", "note". Default when obsidian skills are co-invoked. |
-| **URL** | `excalidraw__export_to_excalidraw` — uploads to excalidraw.com. | User asks for "URL", "link", "share", "excalidraw.com", "SVG", "PNG". NOT combined with obsidian skills. |
-
-**Decision rules:**
-
-- Obsidian skills co-invoked → **Obsidian** mode (no question).
-- User explicitly requests URL/link/share/SVG/PNG → **URL** mode (no question).
-- Neither signal present → **ask**: "Where should I export — Obsidian vault or shareable excalidraw.com URL?"
-
-**URL mode notes:**
-
-- Returns a shareable excalidraw.com URL with the full diagram.
-- From the URL, users can manually export to SVG/PNG via excalidraw.com UI (menu → Export image).
-- No local file is created — the diagram lives on excalidraw.com.
-- Pass the scene JSON directly after stripping pseudo-elements.
-- The tool is `excalidraw__export_to_excalidraw` — takes a `json` parameter with the serialized scene.
 
 ## Process
 
@@ -49,12 +28,9 @@ You draft Excalidraw diagrams using a two-phase workflow:
 3. **Plan the layout.** List nodes and connections, estimate diagram size, choose colors from the light palette per `excalidraw-elements`.
 4. **Draft with MCP preview — mandatory, never skipped.** Follow the `excalidraw-mcp-preview` workflow:
    - Call `excalidraw__create_view` with file-format elements per `excalidraw-elements` — 8-char IDs, bound text via `containerId` / `boundElements` — plus `cameraUpdate` for viewport.
-   - Draw progressively: zones → shapes with their bound text → arrows.
+   - Draw progressively: zones first, then shapes with their bound text, then arrows.
 5. **Iterate.** Based on user feedback, refine using checkpoints. Call `excalidraw__create_view` again. Repeat until satisfied.
-6. **Export.** Once the user is satisfied, choose output mode per the decision rules above:
-   - **Obsidian**: strip pseudo-elements, wrap the same elements per `excalidraw-template`, write to vault.
-   - **URL**: strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array, build the scene JSON (`{type, version, source, elements, appState, files}`), call `excalidraw__export_to_excalidraw` with the serialized JSON. Return the URL to the user.
-   - **If ambiguous**: ask the user before exporting.
+6. **Export.** Once the user is satisfied, strip pseudo-elements, wrap the same elements per `excalidraw-template`, and write to the vault.
 
 ## Conventions
 
@@ -63,9 +39,9 @@ You draft Excalidraw diagrams using a two-phase workflow:
 - **Spacing.** 30–50px gaps. 80–100px margin around edges.
 - **IDs.** Exactly 8 chars alphanumeric (`[0-9a-zA-Z]{8}`). Descriptive prefix + random suffix: `rctApi3d`, `txtAp4Wq`, `arwAD8Pn`, `zonBk2Lm`.
 
-## Obsidian vs excalidraw.com Rendering (CRITICAL)
+## Obsidian Plugin Rendering (CRITICAL)
 
-Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.com:
+Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.com, which the preview follows:
 
 **1. Theme inversion.** The Obsidian plugin overrides `appState.theme` to match the dark vault, and Excalidraw's dark mode inverts the canvas colours. Author light on `#ffffff`; the vault shows it dark. A dark-authored scene is inverted to light. The white-canvas MCP preview matches what is authored.
 
@@ -73,11 +49,5 @@ Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.co
 
 ## Composing with Obsidian Skills
 
-When composed with Obsidian skills, **always use Obsidian output mode** — do not ask.
-
 - **With `obsidian-note`**: embed via `![[Drawings/filename.excalidraw.md]]`.
 - **With `obsidian-repository`**: link architecture diagrams from repository knowledge notes.
-
-## Composing without Obsidian Skills
-
-When invoked standalone (no obsidian skills co-invoked), the output mode depends on user intent. If the user explicitly requests a URL, link, or image export, use URL mode. Otherwise ask.

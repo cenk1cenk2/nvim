@@ -20,7 +20,7 @@ argumentHint: '[create|update|review] [skill-name] [what it should do]'
 
 ## Skill Management
 
-Present proposed changes per `output-diff` before writing. Keep real private specifics out of skills, references, and examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — scope `agents`, branch `rolling`.
+Act, then report what changed per `output-diff`. Keep real private specifics out of skills, references, and examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — scope `agents`, branch `rolling`.
 
 Target discovery and the self-edit gate per `config-targets`.
 
@@ -65,10 +65,8 @@ Skills in this directory form an interconnected system. A skill may depend on or
 3. **Check references** — list `~/.config/nvim/utils/agents/skills/references/` and its family folders, and read the ones that apply. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
 4. Draft the full `SKILL.md`. Name any shared convention inline where the body uses it, and declare it in `references:`.
 5. **Validate** — run the description checklist (see below), verify conventions, and run the `current-state-only` check: no compatibility notes, no history, nothing describing a past shape.
-6. Present the draft in chat.
-7. Iterate based on user feedback.
-8. After approval, create the directory and write the file.
-9. Confirm it landed, per the guidance below.
+6. Create the directory and write the file.
+7. Confirm it landed, per the guidance below, then report it and iterate on feedback.
 
 ### Update
 
@@ -76,12 +74,10 @@ Skills in this directory form an interconnected system. A skill may depend on or
 2. **Read the target with plain `read_skill { slug }`** — the manifest is enough to see what it declares. Fetch a reference body only when the change depends on its content.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
-5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with an inline mention plus the declaration. If it doesn't and 2+ skills must stay in lockstep on it, propose extracting it.
+5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with an inline mention plus the declaration. If it doesn't and 2+ skills must stay in lockstep on it, propose extracting it, named per `config-references` (e.g. `linear/linear-prerequisite.md`).
 6. **Validate** — run the description checklist against the updated description, and the `current-state-only` check over the edit: the old wording is deleted, not annotated.
-7. Present proposed changes to the user.
-8. Iterate based on feedback.
-9. After approval, apply the changes.
-10. Confirm it landed, per the guidance below.
+7. Apply the changes.
+8. Confirm it landed, per the guidance below, then report it and iterate on feedback.
 
 ### Review
 
@@ -89,10 +85,9 @@ Skills in this directory form an interconnected system. A skill may depend on or
 2. **Validate** — run the description checklist (see below), check all conventions, and run the `current-state-only` check for compat notes or history that crept in.
 3. **Audit references** — check whether the skill duplicates content a shared reference already carries, and whether every declaration is still accurate, still used by the body, and correctly tiered (declared vs path-read).
 4. List ambiguities, inconsistencies, or areas that could be improved.
-5. Ask clarifying questions to understand user intent.
-6. Propose specific improvements based on answers.
-7. After approval, apply the changes (or leave as-is if no changes needed).
-8. If files changed, confirm they landed, per the guidance below.
+5. Ask clarifying questions where the intent is unclear.
+6. Apply the improvements the findings settle, or leave it as-is if none are needed.
+7. If files changed, confirm they landed, per the guidance below, then report them.
 
 ## Confirming an Edit Landed
 
@@ -123,6 +118,8 @@ argumentHint: "[args]" # Shown to user as usage hint.
 references: # YAML array of relative paths to reference files.
   - ../references/file.md
   - ./references/local.md
+scripts: # Relative paths to executables the skill ships. See Scripts.
+  - ./scripts/entry.py
 ```
 
 Hyprpilot hands the frontmatter to the agent verbatim — as `metadata` in `list_skills` / `read_skill` output, as the `io.hyprpilot/skill` key in resource `_meta` (minus `title`, `description` and `references`, which other fields carry), and whole in the raw `skill://<slug>/SKILL.md` resource and in `skills/list`.
@@ -159,7 +156,7 @@ Templates, patterns, or formatting rules.
 
 ## Examples (optional, recommended for workflow skills)
 
-Concrete use case examples showing trigger → actions → result.
+Concrete use case examples showing the trigger, the actions, and the result.
 
 ## Key Principles (optional)
 
@@ -178,9 +175,9 @@ How a skill *should* be invoked is declared by `disableModelInvocation`. Hyprpil
 
 Assignment guidance:
 
-- **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes and postures (`caveman`, `agent-bulldozer`, `agent-coordinator`, `agent-supervisor`), companions, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `hyprpilot-delegate`).
-- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, `code-improve`, in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`), CLI manuals (`command-*`), and MCP server manuals (`grafana-kilic`, `labrat`), which load before that server's first call.
-- **Auto-invoke** — session and workspace initializers only (`hyprpilot-skills`, `hyprpilot-nvim`, `linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`).
+- **Manual** — reviews, reads, fixes, CI, codebase audits (`code-improve`), scaffolding, config-authoring (`config-*`), personality modes and postures (`caveman`, `agent-bulldozer`, `agent-coordinator`, `agent-supervisor`), companions, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `hyprpilot-delegate`).
+- **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`, in-harness dispatch (`agent-delegate`, `agent-plan`, `agent-background`, `agent-review`), CLI manuals (`command-*`), and MCP server manuals (`grafana-kilic`, `argocd-kilic`, `labrat`), which load before that server's first call.
+- **Auto-invoke** — session and workspace initializers (`hyprpilot-skills`, `hyprpilot-nvim`, `linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`), and skills that fire on a detected context (`structure-kilic`, `decision`).
 - **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disableModelInvocation: false` because autopilot may auto-apply it.
 
 Note: omitting the flag and writing `disableModelInvocation: false` are behaviorally identical (default is `false`). Write it explicitly only when the autoload intent is the skill's defining feature and you want it legible in source (e.g. `config-repository`).
@@ -278,7 +275,7 @@ The second is 500 characters restating the skill's own opening. Every one of tho
 State a posture **only when the skill deviates**:
 
 - **Strict plan mode** — declare the `plan-mode` reference and say so in one line. Only for skills that plan or analyze and write nothing outside the internal plans directory.
-- **Present-first** — a skill whose writes publish to people, shape every later session, or create a project declares `present-first` and opens with one line: ``Posture: `present-first`.`` No other skill carries the line or the declaration.
+- **Present-first** — a skill whose writes publish to people, change the central guidelines every session loads, or create a project declares `present-first` and opens with one line: ``Posture: `present-first`.`` No other skill carries the line or the declaration.
 - **A skill-specific carve-out** — a standing pre-approval, a read-only exemption, a security note about what a spawn runs as. One inline line, in the step it applies to.
 
 Never tell a skill not to enter plan mode. Only skills declaring `plan-mode` enter it; warning every other skill against a mode it cannot enter is anti-guidance.
@@ -308,16 +305,6 @@ Checklist for any skill that dispatches subagents:
 6. Anything else that differs per runtime (plans directory, state directory) points at `provider-paths` instead of hardcoding a path.
 
 When a runtime's behavior turns out to contradict a generic skill body, fix it in that provider's reference — do not special-case the runtime inside the shared body.
-
-### Checking for Deduplication
-
-When creating or updating a skill, always check:
-
-1. **Read existing references** — list `~/.config/nvim/utils/agents/skills/references/` and its family folders, and read the relevant ones.
-2. **Compare against the skill** — identify any blocks in the skill that overlap with existing references.
-3. **Check sibling skills** — read 2-3 skills in the same family and look for blocks duplicated across them.
-4. **Propose extraction** — if a duplicated block has no matching reference, propose creating one, named per `config-references` (e.g. `linear/linear-prerequisite.md`).
-5. **Present findings** — show the user which blocks can be replaced with references and which new references should be created.
 
 ## Scripts
 
@@ -374,7 +361,7 @@ A script launched detached has no reader; **its exit code is its message**. Fix 
 
 Turning a usage error into exit 1 is the worst available bug: the caller reads it as a ceiling and waits.
 
-**A code the table does not claim belongs to the launch shell, not the script.** Write the consuming steps so an unclaimed code is classified as a failed launch — the condition was never observed even once — and never as a result; the codes themselves are enumerated once, in `agent-background`. The check that catches a bad launch before it detaches into silence is one foreground run of the resolved path (`--help` exits 0) ahead of any launch that backgrounds it; a skill that ships a script states that pre-flight beside the launch step.
+**A code the table does not claim belongs to the launch shell, not the script.** Write the consuming steps so an unclaimed code is classified as a failed launch — the condition was never observed even once — and never as a result. The check that catches a bad launch before it detaches into silence is one foreground run of the resolved path (`--help` exits 0) ahead of any launch that backgrounds it; a skill that ships a script states that pre-flight beside the launch step.
 
 ### stdout is the wake
 
@@ -419,7 +406,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 - **An output that hands the reader an address is a sentence, not a block.** When a skill's output gives someone something to act on — a file to load, a skill to invoke, a command to run — specify it as one plain-English instruction naming the skill, the file, and what to do with it: *"Use the `plan-pickup` skill to read the file at `<path>` and go through the instructions."* A bare path, a labelled key-value block, or a terse command fragment leaves the reader to assemble the instruction themselves. A multi-field status readout or a menu of choices is a different thing and keeps its layout.
 - **End list items with `.`** — consistent punctuation across all skills.
 - **No emoji, in the skill or in what it tells the agent to write** — the absolute rule lives in the central `AGENTS.md`. Markers are words and bold (**ABSOLUTE**, **NEVER**, **Warning:**), never a pictograph. The only glyph that stays is one a file format or API requires as literal data.
-- **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
+- **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing the trigger, the actions, and the result.
 - **Compose over duplicate** — when another skill or reference already does something, name it (Load the skill, or name the reference inline) rather than hardcoding a copy of its logic.
 - **SKILL.md size** — no hard line limit. Some scaffolding skills (e.g. `cluster-*`, `argocd-*`) are legitimately long, and that is fine. Do NOT split a skill into references just to shrink it — references exist only to share content across skills (see References).
 
@@ -432,8 +419,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 3. Check `references/` for shared conventions the new skill should use.
 4. Draft `SKILL.md` with frontmatter, process, and format sections.
 5. Validate against description checklist.
-6. Present draft in chat, iterate on feedback.
-7. After approval, create `obsidian-daily/SKILL.md`.
+6. Create `obsidian-daily/SKILL.md`, confirm it landed, and report it.
 
 **Result:** New skill directory and `SKILL.md` created.
 
@@ -445,8 +431,8 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 2. Run description checklist — check trigger phrases, negative triggers, specificity.
 3. Check conventions — posture, punctuation, conciseness.
 4. Audit references — check if duplicated blocks exist that should use shared references.
-5. Present findings: "The `Not for` clause names a sibling slug instead of the situation".
-6. Propose improvements, iterate.
+5. Finding: "The `Not for` clause names a sibling slug instead of the situation".
+6. Apply the fix and report it.
 
 **Result:** Skill updated with improved description and conventions.
 
@@ -457,8 +443,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 1. Read `linear-project-create/SKILL.md`.
 2. Read shared references in `references/` to check for deduplication.
 3. Identify the prerequisite block and research section as duplicates of existing references.
-4. Propose replacing them with inline mentions plus `references` frontmatter declarations.
-5. Present changes, iterate on feedback.
-6. After approval, update the skill.
+4. Replace them with inline mentions plus `references` frontmatter declarations.
+5. Confirm it landed and report the change.
 
 **Result:** Duplicated blocks replaced by inline reference mentions, frontmatter updated.

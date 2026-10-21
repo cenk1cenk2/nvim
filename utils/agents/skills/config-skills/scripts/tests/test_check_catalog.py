@@ -459,3 +459,146 @@ class TestReferenceWiring:
         result = lint(catalog)
         assert result.code == 0
         assert "history wording: 'previously'" in result
+
+
+class TestArrowsAndIds:
+    def test_an_arrow_in_prose_warns(self, catalog, lint):
+        catalog.add("pointy", body="Read the file → edit it, then a -> b and c => d.\n")
+        result = lint(catalog)
+        assert result.code == 0
+        assert "arrow in prose: '→'" in result
+
+    @pytest.mark.parametrize(
+        "body",
+        ["Run `a -> b` here.\n", "```sh\nfoo -> bar\n```\n", "<!-- MARKER:END -->\n"],
+    )
+    def test_an_arrow_in_code_or_a_comment_is_data(self, catalog, lint, body):
+        catalog.add("literal", body=body)
+        assert "arrow" not in lint(catalog)
+
+    def test_a_bare_id_in_a_template_warns(self, catalog, lint):
+        catalog.add("templater", body="```markdown\nBlocked on K-219 and !262.\n```\n")
+        result = lint(catalog)
+        assert result.code == 0
+        assert "bare id in a template: 'K-219'" in result
+
+    @pytest.mark.parametrize(
+        "body",
+        [
+            "```markdown\n[K-219 - Rotate](https://example.com/K-219)\n```\n",
+            "```sh\ngit commit -m 'fix: K-219'\n```\n",
+            "Prose naming K-219 is not a template.\n",
+        ],
+    )
+    def test_a_linked_id_or_code_fence_is_fine(self, catalog, lint, body):
+        catalog.add("linked", body=body)
+        assert "bare-id" not in lint(catalog)
+
+
+class TestPresentFirst:
+    @staticmethod
+    def declare(catalog):
+        (catalog.root / "references").mkdir(exist_ok=True)
+        (catalog.root / "references" / "present-first.md").write_text("# Present-First\n")
+        return "references:\n  - ../references/present-first.md\n"
+
+    def test_a_posture_line_without_the_declaration_fails(self, catalog, lint):
+        catalog.add("posturer", body="Posture: `present-first`.\n")
+        result = lint(catalog)
+        assert result.code == 1
+        assert "Posture line without declaring" in result
+
+    def test_a_declaration_without_the_posture_line_warns(self, catalog, lint):
+        catalog.add("silent", body="Per `present-first`.\n", extra=self.declare(catalog))
+        result = lint(catalog)
+        assert result.code == 0
+        assert "without the Posture line" in result
+
+    def test_the_toggle_skill_is_exempt(self, catalog, lint):
+        catalog.add("present-first", body="Toggle per `present-first`.\n", extra=self.declare(catalog))
+        assert "posture" not in lint(catalog)
+
+    def test_approval_wording_in_a_non_declarer_warns(self, catalog, lint):
+        catalog.add("asker", body="1. Present the draft.\n2. After approval, write it.\n")
+        result = lint(catalog)
+        assert result.code == 0
+        assert "present-then-approve wording: 'Present the draft'" in result
+
+    def test_approval_wording_in_a_declarer_is_fine(self, catalog, lint):
+        body = "Posture: `present-first`.\n\nAfter approval, write it.\n"
+        catalog.add("declarer", body=body, extra=self.declare(catalog))
+        result = lint(catalog)
+        assert "present-flow" not in result
+        assert "posture" not in result
+
+
+class TestTiers:
+    def test_a_tier_example_must_carry_its_tier(self, catalog, lint):
+        catalog.add("handy", extra="disableModelInvocation: true\n")
+        catalog.add("author", body="- **Model-invocable** — routine actions (`handy`).\n")
+        result = lint(catalog)
+        assert result.code == 1
+        assert "Model-invocable example `handy` is Manual" in result
+
+    def test_matching_tier_examples_pass(self, catalog, lint):
+        catalog.add("handy", extra="disableModelInvocation: true\n")
+        catalog.add("auto", description="auto Auto-invoked on x context. Not for y.")
+        catalog.add("author", body="- **Manual** — `handy`.\n- **Auto-invoke** — `auto`.\n")
+        result = lint(catalog)
+        assert result.code == 0, result.out
+        assert "tier-example" not in result
+
+    def test_an_auto_invoke_example_needs_the_description(self, catalog, lint):
+        catalog.add("quiet")
+        catalog.add("author", body="- **Auto-invoke** — `quiet`.\n")
+        assert "has no Auto-invoked description" in lint(catalog)
+
+    def test_an_auto_invoked_manual_skill_fails(self, catalog, lint):
+        catalog.add(
+            "confused",
+            description="confused Auto-invoked on x context. Not for y.",
+            extra="disableModelInvocation: true\n",
+        )
+        result = lint(catalog)
+        assert result.code == 1
+        assert "Auto-invoked description on a Manual skill" in result
+
+
+class TestGuidance:
+    @pytest.fixture
+    def skills(self, tmp_path: Path) -> Catalog:
+        catalog = Catalog(tmp_path / "skills")
+        catalog.add("good-skill")
+        return catalog
+
+    def test_a_shared_reference_is_linted(self, skills, lint):
+        (skills.root / "references").mkdir()
+        (skills.root / "references" / "notes.md").write_text("# Notes\n\nStep one → step two. It used to differ.\n")
+        result = lint(skills)
+        assert "references/notes.md:3" in result
+        assert "arrow in prose" in result
+        assert "history wording: 'used to'" in result
+
+    def test_agents_md_beside_the_catalog_is_linted(self, skills, lint):
+        (skills.root.parent / "AGENTS.md").write_text("# Guidelines\n\nDone ✅\n")
+        result = lint(skills)
+        assert result.code == 1
+        assert "AGENTS.md" in result
+        assert "emoji or pictograph" in result
+
+    def test_a_named_guidance_file_is_linted(self, skills, lint, tmp_path):
+        other = tmp_path / "CENTRAL.md"
+        other.write_text("# Central\n\nGo a -> b.\n")
+        result = lint(skills, "--guidance", str(other))
+        assert "CENTRAL.md" in result
+        assert "arrow in prose: '->'" in result
+
+    def test_a_missing_guidance_file_is_a_usage_error(self, skills, lint, tmp_path):
+        result = lint(skills, "--guidance", str(tmp_path / "absent.md"))
+        assert result.code == 2
+        assert "no such guidance file" in result
+
+    def test_a_literal_glyph_in_a_reference_fence_is_data(self, skills, lint):
+        (skills.root / "references").mkdir()
+        (skills.root / "references" / "template.md").write_text("# Template\n\n```\n==⚠ header ⚠==\n```\n")
+        assert "emoji" not in lint(skills)

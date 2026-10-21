@@ -142,4 +142,4 @@ git@gitlab.example.com:<group>/<project>.git  →  project_path=<group>/<project
 https://gitlab.example.com/<group>/<project>  →  project_path=<group>/<project>
 ```
 
-For nested groups: `git@gitlab.example.com:<group>/<subgroup>/<project>.git` → `project_path=<group>/<subgroup>/<project>`.
+For nested groups: `git@gitlab.example.com:<group>/<subgroup>/<project>.git` gives `project_path=<group>/<subgroup>/<project>`.

@@ -4,6 +4,7 @@ description: linear-post Draft a Linear status update as plain prose - for a pro
 argumentHint: '[project or initiative, name/ID/URL]'
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md

@@ -17,12 +17,11 @@ references:
   - ./references/rightsize-slack-alert.md
   - ./references/rightsize-database-discovery.md
   - ./references/rightsize-vpa-inplace.md
-  - ../references/output-diff.md
 ---
 
 ## Container Rightsizing
 
-Uses the `grafana-kilic` MCP server for metrics, `argocd-kilic` to resolve a workload to the repository that owns it, and `gitlab` for the change itself. Signals, weights, thresholds, and queries: `rightsize-signals`.
+Load `grafana-kilic` before the first query to its MCP server, which supplies metrics; `argocd-kilic` to resolve a workload to the repository that owns it, and `gitlab` for the change itself. Signals, weights, thresholds, and queries: `rightsize-signals`.
 
 ## Two Modes
 
@@ -86,9 +85,8 @@ The renovate KubeJob's `activeDeadlineSeconds` stays 600s. It is a run budget, n
 3. **Choose the layer** per `kilic-resource-placement`: the common layer when the change points the same way on every cluster running it, an override when one or two genuinely differ. A single-cluster override on a system component is a git edit to `argocd-root`'s `annotations.yml` plus regenerating and committing `argocd/1-manifest` — say so instead of pushing it down a layer.
    - **Generic wins.** Test the generic value across clusters first: the fleet maximum of the corrected figures, landing in the chart default or `.deploy/base/` even where the clusters differ in degree. Only a cluster that genuinely deviates earns a per-cluster override, on top of the generic value.
    - **Never an override duplicating the common value.** An existing override that restates it is deleted in the same change — a per-cluster config-reloader block restating a generic 16Mi is the usual case.
-4. **Present the change** per `output-diff`: the current values, the proposed values, and the evidence line behind each one.
-5. **Land it.** Branch with `git-branch`, commit with `git-commit`, open the merge request with `gitlab-mr-create`. One repository per merge request.
-6. **When the change spans repositories**, load the `linear-structure-agent` skill and shape it as an issueset — a parent issue with one sub-issue per repository — rather than one sprawling change.
+4. **Land it.** Branch with `git-branch`, commit with `git-commit`, open the merge request with `gitlab-mr-create`. One repository per merge request. Report the current values, the proposed values, and the evidence line behind each one.
+5. **When the change spans repositories**, load the `linear-structure-agent` skill and shape it as an issueset — a parent issue with one sub-issue per repository — rather than one sprawling change.
 
 ### A Sweep Across Many Repositories
 

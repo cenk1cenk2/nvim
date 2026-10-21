@@ -6,6 +6,7 @@ argumentHint: '[project, slice, issue id(s), or URL] [optional: agent|direct|seq
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
   - ../references/linear/linear-chunk-issues.md
@@ -32,7 +33,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 > **PREREQUISITE:** A Linear workspace skill MUST be active before this skill runs — workspace detection per `linear-prerequisite`.
 
-The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.
+The pickup lifecycle runs per `linear-pickup-execution`.
 
 Load `linear-structure-agent` before the first dispatch — picking up is one of its two modes; it owns the shape and record rules throughout, whether or not this tree was shaped with it.
 
@@ -77,7 +78,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
 6. **Commit and open review.**
    - Use `git-commit` for logical commits and Linear trailers.
    - Use `github-pr-create` or `gitlab-mr-create` based on origin provider.
-   - Ensure linked issues move to `In Review`.
+   - Linked issues advance to `In Review` through Linear's integration from the PR/MR trailers; verify each moved and report it.
    - Run `agent-review` before finalizing non-trivial or agent-produced PRs/MRs, with an independent review prompt focused on the goals, risks, and alternatives considered.
    - Record deviations and findings on the relevant issue or project document.
 

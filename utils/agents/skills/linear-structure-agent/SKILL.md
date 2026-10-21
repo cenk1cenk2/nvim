@@ -5,6 +5,7 @@ argumentHint: '[project or issue] [what it does]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-description-structure.md
   - ../references/linear/linear-issuesets.md
@@ -135,7 +136,7 @@ Sub-issue:
 ```markdown
 **Repo:** `org/repo-b`
 
-**Read first:** parent issue K-123 — full change and conventions live there.
+**Read first:** parent issue [K-123 — <title>](<url>) — full change and conventions live there.
 
 ## Deviations
 

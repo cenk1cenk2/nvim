@@ -18,14 +18,14 @@ Posture: `present-first`.
 
 ## Context
 
-Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the `slack-kilic__*` tools, kilic's fallback: kilic routes through the claude.ai Slack connector when it is present and authorized for kilic, and the Laravel workspace always uses it. On the connector, use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
+Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name actions; that reference's routing table maps each to its tool, connector or kilic fallback. Load the deferred connector tools via `ToolSearch` first.
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
 
 ## Process
 
 1. **Resolve the channel.**
-   - If the user provides a channel name, use `slack-kilic__slack_list_channels` to resolve it to a channel ID.
+   - If the user provides a channel name, find the channel to resolve its ID.
    - If the user provides a channel ID, use it directly.
 
 2. **Determine the timeframe.**
@@ -34,10 +34,10 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - Otherwise, ask the user how far back to look.
 
 3. **Fetch and filter messages.**
-   - Use `slack-kilic__slack_get_channel_history` with a generous `limit` to fetch messages.
+   - Read the channel with a generous limit.
    - For large results, use the `jq` filtering patterns per `slack`.
-   - For any message with thread replies, use `slack-kilic__slack_get_thread_replies` to read the full thread.
-   - Resolve user IDs to real names using `slack-kilic__slack_get_users` or `slack-kilic__slack_get_user_profile`.
+   - For any message with thread replies, read the full thread.
+   - Resolve user IDs to real names with the user and profile lookups.
 
 4. **Classify and act per channel type.**
 
@@ -77,7 +77,7 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
    #### `issues` — Linear Issue Discussions
    - Messages reference Linear issues or contain issue discussions.
-   - For each message thread, read the full thread via `slack-kilic__slack_get_thread_replies`.
+   - For each message thread, read the full thread.
    - If the thread references a Linear issue, fetch it via `linear-kilic__get_issue`.
    - If the thread contains user comments with feedback or refinements:
      - Use `linear-kilic__list_comments` to see existing Linear comments.
@@ -97,16 +97,16 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - Provide a general summary of messages grouped by topic or thread.
    - Ask the user how they'd like to handle the content.
 
-5. **Respond back to Slack.** Present drafted replies per `output-diff` before sending.
+5. **Respond back to Slack.** Present drafted replies and summaries per `output-diff` before sending.
 
    The response method depends on whether you processed a single message or a batch:
 
    **Single message** — reply in thread:
-   - Use `slack-kilic__slack_reply_to_thread` on the message you processed.
+   - Reply in the thread of the message you processed.
    - Add `:dark_sunglasses:` reaction to that message.
 
    **Batch of messages** — post channel-level summary:
-   - Use `slack-kilic__slack_post_message` to post a summary to the channel.
+   - Post a summary to the channel.
    - Add `:dark_sunglasses:` reaction to **each message that was included in the summary**.
    - Group findings by channel type logic above.
    - Lead with actionable items (failures, pending deployments, unresolved feedback).

@@ -32,9 +32,9 @@ While this mode is active, the agent does **not** auto-invoke any of:
 
 Composite phrases route the same way:
 
-- "implement X and commit" → implement X, **drop the commit step**.
-- "fix this and open a PR" → fix it, **drop the PR step**.
-- "make a branch and add Y" → add Y on the current branch, **drop the branch step**.
+- "implement X and commit": implement X, **drop the commit step**.
+- "fix this and open a PR": fix it, **drop the PR step**.
+- "make a branch and add Y": add Y on the current branch, **drop the branch step**.
 
 ## Explicit User Requests Win
 
@@ -58,7 +58,7 @@ Then continue with whatever the user asked next. Do not require additional confi
 
 ## Exit
 
-User says any of: "exit manual", "stop manual", "manual off", "normal mode", "back to normal" → mode off, default behavior resumes.
+User says any of: "exit manual", "stop manual", "manual off", "normal mode", "back to normal": mode off, default behavior resumes.
 
 The mode otherwise persists until the session ends.
 

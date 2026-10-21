@@ -4,6 +4,7 @@ description: linear-next-task Weigh Linear projects and issues and recommend wha
 argumentHint: '[optional: project or URL - omit to weigh everything]'
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issue-states.md
   - ../references/linear/linear-issue-philosophy.md
@@ -115,16 +116,15 @@ Ask the user:
 - Based on the answer, recommend either a single issue or a set of issues that fit the session.
 - For multi-issue sessions, respect dependency order — if issue A blocks issue B, both can be in the session but A comes first.
 
-### Step 7: Confirm and Move Issues
+### Step 7: Move Issues
 
 Once the user agrees on the selection:
 
-1. **Confirm the status transitions** — present exactly what will change:
+1. **Apply the status transitions** using parallel tool calls where possible:
    - `backlog` to `todo` for issues planned for the session.
    - `backlog` or `todo` to `in progress` for the immediate task.
-2. **Wait for explicit approval** before making any changes.
-3. **Apply status changes** using parallel tool calls where possible.
-4. **Execution handoff** — if the user wants the selected work picked up immediately, Load `linear-pickup` for the selected issues, project, or slice; `agent-pickup` only when the user wants agents to execute it.
+2. **Report** each transition with the prior state.
+3. **Execution handoff** — if the user wants the selected work picked up immediately, Load `linear-pickup` for the selected issues, project, or slice; `agent-pickup` only when the user wants agents to execute it.
 
 ## Recommendation Format
 
@@ -152,7 +152,7 @@ Once the user agrees on the selection:
 
 ## Key Rules
 
-- **Never move issues without user approval.** Draft and present the transitions before writing; apply only after approval.
+- **Move issues only for the selection the user agreed**, and report each transition.
 - **Prerequisites are hard constraints** — blocker resolution per `linear-issue-states`.
 - **Blockers first** — issues that unblock other work take priority over isolated tasks.
 - **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section.

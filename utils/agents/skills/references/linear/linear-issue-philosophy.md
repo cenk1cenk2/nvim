@@ -6,7 +6,7 @@ Who wins when the Linear record and the live conversation disagree. Applies to i
 
 > **THE RECORD IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.**
 
-Descriptions, comments, and status updates carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation hold the most recent version of the intent. When the record's `updatedAt` is older than the current conversation context, **treat the conversation as the source of truth** — always confirming with the user before applying changes.
+Descriptions, comments, and status updates carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation hold the most recent version of the intent. When the record's `updatedAt` is older than the current conversation context, **treat the conversation as the source of truth** — and report what changed. Project and initiative prose waits on `linear-absolute-approval`.
 
 Read-only skills stop at surfacing the gap: flag the stale record with its timestamps and ask, rather than presenting it as definitive. Write skills carry the conversation back into Linear.
 

@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[MR number or URL]'
 references:
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/scm/scm-fix-threads.md
   - ../references/scm/scm-review-thread-kind.md
   - ../references/scm/scm-gitlab.md
@@ -27,10 +28,10 @@ One row per open thread, so it is checkable whether every reviewer got an answer
 | Thread | Asked for | Outcome | Replied | Resolved |
 |---|---|---|---|---|
 | `auth.ts:42` | use the shared validator | applied | yes | yes |
-| `api.ts:88` | two possible approaches | asked the user | yes | no - awaiting choice |
+| `api.ts:88` | two possible approaches | asked the user | no - deferred | no |
 | `old.ts:12` | concern about removed code | skipped, stale | yes | yes |
 
-**Outcome** is one of: applied, asked the user, skipped as stale, or could not — never blank. **Replied** and **Resolved** are the only things the reviewer sees on the other end, so an unreplied row is unfinished work no matter what changed in the code.
+**Outcome** is one of: applied, asked the user, skipped as stale, or could not — never blank. **Replied** and **Resolved** are the only things the reviewer sees on the other end, so an unreplied row that is not deferred is unfinished work no matter what changed in the code.
 
 ## Platform specifics
 

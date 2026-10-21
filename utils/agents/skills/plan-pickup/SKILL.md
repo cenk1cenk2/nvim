@@ -6,6 +6,7 @@ argumentHint: '[plan file path or name]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/harness/provider-paths.md
 ---
 
@@ -36,13 +37,12 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
 
 ### Complete Plan (no pending research)
 
-5. **Present the plan summary** to the user:
+5. **Report the plan summary** to the user:
    - Problem statement (1-2 sentences).
    - Goal and acceptance criteria.
    - Implementation steps overview.
    - Any originating context or cross-repo dependencies.
-6. **Ask the user to confirm** before proceeding with implementation.
-7. After approval, implement step by step.
+6. Implement step by step.
 
 ### Incomplete Plan (pending research or delegation mode)
 
@@ -53,12 +53,11 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
    - Fill in any gaps in the plan.
    - Update the plan file status from `draft` to `ready`.
 7. **Write the revised plan** back to the plan file.
-8. **Present the revised plan** to the user:
+8. **Report the revised plan** to the user:
    - What research was completed and key findings.
    - Updated implementation steps.
    - Any issues, risks, or deviations from the original plan.
-9. **Ask the user to confirm** before proceeding with implementation.
-10. After approval, implement step by step.
+9. Implement step by step.
 
 ## During Implementation
 

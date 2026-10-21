@@ -6,8 +6,13 @@ argumentHint: '[Slack thread permalink, session key, or what the session was abo
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
+  - ../references/agent-owned.md
   - ../references/identifier-legibility.md
+  - ../references/present-first.md
+  - ../references/output-diff.md
 ---
+
+Posture: `present-first`.
 
 ## Context
 

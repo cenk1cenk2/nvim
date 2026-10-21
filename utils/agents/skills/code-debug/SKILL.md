@@ -61,13 +61,15 @@ Before proposing a fix, state a clear hypothesis:
 
 ### Step 6: Verify the Hypothesis
 
-If possible, verify before proposing the fix:
+If possible, verify before applying the fix:
 
 - **Reproduce mentally** — walk through the code path with the failing input and confirm the hypothesis explains the actual behavior.
 - **Check related code** — does the same pattern exist elsewhere? Is it broken there too, or is there a clue about the intended usage?
-- **Run a targeted test** — if the user agrees, run a minimal reproduction with `Bash`. Always describe the command and ask before running. To read output the user produced themselves, capture their scratch terminal instead, per `tmux`.
+- **Run a targeted test** — run a minimal reproduction and say what it ran. To read output the user produced themselves, capture their scratch terminal instead, per `tmux`.
 
-### Step 7: Present Findings
+### Step 7: Fix and Report
+
+Apply the fix, run the verification, then report:
 
 ```
 ## Debug Report: <brief description>
@@ -81,23 +83,20 @@ If possible, verify before proposing the fix:
 ### Evidence
 <The trace — what you followed, what you found, how it leads to the incorrect behavior.>
 
-### Proposed Fix
-<Specific code changes to resolve the issue.>
+### Fix
+<The code changes made, with file:line references.>
 
 ### Verification
-<How to confirm the fix works — test to run, behavior to observe.>
+<What was run or observed to confirm the fix, and its result.>
 ```
-
-Wait for user approval before applying any fix.
 
 ## Key Rules
 
 - **Understand before investigating** — always clarify expected vs. actual behavior first.
 - **Trace, don't guess** — follow the code path using LSP tools. Don't hypothesize without reading the code.
 - **One hypothesis at a time** — verify the most likely cause before exploring alternatives.
-- **Consult the user before running commands** — describe the command and its purpose, wait for approval.
 - **Consult the user before blaming externals** — don't attribute bugs to dependencies or upstream without evidence and user agreement.
-- **Present findings first** — present findings and proposed fix, let the user decide when to proceed.
+- **Fix only the root cause** — when the cause is external, or the fix is a design choice, report the findings instead of changing code.
 
 ## Related Skills
 

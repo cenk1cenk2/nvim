@@ -39,7 +39,7 @@ Present a structured summary to the user:
 ```
 ### <PR #N | MR !N>: <title>
 
-**Author:** <author> | **State:** <state> | **Branch:** <source> → <target>
+**Author:** <author> | **State:** <state> | **Branch:** <source> into <target>
 **Created:** <date> | **Updated:** <date>
 **Labels:** <labels> | **Reviewers:** <reviewers>
 

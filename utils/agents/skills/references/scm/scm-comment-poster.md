@@ -7,9 +7,9 @@ This skill is a **modifier** — it intercepts a companion skill's final output 
 ## Process
 
 1. **Identify the companion skill.**
-   - Exactly one other skill active/invoked → use it.
-   - Multiple skills invoked → ask the user which skill's output to post.
-   - No companion skill identifiable → ask the user what they want commented.
+   - Exactly one other skill active/invoked: use it.
+   - Multiple skills invoked: ask the user which skill's output to post.
+   - No companion skill identifiable: ask the user what they want commented.
 2. **Identify the target PR/MR.**
    - If the user provides a PR/MR URL or number, use it directly.
    - Otherwise detect from the current branch via the platform reference's open-PR/MR lookup (see the skill's "Platform specifics").
@@ -25,6 +25,6 @@ This skill is a **modifier** — it intercepts a companion skill's final output 
 
 ## Key Principles
 
-- **Always present before posting.** Never comment without user approval.
+- **Always present before posting**, per `present-first`, which both poster skills declare. Invoking the skill approves the run — gathering, drafting, finding the target — but not text drafted for other people to read; the comment itself waits for the user's approval of the draft.
 - **Never execute the companion skill's write action.** The output becomes a comment, not its original target.
-- **Ask when ambiguous.** Multiple skills or unclear target → ask before doing anything.
+- **Ask when ambiguous.** Multiple skills or an unclear target: ask before doing anything.
