@@ -18,6 +18,7 @@ references:
   - ../references/delivery-decisions.md
   - ../references/identifier-legibility.md
   - ../references/open-artifact.md
+  - ../references/agent-owned.md
 argumentHint: '[optional: PR number or URL]'
 ---
 
@@ -34,6 +35,7 @@ Draft the description and title per `scm-create-description`, with GitHub MCP to
 
 ## Platform specifics
 
+- **An owned PR/MR is yours to manage** per `agent-owned` — edit, retarget, mark draft or ready, or close it when superseded, without asking.
 - **Find the PR** (when not given): get the current branch via `git status`, extract owner/repo from the remote, then `github__list_pull_requests` with a `head` filter (format `owner:branch`) and `state: open`. See "Branch reuse" in `scm-create-description`. If no open PR exists, ask the user before creating one via `github__create_pull_request` (fall back to `gh pr create` if MCP creation is unavailable).
 - **Cascading PRs — target the prerequisite branch, not trunk.** Load `command-gh` before opening a stack; it goes through `gh stack` when the extension is present, with the base-branch route below as the fallback. When the branch was cut from another branch whose PR is still open (per `git-branch`), set `base` to that branch. The PR then shows only its own diff instead of re-reviewing the prerequisite. **GitHub retargets on head-branch deletion, not on merge:** *"If you delete a head branch after its pull request has been merged, GitHub checks for any open pull requests in the same repository that specify the deleted branch as their base branch"* and updates them to the merged PR's base. So the prerequisite PR must delete its branch on merge or the stack never falls back to trunk — say so on the prerequisite PR when it is yours. State the base and the prerequisite in your report; a stacked PR whose base looks like an accident gets merged into the wrong place.
 - **Check every linked Linear issue's `statusType` first**, per `scm-linear-follow-up`. A follow-up to a Done or Canceled issue gets no ID in the title or the branch; mention it as `Related to <ID>`, or `Ignore <ID>` when no link is wanted.

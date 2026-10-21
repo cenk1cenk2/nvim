@@ -7,7 +7,7 @@ references:
   - ../references/reconcile-state.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-worktrees.md
-  - ../references/scm/scm-own-branch.md
+  - ../references/agent-owned.md
   - ../references/project-tooling.md
   - ../references/agent/agent-conventions.md
   - ../references/agent/agent-completion.md

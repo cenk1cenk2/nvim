@@ -8,6 +8,7 @@ references:
   - ../references/scm/scm-ci-failure-kind.md
   - ../references/scm/scm-github.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 argumentHint: '[optional: workflow or job name]'
 ---
 
@@ -18,6 +19,8 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 Run the CI-diagnosis workflow per `scm-ci-fix`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-detect` and `scm-github`.
 
 ## Platform specifics
+
+- **CI on an owned branch is yours to manage** per `agent-owned` — retry a failed job, cancel pipelines a newer push made obsolete, and stop its review-app environment without asking.
 
 Load `command-gh` before the first `gh` call.
 

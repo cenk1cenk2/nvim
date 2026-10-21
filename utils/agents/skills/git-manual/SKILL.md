@@ -3,7 +3,7 @@ name: git-manual
 description: git-manual Session mode that skips version-control ceremony - implement inline on the current branch and leave branching, committing and pushing to the user. Overrides earlier instructions to branch or commit. Use on "manual mode", "no branch", "I'll handle git". Not for actually creating a branch, committing, or drafting a PR/MR.
 disableModelInvocation: true
 references:
-  - ../references/scm/scm-own-branch.md
+  - ../references/agent-owned.md
 ---
 
 ## Git Manual
@@ -65,5 +65,5 @@ The mode otherwise persists until the session ends.
 ## Boundaries
 
 - This mode does not delete branches, drop commits, reset history, or undo previous actions. It only changes what the agent does **going forward**.
-- It does not silence safety prompts. Destructive operations (force-push, branch deletion, `git reset --hard`, etc.) still require confirmation, outside an agent's own branch per `scm-own-branch`.
+- It does not silence safety prompts. Destructive operations (force-push, branch deletion, `git reset --hard`, etc.) still require confirmation, outside an agent's own branch per `agent-owned`.
 - It does not override the rule against `Co-authored-by:` trailers, AI-attribution lines, or any other hard rule from `git-commit`'s commit-style reference — those apply if the user explicitly asks for a commit while the mode is active.

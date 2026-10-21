@@ -10,6 +10,7 @@ references:
   - ../references/scm/scm-github.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -21,5 +22,6 @@ Run the draft-and-post workflow per `scm-comment-poster`, with GitHub MCP tools,
 
 ## Platform specifics
 
+- **An owned comment is yours to fix** per `agent-owned` — edit it, or delete it while it has no replies, without asking.
 - **Find the PR** (when not given): `git status` for the branch, extract owner/repo from the remote, then `github__list_pull_requests` with `head: "owner:branch"` and `state: open`.
 - **Post the comment:** `github__add_issue_comment` with `owner`, `repo`, `issue_number` (the PR number), and `body`.

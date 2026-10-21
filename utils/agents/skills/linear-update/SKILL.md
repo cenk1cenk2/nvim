@@ -12,6 +12,7 @@ references:
   - ../references/linear/linear-issue-philosophy.md
   - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -87,7 +88,8 @@ Only include deviations that matter for future readers understanding *why* the r
 
 ## Key Rules
 
-- **Never modify without user approval** — and at project and initiative scope, explicit per-change approval per `linear-absolute-approval`.
+- **An owned issue is yours to fix** per `agent-owned` — its fields, its links, or cancelling a duplicate you made, without asking.
+- **Never modify without user approval** outside an owned issue — and at project and initiative scope, explicit per-change approval per `linear-absolute-approval`.
 - **Preserve content that hasn't changed** — only update what deviated.
 - **The Thoughts section documents *why*, not *what*** — the description itself reflects the *what*.
 - **Prefer comments for small issue deviations** — in autonomous agent workflows, rewrite an issue description only when future agents need it to stay aligned, or when it is materially out of whack.

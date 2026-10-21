@@ -9,6 +9,7 @@ references:
   - ../references/scm/scm-gitlab.md
   - ../references/kilic/kilic-ci-pipelines.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 argumentHint: '[optional: pipeline or job name]'
 ---
 
@@ -19,6 +20,8 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 Diagnosis workflow per `scm-ci-fix`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect` and `scm-gitlab`.
 
 ## Platform specifics
+
+- **CI on an owned branch is yours to manage** per `agent-owned` — retry a failed job, cancel pipelines a newer push made obsolete, and stop its review-app environment without asking.
 
 Load `command-glab` before the first `glab` call.
 

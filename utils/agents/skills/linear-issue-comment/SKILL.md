@@ -8,6 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -40,6 +41,7 @@ The current conversation context holds the most recent version of the issue's in
 
 ## Comment Style
 
+- **An owned comment is yours to fix** per `agent-owned` — edit it, or delete it while it has no replies, without asking.
 - **Lead with what changed** — "Switched from X to Y because Z."
 - **No filler** — no greetings, no restating the issue, no "just wanted to note".
 - **Facts and decisions only.**

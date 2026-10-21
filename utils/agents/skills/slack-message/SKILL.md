@@ -8,6 +8,7 @@ references:
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
+  - ../references/agent-owned.md
 ---
 
 ## Slack Message Processor
@@ -60,6 +61,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 ## Key Principles
 
+- **An owned comment is yours to fix** per `agent-owned` — edit it, or delete it while it has no replies, without asking.
 - **Read the full thread.** A single message without thread context is often insufficient. Always fetch the complete thread.
 - **Compose, don't duplicate.** When another skill handles the action better, invoke it with the gathered context rather than reimplementing its workflow.
 - Follow the response conventions — thread vs channel, `:dark_sunglasses:`, approval rules — per `slack`.

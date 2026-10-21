@@ -5,7 +5,7 @@ argumentHint: '[optional: remote, or a safety flag such as ''--force-with-lease'
 references:
   - ../references/scm/scm-detect.md
   - ../references/scm/release-convention.md
-  - ../references/scm/scm-own-branch.md
+  - ../references/agent-owned.md
 ---
 
 ## Git Push
@@ -27,7 +27,7 @@ references:
    - **No upstream (new branch):** plan a first push with `-u <remote> <branch>`. No extra confirmation needed.
    - **Ahead only:** plan a fast-forward push. No extra confirmation needed.
    - **Behind only:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first (suggest `code-pull`). Do NOT auto-pull.
-   - **Diverged on an own branch** (per `scm-own-branch`) — your own rewritten history: plan `--force-with-lease`. No extra confirmation needed.
+   - **Diverged on an own branch** (per `agent-owned`) — your own rewritten history: plan `--force-with-lease`. No extra confirmation needed.
    - **Diverged otherwise:** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`; lead with rebase/merge, since the remote carries commits you did not author.
    - **Up to date:** inform the user there is nothing to push and stop.
 
@@ -38,7 +38,7 @@ references:
 
 5. **Safety checks (only these gate the push).**
    - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
-   - **`--force-with-lease` on an own branch runs without asking**, per `scm-own-branch`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
+   - **`--force-with-lease` on an own branch runs without asking**, per `agent-owned`; report the old and new head. On any other branch it runs only on the user's explicit choice, confirmed once with what gets overwritten. Never on a protected branch.
    - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push.
 
 6. **Report and execute in a single step.**
@@ -69,7 +69,7 @@ When invoked right after `git-commit` ("commit and push"), start at step 1 with 
 
 - **Invoking the skill is the approval.** Do NOT ask for a separate "are you sure?" on the happy path — just report and push.
 - **Ask only on real blockers.** Behind, diverged from someone else's work, a force push off an own branch, protected-branch pushes. Everything else is automatic.
-- **Never plain `--force`.** `--force-with-lease` is free on an own branch per `scm-own-branch`, since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
+- **Never plain `--force`.** `--force-with-lease` is free on an own branch per `agent-owned`, since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
 - **Always list pending commits** in the report so the user sees what landed on remote.
 - **Never auto-pull, auto-rebase, or auto-merge a branch that is not own.** On a foreign divergence, ask.
 - **Push only — no PR creation.** Suggest a PR skill after success; never auto-invoke.

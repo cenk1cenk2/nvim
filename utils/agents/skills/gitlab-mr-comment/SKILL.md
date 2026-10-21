@@ -10,6 +10,7 @@ references:
   - ../references/scm/scm-gitlab.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
+  - ../references/agent-owned.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -21,5 +22,6 @@ Draft-and-post workflow per `scm-comment-poster`. Present the comment per `outpu
 
 ## Platform specifics
 
+- **An owned comment is yours to fix** per `agent-owned` — edit it, or delete it while it has no replies, without asking.
 - **Find the MR** (when not given): `git status` for the branch, extract the project path from the remote, then `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`.
 - **Post the comment:** `gitlab__create_merge_request_note` with the project path, MR IID, and comment body.

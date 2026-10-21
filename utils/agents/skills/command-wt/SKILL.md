@@ -3,7 +3,7 @@ name: command-wt
 description: command-wt Worktrunk (wt) is the default for creating, opening, listing, removing and pruning git worktrees, with raw git worktree as the fallback. Load before running `wt` or `git worktree`, or before creating or cleaning up a worktree for any task. Not for a plain branch without a worktree, or for committing, pushing or merging.
 references:
   - ../references/agent/agent-worktrees.md
-  - ../references/scm/scm-own-branch.md
+  - ../references/agent-owned.md
 ---
 
 ## Route
@@ -29,7 +29,7 @@ references:
 ## Gates
 
 - **Reads never gate** — `list`, `config show`, a prune `--dry-run`.
-- **Own and merged runs free** per `scm-own-branch` — removing an own tree, `-D` on an own branch whose PR/MR merged, and a prune whose candidates are all own.
+- **Own and merged runs free** per `agent-owned` — removing an own tree, `-D` on an own branch whose PR/MR merged, and a prune whose candidates are all own.
 - **Any other prune presents its dry-run first** and runs on approval — it removes trees and deletes branches in bulk.
 - **Otherwise destructive flags need their own approval naming the target:** `-D` (unmerged branch), `-f` (dirty tree), `--clobber` (stale path at the target), and a lowered `--min-age`.
 - **Project hooks run repository-supplied shell.** On an approval prompt or an `(approval required)` skip, show the commands and let the captain approve; `--yes`, `wt config approvals add` and `--no-hooks` only on their word.

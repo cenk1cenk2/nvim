@@ -18,7 +18,7 @@ Irreversible: force pushes, discarding uncommitted work, deleting or overwriting
 - **per case** — confirmation naming the exact target and what is lost, or
 - **per scope** — a standing exception the user scoped themselves ("force pushing is fine on this repo"), valid for that scope only.
 
-Rewrites and cleanup on an agent's own branch are a standing per-scope exception, per `scm-own-branch`.
+Rewrites and cleanup on an agent's own branch are a standing per-scope exception, per `agent-owned`.
 
 Cannot tell if it's reversible? Treat it as not.
 
