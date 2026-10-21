@@ -137,7 +137,7 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 1. Read the Velero rules and note which alerts derive from the Velero server's own metrics.
 2. Those are blinded by the server being down, so only `VeleroServerDown` should page.
 3. Confirm the shared labels by reading the expressions — all Velero alerts carry `namespace=velero`, so `equal: [cluster, namespace]`.
-4. Add the inhibit rule to the Alertmanager config in the `monitoring` repo.
+4. Add the inhibit rule to the Alertmanager config in the `monitoring-backbone` repo.
 5. Check nothing derived from a different source got swept in.
 
 **Result:** One page for the root cause, with the derived alerts suppressed only while the source is down.

@@ -15,6 +15,8 @@ references:
   - ../references/agent/agent-companion-offload.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-roster.md
+  - ../references/present-first.md
+  - ../references/agent-owned.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -50,7 +52,7 @@ A steer from the user is a rule change, not a one-off. Apply it to the PR/MR it 
 
 ## Boundaries
 
-- Destructive actions, credentials, and external writes keep their own gates, per the central guidelines. A blessing for a stretch never covers them.
+- The explicitly invoked stretch covers opening and updating the run's own PRs/MRs: the invocation is approval per `present-first`, and those PRs/MRs are owned per `agent-owned`. Destructive actions, credentials, merging, and every other external write keep their own gates, per the central guidelines. A blessing for a stretch never covers them.
 - Never cross a checkpoint without the user's word.
 - Never merge. Opening and updating PRs/MRs is the bohrhammer's job; merging is the user's.
 

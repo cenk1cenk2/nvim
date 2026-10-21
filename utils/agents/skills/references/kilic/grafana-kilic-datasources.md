@@ -22,7 +22,7 @@ The federated `mimir` and `loki` query all six Kubernetes tenants at once; a per
 
 The consequences that decide how every task is shaped:
 
-- **A fleet question is one query on `mimir` or `loki`**, broken out `by (cluster)` — not seven. It still costs the sum over every tenant, roughly 3–3.7x a single cluster, so say so before running it and scope to the clusters the question names.
+- **A fleet question is one query on `mimir` or `loki`**, broken out `by (cluster)` — not six. It still costs the sum over every tenant, roughly 3–3.7x a single cluster, so say so before running it and scope to the clusters the question names.
 - **On a federated uid the `cluster` matcher is what scopes the query.** Leave it out and you read every tenant. Only on a per-cluster uid is it redundant, because the uid already decided it.
 - **One cluster on `mimir` costs about the same as its per-cluster uid.** Federation visits every tenant, but the others return nothing after an index lookup; only latency grows slightly.
 - **Federated `mimir` puts `__tenant_id__` on every raw series**, and aggregation drops it. A binary operator between a raw series and an aggregate with no `on (...)` matches nothing, and a bare `or` returns both sides — totals come out exactly doubled. Match with `on (...)` and include `cluster` in it; aggregate `__tenant_id__` away with `by (...)`.
@@ -41,7 +41,7 @@ Loki retention is **360h** (15 days), and `max_query_lookback` matches it, so a 
 
 ## Resolving a target to a uid
 
-1. **The user names a cluster** — query `mimir` or `loki` with `cluster="<name>"`, or its per-cluster uid. The seven names above are the whole set; `core` goes to `mimir-core` or `loki-core`.
+1. **The user names a cluster** — query `mimir` or `loki` with `cluster="<name>"`, or its per-cluster uid. The six cluster names above are the whole set of clusters; `core` goes to `mimir-core` or `loki-core`.
 2. **The user names a workload, namespace, or repository** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher on the federated uid.
 3. **The user names nothing** — ask. Do not default to one cluster silently, and do not run an unscoped fleet query without saying that is what you are doing.
 

@@ -51,7 +51,7 @@ For Slack output specifically: label every link with its own URL minus the proto
 Structure:
 
 ```
-<core message — the user's question or finding, rewritten concisely in Slack mrkdwn>
+<core message — the user's question or finding, rewritten concisely in standard markdown>
 
 <inline links to relevant entities, woven naturally into the text>
 ```
@@ -67,8 +67,8 @@ If companion skill output is present, include it as a separate section:
 
 Rules:
 - **Concise.** Say enough so others understand and can reach the resources. No more.
-- **Slack mrkdwn** per `slack`. Use `*bold*`, `_italic_`, `\`code\``, and URL-labelled links so nothing previews.
-- **No markdown.** No `**bold**`, no `[text](url)`, no `###` headings. Use Slack conventions.
+- **Standard markdown** per `slack` — the connector converts it. Use `**bold**`, `_italic_`, `\`code\``, and URL-labelled `[label](url)` links so nothing previews.
+- **No mrkdwn.** No `*bold*`, no `<url|label>`; the connector renders them literally. `##` headings only for the companion and appendix sections.
 - **Stick to what the user said.** Enrich with links and details, but do not add opinions, analysis, or information the user did not ask to share.
 
 ### Step 4: Add Appendix (if needed)
@@ -107,5 +107,5 @@ When composed, the companion skill's output is included under its own `##` secti
 - **Always draft first.** Never post without presenting to the user and getting approval.
 - **Stay within scope.** Only compile what the user asked about. Do not add unrelated information.
 - **Enrich, don't editorialize.** Add links, references, and details — not opinions or analysis.
-- **Use Slack mrkdwn.** Every link labelled with its own URL minus the protocol — no previews, no exceptions.
+- **Use standard markdown.** Every link labelled with its own URL minus the protocol — no previews, no exceptions.
 - **Concise with reach.** Short enough to read quickly, detailed enough to act on.

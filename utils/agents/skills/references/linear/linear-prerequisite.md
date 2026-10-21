@@ -15,7 +15,7 @@ If no workspace context exists in the current session, auto-invoke the appropria
 
 ## Transport
 
-The workspace's standalone server (`linear-kilic`, `linear-laravel`) and the harness Linear connector are the same Linear server behind two names. Use whichever is present; neither outranks the other, and tool names map one to one (`linear-kilic__get_issue` is the connector's `get_issue`). The one check before the first write: the surface you picked is authorized against this session's workspace. Confirm with `get_user "me"` or the team keys (`K-` is kilic-dev, `CLOUD-` is Laravel). A surface bound to the other workspace is not an option for this one.
+The workspace's standalone server (`linear-kilic`, `linear-laravel`) and the harness Linear connector are the same Linear server behind two names. Use whichever is present; neither outranks the other, and tool names map one to one (`linear-kilic__get_issue` is the connector's `get_issue`). The one check before the first write: the surface you picked is authorized against this session's workspace. Confirm with `get_user "me"` or the team keys (`K-` is kilic-dev; `INFFND-`, the Laravel default team key, and `CLOUD-` are Laravel). A surface bound to the other workspace is not an option for this one.
 
 ## Session Initialization
 
@@ -34,6 +34,7 @@ The workspace skill's **first action**, against that workspace's own server:
 | Signal | Workspace | Skill |
 |--------|-----------|-------|
 | Issue ID prefix `K-xxx` | kilic-dev | `linear-kilic` |
+| Issue ID prefix `INFFND-xxx` | Laravel | `linear-laravel` |
 | Issue ID prefix `CLOUD-xxx` | Laravel | `linear-laravel` |
 | Linear URL containing `kilic-dev` | kilic-dev | `linear-kilic` |
 | Linear URL containing `laravel` | Laravel | `linear-laravel` |

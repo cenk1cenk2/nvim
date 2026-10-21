@@ -75,7 +75,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - If no issues found, say so — don't invent problems.
 
 6. **Annotate on PR/MR (only if user chose this mode):**
-   - Use the appropriate MCP review tools to post comments on the PR/MR (e.g., `github__pull_request_review_write`, `gitlab__mr_discussions`).
+   - Use the appropriate MCP review tools to post comments on the PR/MR (e.g., `github__pull_request_review_write`, `gitlab__create_merge_request_thread`).
    - Attach comments to specific lines/files in the diff.
    - Only annotate after the user has reviewed and approved the findings in chat first.
 

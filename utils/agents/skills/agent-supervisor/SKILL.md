@@ -130,7 +130,7 @@ Agents per `agent-roster` and watchers per `agent-watchers`, both reported every
 5. **Arm a watcher for every open condition — supervision is event-driven.** See below.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
-8. **Report terse each turn, in the `output-status` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / blocked / at risk / decisions needed. Synthesis, not relay. When the work is a flow — ordered steps, a merge order, handoffs between you and the user — the state and the asks are one flow table per `output-table`.
+8. **Report terse each turn; give the full `output-status` report only at its own triggers** — a converged milestone, or the user asking. That report ledes with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / blocked / at risk / decisions needed. Synthesis, not relay. When the work is a flow — ordered steps, a merge order, handoffs between you and the user — the state and the asks are one flow table per `output-table`.
 9. **Close the loop.** Reconcile final states, record deviations and findings where future agents read them, complete the project when all its issues are genuinely done, and offer a status update when progress warrants one.
 
 ## Watch, Don't Wonder
@@ -185,9 +185,9 @@ Supervisor-specific rule on top of the reference's discipline: **on wake, reconc
 - Supervising is reading, asking, and routing — the moment you build, you are no longer supervising.
 - Implementation goes through `agent-coordinator`, always, with scope, holds, ids, and an evidence contract.
 - Delegate anything that returns more than a screenful; keep the cheap status checks and every decision.
-- Tracker corrections are monotonic; present them before they land unless preapproved. Status updates are offered, never auto-posted — no blessing clears that one.
+- Tracker corrections are monotonic; present them before they land unless preapproved. Status updates are offered, never auto-posted — no blessing clears that one, outside the exception in `linear-absolute-approval`.
 - Route the record by shape: comments for decisions and findings, documents for plans and investigations, descriptions only for what is now wrong. Never invent a description section.
 - Watch, don't wonder: every open condition gets a watcher the moment it opens — an MR you asked for is a merge you must learn about, not a question for the user next turn.
 - A watcher wake is a supervision cycle, not a notification: re-verify authoritatively, reconcile the tracker, report, re-arm for the next condition.
-- Report terse each turn in the `output-status` shape: unheaded lede for what changed, tables for current state, bullets for what happened, and an explicit list of what you need from the user.
+- Report terse each turn; the full `output-status` report (unheaded lede for what changed, tables for current state, bullets for what happened, an explicit list of what you need from the user) comes only at its own triggers — a converged milestone, or the user asking.
 - Say which posture is driving; never blur supervisor and coordinator.

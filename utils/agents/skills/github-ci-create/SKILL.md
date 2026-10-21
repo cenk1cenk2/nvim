@@ -38,4 +38,4 @@ argumentHint: '[optional: what the workflow should do]'
 
 ## Related Skills
 
-- **`github-ci-fix`** — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.
+- **`github-ci-fix`** — for diagnosing failures in existing GitHub Actions workflows. Suggest it when the user reports CI failures instead of wanting to create/update workflows.

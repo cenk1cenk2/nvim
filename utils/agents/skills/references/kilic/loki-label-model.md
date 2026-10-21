@@ -83,9 +83,9 @@ Matchers are anchored and case-sensitive, so **any value not already lowercase n
 
 Pass the Prometheus value literally and add the flag. Do not normalise it.
 
-## A `cluster` matcher inside a selector is redundant
+## A `cluster` matcher is redundant on a per-cluster uid
 
-Each Loki datasource holds exactly one cluster, so the uid already decided it. Keep the matcher only when copying a dashboard query that templates on it.
+Each `loki-<cluster>` datasource holds exactly one cluster, so the uid already decided it; there, keep the matcher only when copying a dashboard query that templates on it. On the aggregated `loki` uid the `cluster` matcher is what scopes the query, so use it whenever the question names clusters.
 
 ## A label in the listing is not proof anything writes it
 

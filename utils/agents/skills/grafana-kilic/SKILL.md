@@ -17,7 +17,7 @@ Datasource inventory, the federated and per-cluster uids, endpoint flakiness, an
 
 Every query tool needs a datasource uid, and picking the wrong one returns a confidently empty answer rather than an error.
 
-1. **A cluster is named** — use it. The seven are `core`, `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`.
+1. **A cluster is named** — use it. The six are `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`. `core` is a datasource tenant (`mimir-core`, `loki-core`), not a cluster; it, `rancher` and `gitlab` are VMs managed in `ansible-playbooks`.
 2. **A workload, namespace, or repository is named** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher.
 3. **Nothing is named** — ask. Do not silently pick one cluster. A fleet question is one query on the federated uid, broken out `by (cluster)`, but it costs the sum over every tenant, so say so before running it.
 
@@ -43,7 +43,7 @@ Use the server's read tools freely to verify. For anything that changes what Gra
 ## Key Principles
 
 1. **Resolve the uid before the query.** A wrong datasource answers confidently and wrongly.
-2. **Fleet questions go to the federated `mimir` and `loki`** — one query broken out `by (cluster)`, not seven. It still costs every tenant, so say so before running it; core is only in `mimir-core` and `loki-core`.
+2. **Fleet questions go to the federated `mimir` and `loki`** — one query broken out `by (cluster)`, not six. It still costs every tenant, so say so before running it; core is only in `mimir-core` and `loki-core`.
 3. **Read here, write in the repository.**
 4. **Route to the owning skill** rather than improvising a query, a panel, or a rule.
 5. **Retry before concluding**, and distinguish empty from broken.

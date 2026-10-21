@@ -43,9 +43,9 @@ Cadence 30 s; cap sized to how long the human plausibly takes — hours, not min
 after a meeting or overnight. On wake, **the merge is a proxy**: the thing you actually care about is
 usually what the merge triggers, so re-verify and arm the follow-on rather than declaring done.
 
-**One watcher per PR.** When several are in flight and any one merging is independently actionable, a
-single loop that exits naming *whichever merged first* is not a bundle — it is a first-event detector.
-Handle that one, then re-arm for the remainder.
+**One watcher per PR.** When several are in flight, arm one watcher for each; never share one loop
+across them, not even a first-event loop that exits naming whichever merged first. Each wake handles its
+own PR and re-arms only that PR's follow-on.
 
 ### CI and pipeline runs
 

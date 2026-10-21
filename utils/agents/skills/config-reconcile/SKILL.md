@@ -61,7 +61,7 @@ Posture: `present-first`. Agents apply only edits that preserve meaning; every c
 
 - **One owner per rule.** A rule lives in one skill or reference; every other file names it. The central guidance keeps only what must hold when no skill has loaded.
 - **Live source beats the catalog.** A tool list, a script's flags, or a config file outranks any skill that describes them. Flag what cannot be checked rather than guessing.
-- **Meaning moves only on approval.** Wiring, dedup to a name, history removal and tightening are applied directly. Rules, gates, tiers, deletions and merges are proposed.
+- **Meaning moves only on approval.** Wiring, dedup to a name, history removal and tightening are applied directly: invoking this skill is the approval for those meaning-preserving edits, per `present-first`. Rules, gates, tiers, deletions and merges are proposed.
 - **Current state only**, per `current-state-only`, on every edit.
 
 ## Example

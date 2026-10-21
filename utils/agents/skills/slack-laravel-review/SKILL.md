@@ -57,18 +57,18 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
      - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 2, finished._`).
      - Follow with a paragraph explaining the core intended change and its effect (e.g., what the tunnel cutover does, what service replaces what).
      - Then a paragraph covering module-bump or incidental side effects — new resources added, secrets recreated, addon version bumps, AMI refreshes. Name specific resources, versions, and values so the reviewer understands the blast radius without opening the PR.
-     - Use Slack mrkdwn: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
+     - Use standard markdown: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
    - **Title-only (very rare, on request).** Only when the user explicitly asks for just the link (e.g. "title only", "no summary", or a bulk wave rollout where they want minimal noise), post the bare title line `[{pr_url_no_protocol}]({pr_url}) :review:` and skip the summary. This is the exception, not the default.
    - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-mr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
 5. **Format the message.**
-   - Use Slack mrkdwn syntax (NOT standard markdown) per `slack`.
-   - **Review line (always, exact):** `[{pr_url_no_protocol}]({pr_url}) :review:` — the link first, then the `:review:` emoji. Label it with the URL minus the protocol so Slack generates no preview, per `slack`.
+   - Use standard markdown (NOT Slack mrkdwn) per `slack`; the connector converts it.
+   - **Review line (always, exact):** `[{pr_url_no_protocol}]({pr_url}) :review:` — the link first, then the `:review:` emoji, a literal a bot keys on (data, not decoration), so it stays in the text. Label it with the URL minus the protocol so Slack generates no preview, per `slack`.
    - **Default — title + description.** Leave ONE blank line after the review line, then the bold what-was-done title, then the extended description:
      ```
      [{pr_url_no_protocol}]({pr_url}) :review:
 
-     *{what_was_done_title}*
+     **{what_was_done_title}**
 
      {extended_description}
 
@@ -81,7 +81,7 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
      ```
      [github.com/<owner>/<repo>/pull/<number>](https://github.com/<owner>/<repo>/pull/<number>) :review:
 
-     *<what was done — PR title enriched with context>*
+     **<what was done — PR title enriched with context>**
 
      <One terse line stating the goal — light caveman lingo, drop articles/filler>.
 
@@ -128,7 +128,7 @@ Workspace `slack-laravel` must be active, per `slack-prerequisite`.
 - **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.
 - **Review line is exact:** `[{pr_url_no_protocol}]({pr_url}) :review:` — link first, then the `:review:` emoji.
 - **Default carries title + description.** Every post leads with the review line, then a bold one-line title of what was done (PR title blended with contextual detail), then ONE terse line stating the goal. Title-only is a very rare opt-out (bulk waves, "just the link").
-- **Use Slack mrkdwn.** No markdown bold (`**`), use `*text*` instead.
+- **Use standard markdown.** Bold is `**text**`; mrkdwn `*text*` renders literally through the connector.
 - **No link previews — every link, not just the PR.** Label each link with its own URL minus the protocol, per `slack` — clickable, no card. Never set `unfurl_app_links: true`.
 - **Summary states the GOAL in ONE terse line, not a changelog.** Use a light touch of the `caveman` skill's lingo — drop articles and filler, fragments fine, technical terms exact. State only what the change does. Strip prior-phase history, canary/drift/verification notes, version minutiae, and parentheticals. Do NOT itemize incidental resource changes — the source footer carries the impact. Do NOT paste sibling PR links.
 - **Source footer is optional and pluggable.** Spacelift is the common source line; use other sources (CI/pipeline status, another infra report, or one the user names) when available or requested. Omit when none applies.

@@ -67,7 +67,7 @@ Use it when:
 
 6. **Transition linked Linear issue to `In Progress` (when applicable).**
    - If the user's request mentions a Linear id (`K-xxx` / `CLOUD-xxx`) or a Linear URL, move it to `In Progress` before dispatch per `linear-state-transitions`.
-   - Report one line in the dispatch summary: `Linear state: moved K-xxx → In Progress (was Todo).`
+   - Report one line in the dispatch summary: `Linear state: moved [K-xxx — <title>](<url>) to In Progress (was Todo).`
    - Silent-with-report: no confirmation prompt. User opts out for the turn by saying "don't move the Linear state".
    - Skip when no Linear id is in scope — not every delegate is Linear-linked.
 

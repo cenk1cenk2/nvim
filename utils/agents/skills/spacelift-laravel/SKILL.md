@@ -17,7 +17,7 @@ description: spacelift-laravel Auto-invoked on Spacelift context - Spacelift URL
 
 - **Spacelift MCP:** `spacelift-laravel` — ALWAYS use `spacelift-laravel__*` tools.
 - **Common read operations:** `list_stacks`, `list_stack_runs`, `get_stack_run`, `get_stack_run_logs`, `get_stack_run_changes`, `list_resources`, `list_spaces`, `list_policies`, `list_modules`.
-- **Write operations:** `trigger_stack_run` — always confirm with user before executing. `confirm_stack_run` and `discard_stack_run` are not registered on this server; approving or discarding a run happens in the Spacelift UI.
+- **Write operations:** `trigger_stack_run` — always confirm with user before executing. `confirm_stack_run` and `discard_stack_run` are not registered on this server; approving or discarding a run happens in the Spacelift UI by default, and through the CLI or a registered tool only when the user explicitly blesses that specific run.
 - **Cross-reference style:** Reference stack names and run IDs when discussing Spacelift operations.
 
 ## After Initialization
@@ -26,7 +26,7 @@ Once context is established, proceed with the user's request. Common tasks inclu
 
 - Checking stack status and recent runs.
 - Viewing run logs and resource changes.
-- Triggering or approving runs (with user confirmation).
+- Triggering runs (with user confirmation); approving or discarding them in the Spacelift UI, or through the CLI or a registered tool when the user blesses that specific run.
 - Investigating failed runs.
 - Browsing managed resources and policies.
 - Exploring module registry.

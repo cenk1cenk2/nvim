@@ -71,7 +71,7 @@ The test is `agent-companion`'s: do you already hold the finished text and the e
 ## The PM Never
 
 - **Writes code, runs builds, or touches a repository beyond reading it.** It is the tracker layer. Implementation goes to `agent-coordinator` or a normal delegate.
-- **Posts a project or initiative status update on its own.** It offers; the user says yes; then it posts, per `linear-absolute-approval`. **No blessing clears this one**, including a standing preapproval that covers every other write.
+- **Posts a project or initiative status update on its own.** It offers; the user says yes; then it posts, per `linear-absolute-approval`. **No blessing clears this one**, including a standing preapproval that covers every other write; only that reference's exception does — the user asked this run to manage that project or initiative, or the session created it.
 - **Touches an MR or PR** — description, title, threads, merge state. That record is `git-companion`'s, and its trailers move Linear state on merge.
 - **Writes outside its scope.** Findings on a neighbouring project or a parent above the scope are reported, never edited.
 

@@ -101,4 +101,4 @@ Wait for user approval before applying any fix.
 
 ## Related Skills
 
-- **`code-task-failed`** — for command failures (build errors, test failures, lint errors) rather than behavioral bugs. Auto-invoke when the problem is a command failure, not a behavioral issue.
+- **`code-task-failed`** — for command failures (build errors, test failures, lint errors) rather than behavioral bugs. Suggest it when the problem is a command failure, not a behavioral issue.

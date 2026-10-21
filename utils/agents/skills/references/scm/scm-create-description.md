@@ -29,7 +29,7 @@ If a request is genuinely ambiguous — the word "draft" appears but you cannot 
 **A draft is a state you are responsible for clearing.** Whichever reason opened it:
 
 - **Name the reason in the description** — which PR/MR, release, or approval it waits on. A draft with no stated blocker is indistinguishable from one that was opened by mistake.
-- **Reconcile it when the blocker clears.** The prerequisite merged, the dependency shipped, or the user said it is ready — mark it ready for review and say so. Do not leave it sitting in draft, and do not make the user ask twice.
+- **Reconcile it when the blocker clears.** The prerequisite merged, the dependency shipped, or the user said it is ready — propose marking it ready for review and say so. Marking it ready waits for the user's approval per `agent-owned`, unless the user explicitly invoked a skill whose job is to complete it. Do not leave it sitting in draft, and do not make the user ask twice.
 
 ## The description is live, not write-once
 
@@ -53,7 +53,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
 - Do NOT list changed files, line counts, or mechanical details.
 - **Check each Linear issue's state before linking it, per `scm-linear-follow-up`.** A follow-up to a Done or Canceled issue mentions it as a plain markdown link with no magic word, and carries no ID in the title or the branch.
-- If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work.
+- If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work. On GitLab write `References <ID>` instead, or `Part of <ID>` when the close is explicitly deferred, per `commit-trailers-linear`.
 - **When one PR/MR closes several issues, give each issue its own section** and list every closed ID on one trailer line — see "Multiple linked issues" below. A reviewer must be able to tell which change belongs to which issue without reading the diff.
 - **Linear links from the title, the description, and the branch name.** On GitLab a Linear ID in a commit message does nothing, and on GitHub it links only behind a magic word — see `commit-trailers-linear`. Never rely on commits to carry the link.
 
@@ -97,7 +97,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 Closes K-879, K-881
 ```
 
-One section per issue, headed by its ID and title, so the split is obvious at a glance. The trailer stays a **single line listing every closed ID** — that is Linear's documented multi-issue form, not one trailer per issue. Mixed kinds get one line each: `Closes K-879, K-881` and `Refs K-884`.
+One section per issue, headed by its ID and title, so the split is obvious at a glance. The trailer stays a **single line listing every closed ID** — that is Linear's documented multi-issue form, not one trailer per issue. Mixed kinds get one line each: `Closes K-879, K-881` and `Refs K-884` (`References K-884` on GitLab).
 
 **Large PRs/MRs (judgment call — significant scope or multiple concerns):**
 

@@ -26,7 +26,8 @@ references:
 3. **Inspect divergence against the upstream.**
    - **No upstream (new branch):** plan a first push with `-u <remote> <branch>`. No extra confirmation needed.
    - **Ahead only:** plan a fast-forward push. No extra confirmation needed.
-   - **Behind only:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first (suggest `code-pull`). Do NOT auto-pull.
+   - **Behind only on an own branch** (per `agent-owned`): run `git pull --rebase` yourself, then continue.
+   - **Behind only otherwise:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first with raw `git pull --rebase`. Do NOT auto-pull.
    - **Diverged on an own branch** (per `agent-owned`) — your own rewritten history: plan `--force-with-lease`. No extra confirmation needed.
    - **Diverged otherwise:** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`; lead with rebase/merge, since the remote carries commits you did not author.
    - **Up to date:** inform the user there is nothing to push and stop.

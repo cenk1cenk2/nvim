@@ -128,7 +128,7 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 
 ## Key Rules
 
-- **Read-only.** Never modify issues, comments, relations, the project, or status updates. For modifications, refer the user to `linear-reconcile`.
+- **Read-only.** Never modify issues, comments, relations, the project, or status updates. For edits, refer the user to `linear-update`.
 - **Highlight deltas, not full restatements.** The value is in surfacing *what changed since I last looked*, not describing the work from scratch.
 - **Timestamps drive staleness.** Quote `updatedAt` when flagging anything as possibly stale.
 - **Match depth to scope.** Follow every relation on a single issue; skim on a project sweep. If a project read raises a question about one issue, re-run this skill scoped to that issue.

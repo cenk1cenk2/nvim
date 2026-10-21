@@ -81,7 +81,7 @@ The renovate KubeJob's `activeDeadlineSeconds` stays 600s. It is a run budget, n
 
 1. **Gather the evidence for the named target** — steps 2 through 4 above, scoped to it. A target named by the user still has to be shown to be wrong before it is changed.
 2. **Resolve the target to its repository and count the spread** per `kilic-workload-resolution`.
-3. **Choose the layer** per `kilic-resource-placement`: the common layer when the change points the same way on every cluster running it, an override when one or two genuinely differ. A single-cluster override on a system component is a **Vault** write, not a commit — say so instead of pushing it down a layer.
+3. **Choose the layer** per `kilic-resource-placement`: the common layer when the change points the same way on every cluster running it, an override when one or two genuinely differ. A single-cluster override on a system component is a git edit to `argocd-root`'s `annotations.yml` plus regenerating and committing `argocd/1-manifest` — say so instead of pushing it down a layer.
    - **Generic wins.** Test the generic value across clusters first: the fleet maximum of the corrected figures, landing in the chart default or `.deploy/base/` even where the clusters differ in degree. Only a cluster that genuinely deviates earns a per-cluster override, on top of the generic value.
    - **Never an override duplicating the common value.** An existing override that restates it is deleted in the same change — a per-cluster config-reloader block restating a generic 16Mi is the usual case.
 4. **Present the change** per `output-diff`: the current values, the proposed values, and the evidence line behind each one.

@@ -18,7 +18,7 @@ Posture: `present-first`.
 
 ## Context
 
-Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the kilic tools (`slack-kilic__*`); on the Laravel workspace use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
+Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the `slack-kilic__*` tools, kilic's fallback: kilic routes through the claude.ai Slack connector when it is present and authorized for kilic, and the Laravel workspace always uses it. On the connector, use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
 

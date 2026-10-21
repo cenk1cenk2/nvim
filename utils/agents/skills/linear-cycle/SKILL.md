@@ -118,27 +118,27 @@ Present the cycle plan to the user in a clear format, in logical chunks per `out
 
 ### Carry-over
 (List ALL carry-over issues. Do not truncate.)
-- <issue-id>: <title> (<estimate>pts, <status>)
+- [<issue-id> — <title>](<url>) (<estimate>pts, <status>)
 - ...
 
 ### Project Work
 (List ALL project issues being proposed. Group by project. Do not truncate.)
 #### <Project Name>
-- <issue-id>: <title> (<estimate>pts) — <reason>
+- [<issue-id> — <title>](<url>) (<estimate>pts) — <reason>
 - ...
 
 #### <Another Project Name>
-- <issue-id>: <title> (<estimate>pts) — <reason>
+- [<issue-id> — <title>](<url>) (<estimate>pts) — <reason>
 - ...
 
 ### Standalone Issues
 (List ALL standalone issues being proposed. Do not truncate.)
-- <issue-id>: <title> (<estimate>pts) — <reason>
+- [<issue-id> — <title>](<url>) (<estimate>pts) — <reason>
 - ...
 
 ### Stretch Goals
 (List ALL stretch goals. Do not truncate.)
-- <issue-id>: <title> (<estimate>pts) — <reason>
+- [<issue-id> — <title>](<url>) (<estimate>pts) — <reason>
 - ...
 
 ### Total: <N> points planned / <Z> available

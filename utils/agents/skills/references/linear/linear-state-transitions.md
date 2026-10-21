@@ -16,7 +16,7 @@ post-merge comment). The issue itself does not drive state — the
 
 | Trigger | Target state | Applied by |
 |---|---|---|
-| User picks up an issue (`linear-pickup`, `linear-next-task`, `linear-triage` promote) | `In Progress` | the pickup skill itself. |
+| User picks up an issue (`linear-pickup`) | `In Progress` | the pickup skill itself. |
 | A worker is dispatched for a Linear-linked task (`agent-delegate`, `agent-plan`) | `In Progress` | the dispatch skill before launching the agent. |
 | User or workflow explicitly updates status (`linear-status`) | requested state | `linear-status`, respecting never-downgrade and terminal-state guards. |
 | An MR/PR is created that links the issue (a contributing or closing keyword, or the id in its title or branch) | `In Review` | Linear's own integration, from the trailers in the approved MR/PR description; the create skills make no state write. |
@@ -91,8 +91,9 @@ and — on GitHub only — commit messages:
   close it. On GitHub, a keyword before the id in a commit message links
   and moves the issue when the workspace has commit linking enabled; a
   bare id in a commit still does not.
-- **Regex target:** `/(?:^|\s)(K|CLOUD)-\d+/i` — match the team
-  prefixes the current workspace supports. Check `linear-prerequisite`
+- **Regex target:** `/(?:^|\s)(K|CLOUD|INFFND)-\d+/i` — match the team
+  prefixes the current workspace supports. The Laravel default team key
+  is `INFFND`, unless the workspace or user overrides it. Check `linear-prerequisite`
   for the active workspace's id prefix.
 - Dedupe ids before transitioning — one `save_issue` call per unique
   id.
@@ -109,8 +110,8 @@ Transitions are applied **without interrupting the user** and
 reported in the skill's normal summary output. Format for reporting:
 
 ```
-Linear state: moved K-240 → In Review (was Todo).
-Linear state: K-241 already Done, skipped downgrade.
+Linear state: moved [K-240 — <title>](<url>) to In Review (was Todo).
+Linear state: [K-241 — <title>](<url>) already Done, skipped downgrade.
 ```
 
 - One line per issue touched (or skipped).

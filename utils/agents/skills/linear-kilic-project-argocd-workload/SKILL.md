@@ -115,7 +115,7 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 
 - Create `.deploy/<cluster>/kustomization.yaml` and the per-component directories
 - Configure resource limits and security contexts
-- Add the HTTPRoute if the workload is exposed in-cluster
+- Add the HTTPRoute under `.deploy/<cluster>/` if the workload is exposed in-cluster
 - **Blocked by:** Issue 2 (and Issue 3 if secrets are needed)
 
 Load `cluster-kilic-workload` for this issue — it owns the directory conventions and the reference repos to copy from.
@@ -163,7 +163,7 @@ export class MyWorkloadService implements OnModuleInit {
 
 ## Routing Architecture
 
-Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cluster's argocd repo. The YAML manifests in `workloads/routes/1-manifest/` are Pulumi-generated output — not hand-written.
+Pulumi in each cluster's argocd repo defines and wires each workload, along with the gateways and DNS for the load balancer; the YAML manifests in its `1-manifest/` directories are Pulumi-generated output — not hand-written. A workload's own routes live in its repo under `.deploy/<cluster>/`.
 
 **Traffic flow for exposed services:**
 
@@ -181,7 +181,7 @@ Internet/LAN → LB cluster gateway → relayed TLSRoute/HTTPRoute (copied by op
 **Target cluster (`argocd-<cluster>`)** handles:
 - Its own gateway definitions (`src/cluster/gateway.service.ts`) — cluster-specific gateway names/IPs
 - The relay ListenerSet and Upstream declarations (`src/cluster/operator-lb.service.ts`, `src/cluster/relay.service.ts`)
-- In-cluster HTTPRoutes from gateway to services (defined in workload's Pulumi service)
+- The workload definition (in the workload's Pulumi service); its in-cluster HTTPRoutes from gateway to services live in `cluster/workloads/<workload>/.deploy/<cluster>/`
 
 **DNS providers:**
 - **External (Cloudflare):** label `provider.kilic.dev/external-dns-cloudflare: "true"`, annotation `external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"`
@@ -191,8 +191,8 @@ Internet/LAN → LB cluster gateway → relayed TLSRoute/HTTPRoute (copied by op
 
 - **Use `gitlab` MCP** for researching existing patterns
 - **Workloads go to target cluster** — deployed via `cluster/<cluster>/argocd-<cluster>`, not `argocd-system`
-- **Load balancer cluster is separate** — routes are configured in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
-- **All routes are Pulumi-managed** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written
+- **Load balancer cluster is separate** — LB gateways and VM routes are configured in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
+- **Pulumi wires the workload, the workload repo holds its routes** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written; per-workload routes live under that workload's `.deploy/<cluster>/`
 - **Two DNS providers:** Cloudflare (external, `provider.kilic.dev/external-dns-cloudflare`) and OPNSense (internal, `provider.kilic.dev/external-dns-opnsense-loki`)
 - **Two LB gateways:** `default` for external traffic, `internal` for internal-only services
 - **Only create issues that are needed** — skip optional issues unless confirmed by user

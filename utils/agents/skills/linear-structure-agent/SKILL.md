@@ -12,6 +12,7 @@ references:
   - ../references/linear/linear-scm-discovery.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
+  - ../references/linear/linear-absolute-approval.md
 ---
 
 Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
@@ -163,7 +164,7 @@ This matters most under the agent postures — `agent-coordinator`, `agent-super
 
 1. **Ask at structure time, not mid-flight.** One line: `Is K-123 and its sub-issues ours to keep updated as we go?` Asking after four agents have finished is asking too late.
 2. **Record the answer durably** per `long-running-work`. Ownership held only in the transcript is gone at the next compaction, and the session that resumes cannot tell whether it may write.
-3. **Ours** — reconcile on by default, no re-asking per write. Corrections to your own artifacts are corrections, not new decisions.
+3. **Ours** — reconcile on by default, no re-asking per write. Corrections to your own artifacts are corrections, not new decisions. Project and initiative prose follows `linear-absolute-approval`: free only when the user asked this run to create or manage it, or the session created it.
 4. **Not ours** — never write. Surface drift in one line and let the user decide: `K-402 contradicts what we just implemented — not ours to edit, want me to?`
 5. **The blessing is scoped to that set.** One issueset, or a project plus its issues. A different project needs its own blessing; a general `g` / `yolo` / autopilot does not supply one.
 6. **An opt-out suppresses the write, never the question.** "Don't touch the tracker" gets honored and reported.

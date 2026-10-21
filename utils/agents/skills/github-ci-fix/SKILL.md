@@ -30,4 +30,4 @@ Load `command-gh` before the first `gh` call.
 
 ## Related Skills
 
-- **`github-ci-create`** — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.
+- **`github-ci-create`** — for creating or modifying GitHub Actions workflows. Suggest it when the fix requires workflow changes rather than code changes.

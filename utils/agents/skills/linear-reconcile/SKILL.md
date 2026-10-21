@@ -92,7 +92,7 @@ Present findings as a structured summary, not a raw dump:
 - [project or parent issue: status/description/label/estimate changes if any]
 
 ### Priority Violations
-- <issue-id>: priority <current> → <recommended> (blocks <blocked-issue-id> which is priority <X>)
+- <issue-id>: priority <current> to <recommended> (blocks <blocked-issue-id> which is priority <X>)
 
 ### Estimate Issues
 - <issue-id>: [missing | needs adjustment] — <reasoning>
@@ -101,7 +101,7 @@ Present findings as a structured summary, not a raw dump:
 - <issue-id> should block <issue-id> — <reasoning>
 
 ### Status Corrections
-- <issue-id>: <current-status> → <recommended-status> — <reasoning>
+- <issue-id>: <current-status> to <recommended-status> — <reasoning>
 
 ### Stale Descriptions
 - <issue-id>: <brief note on what's outdated>
@@ -121,9 +121,9 @@ Present every proposed change as one row, so a batch approval is reviewable rath
 
 | Issue | Field | Now | Proposed | Why |
 |---|---|---|---|---|
-| K-219 | priority | None | High | blocks K-221 and K-224 |
-| K-221 | parent | none | K-219 | it is a slice of that work |
-| K-233 | estimate | 8 | 3 | scope shrank when the API landed |
+| [K-219 — <title>](<url>) | priority | None | High | blocks [K-221 — <title>](<url>) and [K-224 — <title>](<url>) |
+| [K-221 — <title>](<url>) | parent | none | [K-219 — <title>](<url>) | it is a slice of that work |
+| [K-233 — <title>](<url>) | estimate | 8 | 3 | scope shrank when the API landed |
 
 The **Now** column is what makes this approvable — a proposal with no current value asks the user to trust that a change is needed. Nothing is written until the whole table is approved.
 

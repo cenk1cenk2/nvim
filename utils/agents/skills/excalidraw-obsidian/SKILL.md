@@ -98,6 +98,6 @@ If the user wants to revise the drawing:
 
 ## Composing with Obsidian Skills
 
-- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing. Embedding is native — write `![[<drawing>.excalidraw]]` transclusion into any note and the plugin renders it (this vault: `embedType`/`previewImageType` = SVG, `renderImageInMarkdownReadingMode` on, plus an auto-exported `.svg` sidecar from `autoexportSVG`). No format conversion is involved anywhere: the scene JSON is edited and previewed as stored.
+- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing. Embedding is native — write `![[<drawing>.excalidraw.md]]` transclusion into any note and the plugin renders it (this vault: `embedType`/`previewImageType` = SVG, `renderImageInMarkdownReadingMode` on, plus an auto-exported `.svg` sidecar from `autoexportSVG`). No format conversion is involved anywhere: the scene JSON is edited and previewed as stored.
 - **With `obsidian-repository`**: revising architecture diagrams that are linked from repository notes.
 - **With `excalidraw-draft`**: if the user wants a completely new drawing instead of revising, delegate to `excalidraw-draft`.

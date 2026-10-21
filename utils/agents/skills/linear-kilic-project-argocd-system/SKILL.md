@@ -154,7 +154,7 @@ This repo commits generated output, and the generated file is what ArgoCD reads.
 
 ## Routing Architecture
 
-Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cluster's argocd repo. The YAML manifests in `workloads/*/1-manifest/` are Pulumi-generated output — not hand-written.
+Pulumi in each cluster's argocd repo defines and wires each workload, along with the gateways and DNS for the load balancer; the YAML manifests in its `workloads/*/1-manifest/` are Pulumi-generated output — not hand-written. A workload's own routes live in its repo under `.deploy/<cluster>/`.
 
 **Traffic flow for exposed services:**
 
@@ -172,7 +172,7 @@ Internet/LAN → LB cluster gateway → relayed TLSRoute/HTTPRoute (copied by op
 **Target cluster (`argocd-<cluster>`)** handles:
 - Its own gateway definitions (`src/cluster/gateway.service.ts`) — cluster-specific gateway names/IPs
 - The relay ListenerSet and Upstream declarations (`src/cluster/operator-lb.service.ts`, `src/cluster/relay.service.ts`)
-- In-cluster HTTPRoutes from gateway to services
+- The workload definitions; in-cluster HTTPRoutes from gateway to services live in each workload's `.deploy/<cluster>/`
 
 **DNS providers:**
 - **External (Cloudflare):** label `provider.kilic.dev/external-dns-cloudflare: "true"`, annotation `external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"`
@@ -215,7 +215,7 @@ System operators typically use:
 - **`argocd-root` commits generated output** — edit the asset file, then re-run the synth and commit the regenerated manifest
 - **Cluster labels enable selective deployment** — not all clusters need every component
 - **Load balancer cluster is separate** — gateway and VM routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-<lb-cluster>`; cluster-target exposure is the operator-lb relay, declared in the target cluster's repos (see Issue 8)
-- **All routes are Pulumi-managed** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written
+- **Pulumi wires the workload, the workload repo holds its routes** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written; per-workload routes live under that workload's `.deploy/<cluster>/`
 - **Two DNS providers:** Cloudflare (external, `provider.kilic.dev/external-dns-cloudflare`) and OPNSense (internal, `provider.kilic.dev/external-dns-opnsense-loki`)
 - **Two LB gateways:** `default` for external traffic, `internal` for internal-only services
 - **Only create issues that are needed** — skip optional issues unless confirmed by user

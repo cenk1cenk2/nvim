@@ -9,7 +9,7 @@ references:
 
 ## The kubernetes-kilic Server
 
-Read-only inspection of the kilic clusters: `moon`, `nailbed`, `neutrino`, `overseer`, `rancher`, `rubik`, `sun`. **Load this before the first call to it.**
+Read-only inspection of the kilic clusters: `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`, plus a `rancher` context, which is the Rancher VM, not a workload cluster. **Load this before the first call to it.**
 
 - **Transport:** hosted, `https://kubernetes.mcp.kilic.dev/mcp`, bearer auth.
 - **Estate:** its kubeconfig carries the kilic contexts and nothing else, so every context it lists is a valid target. Default context is `nailbed` — pass `context` anyway, on every call.
@@ -32,11 +32,11 @@ Anything else is absent, and a step written against an absent tool cannot execut
 
 ## Naming the Cluster
 
-The seven cluster names above **are** the context names, verbatim — `rubik` the cluster is `rubik` the context. Resolving is only a question when the captain named a workload rather than a cluster:
+The names above **are** the context names, verbatim — `rubik` the cluster is `rubik` the context. Resolving is only a question when the captain named a workload rather than a cluster:
 
 1. **The repository says it.** Inside a cluster ArgoCD repo (`argocd-<cluster>`), the cluster is in the path.
 2. **ArgoCD says it.** An Application's `spec.destination` names the cluster it deploys to, per `kilic-workload-resolution`.
-3. **`configuration_contexts_list`.** A blessed read returning all seven with their server URLs — cheap, and the way to settle a spelling.
+3. **`configuration_contexts_list`.** A blessed read returning every context with its server URL — cheap, and the way to settle a spelling.
 
 Naming and confirming the resolved context: `kubernetes`.
 

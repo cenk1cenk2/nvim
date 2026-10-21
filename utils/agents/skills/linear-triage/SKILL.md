@@ -102,8 +102,8 @@ The pass itself stays one issue at a time. At the end, show only what changed:
 
 | Issue | Project | Priority | State |
 |---|---|---|---|
-| K-244 | Cluster Rollout | High | Todo |
-| K-245 | - none - | Low | Canceled |
+| [K-244 — <title>](<url>) | Cluster Rollout | High | Todo |
+| [K-245 — <title>](<url>) | - none - | Low | Canceled |
 
 Decided issues only. Anything still open is a question, not a row.
 

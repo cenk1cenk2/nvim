@@ -79,7 +79,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Use `linear-status` to reflect completed or explicitly canceled checklist items.
 - Update project documents via the workspace `save_document` tool when deviations or findings are shared across multiple issues.
 - When PRs/MRs are opened, ensure referenced issues advance to `In Review` through the PR/MR skill or explicit state transition.
-- At wrap-up, if all issues in a project are done, close or complete the project by default unless evidence says it should stay open.
+- At wrap-up, if all issues in a project are done, close or complete the project by default unless evidence says it should stay open. Executing the project is managing it, so this needs no per-change approval under `linear-absolute-approval`.
 
 ## Git, Branching, Commits, and PRs
 

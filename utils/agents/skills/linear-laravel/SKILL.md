@@ -1,6 +1,6 @@
 ---
 name: linear-laravel
-description: linear-laravel Auto-invoked on Laravel context - CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM. Not for kilic-dev work or K-xxx ids.
+description: linear-laravel Auto-invoked on Laravel context - INFFND-xxx or CLOUD-xxx issue ids, Laravel workspace URLs, or a repo in the Laravel GitHub org. Initialises the Linear session for that workspace, with GitHub as its SCM. Not for kilic-dev work or K-xxx ids.
 references:
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md
@@ -14,8 +14,8 @@ references:
 
 The current user is on multiple teams (`Infrastructure Foundations`, `Infrastructure`). For this workspace, override the generic multi-team rule in `linear-mandatory-fields`:
 
-- **Default:** `Infrastructure Foundations`. Use for all create flows (issues, projects, initiatives) unless the user explicitly opts out.
-- **Opt-in:** `Infrastructure`. Use ONLY when the user explicitly signals it, e.g.:
+- **Default:** `Infrastructure Foundations`, team key `INFFND`. Use for all create flows (issues, projects, initiatives) unless the user explicitly opts out.
+- **Opt-in:** `Infrastructure`, team key `INFRA`. Use ONLY when the user explicitly signals it, e.g.:
   - Says "Infra team", "Infrastructure team", "on Infra", or similar.
   - References an `INFRA-xxx` issue or asks to create something in the Infra scope.
   - Works in a project/scope that lives on the Infrastructure team (e.g., Nginx replacement, envoy-gateway cutover).

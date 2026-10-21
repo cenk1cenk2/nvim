@@ -11,7 +11,7 @@ references:
 
 Kargo runs on `overseer`. [kargo-root](https://gitlab.kilic.dev/cluster/kargo-root) `CLAUDE.md` on `main` is the authority for task internals, record schema, the `.promote/` layout and Kargo version quirks, and [chart-kargo-promote](https://gitlab.kilic.dev/cluster/charts/chart-kargo-promote) `README.md` for every `.promote/values.yaml` key; this skill carries the estate-level decisions around it: which Project shape a repository gets, where its pins live (on the Warehouse), how Stages chain, and how a repository moves between Renovate and Kargo.
 
-A promotion never calls ArgoCD's sync API to deploy a new version. `promote-pin` writes the pinned values of one file of a gitops repository, merges the pin MR, then asks ArgoCD to sync the Application; the report Stage judges the result after a soak.
+ArgoCD syncs a promoted version automatically from the git push webhook, and the promotion task also triggers that sync. `promote-pin` writes the pinned values of one file of a gitops repository, merges the pin MR, then triggers the Application's sync; the report Stage judges the result after a soak.
 
 ## Where Promotions Live
 

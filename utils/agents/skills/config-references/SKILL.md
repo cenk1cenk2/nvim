@@ -134,7 +134,7 @@ Never create a reference whose only content is "go load skill X". A reference ca
 
 When a body loads another skill for a branch, that skill arrives **with its own references**. A reference needed only on that branch does not belong in your frontmatter — declaring it taxes every run for a branch most runs skip.
 
-`agent-plan` composes with the Linear pickup skills when the input is Linear, and those declare `linear-state-transitions` and `linear-chunk-issues`. So `agent-plan` does not.
+A planning skill that loads a tracker pickup skill only when the input is a tracker issue leaves that tracker's state-transition reference to the pickup skill, which declares it. Its own frontmatter lists it only if a step outside that branch names it.
 
 **The test is what the reference serves, not whether both files list it.** Overlap is usually correct:
 

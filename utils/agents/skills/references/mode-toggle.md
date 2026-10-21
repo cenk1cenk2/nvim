@@ -18,7 +18,10 @@ Engage only on the user's own signal:
 
 Never self-engage a mode, and never engage a **second** mode because the first seems to call for it. Coordinating is not a licence to bulldoze; supervising is not a licence to coordinate. If the work seems to want another mode, say so in one line and let the user call it.
 
-**One carve-out:** a mode this setup declares as a standing session default in `AGENTS.md` (caveman) is engaged at startup without a user signal. That is the configuration speaking, not self-engagement — and the user's word still ends it.
+**Two carve-outs:**
+
+- **Caveman.** A mode this setup declares as a standing session default in `AGENTS.md` (caveman) is engaged at startup without a user signal. That is the configuration speaking, not self-engagement — and the user's word still ends it.
+- **Companion offload.** A skill that declares `agent-companion-offload` starts a companion once its trigger holds, without a user signal, and announces it in the same turn. That is the declaring skill's authority speaking, not self-engagement — and the user's word still ends it.
 
 On engaging, acknowledge in one line: which mode is now on and its scope. If another was already on, name both.
 

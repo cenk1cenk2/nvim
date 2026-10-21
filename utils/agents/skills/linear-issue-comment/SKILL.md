@@ -37,7 +37,7 @@ The current conversation context holds the most recent version of the issue's in
 3. **Post the comment:**
    - Present the drafted comment per `output-diff`, then write it with the Linear MCP `save_comment` tool from the appropriate workspace. Markdown normaliser traps per `linear-description-structure`.
 
-4. **Close out:** when the comment is a delivery or close-out note — it announces or links a merged MR/PR, or the user says "close K-xxx", "mark K-xxx done", "K-xxx is merged" — Load `linear-status` to move the issue to `Done`.
+4. **Close out:** when the comment is a delivery or close-out note — it announces or links a merged MR/PR, or the user says "close K-xxx", "mark K-xxx done", "K-xxx is merged" — Load `linear-status` to move the issue to `Done`, only when the merged MR/PR carried a closing keyword for this issue or the work it delivers is finished.
 
 ## Comment Style
 

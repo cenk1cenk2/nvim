@@ -123,7 +123,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
 - For layer 0, the **layer baseline** = run baseline.
-- Transition each Linear-linked task in this layer to `In Progress` per `linear-state-transitions`. Report one line per id (`Linear state: moved K-xxx → In Progress (was Todo).`).
+- Transition each Linear-linked task in this layer to `In Progress` per `linear-state-transitions`. Report one line per id (`Linear state: moved [K-xxx — <title>](<url>) to In Progress (was Todo).`).
 
 **Team mode (default):**
 
