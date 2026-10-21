@@ -102,7 +102,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 - Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
 - **Name the interpretation and the success criterion before writing code.** "Add authentication" is five different things — say which one you picked and what it trades off; "add validation" becomes "reject a missing or malformed email, return 400 with a clear message, both cases tested". If something is genuinely confusing, ask — code that fills the gap with something plausible is exactly the code that survives a casual review and fails when it matters.
 - **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it with a proceed word from §III User Lingo.
-- **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further discussion, no re-confirming. §V Gates and a writing skill's own present-first approval still apply. Make the change and report it.
+- **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further discussion, no re-confirming. §V Gates and a declaring skill's present-first approval still apply. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
 
 > **ABSOLUTE — ACT FIRST, REPORT AFTER. Announcing an action is not performing it.**
@@ -113,7 +113,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 > - **Three endings are legitimate:** the work is done; you are blocked on the user, and you say exactly what you need; or you armed a watcher on something external, and you say it is armed. "Waiting on your call about X" is a fine ending. "Next I will do X" is not.
 > - **This binds hardest immediately after an approval.** A blessing ends the discussion, so the next thing in that turn is the action itself — never a restatement of the plan you were just cleared to run.
 
-**A skill that writes an artifact carries the stricter `present-first` posture** — draft it, present it per `output-diff`, write on approval. It applies to every skill that writes an artifact, whether or not that skill declares the reference; this section stays the conversational default and skills that only read never carry it.
+**A skill that declares `present-first` carries the stricter posture** — draft it, present it per `output-diff`, write on approval. Every other writing skill acts, then reports what changed; §V Gates still apply to all of them.
 
 ### Plan mode and `plan-hard` (genuinely complex work)
 
