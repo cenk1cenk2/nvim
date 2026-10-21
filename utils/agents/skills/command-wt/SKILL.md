@@ -38,7 +38,7 @@ references:
 
 - **No `--base`** — `--create` branches from the default branch, not `HEAD`. `@` is the current branch, `^` the default.
 - **Background removal** — without `--foreground`, `wt remove` and `wt step prune` return before the tree is gone and failures land in `.git/wt/logs/`. Pass it whenever you verify or report.
-- **Unmerged branch on remove** — kept; a squash-merged own branch looks unmerged too, and deleting it is `-D`, gated above.
+- **Unmerged branch on remove** — kept. A squash-merged own branch looks unmerged too; once its PR/MR merged, `-D` runs free per the first gate.
 - **Dirty tree on remove** — fails; surface it.
 - **Processes in the tree** — `wt remove --reap` stops detached ones under it; terminal-holding processes are spared.
 - **Prune skips a candidate** — younger than `--min-age` (default `1d`), dirty, locked, or awaiting hook approval. The age guard keeps a fresh tree that only looks merged; leave it.

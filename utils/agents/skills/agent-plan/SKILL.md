@@ -158,7 +158,7 @@ Per `agent-plan-split` step 7 — one agent per task, a later layer's task steer
 
 ### Step 10 — Merge this layer's worktrees
 
-Per `agent-merge-review` step 1: merge sequentially, conflicts go to the user, worktrees removed without silent force.
+Per `agent-merge-review` step 1: merge sequentially, the run resolves conflicts between its own branches, design-choice conflicts go to the user, worktrees removed without silent force.
 
 ### Step 11 — Review this layer
 
@@ -329,7 +329,7 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 - Defaulting to fire-and-forget without the user explicitly asking.
 - Defaulting to `final-only` review when per-layer would catch integration issues earlier.
 - Auto-advancing past a failed or BLOCKED task.
-- Auto-resolving merge conflicts between layers.
+- Auto-resolving a design-choice conflict, or one touching changes the run did not make.
 - Force-removing a worktree silently when removal fails.
 - Trusting agent "success" reports without verifying the diff.
 - Assuming verification commands without checking the project's actual tooling.

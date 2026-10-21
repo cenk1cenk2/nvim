@@ -51,6 +51,6 @@ Follow the `agent-completion` reference — summarize work, present options (com
 - Skipping review because "agents reported success" — agent summaries describe intent, not outcomes. Always diff.
 - Running end-of-run review against the wrong baseline (layer baseline instead of run baseline, or vice versa).
 - Claiming completion without running verification.
-- Auto-resolving merge conflicts without user input.
+- Auto-resolving a design-choice conflict, or one touching changes the run did not make.
 - Force-removing a worktree silently when removal fails.
 - Proceeding to handoff when review flagged unaddressed issues.

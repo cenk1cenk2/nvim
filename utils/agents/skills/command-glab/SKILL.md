@@ -3,6 +3,7 @@ name: command-glab
 description: command-glab When to run the glab CLI rather than the GitLab MCP server, and how to build native MR stacks with glab stack and fall back when it fails. Load before running `glab`, or before opening a stack of MRs. Not for MR, issue or pipeline work the GitLab MCP server already does.
 references:
   - ../references/scm/scm-gitlab.md
+  - ../references/agent-owned.md
 ---
 
 ## Route
@@ -17,7 +18,7 @@ references:
 
 1. `glab stack create <name>` starts the stack.
 2. `glab stack save` commits each layer.
-3. `glab stack sync` pushes, rebases, and opens an MR per layer targeting the layer below. Flags that matter: `--update-base`, `--skip-mr-creation`, `--reviewer`. It writes to the remote, so it gates as an external write.
+3. `glab stack sync` pushes, rebases, and opens an MR per layer targeting the layer below. Flags that matter: `--update-base`, `--skip-mr-creation`, `--reviewer`. It writes to the remote, so it gates as an external write — except over owned layers whose MRs already exist, which runs free per `agent-owned`.
 4. **After `sync`**, bring every MR it opened up to those title, description and merge defaults with `gitlab__update_merge_request`; `sync` creates them without those. Squash stays off on every MR in the stack.
 
 **On any `glab stack` failure**, say so and fall back to plain MRs, each created with `--target-branch <layer below>`.

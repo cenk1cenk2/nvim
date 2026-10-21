@@ -197,15 +197,14 @@ The row, recorded when armed, again when re-armed, and produced whenever asked w
 
 | Watcher | Watching for | Cadence | Cap | On wake | Handle |
 |---|---|---|---|---|---|
-| `pr-4821` | `gh pr view 4821 --json state` returns `MERGED` | 60s | 180 (~3h), then report and re-arm | verify the merge, arm the apply watcher | `task_01H…` |
-| `deploy-prod` | all 8 prod pipeline jobs settled | 5m | 24 (2h), then surface as stalled | verify, then open the follow-up MR | `task_01H…` |
+| `pr-4821` | `gh pr view 4821 --json state` returns `MERGED` | 10s | 180 (~3h), then report and re-arm | verify the merge, arm the apply watcher | `task_01H…` |
+| `deploy-prod` | all 8 prod pipeline jobs settled | 10s | 24 (2h), then surface as stalled | verify, then open the follow-up MR | `task_01H…` |
 | `mr-315-review` | `watch.py gitlab-mr-review --project g/p --iid 315` reports new review activity | 30s | 480 (4h), then report and re-arm | re-read the threads, route them through `gitlab-mr-fix` (`github-pr-fix` for a PR) | `task_01H…` |
 
 - **Watching for** is the done-condition *as it will be tested*, not the topic. "PR merged" is a topic;
   the command and its expected value is a condition. If you cannot write it as a testable line, the
   watcher is not ready to arm.
-- **Cadence** matches how fast the signal actually changes. A 5-minute deploy does not need a
-  30-second poll.
+- **Cadence** is the table's ceiling for that kind of signal, or faster.
 - **Cap** always states what happens when it is hit, because a watcher that expires silently is worse
   than one that never armed.
 - **On wake** is the action it exists to trigger. A watcher with no stated action is an alarm nobody

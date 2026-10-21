@@ -3,6 +3,7 @@ name: git-conflict
 description: git-conflict Resolve merge conflicts interactively - settles the clear ones itself, asks on the ambiguous. Use on "resolve conflicts", "fix the merge conflicts", or when git reports unmerged paths. Not for ordinary git operations, which are plain CLI calls.
 references:
   - ../references/scm/scm-detect.md
+  - ../references/agent-owned.md
 ---
 
 ## Git Conflict Resolution
@@ -56,7 +57,7 @@ references:
 8. **Final summary.**
    - List all resolved files and the strategy used for each.
    - If a rebase or merge is in progress, inform the user of the next step (e.g., `git rebase --continue`, `git merge --continue`).
-   - Do NOT run the continue command automatically — let the user decide when to proceed.
+   - Do NOT run the continue command automatically — let the user decide when to proceed. On an owned branch per `agent-owned`, run it once the checks pass.
 
 ## Key Principles
 

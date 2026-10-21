@@ -46,7 +46,7 @@ After applying fixes, update each thread on the PR/MR. See the skill's "Platform
 - **Fixed threads (obvious fix or suggestion applied)** — resolve silently. No reply needed when the fix speaks for itself.
 - **Fixed threads (non-obvious custom fix)** — reply with a one-liner only if the fix deviates from the request or needs explanation. Then resolve.
 - **Answered threads** (explanation, no code change) — post the explanation, then resolve.
-- **Stale threads** (code already changed, concern no longer applies) — resolve silently.
+- **Stale threads** (code already changed, concern no longer applies) — after the user confirms per Triage, reply in one line and resolve.
 - **Deferred threads** (awaiting user input) — leave open. Do not reply or resolve.
 
 ## Report to user

@@ -10,7 +10,7 @@ references:
   - ../references/delivery-decisions.md
 ---
 
-## Git Break
+## Git Split
 
 Posture: `present-first`.
 ## Context

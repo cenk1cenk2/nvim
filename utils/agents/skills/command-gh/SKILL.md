@@ -3,6 +3,7 @@ name: command-gh
 description: command-gh When to run the gh CLI rather than the GitHub MCP server, and how to build and maintain native PR stacks with the gh-stack extension. Load before running `gh`, or before opening a stack of PRs. Not for PR or issue work the GitHub MCP server already does.
 references:
   - ../references/scm/scm-github.md
+  - ../references/agent-owned.md
 ---
 
 ## Route
@@ -25,7 +26,7 @@ Native stacks come from the official extension `github/gh-stack`. Load `github-p
    - Read it with `gh stack view --json`.
 4. **Never run `gh stack merge`**: merging is the user's. Never pass a squash method to any merge of a stack layer.
 
-`submit`, `link`, `push` and `sync` write to the remote, so each gates as an external write.
+`submit`, `link`, `push` and `sync` write to the remote, so each gates as an external write — except `push` and `sync` over owned layers whose PRs already exist, which run free per `agent-owned`.
 
 ## Exit Codes
 

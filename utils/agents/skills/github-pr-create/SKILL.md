@@ -12,7 +12,6 @@ references:
   - ../references/scm/commit-trailers-linear.md
   - ../references/scm/scm-linear-follow-up.md
   - ../references/output-diff.md
-  - ../references/linear/linear-state-transitions.md
   - ../references/scm/release-convention.md
   - ../references/scm/scm-change-kind.md
   - ../references/delivery-decisions.md
@@ -55,4 +54,4 @@ Draft the description and title per `scm-create-description`, with GitHub MCP to
   7. `docs/pull_request_template.md`
   If a template is found, announce the path (e.g., "Found template at `.github/PULL_REQUEST_TEMPLATE.md`") and use it as the starting scaffold. If none is found, fall back to the standard description format in `scm-create-description`.
 - **Update the PR** (only after approval): present the drafted title and body per `output-diff`, then update both `title` (if changed) and `body` via `github__update_pull_request` and confirm success. Once the PR is created/updated and ready to look at, open its web URL in the browser (e.g. via `hyprpilot__open`) — **only when you are the lead**. Running as a subagent, put the link in the result and leave the opening to the parent, unless the dispatch prompt explicitly told you to open it. Either way, skip the open if the user said not to ("just give me the link", "don't open it", "no browser"). Timing per `open-artifact`.
-- **Transition linked Linear issues to `In Review`:** after the PR update succeeds, follow `linear-state-transitions` — extract Linear ids from the PR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages, fetch each id's current `statusType`, and call `save_issue` with `state: "In Review"` (skip when already `Done` / `Canceled` or already `In Review`; never downgrade). Report one line per issue touched: `Linear state: moved K-xxx → In Review (was Todo).` Silent-with-report — no prompt; the user opts out by saying "don't move the Linear state" in the PR-create request. Skip entirely when zero Linear ids are found.
+- **Linear state rides on the trailers.** The `closes` / contributing trailers in the approved description link the issues, and Linear's own integration moves them per the workspace's workflow; make no separate `save_issue` call.

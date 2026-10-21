@@ -27,7 +27,7 @@ This skill performs an autonomous code review on a GitHub pull request using nat
 - **Identify the PR:** if the user provides a GitHub PR URL or number, use it directly. Otherwise detect from the current branch: `git status` for the branch, extract owner/repo from the remote URL, then `github__list_pull_requests` with `head: "owner:branch"` and `state: open`. If no open PR is found, inform the user and stop. Read PR metadata via `github__pull_request_read` (method: `get`).
 - **Detect previous reviews:** read existing PR comments to find prior summary comments carrying the marker above.
 - **Diff tool:** full PR diff via `github__pull_request_read` (method: `get_diff`). Use the same tool to fetch a reference PR's diff for cross-PR consistency checks.
-- **Resolve previous threads:** read existing review comments and threads on the PR; reply via `github__add_reply_to_pull_request_comment`. GitHub threads are left in place (the `Fixed in <short-sha>.` reply carries no further commentary; no separate resolve action).
+- **Resolve previous threads:** read existing review comments and threads on the PR; reply via `github__add_reply_to_pull_request_comment`. After the `Fixed in <short-sha>.` reply, resolve the thread through `gh api graphql` (`resolveReviewThread`), as `github-pr-fix` does; Load `command-gh` first.
 - **Summary comment:** post via `github__add_issue_comment` with `owner`, `repo`, `issue_number` (the PR number), and `body`.
 
 ### Post inline annotations

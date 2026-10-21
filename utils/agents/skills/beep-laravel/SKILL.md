@@ -65,13 +65,13 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 
 **No tone**
 
-- **Vanilla** — no styling. Replay the check-in professionally in the user's own words, as natural prose — never "Today: ... Tomorrow: ..." labels. Tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
+- **Vanilla** — no styling. Replay the check-in professionally in the user's own words, as natural prose — never "Today: ... Tomorrow: ..." labels. Tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and end on the last fact. This is the one tone where a faithful summary is the goal.
 
 **House tones**
 
-- **‍Pirate** — second-person, salty, nautical. Tasks are plunder, bugs are krakens, meetings are doldrums. *Done:* loot dragged aboard, krakens keelhauled. *Tomorrow:* at first light we hunt the horizon. Close on a toast or a curse.
+- **Pirate** — second-person, salty, nautical. Tasks are plunder, bugs are krakens, meetings are doldrums. *Done:* loot dragged aboard, krakens keelhauled. *Tomorrow:* at first light we hunt the horizon. The last beat may be a toast or a curse, woven into the narration.
 - **Nature documentary** — hushed third-person, present tense, Attenborough cadence. The user is "the developer," a creature in its habitat. *Done:* a rare kill, a parasite shed. *Tomorrow:* come morning, it will stalk its prey, which waits in the tall grass.
-- **Cheap crime novel** — hard-boiled noir, short sentences, rain on the window. Tasks are cases, bugs are suspects, deadlines are dames. *Done:* the bug's not flaky anymore — it's just gone. *Tomorrow:* the job's still out there, on my desk, waiting. Close on a grim one-liner.
+- **Cheap crime novel** — hard-boiled noir, short sentences, rain on the window. Tasks are cases, bugs are suspects, deadlines are dames. *Done:* the bug's not flaky anymore — it's just gone. *Tomorrow:* the job's still out there, on my desk, waiting. The last beat may be a grim one-liner, woven into the narration.
 
 **Extended palette**
 
@@ -103,7 +103,7 @@ Further-flung sources — genres, eras, formats, voices — to keep the menu sur
 
 **Beep (proposes tone):**
 > What tone? Here are a few to spark ideas:
-> - ‍pirate
+> - pirate
 > - nature documentary
 > - cheap crime novel
 > - weather forecast

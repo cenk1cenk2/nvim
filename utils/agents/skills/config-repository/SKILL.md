@@ -37,7 +37,7 @@ The skill runs in two invocation modes. Classify before proceeding.
 
 ALL of the following must hold:
 
-1. Session is in **automatic mode** (user gave broad authorization via `go`/`y`/`yolo`/equivalent, or session runs under `/loop`/cron).
+1. The user already approved a `config-repository` write this session, invoked it explicitly, gave `autopilot` or `blessed for the session`, or the session runs under `/loop`/cron.
 2. Change is **additive only** — pure append to a list-shaped section (`Approaches Tried`, `Gotchas`, `Tools & MCP Usage`).
 3. Change does **not** touch `Decision Log`, `Overview`, `Conventions`, or `Stack & Structure`.
 4. Change does **not** conflict with, reshape, or partially overlap existing content.

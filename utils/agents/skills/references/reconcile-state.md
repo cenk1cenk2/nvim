@@ -27,7 +27,7 @@ Deviating is normal — scope grows, an approach is dropped, an issue splits, a 
 
 | Situation | Do |
 |---|---|
-| Yours, and it contradicts what is now true | **Update it** — a correction, not a new decision. No prompt. |
+| Yours, and it contradicts what is now true | **Update it** — a correction, not a new decision. No prompt. A PR/MR title, description or draft state is the exception: present the update first, per `agent-owned`. |
 | Yours, but unclear whether it should follow the deviation | **Ask in one line:** "scope changed to X — update the issue?" |
 | Only the conversation moved | Leave it. Not every turn earns a write. |
 

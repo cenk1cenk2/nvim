@@ -33,9 +33,9 @@ Shared conventions for writing commit messages and PR/MR titles.
 ## What Never Goes In
 
 - "This commit does X", "I", "we", "now", "currently" — the diff says what.
-- "As requested by..." — use `Co-authored-by` trailer.
+- "As requested by..." or any `Co-authored-by` trailer.
 - "Generated with Claude Code" or any AI attribution.
-- Emoji (unless project convention requires).
+- Emoji, ever — no project convention overrides it.
 - Em-dashes or fancy Unicode punctuation (`—`, `–`, `“ ”`, `…`) — plain ASCII and a hyphen `-` only.
 - Restating the file name when scope already says it.
 

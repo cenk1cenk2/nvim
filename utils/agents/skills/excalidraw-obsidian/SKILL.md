@@ -84,7 +84,7 @@ If the user wants to revise the drawing:
 
 9. **Export to Obsidian.** Once approved:
    - Strip pseudo-elements.
-   - Preserve the original appState (dark/light mode) unless the user changed it.
+   - Preserve the original appState, except a drawing authored dark, which converts to the light palette per Key Principles.
    - Wrap per `excalidraw-template`: frontmatter, text elements section, drawing section.
    - Present changes per `output-diff`.
    - Overwrite the original file (or write to a new file if the user prefers).
