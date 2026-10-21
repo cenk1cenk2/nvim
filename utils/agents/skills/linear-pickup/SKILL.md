@@ -5,7 +5,6 @@ argumentHint: '[project, parent issue, issue id(s), or URL] [optional: slice or 
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
   - ../references/linear/linear-issuesets.md
@@ -27,7 +26,6 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **THE RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Record vs conversation authority per `linear-issue-philosophy`, applied before treating a project, a parent, or an issue as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the issue says…".

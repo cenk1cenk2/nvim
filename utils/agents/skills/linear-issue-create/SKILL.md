@@ -3,7 +3,6 @@ name: linear-issue-create
 description: linear-issue-create Create Linear issues with the analysis and research behind them, always setting the state explicitly rather than letting it fall into triage. Use on "create an issue", "file a bug", "open a ticket". Not for editing an existing issue, commenting on one, or preparing one for work.
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-mandatory-fields.md
   - ../references/linear/linear-issue-states.md
@@ -21,7 +20,6 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Core Requirements

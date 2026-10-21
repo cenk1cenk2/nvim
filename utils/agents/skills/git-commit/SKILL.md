@@ -3,7 +3,6 @@ name: git-commit
 description: git-commit Commit current changes as conventional commits, or split them into scoped commits on this branch; analyses the diff and commits after approval, or straight away on a branch the session owns. Use on "commit this", "split into commits". Not for splitting work across separate branches or PRs, writing a PR/MR description, or resolving conflicts.
 argumentHint: '[optional: type or message hint - e.g. ''fix'', ''feat: add retry'']'
 references:
-  - ../references/present-first.md
   - ../references/scm/scm-detect.md
   - ../references/scm/commit-style.md
   - ../references/scm/commit-trailers.md
@@ -19,7 +18,6 @@ references:
 
 ## Git Commit
 
-Posture: `present-first`.
 ## Process
 
 1. **Assess the working tree.**

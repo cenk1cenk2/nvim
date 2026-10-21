@@ -4,7 +4,6 @@ description: config-mcp Add, remove, or modify MCP server entries in the hyprpil
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
-  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -15,7 +14,6 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 
 ## MCP Server Configuration Manager
 
-Posture: `present-first`.
 
 **Target: the MCP catalog under `~/.config/nvim/utils/agents/mcp/`** — three files, picked by which profiles should see the server. The hyprpilot launcher config that wires them into a launch is `config-hyprpilot`'s.
 

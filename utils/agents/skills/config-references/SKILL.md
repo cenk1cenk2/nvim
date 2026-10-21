@@ -16,7 +16,7 @@ argumentHint: '[create|update|review] [reference-name] [context]'
 
 ## Reference Management
 
-Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`; ask before committing unless the request already blessed the push.
+Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`; ask before committing unless the request already blessed the push.
 
 **Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits.
 
@@ -138,7 +138,7 @@ A planning skill that loads a tracker pickup skill only when the input is a trac
 
 **The test is what the reference serves, not whether both files list it.** Overlap is usually correct:
 
-- **Keep it** when your own steps need it — `present-first` and `output-diff` govern *your* writes, and every writing skill declares them independently. Two skills sharing them is not duplication.
+- **Keep it** when your own steps need it — `present-first` and `output-diff` govern *your* writes, and every skill that presents before writing declares them independently. Two skills sharing them is not duplication.
 - **Drop it** when it exists purely for the composed skill's job, and your body only mentions it inside that branch.
 
 Applied naively this deletes load-bearing declarations. Check each one against the body: if a step outside the composition branch names it, it stays.
@@ -180,7 +180,7 @@ Do NOT extract:
 
 **Same name on both halves**, so the reader who sees `per \`present-first\`` and the user who types `/present-first` land on the same subject.
 
-`present-first` is the worked example: a reference declared by every writing skill, and a small skill that changes its state and nothing else, leaning on `mode-toggle` for the on/off mechanics.
+`present-first` is the worked example: a reference declared by every skill that presents before writing, and a small skill that changes its state and nothing else, leaning on `mode-toggle` for the on/off mechanics.
 
 **`caveman` is the deliberate exception.** It has no reference half: `AGENTS.md` §I step 4 force-loads the skill in every session, so it carries its rules inline.
 

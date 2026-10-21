@@ -1,6 +1,6 @@
 # Present-First
 
-The posture for a skill that writes — files, code, or an external resource. On by default; the `present-first` skill toggles it.
+The posture for a skill that declares it — one whose writes publish to people, shape every later session, or create a project. Every other skill acts, then reports what changed. The `present-first` skill toggles it.
 
 - **Draft, present per `output-diff`, then write.** Not before approval.
 - **One gate per artifact, not per file.** Fifteen files, one presentation.

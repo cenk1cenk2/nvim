@@ -5,7 +5,6 @@ disableModelInvocation: true
 argumentHint: '[repository name or path] [optional: what to document]'
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
@@ -14,7 +13,6 @@ references:
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 ## Context
 
 You maintain structured reference notes about development repositories in the vault's `Repositories/` folder (`~/notes/Repositories/` on disk). These notes capture architecture, conventions, key decisions, and gotchas — the knowledge that's hard to rediscover. They are living documents that get updated as repositories evolve.

@@ -37,7 +37,7 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 - **Plain `--force`.** Never.
 - **A conflict whose resolution is a design choice** — stop and present both sides.
 - **Discarding uncommitted work** — a dirty-tree force-remove, `reset --hard` over local changes.
-- **Merging**, and any Linear project or initiative status update.
+- **Merging a PR/MR**, and any Linear project or initiative status update. Local merges of the run's own branches, as in a plan layer, are free.
 - **Deleting an owned thing before its work merged** — branch, worktree or data of work still open, closed unmerged, or never opened.
 - **A bulk operation that also reaches what is not owned** — present the dry-run.
 - **Live clusters** — Kubernetes and ArgoCD resources gate per their own skills, owned or not.

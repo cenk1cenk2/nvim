@@ -4,7 +4,6 @@ description: config-hyprpilot Edit or review the hyprpilot launcher config - pro
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
-  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -14,7 +13,6 @@ argumentHint: '[what to change or review]'
 
 ## Hyprpilot Launcher Config
 
-Posture: `present-first`.
 
 **Target: `~/.dotfiles/hyprpilot/.config/hyprpilot/config.yaml`** — the launcher config. It is stowed,
 so `~/.config/hyprpilot/config.yaml` is a symlink to it; edit the dotfiles path, which is the one git

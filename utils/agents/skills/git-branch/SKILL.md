@@ -3,7 +3,6 @@ name: git-branch
 description: git-branch Create a branch following the repo's naming convention; fast-forwards the default branch, branches off it, and switches. Use on "create a branch", "cut a branch", "branch off". Not for committing, resolving conflicts, porting changes from another repo, or opening a PR/MR.
 argumentHint: '[optional: branch name, prefix, or base branch]'
 references:
-  - ../references/present-first.md
   - ../references/scm/scm-detect.md
   - ../references/output-diff.md
   - ../references/scm/scm-linear-follow-up.md
@@ -13,7 +12,6 @@ references:
 
 ## Git Branch
 
-Posture: `present-first`.
 ## Process
 
 1. **Discover the current state.**

@@ -6,7 +6,6 @@ argumentHint: '[project, slice, issue id(s), or URL] [optional: agent|direct|seq
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
   - ../references/linear/linear-chunk-issues.md
@@ -31,7 +30,6 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 > **PREREQUISITE:** A Linear workspace skill MUST be active before this skill runs — workspace detection per `linear-prerequisite`.
 
 The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.

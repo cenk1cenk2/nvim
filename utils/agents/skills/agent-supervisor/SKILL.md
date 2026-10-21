@@ -6,7 +6,6 @@ argumentHint: '[project, scope, or tracker target to supervise]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-project-documents.md
   - ../references/mode-toggle.md
   - ../references/agent/agent-watchers.md
@@ -39,7 +38,6 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes.
 
 > **PREREQUISITE:** A Linear workspace skill MUST be active before any Linear operation — workspace detection per `linear-prerequisite`.

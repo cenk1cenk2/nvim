@@ -9,7 +9,6 @@ scripts:
   - ./scripts/check_catalog.py
 references:
   - ../references/current-state-only.md
-  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -21,7 +20,6 @@ argumentHint: '[create|update|review] [skill-name] [what it should do]'
 
 ## Skill Management
 
-Posture: `present-first`.
 Present proposed changes per `output-diff` before writing. Keep real private specifics out of skills, references, and examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — scope `agents`, branch `rolling`.
 
 Target discovery and the self-edit gate per `config-targets`.
@@ -275,11 +273,12 @@ The second is 500 characters restating the skill's own opening. Every one of tho
 
 ### Posture — inherited, stated only on deviation
 
-**Do not write a posture directive.** The default is `AGENTS.md` §III: investigate, present before writing, act immediately once cleared. Every skill inherits it, so restating it spends tokens telling the agent what it already knows.
+**Do not write a posture directive.** The default is `AGENTS.md` §III: investigate, act immediately once cleared, report what changed. Every skill inherits it, so restating it spends tokens telling the agent what it already knows.
 
 State a posture **only when the skill deviates**:
 
 - **Strict plan mode** — declare the `plan-mode` reference and say so in one line. Only for skills that plan or analyze and write nothing outside the internal plans directory.
+- **Present-first** — a skill whose writes publish to people, shape every later session, or create a project declares `present-first` and opens with one line: ``Posture: `present-first`.`` No other skill carries the line or the declaration.
 - **A skill-specific carve-out** — a standing pre-approval, a read-only exemption, a security note about what a spawn runs as. One inline line, in the step it applies to.
 
 Never tell a skill not to enter plan mode. Only skills declaring `plan-mode` enter it; warning every other skill against a mode it cannot enter is anti-guidance.

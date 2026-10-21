@@ -4,7 +4,6 @@ description: linear-status Move Linear state forward on evidence and keep checkl
 argumentHint: '[issue id, project, or URL] [target state, items, or evidence: PR/MR URLs, repos, ''recent merged'', notes]'
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-issue-states.md
   - ../references/linear/linear-state-transitions.md
@@ -23,7 +22,6 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 State semantics and the never-downgrade rule: `linear-issue-states`. Triggers, the monotonic guard, issue-id extraction, closing vs contributing semantics, the report line, and the opt-out wording: `linear-state-transitions`. Every proposal at every scope passes that guard.

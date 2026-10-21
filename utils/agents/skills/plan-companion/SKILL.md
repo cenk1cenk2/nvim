@@ -7,7 +7,6 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -23,6 +22,8 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
+Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the plan file, per `agent-companion`.
+
 Issues, MRs and plan tasks carry their title and link where one exists, per `identifier-legibility`.
 
 ## Context
@@ -33,7 +34,6 @@ The whole lifecycle — the split test, tier selection, the spawn shape, the bri
 
 **What the companion holds is the reasoning the plan file cannot carry.** A plan records decisions; it does not record which decisions were load-bearing, what was considered and rejected, or which task's assumptions quietly depend on another task's shape. That is exactly what makes a deviation expensive: the plan still reads fine after reality diverges from it, and nothing in the file knows that task 7 was only correct because task 3 chose one of two options. A companion that sat through the design holds that; a fresh reader of the file does not.
 
-Posture: `present-first`. Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the plan file, per `agent-companion`.
 
 State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its plan path, its tier, and the open design questions. Reconcile drift per `reconcile-state`.
 

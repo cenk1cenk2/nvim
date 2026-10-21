@@ -5,7 +5,6 @@ disableModelInvocation: true
 argumentHint: '[topic or description]'
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
@@ -14,7 +13,6 @@ references:
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 ## Context
 
 Vault location, tool access, file naming, frontmatter, writing style, and vault exploration: `obsidian`.

@@ -4,7 +4,6 @@ description: linear-reconcile Audit and fix Linear structure in one pass - a pro
 argumentHint: '[project, issueset parent, issue id, or URL]'
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear/linear-absolute-approval.md
@@ -22,7 +21,6 @@ Audit a scope of Linear work and fix what drifted. The scope is a **project**, a
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **Status updates and summary comments: offer, never auto-post, per `linear-absolute-approval`.** Reconciliation covers **issues + structure only** — no project or initiative status update and no summary comment on a parent of its own accord. When progress is genuinely update-worthy, finish all the issue work first, then offer it in one line ("X and Y landed — I can post a project update if you'd like"), and Load `linear-post` or `linear-issue-comment` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.

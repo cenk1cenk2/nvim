@@ -7,7 +7,6 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -27,6 +26,8 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
+Invoking this skill is the standing blessing to spawn the PM and to talk to it; the gate is Linear, per `agent-companion`.
+
 Issues, projects and MRs carry their title and link, per `identifier-legibility`.
 
 ## Context
@@ -35,7 +36,6 @@ One Linear scope gets one standing project manager: a subagent that lives for th
 
 The whole lifecycle — the split test, tier selection, the spawn shape, the brief, steering, collection, the roster row, and the user-gated retirement — is `agent-companion`. This skill supplies the Linear domain on top of it.
 
-Posture: `present-first`. Invoking this skill is the standing blessing to spawn the PM and to talk to it; the gate is Linear, per `agent-companion`.
 
 State that spans turns must be written durably per `long-running-work` — the PM's name and spawn id, its scope, its tier, the armed watchers, and the open ledger. Reconcile drift per `reconcile-state`.
 

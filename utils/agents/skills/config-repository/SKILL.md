@@ -5,7 +5,6 @@ disableModelInvocation: false
 references:
   - ../references/reconcile-state.md
   - ../references/current-state-only.md
-  - ../references/present-first.md
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -16,7 +15,6 @@ argumentHint: '[local] [optional: what changed or focus area]'
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 
 **Target: `CLAUDE.md` / `AGENTS.md` in the repository being worked on.** The repo's Obsidian note is a separate artifact that `obsidian-repository` owns.
 

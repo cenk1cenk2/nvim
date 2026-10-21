@@ -7,7 +7,6 @@ references:
   - ../references/agent/agent-companion.md
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/mode-toggle.md
   - ../references/output-status.md
@@ -25,6 +24,8 @@ references:
   - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
+Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the platform, per `agent-companion`. Merging never falls under a preapproval — see below.
+
 MRs, PRs, pipelines and branches carry their title and link, per `identifier-legibility`.
 
 ## Context
@@ -35,7 +36,6 @@ The whole lifecycle — the split test, tier selection, the spawn shape, the bri
 
 **What the companion is actually holding is the merge-order graph.** Which MR must land before which, which are stacked, which will conflict, which are blocked on a human and which on a machine. That graph is expensive to rebuild and cheap to keep current, which is the whole case for a standing agent over a fresh review each time.
 
-Posture: `present-first`. Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the platform, per `agent-companion`. Merging never falls under a preapproval — see below.
 
 State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its scope, its tier, and the live watcher set. Reconcile drift per `reconcile-state`.
 

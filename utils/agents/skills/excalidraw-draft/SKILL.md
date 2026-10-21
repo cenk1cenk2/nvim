@@ -4,7 +4,6 @@ description: excalidraw-draft Draft a hand-drawn Excalidraw diagram and export i
 disableModelInvocation: true
 argumentHint: '[what to draw]'
 references:
-  - ../references/present-first.md
   - ../references/excalidraw/excalidraw-mcp-preview.md
   - ../references/excalidraw/excalidraw-elements.md
   - ../references/excalidraw/excalidraw-template.md
@@ -14,7 +13,6 @@ references:
 
 ## Excalidraw Diagram Drafting
 
-Posture: `present-first`.
 ## Context
 
 You draft Excalidraw diagrams using a two-phase workflow:

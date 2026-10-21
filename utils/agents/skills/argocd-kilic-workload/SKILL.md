@@ -4,13 +4,11 @@ description: argocd-kilic-workload Create a workload service in the current clus
 disableModelInvocation: true
 argumentHint: '[workload-name] - e.g. ''my-app'', ''notifications'''
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Cluster Workload Creator
 
-Posture: `present-first`.
 > **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-rubik`).
 
 ## How This Repository Works

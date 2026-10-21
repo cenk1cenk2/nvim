@@ -2,7 +2,6 @@
 name: linear-document
 description: linear-document Attach a document capturing this task's findings to a Linear issue or project, one document per concern. Use on "attach a document", "write this up in Linear". Not for editing descriptions or fields, for a short comment, or for creating a project.
 references:
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear/linear-project-documents.md
@@ -17,7 +16,6 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Linear Document — Attach Task Details to an Issue or Project
 
-Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Context

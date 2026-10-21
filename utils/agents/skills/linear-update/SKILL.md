@@ -4,7 +4,6 @@ description: linear-update Rewrite a Linear issue, project, or initiative so its
 argumentHint: '[issue id, project, or initiative - name, id, or URL]'
 references:
   - ../references/reconcile-state.md
-  - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear/linear-absolute-approval.md
@@ -21,7 +20,6 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **Absolute approval required at project and initiative scope — see `linear-absolute-approval`.** Those writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` / `save_initiative` before the user approves the drafted change. At issue scope, the drafted change still waits for the user's approval.

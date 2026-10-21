@@ -4,13 +4,11 @@ description: notion-pull Pull a Notion page into the editor as markdown - title 
 disableModelInvocation: true
 argumentHint: '[Notion URL or search terms]'
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Notion Pull: Page to Markdown
 
-Posture: `present-first`.
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs.
 > If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
 

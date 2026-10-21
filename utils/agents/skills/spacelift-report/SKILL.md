@@ -3,7 +3,6 @@ name: spacelift-report
 description: spacelift-report Report what infrastructure a change actually alters, from the Spacelift runs a PR, branch, commit, or Actions run triggered. Use on "spacelift report", "what infra does this change". Not for spotting destroy/create cycles that moved blocks would fix, ordinary Spacelift operations, CI failures, or PR descriptions.
 references:
   - ../references/scm/scm-detect.md
-  - ../references/present-first.md
   - ../references/scm/scm-github.md
   - ../references/output-diff.md
   - ../references/spacelift-github.md
@@ -15,7 +14,6 @@ Issues, MRs and PRs carry their title and link, per `identifier-legibility`.
 
 ## Spacelift Infrastructure Impact Report
 
-Posture: `present-first`.
 ## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
