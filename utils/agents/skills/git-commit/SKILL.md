@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: git-commit Commit current changes as conventional commits, or split them into scoped commits on this branch; analyses the diff and commits after approval, amending its own unshared commits where right. Use on "commit this", "split into commits". Not for splitting work across separate branches or PRs, writing a PR/MR description, or resolving conflicts.
+description: git-commit Commit current changes as conventional commits, or split them into scoped commits on this branch; analyses the diff and commits after approval, or straight away on a branch the session owns. Use on "commit this", "split into commits". Not for splitting work across separate branches or PRs, writing a PR/MR description, or resolving conflicts.
 argumentHint: '[optional: type or message hint - e.g. ''fix'', ''feat: add retry'']'
 references:
   - ../references/present-first.md
@@ -14,6 +14,7 @@ references:
   - ../references/output-diff.md
   - ../references/scm/release-convention.md
   - ../references/scm/scm-change-kind.md
+  - ../references/agent-owned.md
 ---
 
 ## Git Commit
@@ -90,12 +91,12 @@ Posture: `present-first`.
    - Show the full commit message per `output-diff`:
      - Reasoning: brief explanation of why you chose this type, scope, and message.
      - Content: the full commit message in a fenced code block.
-   - Ask for approval or feedback.
-   - Iterate until the user is satisfied.
+   - Ask for approval or feedback, and iterate until the user is satisfied.
+   - **On an owned branch** (per `agent-owned`) inside work the user already cleared, skip the wait: commit, then show the message with the hash. Grouping proposals in step 2a still wait.
 
 6. **Commit.**
-   - After explicit user approval, commit via `git commit` with the approved message.
-   - **Amend (your own branch only):** if the change is a fixup to the commit you just made, or the user asks to amend, use `git commit --amend` instead of a new commit — present the updated message first, and note that pushing the rewrite needs `--force-with-lease` via `git-push`. Never amend a commit that is already shared or on a protected branch.
+   - After explicit user approval, or straight away on an owned branch per step 5, commit via `git commit`.
+   - **Amend (owned branch only):** if the change is a fixup to the commit you just made, or the user asks to amend, use `git commit --amend` instead of a new commit; pushing the rewrite is `--force-with-lease` via `git-push`. Never amend on a branch that is not owned per `agent-owned`.
    - Confirm success by reporting the commit hash from the output.
    - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
 
@@ -107,7 +108,7 @@ Posture: `present-first`.
 - **No AI attribution.** Never include "Generated with Claude" or similar.
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
-- **New commits by default; amend your own work when it fits.** Default to a fresh commit (and separate commits for separate concerns). Amend or rewrite only your own commits on your own branch — a fixup to the commit you just made, or tidying unshared history — or when the user asks; pushing the rewrite uses `--force-with-lease` via `git-push`. Never amend or rewrite shared or protected-branch history.
+- **New commits by default; amend your own work when it fits.** Default to a fresh commit (and separate commits for separate concerns). Amend or rewrite only on an owned branch — a fixup to the commit you just made, or tidying its history — or when the user asks; pushing the rewrite uses `--force-with-lease` via `git-push`.
 - **Different tasks → different commits.** Don't collapse unrelated work into one commit; keep a branch's distinct commits (squash is decided in `github-pr-create` / `gitlab-mr-create`).
 
 ## Composing with Other Skills

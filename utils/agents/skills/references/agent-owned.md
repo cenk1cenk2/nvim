@@ -22,7 +22,7 @@ Any condition fails, or you cannot prove one, and it is not owned — the normal
 | Owned thing | Free |
 |---|---|
 | Branch | Rebase, `rebase --onto` to repair a stack, amend, squash fixups; resolve the conflicts the rebase raises, then run the project's checks; push with `--force-with-lease=<branch>:<last SHA you pushed>` and report the old and new head. |
-| PR/MR | Edit title and description, retarget its base, mark it draft or ready, close it when a replacement supersedes it. |
+| PR/MR | Retarget its base after a stack moves, close it when a replacement supersedes it. Opening one, its title and description, and draft or ready status stay gated on the user's approval of the draft. |
 | CI on an owned branch | Retry a failed job or pipeline, cancel pipelines a newer push made obsolete, stop or delete its review-app environment. |
 | Comment (PR/MR, Linear, Slack) | Edit it; delete it while it has no replies. |
 | Stash entry | Pop or drop it. |

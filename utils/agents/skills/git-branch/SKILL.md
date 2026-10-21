@@ -57,7 +57,7 @@ Posture: `present-first`.
    - Present per `output-diff` with a single chunk covering the full branching plan:
      - Reasoning: 1-2 sentences on prefix choice (what convention was detected and why).
      - Content block listing: `branch`, `base`, `fast-forward` (yes/no), and any notes (e.g., uncommitted changes present).
-   - Wait for explicit user approval before any write.
+   - Wait for explicit user approval before any write — unless the branch serves work the user already cleared, then report the plan and continue. The new branch is owned from creation per `agent-owned`.
 
 6. **Fast-forward the default branch (unless opted out).**
    - Default behavior: checkout the default branch via `git checkout`, then fast-forward via `git pull --ff-only` (CLI; no MCP pull tool).

@@ -9,10 +9,8 @@ Shared merge + review phase for agent orchestration skills. Covers **per-layer**
 Agents in the completed layer ran in isolated worktrees, each on its own branch. After the layer returns:
 
 - Merge each layer worktree's branch back to the active branch sequentially.
-- On merge conflicts:
-  - Present the conflicting files and both sides to the user.
-  - Wait for the user's resolution decision, or propose one and get approval.
-  - Do NOT auto-resolve — the user decides.
+- On merge conflicts between the run's own branches, resolve them per `agent-owned`, keeping both sides' intent, then run the project's checks.
+- A conflict whose resolution is a design choice, or one that touches changes the run did not make: present the conflicting files and both sides, and wait for the user's decision.
 - After all merges for this layer complete, verify the working tree is clean.
 - **Cleanup:** remove each worktree per `command-wt`. If removal fails (uncommitted state or locked worktree), surface the error to the user before force-removing — don't force silently.
 

@@ -37,7 +37,7 @@ Check every linked issue's `statusType` first, per `scm-linear-follow-up`: a fol
 
 ## Platform specifics
 
-- **An owned PR/MR is yours to manage** per `agent-owned` — edit, retarget, mark draft or ready, or close it when superseded, without asking.
+- **An owned PR/MR may be retargeted or closed when superseded without asking**, per `agent-owned`; opening it, its title and description, and draft or ready status still wait for approval of the draft.
 - **Find the MR** (when not given): get the current branch via `git status`, extract the GitLab project path from the remote, then `gitlab__list_merge_requests` with a `source_branch` filter and `state: opened`. See "Branch reuse" in `scm-create-description`. If no open MR exists, ask the user before creating one, then create it with `gitlab__create_merge_request`.
 - Load `command-glab` for stacks; it falls back to the target-branch route below.
 - **Cascading MRs — target the prerequisite branch, not trunk.** When the branch was cut from another branch whose MR is still open (per `git-branch`), pass `--target-branch <prerequisite>` on create. The MR then shows only its own diff instead of re-reviewing the prerequisite. **GitLab retargets on merge**, and the docs are explicit that deletion is not the trigger: *"Selecting Remove source branch after merging does not retarget open merge requests"* — so the `--remove-source-branch` default below neither helps nor hurts here. **The limit is four open MRs** updated per merge; beyond that, retarget the rest by hand. State the target and the prerequisite in your report; an MR whose target looks like an accident gets merged into the wrong place.
