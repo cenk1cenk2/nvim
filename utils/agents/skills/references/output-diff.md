@@ -11,6 +11,8 @@ Present changes in **logical chunks**. Each chunk is:
 
 Reasoning sits on top so the user can decide whether to read the block below it. Present **all** chunks before asking for approval; never interleave chunks with approval prompts.
 
+**Use the runtime's native surfaces when it has them** — a question UI for decisions, a reviewable edit diff for local file changes. On Claude Code, mechanics are in `/home/cenk/.config/nvim/utils/agents/skills/references/harness/output-diff-harness-claude.md`; read it before presenting anything there. Other runtimes use the chunk format below.
+
 ## Rules
 
 - One chunk per logical change; group related small changes under a shared reason.
