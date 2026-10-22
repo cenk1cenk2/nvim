@@ -91,6 +91,16 @@ Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus
 
 **When inserting a panel, shift the `y` of every panel at or below the insertion point**, then check for `gridPos` overlaps and duplicate panel ids.
 
+**A stat showing several values in one pill uses `orientation: auto` with `wideLayout: true`.** `horizontal` stacks the values in a column, so three values in an `h: 3` pill each get a third of the height and render as bare colour bars with no text. The stat panel does not forward `minVizHeight` or `minVizWidth`, so those settings do nothing. `auto` lays the values side by side, with the name on the left and the value on the right.
+
+## Repeating per Entity
+
+- **Repeat a row, not a panel, when an entity owns both pills and charts.** Each row clone gets a single-valued `$<var>`, so everything inside stays scoped to that entity; panel repeat separates an entity's pills from its charts.
+- **Drive the repeat from a hidden query variable on the metric that defines the kind:** `label_values(<metric>{cluster=~"$cluster", <key>=~"$<key>"}, <key>)`, with `hide: 2` and `skipUrlSync: true`. An entity without that metric gets no row, a new one appears without a JSON edit, and the visible `<key>` selector still narrows it.
+- **An empty repeat variable still renders one placeholder titled `All` whose queries match nothing.** No setting hides it; say so in the panel description.
+- **Clone width is 24 / min(count, `maxPerRow`); the stored `w` is ignored.**
+- **A series with no label to match the variable is gated with a constant.** This covers an entity derived from a name pattern rather than a label: `<expr> and on (<key>) label_replace(label_replace(vector(1), "p", "<value>", "", ""), "<key>", "$1", "p", "($<key>)")`. The outer `label_replace` sets `<key>` only when `<value>` is selected. This `on` list omits `cluster`, because `vector(1)` has none.
+
 ## Thresholds
 
 **An absolute-value stat gets one flat threshold step, with `value: null`.** Cloning a percent panel carries its 80/90 steps onto a bytes panel, and with `colorMode: background` every value above the step renders critical — a memory pill shipped permanently red this way. For headroom metrics the polarity is inverted as well, so percent steps are wrong twice over.
