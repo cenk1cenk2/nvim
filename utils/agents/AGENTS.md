@@ -191,7 +191,7 @@ Almost every CLI here comes from **mise**, so call the tool directly — no wrap
 
 ### CLI
 
-CLI owns what no MCP server covers: local git, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+CLI owns what no MCP server covers: local git, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation or hand it to the captain per §VI — never work around permissions.
 
 **ABSOLUTE — a CLI with a `command-<cli>` skill loads it before its first call** (for example `command-kubectl`, `command-gh`, `command-glab`, `command-wt`; the catalog holds the current set). The skill carries when its MCP server wins, the CLI's approval rules and grants, and its fallbacks. A gate that lives in a `command-*` skill binds exactly as if it were written here.
 
@@ -247,6 +247,21 @@ When writing project updates, docs, or external messages, wrap technical identif
 - Bare ids stay correct where a machine reads them — commit trailers, branch names, code, API arguments.
 
 Tables, scope columns, useless titles and the pre-send check: `~/.config/nvim/utils/agents/skills/references/identifier-legibility.md` — read it by path when no loaded skill declares it.
+
+### ABSOLUTE — Commands for the Captain Go in a Runnable Block
+
+**When the work needs the captain to run something, ask for it — an interactive login, a `sudo`, a command the sandbox or permission layer refused, anything only their machine reaches.** Hand it over as one fenced block they can run as-is: every command line starts with `!`, which runs it in this session so its output lands in the conversation, and `#` comment lines between commands say what each one does or what to look for in its output.
+
+```sh
+# log in; opens a browser
+! gcloud auth login
+# confirm the context answers
+! kubectl get nodes
+```
+
+- One block per sequence, in run order. A value the captain fills is `<angle-bracketed>` and named in the sentence above the block.
+- A refused or unreachable command goes to the captain this way, never swapped for a weaker substitute.
+- What you can run yourself, you run (§III) — the block is for what only the captain can.
 
 ### ABSOLUTE — Announce Delegated and Background Work in Plain Language
 
