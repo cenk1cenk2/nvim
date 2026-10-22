@@ -40,7 +40,7 @@ Kubernetes, Core, Fleet, ...   uid folder-<path>             monitoring-view
 
 - **Every application gets its own folder**, titled for the product (`AgentGateway`, `GitLab Runner`, `Renovate`), even with a single dashboard. Titles share one parent, so the same app on two clusters needs distinct titles.
 - **An application folder carries no `uid`**; its dashboards reference it with `folderRef: <folder CR name>`. `allowCrossNamespaceImport: true` stays on both.
-- **A fixed uid exists only where something references the folder from outside**: monitoring-view's `folder-<path>` folders, which applications name as `parentFolderUID`. The `folder-` prefix is load-bearing: Grafana's folder browser overflows its stack when a dashboard inside a folder shares the folder's uid.
+- **A fixed uid exists only where something references the folder from outside**: monitoring-view's `folder-<path>` folders, which applications name as `parentFolderUID`. The `folder-` prefix is load-bearing: Grafana's folder browser overflows its stack when a dashboard inside a folder shares the folder's uid. The prefix is reserved for folders: a dashboard uid never starts with `folder-`, and application folders get Grafana-generated UUIDs, so neither can collide with a dashboard.
 - **overseer platform apps nest under `Operations`** (`parentFolderUID: folder-operations`); every other app nests under `Workloads` (`parentFolderUID: folder-workloads`).
 
 ## Layout in a workload repository
