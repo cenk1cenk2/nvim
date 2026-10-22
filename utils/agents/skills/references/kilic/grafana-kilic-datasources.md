@@ -66,5 +66,5 @@ A wrong parameter name errors with the valid argument list, which is cheap. Gues
 
 ## What this stack does not have
 
-- **Grafana-managed alert rules.** `alerting_manage_rules` with `operation: list` returns null. Alerting lives in the Mimir Ruler, deployed from the `monitoring-ruler` workload, and is authored as rule files rather than through the Grafana API.
+- **Grafana-managed alert rules.** `alerting_manage_rules` with `operation: list` returns null. Alerting lives in the Mimir Ruler, fed by Alloy from the PrometheusRules in `monitoring-ruler` and in the workload repositories and charts that own them, and is authored as rule files rather than through the Grafana API.
 - **Grafana OnCall.** `list_alert_groups` fails resolving the OnCall URL with a 404 from the settings API. Every OnCall and IRM tool is unavailable; do not reach for them.

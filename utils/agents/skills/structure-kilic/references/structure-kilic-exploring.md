@@ -65,6 +65,7 @@ How an agent finds the repository and file behind a change or an observation. Th
 | DNS/DHCP/firewall internal | `infrastructure/tf-config-opnsense` (`region-<thor|loki>-*.tf`) | - |
 | A legacy server or core container (GitLab, Rancher, headscale, caddy) | `ansible/ansible-playbooks/containers/<svc>/` and `host_vars/<host>/` | `inventory.ini`; repo `CLAUDE.md` |
 | Monitoring stack per cluster | `cluster/workloads/monitoring`, `monitoring-ruler` (via argocd-system); central view on rubik `monitoring-backbone`, `monitoring-view` | skill `grafana-kilic` |
+| A dashboard or alert rule | one workload or component: its repo's `dashboards/` and `rules/`, or its chart's `templates/dashboards/` and `templates/rules/`; fleet and cross-cutting: `monitoring-view`, `monitoring-ruler` | reference `kilic-monitoring-ownership`; skills `grafana-kilic-dashboards`, `grafana-kilic-alerts` |
 | A pipeline job's behaviour, variables, or failure | the `include` `ref: <package>@<ver>` in `.gitlab-ci.yml`, then `devops/pipelines/<package>/<template>.gitlab-ci.yml` at that tag, then `devops/pipes/<pipe>/<command>/` | reference `kilic-ci-pipelines`; skills `gitlab-ci-create`, `gitlab-ci-fix` |
 
 ## Skill coverage

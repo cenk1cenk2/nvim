@@ -1,10 +1,11 @@
 ---
 name: grafana-kilic-alerts
-description: grafana-kilic-alerts Author and tune Prometheus alert rules in the monitoring-ruler repo - expression, for-duration, severity, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
+description: grafana-kilic-alerts Author and tune Prometheus alert rules in monitoring-ruler or the repo that owns the workload - expression, for-duration, severity, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
 disableModelInvocation: true
 argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero is noisy'''
 references:
   - ../references/kilic/grafana-kilic-datasources.md
+  - ../references/kilic/kilic-monitoring-ownership.md
 ---
 
 ## Alerting
@@ -15,21 +16,22 @@ Two repositories are involved and both usually change together:
 
 | What | Where |
 |---|---|
-| Alert and recording rules | `cluster/workloads/monitoring-ruler` |
+| Fleet and cross-cutting alert and recording rules | `cluster/workloads/monitoring-ruler` |
+| Rules for one workload or system component | that workload's repository or chart, beside its dashboards, per `kilic-monitoring-ownership` |
 | Alertmanager routing and inhibition | `cluster/workloads/monitoring-backbone`, at `.deploy/rubik/mimir/es-alertmanager-slack.yaml` |
 
 Alertmanager config is templated inside an ExternalSecret, so Go template braces in it are escaped as `{{ "{{" }}`. Alertmanager is the multi-tenant Mimir Alertmanager, with one `alertmanager-<cluster>` datasource per tenant, `core` included.
 
-## Repository Layout
+## monitoring-ruler Layout
 
 ```
 .deploy/base/alerts/<category>/     alerting rules, every cluster
 .deploy/base/rules/<category>/      recording rules, every cluster
-.deploy/rubik/alerts/workloads/     rubik-only, for the central stack
-.deploy/<cluster>/                  per-cluster overlays
+.deploy/<cluster>/alerts/<category>/  one cluster only (rubik backbone and operations, overseer operations)
+.deploy/rubik/core/alerts/          the core tenant
 ```
 
-Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino, overseer and sun are **edge**. An alert about something only rubik runs belongs in `.deploy/rubik/`, not in base with a cluster matcher.
+Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino, overseer and sun are **edge**. An alert about something only rubik runs belongs in `.deploy/rubik/`, not in base with a cluster matcher. An alert about one workload belongs in that workload's `rules/`, not here: Alloy syncs PrometheusRules from every namespace, so the owning repository ships it with the code it watches, scoped in `expr` to `cluster="<cluster>", namespace="<ns>"`.
 
 ## Rules and the Federated Datasource
 
@@ -112,12 +114,13 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 ## Process
 
 1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition.
-2. **Decide base or cluster.** Base for anything every cluster runs; `.deploy/rubik/` for the central stack.
+2. **Decide the owner, then base or cluster.** One workload or system component goes in its own repository or chart; otherwise base for anything every cluster runs, `.deploy/rubik/` for the central stack.
 3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above. Confirm it returns rows now, and reason about when it would not.
 4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.
 5. **Check what it will fire alongside.** If a root cause already pages, add an inhibit rule and verify the `equal:` labels appear in **both** expressions.
 6. **Set `dashboard_url`** to the dashboard that shows the problem, templated on cluster.
 7. **Report the rule and any Alertmanager change together** — they are one change even across two repos.
+8. **Moving a rule to another owner keeps its name and labels unchanged**, so Alertmanager deduplicates the overlap: add the new copy, let it sync, then remove the old one.
 
 ## Key Principles
 

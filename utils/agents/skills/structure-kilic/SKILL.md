@@ -7,6 +7,7 @@ references:
   - ../references/kilic/kilic-workload-resolution.md
   - ../references/kilic/kilic-resource-placement.md
   - ../references/kilic/kilic-ci-pipelines.md
+  - ../references/kilic/kilic-monitoring-ownership.md
   - ../references/current-state-only.md
 ---
 

@@ -1,18 +1,19 @@
 ---
 name: grafana-kilic-dashboards
-description: grafana-kilic-dashboards Author and fix Grafana dashboards in the monitoring-view repo - panel layout, table transforms, drilldown links, thresholds. Links break silently when a transform renames the field they read, so the frame is checked before the link. Use on "fix this dashboard", "add a panel". Not for reading metrics, writing alert rules, or editing Grafana directly.
+description: grafana-kilic-dashboards Author and fix Grafana dashboards in monitoring-view or their owning repo - panel layout, table transforms, drilldown links, thresholds. Links break silently when a transform renames the field they read, so the frame is checked first. Use on "fix this dashboard", "add a panel". Not for reading metrics, writing alert rules, or editing Grafana directly.
 disableModelInvocation: true
 argumentHint: '[dashboard or panel] - e.g. ''add a logs button to cluster-workloads'''
 references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/loki-label-model.md
+  - ../references/kilic/kilic-monitoring-ownership.md
 ---
 
 ## Grafana Dashboards
 
-Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitoring`. Datasource uids and the per-cluster model: `grafana-kilic-datasources`. The Loki label model behind every log drilldown is in `loki-label-model` — indexed stream label versus structured metadata decides whether a button returns lines or nothing.
+Fleet and cross-cutting dashboards live in `cluster/workloads/monitoring-view`, rubik only, namespace `monitoring-backbone`; a dashboard for one workload or system component lives in that repository or chart. Which owner, the folder tree and the workload-side layout: `kilic-monitoring-ownership`. Datasource uids and the per-cluster model: `grafana-kilic-datasources`. The Loki label model behind every log drilldown is in `loki-label-model` — indexed stream label versus structured metadata decides whether a button returns lines or nothing.
 
-**`README.md` in that repo is the spec for links and drilldowns, and `CLAUDE.md` is the operational context.** Read both before touching anything. They are load-bearing; correct them when you prove them wrong.
+**monitoring-view's `README.md` is the spec for links and drilldowns, and its `CLAUDE.md` is the operational context, for every dashboard wherever it lives.** Read both before touching anything; a workload repository's own `CLAUDE.md` adds only what is specific to its dashboards. They are load-bearing; correct them when you prove them wrong.
 
 ## Datasources
 
@@ -20,7 +21,7 @@ Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitor
 
 | Folder | `datasource` variable | `cluster` variable |
 |---|---|---|
-| Fleet landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `gateway/gateway`, `backups/backups`, `databases/postgresql`, `fleet/fleet` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
+| Fleet landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `kubernetes/gateway/gateway`, `kubernetes/backups/backups`, `kubernetes/databases/databases`, `kubernetes/databases/postgresql`, `backbone/backbone`, `operations/operations`, `fleet/fleet` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
 | `metrics/*` | regex `/^mimir(-core)?$/`, selected `mimir` | multi-select, defaults to All |
 | `core/*` | regex `/^mimir(-core)?$/`, selected `mimir-core` | none |
 | Every other category | regex `/^mimir$/`, selected `mimir` | multi-select, defaults to All |
@@ -32,14 +33,16 @@ Target repo: `cluster/workloads/monitoring-view`, rubik only, namespace `monitor
 
 ## How a Dashboard Reaches Grafana
 
+In monitoring-view the directories nest like the Grafana folder tree:
+
 ```
-.deploy/rubik/dashboards/<category>/<name>.json     the dashboard
-.deploy/rubik/dashboards/<category>/<name>.yaml     GrafanaDashboard CR
-.deploy/rubik/dashboards/<category>/kustomization.yaml   configMapGenerator
-.deploy/rubik/folders/<category>/                   GrafanaFolder CR
+.deploy/rubik/dashboards/<path>/<name>.json        the dashboard
+.deploy/rubik/dashboards/<path>/<name>.yaml        GrafanaDashboard CR
+.deploy/rubik/dashboards/<path>/kustomization.yaml configMapGenerator
+.deploy/rubik/folders/<path>/                      GrafanaFolder CR
 ```
 
-The JSON is mounted as a ConfigMap and referenced by a `GrafanaDashboard` CR (`grafana.integreatly.org/v1beta1`) via `configMapRef`, with `folderRef: <category>-folder` and `instanceSelector` matching `monitoring.kilic.dev/grafana: default`. Categories carry a kustomize `namePrefix`, so a CR named `folder` becomes `kubernetes-folder`.
+`<path>` is a category or a subfolder of one (`kubernetes/gateway`). The JSON is mounted as a ConfigMap and referenced by a `GrafanaDashboard` CR (`grafana.integreatly.org/v1beta1`) via `configMapRef`, with `instanceSelector` matching `monitoring.kilic.dev/grafana: default`. Each level adds its own `namePrefix`, so CR names read as the path (`kubernetes-gateway-folder`) and `folderRef` names that final CR name. A monitoring-view folder's uid is `folder-<path>` and never changes. A workload-owned dashboard follows `kilic-monitoring-ownership` instead: its own `dashboards/` directory, instance label `monitoring.kilic.dev/instance`, its own folder.
 
 Adding a dashboard means three edits, not one: the JSON, its CR, and a `configMapGenerator` entry with `disableNameSuffixHash: true`.
 
@@ -87,7 +90,7 @@ The grid is 24 columns wide. Established widths, in descending use: `12` (half),
 | `row` | `h: 1` | Collapsible grouping |
 | `bargauge` | `w: 12` | Top-N distributions |
 
-Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus three narrow exceptions: `status-history` on `core/rancher` and `gateway/blackbox-probe`, one `piechart` on `gateway/envoy-gateway-traffic`, and one `text` markdown note on `provider/tenants`. No dashboard uses the `statusmap` plugin. Variables are `query`, `datasource` and `constant`; none is `custom`.
+Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus three narrow exceptions: `status-history` on `core/rancher` and `kubernetes/gateway/blackbox-probe`, one `piechart` on `kubernetes/gateway/envoy-gateway-traffic`, and one `text` markdown note on `backbone/tenants`. No dashboard uses the `statusmap` plugin. Variables are `query`, `datasource` and `constant`; none is `custom`.
 
 **When inserting a panel, shift the `y` of every panel at or below the insertion point**, then check for `gridPos` overlaps and duplicate panel ids.
 
@@ -136,9 +139,9 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 
 ## Verification
 
-1. **`kustomize build .deploy/rubik`** is what CI runs and must pass — invalid JSON breaks the deploy, not one panel.
+1. **`kustomize build .deploy/<cluster>`** in the owning repository is what CI runs and must pass — invalid JSON breaks the deploy, not one panel.
 2. **Confirm the query returns rows** against the live instance before shipping a panel or button: `query_prometheus` for a metric and its joins, `query_loki_logs` to prove a selector returns lines.
-3. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Several dashboards on the instance are managed elsewhere, so a target absent from this repo is not automatically dangling.
+3. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
 4. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
 5. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found.
 

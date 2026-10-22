@@ -13,6 +13,7 @@ references:
   - ./references/cluster-kilic-workload-postgresql.md
   - ./references/cluster-kilic-workload-mariadb.md
   - ./references/cluster-kilic-workload-monitoring-probe.md
+  - ../references/kilic/kilic-monitoring-ownership.md
 ---
 
 ## Cluster Workload Creator
@@ -107,6 +108,7 @@ The following patterns are **standardized** across all workloads. Use these exac
 - **MariaDB (Bitnami Helm):** `cluster-kilic-workload-mariadb`.
 - **Restore (data and databases):** restore is the counterpart to the backup patterns and uses the same tooling. Restore jobs are **always** `suspend: true` — they ship dormant via kustomize and are triggered by hand. Build them from the templates and S3 conventions in `kilic-argocd-pvc-restore`.
 - **Monitoring probe:** `cluster-kilic-workload-monitoring-probe`.
+- **Dashboards and alert rules:** a workload ships its own `dashboards/` and `rules/` beside the component they describe, into its own Grafana folder, per `kilic-monitoring-ownership`.
 
 ## Deployment Conventions
 
@@ -153,6 +155,7 @@ The following patterns are **standardized** across all workloads. Use these exac
 - [ ] If PostgreSQL: create CNPG Cluster + ScheduledBackup + ExternalSecrets in `postgresql/` subfolder.
 - [ ] If MariaDB: create Bitnami Helm + CronJob backup + ExternalSecrets in `db/` subfolder.
 - [ ] If monitoring: create Probe resource.
+- [ ] If dashboards or alerts: add `dashboards/` (own folder, no `uid`, `folderRef`) and `rules/`, both stamping `monitoring.kilic.dev/instance`.
 - [ ] Onboard every pinned image and chart into Kargo (`.promote/` `kustomization.yaml` and `values.yaml`, `kargo-root` registry, `authorized-stage`, Renovate disable).
 - [ ] Verify kustomize labels (`part-of` at root, `name` at component).
 - [ ] Match code style from reference workload.

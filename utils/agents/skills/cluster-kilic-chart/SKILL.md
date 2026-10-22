@@ -3,6 +3,8 @@ name: cluster-kilic-chart
 description: cluster-kilic-chart Create a Helm chart wrapper in the charts group - scaffolds the repo with its upstream dependency, values, optional custom templates, and standard boilerplate. Use when wrapping an upstream chart for this setup. Not for deployment repos, ArgoCD workload services, or load balancer routing.
 disableModelInvocation: true
 argumentHint: '[chart-name] - e.g. ''goldilocks'', ''velero'''
+references:
+  - ../references/kilic/kilic-monitoring-ownership.md
 ---
 
 ## Cluster Chart Creator
@@ -301,6 +303,10 @@ secrets:
 
 **All secrets reference `ClusterSecretStore` named `secret.vault.int.kilic.dev`** — this is the standard Vault integration point across all clusters.
 
+## Dashboards and Alert Rules
+
+A component that ships dashboards or alerts carries them in the chart, behind `dashboards.enabled` and `rules.enabled`, under `templates/dashboards/` and `templates/rules/` over `files/dashboards/*.json`. Layout, values and the folder rule: `kilic-monitoring-ownership`. Only what is true of any install belongs here; dashboards about our own use of the component ship from the repository holding that config.
+
 ## Key Principles
 
 - **Use GitLab MCP** to research existing chart patterns before creating
@@ -320,6 +326,7 @@ secrets:
 - [ ] Create `values.yaml` with sensible defaults nested under dependency name
 - [ ] If ExternalSecret needed: create `templates/external-secret.yaml` and add `secrets:` block to values
 - [ ] If custom resources needed: create templates with proper Helm templating
+- [ ] If dashboards or alerts: add `templates/dashboards/` and `templates/rules/` behind `dashboards.enabled` and `rules.enabled`, and enable them from `argocd-system` `base/<c>/values.yaml`
 - [ ] Create all boilerplate files (`.gitlab-ci.yml`, `Taskfile.yml`, `mise.toml`, `renovate.json`, `release.config.mjs`, `.gitignore`, `.helmignore`). `package.json` when the chart publishes via semantic-release, or when it deploys as part of a monorepo — it carries the package name and `publishConfig`, not a toolchain. `mise.toml` handles tooling (helm-docs). Copy whichever shape the nearest existing chart uses.
 - [ ] Verify values structure matches upstream chart's expected format
 - [ ] Match code style from the reference chart
