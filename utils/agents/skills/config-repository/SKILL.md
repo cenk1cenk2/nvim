@@ -183,6 +183,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 
 - **No private specifics** — keep customer names, account IDs, secrets, internal hostnames, and real resource IDs out of the file and its examples per `redact-private-data`; use placeholders.
 - **Always write how and why** — not just what. "We use X" is useless. "We use X because Y, and Z doesn't work because W" is useful.
+- **ABSOLUTE — rules, never inventories.** Never write down what is cheaper to look up than to keep in sync: lists or tables of folders, projects, components, warehouses, images, versions or files, and counts of any of them. Each copy drifts with every change elsewhere and turns that change into a docs edit, often in another repository. Write the convention that derives the fact (`projects/<repo>/` registers Project `kargo-<repo>`) and where the live answer sits (`ls projects/`, the values file). Delete any inventory you find.
 - **Be concise** — this file is loaded into agent context windows. Every line must earn its place.
 - **Delete aggressively** — outdated information is worse than no information. If something changed, remove the old version entirely.
 - **Constraints are append-mostly** — a constraint stays until the thing that causes it changes, because it is what stops the same dead end being walked again. Remove one only when it no longer holds.
