@@ -8,11 +8,17 @@ Where a dashboard or an alert rule lives, and how it reaches the central Grafana
 |---|---|---|
 | The fleet, a cross-cutting concern, or the monitoring stack itself | `cluster/workloads/monitoring-view`, rubik, namespace `monitoring-backbone` | `cluster/workloads/monitoring-ruler`, every cluster, namespace `monitoring` |
 | One workload | that workload's repository, beside the component it describes | the same repository, beside its dashboards |
-| One system component | its `cluster/charts/chart-<c>`, enabled from `cluster/argocd-system` values | the same chart |
+| One system component | its `cluster/charts/chart-<c>` | the same chart |
 
 **Split generic from specific.** A dashboard or rule about the software itself — its controller, API, runtime, any install of it — ships with the chart or workload that deploys it. One about our own use of it — the projects, pipelines, routes or config we feed it — ships from the repository that holds that config, in its own folder beside the generic one. The test is where the concept is defined: a panel built on something only our config defines (kargo-root's report stages and verdicts, the agent-job metrics its WorkflowTemplate emits) belongs to that config's repository even when the metric comes from the upstream controller. For Kargo, the controller dashboards are `chart-kargo`'s under `Kargo`, and verification, reporting and agent jobs are `kargo-root`'s under `Kargo Root`. A dashboard mixing both is split along that line, so adjusting our setup never needs a chart release.
 
-Moving something between owners keeps the dashboard `uid` and the alert's name and label set unchanged, so `/d/<uid>` links survive and Alertmanager deduplicates the overlap. Add the new copy first and remove the old one last.
+## Moving or splitting between owners
+
+- **The generic half keeps the uid; the specific half gets a new one.** Links and alerts that pointed at the dashboard keep working, and only the moved panels need their links repointed.
+- **A rule keeps its name and label set.** Add the new copy first and remove the old one last, so Alertmanager deduplicates the overlap instead of dropping the alert. When the two copies sync from different Applications, sync the adding one first.
+- **A dashboard moving with its uid goes the other way: remove the old owner's CR first.** Deleting a dashboard CR deletes that uid in Grafana, whoever owns it by then, so the new owner's CR must sync after the old one is gone. The dashboard is missing in between.
+- **Repoint every link into the moved panels** — `viewPanel` ids, `var-*` names the old dashboard had and the new one does not, and alert `dashboard_url`s — in the same change set, including links from monitoring-view's landing pages.
+- **State the merge order in every MR description.** A pin to a chart version that is not tagged yet leaves the Application at `Unknown` until a refresh after the tag exists.
 
 ## How a workload-owned dashboard reaches Grafana
 
@@ -60,15 +66,15 @@ A workload with no Application of its own in the dashboards' namespace gets one:
 
 ```yaml
 dashboards:
-  enabled: false
+  enabled: true
   folder:
-    parentUID: ""       # required when enabled; no default from the cluster name
+    parentUID: folder-workloads
     title: <App>
 rules:
   enabled: true
 ```
 
-The folder CR name is a fixed literal and the dashboards `folderRef` it. `argocd-system` `base/<c>/values.yaml` sets `dashboards.enabled` and `dashboards.folder.parentUID`.
+`dashboards.folder.parentUID` is `required` when dashboards are enabled and never derived from the cluster name. A wrapper chart that always ships under the same parent sets it as its default (`chart-agentgateway`, `folder-workloads`), so the dashboards arrive with the chart release and no values change. A chart whose parent differs per install leaves `enabled: false` and `parentUID: ""` and takes both from `argocd-system` `base/<c>/values.yaml` (the Kargo and Argo charts, `folder-operations`). The folder CR name is a fixed literal and the dashboards `folderRef` it.
 
 ## How a rule reaches the Ruler
 
@@ -77,6 +83,10 @@ Alloy's `mimir.rules.kubernetes` syncs PrometheusRules from **every namespace** 
 ## Changing a folder or dashboard in place
 
 - **A `GrafanaFolder` `spec.uid` is immutable**, including set to unset. Changing it means deleting the CR and letting Argo recreate it.
+- **Changing `parentFolderUID` moves the folder** with its dashboards (grafana-operator v5.25.0 `folder_controller.go` calls `MoveFolder`); no recreate is needed. Renaming the folder CR is a delete and a create, so it takes its dashboards with it.
 - **Deleting a folder CR deletes the folder in Grafana with every dashboard inside it.** The dashboard CRs keep reporting success until the operator resyncs (every 10 minutes, or at once after a restart of that cluster's operator).
-- **Deleting a dashboard CR deletes that uid in Grafana**, whichever CR now owns it. Delete the old owner's CR before the new one syncs, never after.
 - **A folder delete can hang on its finalizer** when Grafana answers 403 for a folder already gone; clear `metadata.finalizers` on that CR.
+
+## Links
+
+Links between dashboards use `/d/<uid>/<slug>`, which survives folder moves and owner changes, and follow monitoring-view's `README.md` link rules wherever the dashboard lives. Every landing page (Fleet, Operations and the category hubs) links to every dashboard in its scope, workload-owned ones included, and the two halves of a split link to each other.
