@@ -1,0 +1,2 @@
+read_only = true
+toolsets = ["core", "config", "helm"]
