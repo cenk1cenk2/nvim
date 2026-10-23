@@ -34,6 +34,10 @@ class CallFailed(Exception):
     """One tool call failed in a way the next poll may not repeat: a timeout, a 5xx, a tool error."""
 
 
+class StreamLost(Exception):
+    """A followed stream no longer returns the item the watch anchored on."""
+
+
 @dataclass(frozen=True)
 class Server:
     url: str
@@ -157,8 +161,8 @@ class Client:
         self._post({"jsonrpc": "2.0", "method": "notifications/initialized"})
         self.initialized = True
 
-    def call(self):
-        """Return the tool's result as decoded JSON."""
+    def call(self, arguments: dict | None = None):
+        """Return the tool's result as decoded JSON; `arguments` replaces the configured ones for this call."""
         if not self.initialized:
             self._initialize()
         result = self._post(
@@ -166,7 +170,7 @@ class Client:
                 "jsonrpc": "2.0",
                 "id": next(self.ids),
                 "method": "tools/call",
-                "params": {"name": self.tool, "arguments": self.arguments},
+                "params": {"name": self.tool, "arguments": self.arguments if arguments is None else arguments},
             }
         )
         result = result or {}
@@ -247,17 +251,10 @@ class NewItem:
         return f"new item in {self.items} of mcp {self.client.tool} on {self.client.server.url}{where}"
 
     def _fetch(self) -> list[dict]:
-        result = self.client.call()
-        try:
-            found = json.loads(json_walk(json.dumps(result), self.items))
-        except (ValueError, KeyError, IndexError, TypeError, JSONPathError) as err:
-            raise CallFailed(f"items path {self.items} unresolved ({err.__class__.__name__})") from None
-        if not isinstance(found, list):
-            raise CallFailed(f"items path {self.items} is not a list")
         return [
             item
-            for item in found
-            if isinstance(item, dict) and all(str(item.get(key)) == value for key, value in self.matches)
+            for item in _items_at(self.client.call(), self.items)
+            if all(str(item.get(key)) == value for key, value in self.matches)
         ]
 
     def __call__(self) -> tuple[bool, str | None]:
@@ -280,3 +277,104 @@ class NewItem:
             summary = f": {truncate(shown[0])}" if shown else ""
         self.outcome = f"new item {fresh.get(self.id_key)} in mcp {self.client.tool}{summary}"
         return True, f"{len(ids)} item(s), 1+ new"
+
+
+def _items_at(result, items: str) -> list:
+    try:
+        found = json.loads(json_walk(json.dumps(result), items))
+    except (ValueError, KeyError, IndexError, TypeError, JSONPathError) as err:
+        raise CallFailed(f"items path {items} unresolved ({err.__class__.__name__})") from None
+    if not isinstance(found, list):
+        raise CallFailed(f"items path {items} is not a list")
+    return [item for item in found if isinstance(item, dict)]
+
+
+class NextInStream:
+    """Probe: follow a cursor-paged event stream and fire on the first matching item past where the watch began.
+
+    The first poll drains the stream to its head and anchors on the last item it
+    saw. Every later poll re-reads from just before that anchor: a stream that
+    restarted, or rolled past the anchor, no longer returns it, and the events in
+    that gap are gone from the stream, so losing the anchor is itself the wake.
+    """
+
+    reports_first_value = True
+    max_pages = 100
+
+    def __init__(
+        self,
+        client: Client,
+        items: str,
+        cursor_key: str,
+        cursor_arg: str,
+        matches: Iterable[tuple[str, str]],
+        show: str | None,
+    ):
+        self.client = client
+        self.items = items
+        self.cursor_key = cursor_key
+        self.cursor_arg = cursor_arg
+        self.matches = tuple(matches)
+        self.show = show
+        self.cursor = int(client.arguments.get(cursor_arg, 0))
+        self.anchored = False
+        self.baselined = False
+        self.outcome: str | None = None
+
+    def describe(self) -> str:
+        where = "".join(f", {key}={value}" for key, value in self.matches)
+        return f"next item in {self.items} of mcp {self.client.tool} on {self.client.server.url} after the head{where}"
+
+    def _page(self, after: int) -> list[dict]:
+        page = _items_at(self.client.call({**self.client.arguments, self.cursor_arg: after}), self.items)
+        try:
+            return sorted(page, key=lambda item: int(item[self.cursor_key]))
+        except (KeyError, TypeError, ValueError):
+            raise CallFailed(f"an item in {self.items} carries no integer {self.cursor_key}") from None
+
+    def _matches(self, item: dict) -> bool:
+        return all(str(item.get(key)) == value for key, value in self.matches)
+
+    def _advance(self, check: bool) -> dict | None:
+        """Read pages past the cursor until one comes back empty; return the first match when `check` is set."""
+        after = self.cursor - 1 if self.anchored else self.cursor
+        for _ in range(self.max_pages):
+            page = self._page(after)
+            if self.anchored and after == self.cursor - 1:
+                if not page or int(page[0][self.cursor_key]) != self.cursor:
+                    raise StreamLost
+                page = page[1:]
+            if not page:
+                return None
+            for item in page:
+                self.cursor = int(item[self.cursor_key])
+                self.anchored = True
+                if check and self._matches(item):
+                    return item
+            after = self.cursor
+        raise CallFailed(f"still draining after {self.max_pages} pages")
+
+    def __call__(self) -> tuple[bool, str | None]:
+        try:
+            fresh = self._advance(check=self.baselined)
+        except StreamLost:
+            self.outcome = (
+                f"stream {self.client.tool} lost its place at cursor {self.cursor}: it restarted or rolled past; "
+                "read the source for the gap"
+            )
+            return True, f"anchor {self.cursor} gone"
+        except CallFailed as err:
+            if not self.baselined:
+                raise CannotRun(f"cannot take the baseline: {err}") from None
+            return False, f"poll failed, retrying: {err}"
+        if not self.baselined:
+            self.baselined = True
+            return False, f"head at cursor {self.cursor}"
+        if fresh is None:
+            return False, f"cursor {self.cursor}, none new"
+        summary = ""
+        if self.show:
+            shown = str(fresh.get(self.show, "")).strip().splitlines()
+            summary = f": {truncate(shown[0])}" if shown else ""
+        self.outcome = f"new item at cursor {self.cursor} in mcp {self.client.tool}{summary}"
+        return True, f"cursor {self.cursor}, 1+ new"

@@ -391,6 +391,28 @@ def mcp_new(items: str, id_key: str, matches: tuple[str, ...], show: str | None,
     raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
 
+@cli.command("mcp-stream")
+@mcp_options
+@click.option("--items", required=True, help="Path to the list of events in the tool result, dotted or JSONPath.")
+@click.option("--cursor", "cursor_key", default="cursor", show_default=True, help="The integer key ordering events.")
+@click.option(
+    "--cursor-arg", default="after_cursor", show_default=True, help="The tool argument that pages past a cursor."
+)
+@click.option("--match", "matches", multiple=True, help="KEY=VALUE an event must carry to count. Repeatable.")
+@click.option("--show", default=None, help="A key whose first line names the event in the RESULT line.")
+def mcp_stream(
+    items: str, cursor_key: str, cursor_arg: str, matches: tuple[str, ...], show: str | None, **kwargs
+) -> None:
+    """The next event past the head of a cursor-paged MCP stream; also fires when the stream loses its place."""
+    cadence = {key: kwargs.pop(key) for key in (*CADENCE_DEFAULTS, *LOGGING_KEYS)}
+    client = _mcp_client(**kwargs)
+    probes.check_json_path(items)
+    if not isinstance(client.arguments.get(cursor_arg, 0), int):
+        raise ScriptError(f"--arguments {cursor_arg} must be an integer cursor")
+    probe = mcp.NextInStream(client, items, cursor_key, cursor_arg, [mcp.parse_match(raw) for raw in matches], show)
+    raise SystemExit(runner.run(probe, build_cadence(**cadence)))
+
+
 def main() -> None:
     try:
         cli.main(standalone_mode=False)
