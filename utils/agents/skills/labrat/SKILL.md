@@ -56,7 +56,7 @@ One process-global stream for every session, starting when the bridge started �
 3. **Advance.** `events_wait` returns one `event`: wait again from its `cursor`, or drain the backlog with `events_poll` from that cursor and take its `next_cursor`. An empty return at the timeout is not an error.
 4. **Re-baseline when the cursor goes backwards.** The bridge restarted and every cursor reset; take the new cursor, then `messages_read` the sessions you follow to cover the gap. Falling more than 1000 events behind loses the oldest the same way.
 
-Each `events_wait` holds a turn, and the cursor lives only in this session — record it durably per `long-running-work` when a watch spans turns. For a watch longer than a few cycles, Load `agent-background` and arm its `mcp-new` condition on this server's `messages_read` for the session — `--items result.messages --id id --match role=assistant --show content` — so the wake names labrat's next reply; read it in full with `messages_read` on the main loop.
+Each `events_wait` holds a turn, and the cursor lives only in this session — record it durably per `long-running-work` when a watch spans turns. For a watch longer than a few cycles, Load `labrat-background`; it follows the stream from a background watcher, one per session.
 
 ## Key Principles
 
