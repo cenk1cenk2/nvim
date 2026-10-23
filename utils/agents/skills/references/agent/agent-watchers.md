@@ -60,9 +60,12 @@ and it still runs and still polls correctly, but every line it prints is withhel
 lost entirely if it is reaped first. If you find yourself reading a watcher's log to see what it has said,
 the mechanism is wrong, not slow.
 
-**Bash cannot call MCP tools.** When the truth is only reachable via MCP (Linear state, ArgoCD, Grafana,
-Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
-yourself on wake.
+**Prefer watching through an HTTP MCP server when one holds the truth.** A shell cannot use the agent's MCP
+connection, but `watch.py`'s `mcp` and `mcp-new` conditions speak to the server themselves, with the
+credentials its config names, so the watch reads exactly what the authoritative check on wake reads (MR and
+pipeline state, Linear status, ArgoCD health, an agent session). Route order and recipes per `agent-background`. When the server is
+stdio-only or a runtime connector with no endpoint the shell can authenticate to, poll a shell-visible
+**proxy** and do the authoritative MCP check yourself on wake.
 
 **The tested `watch.py` in `agent-background` is the default watcher; a hand-written loop is the fallback** for a runtime with no tree on disk, and it is written in python (`python3 -c` — an inline program, not a script file, so the launch-by-path rule does not apply to it). Python is preferred because agents reliably mis-escape hand-written bash — nested quotes die at the shell's parser. Bash is acceptable
 only for a single-condition one-liner — **no arrays, no JSON parsing, no multi-line payload**; anything past

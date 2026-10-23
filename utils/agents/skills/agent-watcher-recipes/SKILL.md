@@ -119,9 +119,9 @@ be asked for.
 
 ### Deploy convergence — ArgoCD, operators, rollouts
 
-Reconcile loops run on their own interval; cadence 15 s, so the flip reaches you as soon as it lands. The signal is usually MCP-only or
-cluster-only, so poll a shell-visible proxy (a CLI status, an HTTP probe) and confirm through the
-authoritative tool on wake.
+Reconcile loops run on their own interval; cadence 15 s, so the flip reaches you as soon as it lands. The signal is usually behind an MCP
+server or cluster-only: call the server's tool with `mcp` when it has an HTTP endpoint, otherwise poll a
+shell-visible proxy (a CLI status, an HTTP probe) and confirm through the authoritative tool on wake.
 
 ```python
 import json, subprocess

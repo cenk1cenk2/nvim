@@ -13,6 +13,7 @@ One condition per invocation; arm another watcher for another item.
 
 from __future__ import annotations
 
+import json
 import sys
 
 import click
@@ -20,6 +21,7 @@ from agentlib.cli import ScriptError, create_logger
 from agentlib.models import Cadence, Expectations, FlatFor, WatchedPath, http_url
 from pydantic import ValidationError
 
+import mcp
 import probes
 import reviews
 import runner
@@ -299,6 +301,93 @@ def github_pr_review(
         kinds=wait_result or reviews.KINDS,
         ignore=ignore_author,
     )
+    raise SystemExit(runner.run(probe, build_cadence(**cadence)))
+
+
+def mcp_options(func):
+    func = click.option(
+        "--arguments-file", default=None, help="Read the tool arguments as JSON from a file; for quoted values."
+    )(func)
+    func = click.option("--arguments", default=None, help="The tool arguments as a JSON object.")(func)
+    func = click.option("--tool", required=True, help="The tool to call every poll.")(func)
+    func = click.option("--config", default=None, help="An mcpServers JSON config to read --server from.")(func)
+    func = click.option("--server", default=None, help="A server name in --config; its url and headers are used.")(func)
+    func = click.option(
+        "--header", "headers", multiple=True, help="'Name: value' for --url; ${VAR} expands from the environment."
+    )(func)
+    func = click.option("--url", default=None, help="The server's streamable-HTTP endpoint.")(func)
+    return cadence_options(func)
+
+
+def _mcp_client(
+    url: str | None,
+    headers: tuple[str, ...],
+    server: str | None,
+    config: str | None,
+    tool: str,
+    arguments: str | None,
+    arguments_file: str | None,
+) -> mcp.Client:
+    if server is not None:
+        if url is not None or headers:
+            raise ScriptError("pass --server with --config, or --url with --header, not both")
+        if config is None:
+            raise ScriptError("--server needs --config")
+        target = mcp.server_from_config(validated(WatchedPath, path=config).path, server)
+    elif url is not None:
+        target = mcp.Server(_checked_url(url), dict(mcp.parse_header(raw) for raw in headers))
+    else:
+        raise ScriptError("mcp needs --url, or --server with --config")
+    if arguments is not None and arguments_file is not None:
+        raise ScriptError("pass --arguments or --arguments-file, not both")
+    raw = "{}"
+    if arguments_file is not None:
+        try:
+            with open(validated(WatchedPath, path=arguments_file).path, encoding="utf-8") as handle:
+                raw = handle.read()
+        except OSError as err:
+            raise ScriptError(f"cannot read --arguments-file: {err}") from err
+    elif arguments is not None:
+        raw = arguments
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as err:
+        raise ScriptError(f"tool arguments are not JSON: {err}") from err
+    if not isinstance(parsed, dict):
+        raise ScriptError("tool arguments must be a JSON object")
+    return mcp.Client(target, tool, parsed)
+
+
+@cli.command("mcp")
+@mcp_options
+@click.option("--expect", "expect", multiple=True, help="A value that means met. Repeatable.")
+@click.option("--json-path", default=None, help="Narrow the tool result by a dotted path or JSONPath.")
+@click.option("--contains", is_flag=True, help="Substring match instead of equality.")
+@click.option("--negate", is_flag=True, help="Met when the value LEAVES the expected set.")
+def mcp_condition(expect: tuple[str, ...], json_path: str | None, contains: bool, negate: bool, **kwargs) -> None:
+    """An MCP tool's result matches --expect; for truth only an MCP server holds."""
+    cadence = {key: kwargs.pop(key) for key in (*CADENCE_DEFAULTS, *LOGGING_KEYS)}
+    client = _mcp_client(**kwargs)
+    if not expect:
+        raise ScriptError("mcp needs at least one --expect VALUE")
+    if json_path is not None:
+        probes.check_json_path(json_path)
+    spec = Expectations(values=tuple(expect), json_path=json_path, contains=contains, negate=negate)
+    raise SystemExit(runner.run(mcp.ToolValue(client, spec), build_cadence(**cadence)))
+
+
+@cli.command("mcp-new")
+@mcp_options
+@click.option("--items", required=True, help="Path to the list in the tool result, dotted or JSONPath.")
+@click.option("--id", "id_key", required=True, help="The key that identifies an item.")
+@click.option("--match", "matches", multiple=True, help="KEY=VALUE an item must carry to count. Repeatable.")
+@click.option("--show", default=None, help="A key whose first line names the new item in the RESULT line.")
+def mcp_new(items: str, id_key: str, matches: tuple[str, ...], show: str | None, **kwargs) -> None:
+    """A new item in an MCP tool's list since the watch started; a new message, comment or event."""
+    cadence = {key: kwargs.pop(key) for key in (*CADENCE_DEFAULTS, *LOGGING_KEYS)}
+    client = _mcp_client(**kwargs)
+    probes.check_json_path(items)
+    probe = mcp.NewItem(client, items, id_key, [mcp.parse_match(raw) for raw in matches], show)
     raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
 
