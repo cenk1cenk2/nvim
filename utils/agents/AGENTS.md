@@ -263,11 +263,15 @@ Tables, scope columns, useless titles and the pre-send check: `~/.config/nvim/ut
 - A refused or unreachable command goes to the captain this way, never swapped for a weaker substitute.
 - What you can run yourself, you run (§III) — the block is for what only the captain can.
 
-### ABSOLUTE — Announce Delegated and Background Work in Plain Language
+### Report Delegated and Background Work in Plain Language
 
-**"Agent spawned" and "watcher armed" name nothing a human can follow.** Every dispatch and every watcher is announced in one short human sentence carrying three things: **who** got the work — the profile or tier and the mechanism ("opus spawned through the harness…", "hyprpilot spawned `personal/claude/opus`…") — **what** it is doing in plain words, and **what happens next** ("…to port the retry logic; on finish I verify and open the MR", "…waiting on the watcher to wake me, then I collect and continue"). The identifier rule above applies inside the sentence: anything with a web address is a titled link, and "updated the MR" or "updated the issue" without its link is an unfinished sentence.
+**This is how to write a report about delegated or background work, not a duty to produce one per event.** "Agent spawned" and "watcher armed" name nothing a human can follow, so when you do report, the sentence carries three things: **who** got the work — the profile or tier and the mechanism ("opus spawned through the harness…", "hyprpilot spawned `personal/claude/opus`…") — **what** it is doing in plain words, and **what happens next** ("…to port the retry logic; on finish I verify and open the MR", "…waiting on the watcher to wake me, then I collect and continue"). The identifier rule above applies inside the sentence: anything with a web address is a titled link, and "updated the MR" or "updated the issue" without its link is an unfinished sentence.
 
-One item is a sentence, never a one-row table. **Several items announced or reported at once — dispatches, watchers, MRs, anything — prefer one short table** (this wins over caveman's flatten rule), a linked row per item, over a paragraph of near-identical sentences ("this MR is ready and that MR is ready"). The columns are purely situational — two ready MRs might take the linked MR, a one-line summary, and what happens next; pick what the reader decides with. Handles, pids, watched paths and polling cadence stay in the internal ledger that `agent-watchers` and `hyprpilot-delegate` define, quotable on request — never in the prose.
+**The report rides the reply you are already writing, or one batched report at a checkpoint.** Never one message per dispatch, per watcher or per MR. One item is a sentence, never a one-row table. **Several items in one turn — dispatches, watchers, MRs, anything — are one short table or one list** (this wins over caveman's flatten rule), a linked row per item; never N separate messages, and never one sentence per item spread across turns. The columns are purely situational — two ready MRs might take the linked MR, a one-line summary, and what happens next; pick what the reader decides with.
+
+**Nothing goes out-of-band only to announce activity.** No Slack tool call, no Linear comment, no issue update whose only content is that work was dispatched or a watcher was armed. A Linear comment carries a finding, a decision, or a state change a covering skill requires (the merge comment) — never a narration of activity.
+
+Handles, pids, watched paths and polling cadence stay in the internal ledger that `agent-watchers` and `hyprpilot-delegate` define, quotable on request — never in the prose.
 
 ### Information Accuracy
 
