@@ -1,6 +1,6 @@
 # Rightsize VPA In-Place
 
-How in-place VPA resize and goldilocks-generated VPAs behave in this estate, and what that means for automating requests. Measured and verified 2026-10-16 against VPA 1.8.0, Kubernetes 1.36 and goldilocks 4.16.2. The committed sizing values still come from `rightsize-signals`; this file covers the mechanism that could apply them. Recommender percentiles: `rightsize-vpa-percentiles`.
+How in-place VPA resize and goldilocks-generated VPAs behave in this estate: VPA 1.8.1 from `chart-vpa`, goldilocks 4.16.2 from `chart-goldilocks`, Kubernetes 1.36. VPA applies the request band; the measured figures behind the band come from `rightsize-signals`. Recommender percentiles: `rightsize-vpa-percentiles`.
 
 ## In-place resize semantics
 
@@ -8,18 +8,18 @@ How in-place VPA resize and goldilocks-generated VPAs behave in this estate, and
 |---|---|
 | Kubernetes | `InPlacePodVerticalScaling` is GA from 1.35, always on, no feature gate. |
 | VPA update modes | `Auto`, `Off`, `Initial`, `InPlaceOrRecreate`. `InPlaceOrRecreate` is GA since VPA 1.6 (alpha 1.4, beta 1.5). |
-| Never-evict mode | `InPlace` is alpha, behind `--feature-gates=InPlace` on the updater AND the admission controller. |
+| Never-evict mode | `InPlace` is alpha, behind `--feature-gates=InPlace` on the updater AND the admission controller; `chart-vpa` sets both. It is the estate's mode: a resize never restarts the pod. |
 | Updater flags that matter | `--in-place-skip-disruption-budget=true` (deployed in this estate); `--min-replicas` defaults to 2, changed per workload with the goldilocks `vpa-min-replicas` annotation. |
 | Container `resizePolicy` | A Deployment field, Kubernetes default `NotRequired`. goldilocks only writes VPAs and never sets it. The in-place path holds only while it stays `NotRequired`; a chart that sets `RestartContainer` turns every resize into a restart. |
 | Shrinking a request | Always feasible in place. |
-| Growing a request | Can be infeasible under node pressure and then falls back to eviction. Evicting a model-loading workload (GPU or not) unloads what it held, so such workloads are poor candidates. |
+| Growing a request | Can be deferred or infeasible under node pressure. Under `InPlace` the resize stays pending on the node (`KubeletPodResizePending`); under `InPlaceOrRecreate` it falls back to eviction, and evicting a model-loading workload (GPU or not) unloads what it held. |
 
 ### controlledValues
 
 | Value | Behaviour | Use |
 |---|---|---|
-| `RequestsOnly` | VPA resizes requests; limits stay static. | REQUIRED when limits are set deliberately outside VPA. A tight `maxAllowed` cannot cause an OOM, because the limit does not move. |
-| `RequestsAndLimits` | VPA scales limits by the manifest's request:limit ratio on every resize. | Not here: a 10x ratio balloons the limit to the `maxAllowed` cap. |
+| `RequestsOnly` | VPA resizes requests; limits stay authored in the manifest. | **The estate's policy, on every VPA outside the HTML canary.** A tight `maxAllowed` cannot cause an OOM, because the limit does not move. |
+| `RequestsAndLimits` | VPA scales limits by the manifest's request:limit ratio on every resize. | Only the HTML canary runs it, deliberately; it is not a pattern to copy. |
 
 ### evictionRequirements
 
@@ -40,7 +40,26 @@ The full change-later contract, set per workload on the Deployment:
 | `vpa-min-replicas` | Updater minimum replicas for that workload. |
 | `exclude-containers` | Dashboard only; does not touch the VPA. |
 
-Proven bounds, the `html-*` setup: `minAllowed` 10m / 10Mi, `maxAllowed` 50m / 32Mi, from measured peaks, `controlledValues: RequestsOnly`.
+The band as a policy, with `maxAllowed` at or below the container's authored limit and `requests = minAllowed` seeded in the manifest:
+
+```yaml
+goldilocks.fairwinds.com/vpa-update-mode: InPlace
+goldilocks.fairwinds.com/vpa-resource-policy: |
+  {
+    "containerPolicies": [
+      {
+        "containerName": "<container>",
+        "mode": "Auto",
+        "controlledResources": ["cpu", "memory"],
+        "controlledValues": "RequestsOnly",
+        "minAllowed": { "cpu": "<min cpu>", "memory": "<min memory>" },
+        "maxAllowed": { "cpu": "<max cpu>", "memory": "<max memory>" }
+      }
+    ]
+  }
+```
+
+A workload whose fixed request is deliberate keeps a VPA in `Off` mode for visibility; the `VPARequests*` alerts exclude it by `update_mode`.
 
 ### Truths from source
 
@@ -61,47 +80,11 @@ Exit a whole namespace:
 1. Remove the label in Pulumi.
 2. Add explicit VPA CRs in the workload repositories for every workload that needs one, including `Off`-mode CRs for the siblings that should keep a recommendation.
 
-## Candidates and evidence
-
-Estate evidence, 2026-10-16.
-
-**Proven:** `html-cv3`, `listr2` and `nurankilic` on rubik had requests AND limits resized live, without restarts, under `InPlaceOrRecreate`.
-
-**Why the default recommender declines the bursty candidates.** In Auto mode VPA writes its Target into the REQUEST. The default recommender targets near-peak (p90 CPU, p95 memory, over daily peaks), which pins a bursty workload's request near its peak. That contradicts the estate's time-weighted-average posture for requests in `rightsize-signals`.
-
-Measured candidate sweep, time-weighted method (memory):
-
-| Workload | Time-weighted avg | 7d max |
-|---|---|---|
-| ollama | 754Mi | 8155Mi |
-| speaches | 2781Mi | 4738Mi |
-| nzbget | 13Mi | 728Mi |
-| paperless | 859Mi | 1950Mi |
-| immich | 452Mi | 833Mi |
-
-**The fix: a second request-track recommender** through `spec.recommenders` (works in VPA 1.8.0, verified in source):
-
-- `chart-vpa` needs a new template to deploy it.
-- It needs `memory-aggregation-interval` at 1h. Memory percentiles aggregate per-interval peaks, so at the 24h default p50 is the median DAILY PEAK, not the average (`rightsize-vpa-percentiles`, "Memory percentiles and the aggregation interval").
-- The candidates still need the whole-namespace exit above.
-
-The merits landed within the materiality floors of the static sizes today. Revisit for workloads whose 7d average drifts more than 20% week over week.
-
-## Estate config note
-
-Deployed recommender args, observed 2026-10-16 (full table in `rightsize-vpa-percentiles`):
-
-| Cluster | target cpu / mem | upper cpu / mem |
-|---|---|---|
-| nailbed | 0.95 / 0.99 | 0.99 / 0.99 |
-| rubik, neutrino, overseer | 0.9 / 0.95 | 0.95 / 0.99 |
-
-nailbed matches the reference; the divergence on the other three is untraced and reconciliation is pending. No cluster sets `memory-aggregation-interval`, so all run the 24h default. Re-read the deployed args before relying on this table.
-
 ## Pitfalls
 
-- **`RequestsAndLimits` on a workload with deliberate limits.** Limits ratchet up with every resize.
+- **`RequestsAndLimits` anywhere.** Limits move with every resize; the estate authors limits in the manifest.
+- **`maxAllowed` above the authored limit.** A request may never exceed its limit, so the resize produces an invalid pod.
+- **Copying the HTML canary.** Its `RequestsAndLimits` policy and limit-relative ScaledObject are deliberate exceptions.
 - **A standalone VPA next to a goldilocks one.** The older object wins; the newer one never acts.
 - **Trusting an annotation edit.** A misspelled key is dropped without error; the live VPA is the only proof.
 - **Adding `evictionRequirements` to gate disruption.** It also blocks live shrinking.
-- **Auto mode on a bursty workload with the default recommender.** The request lands near peak.

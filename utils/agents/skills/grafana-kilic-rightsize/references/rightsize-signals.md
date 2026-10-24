@@ -33,6 +33,8 @@ Both apply to **requests**. Below the floors, the change is noise: it costs a me
 
 The sizing is tight: each value is the measured figure on the grid, with no multiplier on top.
 
+On a VPA-managed container the request rows are evidence for the band, not committed values: VPA writes the request, and the 7d max decides `maxAllowed` and the limit per the skill's band rules.
+
 | Value | Target |
 |---|---|
 | `requests.memory` | 7d time-weighted average of the busiest pod per 5-minute step |

@@ -82,6 +82,7 @@ How an agent finds the repository and file behind a change or an observation. Th
 | Kargo promotions (`.promote/`, `kargo-root`) | `kargo-kilic` |
 | Cluster reads | `kubernetes-kilic` |
 | Observability | `grafana-kilic`, `grafana-kilic-*` |
+| Sizing and autoscaling: VPA bands, goldilocks annotations, HPAs, KEDA | `grafana-kilic-rightsize`; wiring in reference `structure-kilic-autoscaling` |
 | Resolving observation to repo; value placement | references `kilic-workload-resolution`, `kilic-resource-placement` |
 | infrastructure group (Terraform/Pulumi), pulumi-config-rancher, tf-overseer, ansible-playbooks | **No skill.** `ansible-playbooks` has in-repo `.claude/skills/{container-quadlet,setup-playbook}` and a `CLAUDE.md`; `argocd-system` has in-repo `.claude/skills` |
 | `spacelift-*` | Laravel estate, not kilic |

@@ -1,11 +1,12 @@
 ---
 name: grafana-kilic-rightsize
-description: grafana-kilic-rightsize Find and apply tight container rightsizing from VPA outliers, OOM kills, throttling and a week of usage, resolving each candidate to the repository and layer that owns it. Use on "find rightsizing candidates", "rightsize this workload", a CPUThrottlingHigh alert, "walStorage". Not for replica counts or node sizing.
+description: grafana-kilic-rightsize Size containers through a VPA request band, or static values where VPA does not fit, from VPA outliers, OOM kills, throttling and 7d usage, resolving each candidate to the repository and layer that owns it. Use on "find rightsizing candidates", "rightsize this workload", a CPUThrottlingHigh alert, "walStorage". Not for replica counts or node sizing.
 disableModelInvocation: true
 argumentHint: '[candidates|target] - e.g. ''find candidates on rubik'', ''rightsize loki-chunks-cache'''
 references:
   - ../references/kilic/kilic-workload-resolution.md
   - ../references/kilic/kilic-resource-placement.md
+  - ../references/kilic/kilic-autoscaling-metrics.md
   - ./references/rightsize-signals.md
   - ./references/rightsize-snap-grids.md
   - ./references/rightsize-hpa-anchor.md
@@ -44,15 +45,27 @@ The outlier dashboard is the entry point, and it is only that. A VPA recommendat
 
 Short-lived workloads and brief throttle spikes carry little weight. A Job pegged at 100% throttle for ninety seconds is usually working as intended; list it separately rather than proposing a change for it.
 
-## Tight Sizing
+## Sizing Through a VPA Band
 
-**Every value is the measured figure on the grid, with nothing added.** Queries and targets per `rightsize-signals`, grid and value floors per `rightsize-snap-grids`.
+**VPA-managed requests inside a `minAllowed`/`maxAllowed` band are the preferred method.** Measured figures per `rightsize-signals`, grid per `rightsize-snap-grids`, the VPA policy and goldilocks annotations per `rightsize-vpa-inplace`, the recommender per `rightsize-vpa-percentiles`, and the metrics and alerts that prove it works per `kilic-autoscaling-metrics`.
+
+- **VPA manages requests only**: `controlledValues: RequestsOnly`. Limits stay authored in the manifest and VPA never moves them; no limit-to-request ratio is part of the method.
+- **The band clamps the request, per container and resource**, set from the measured distribution and justified in the merge request:
+  - `maxAllowed.memory` is at least `1.25 x` the 7d max working set.
+  - `maxAllowed` sits at or below the container's authored limit. A request may never exceed its limit, so a band that climbs past it produces an invalid pod.
+  - `minAllowed` is the smallest request the workload should ever run at.
+- **The manifest seeds `requests = minAllowed`** and leaves the limit as it is.
+- **Limits** are the smallest grid stop at or above the 7d max, never a new limit where none existed, and never below `maxAllowed`. When `1.25 x` the 7d max memory does not fit under the authored limit, raise the limit in the same change.
+- **Sustained throttling raises the CPU limit**, and only for a container steadily throttled by the summed figure. A container throttling in sub-second bursts while its average sits far below the limit — exporters, usually — is the quota working as designed and stays untouched.
+- **Read every HPA before a request moves**, per `rightsize-hpa-anchor`. HPAs stay, at a fixed `AverageValue`; a Utilization target divides by a request VPA now moves.
+
+### When VPA Is the Wrong Tool
+
+Size statically instead when the workload is resized once and never again, or when its fixed value is deliberate — the kagent WorkerPool's requests are its capacity declaration, so it is pinned and its VPA runs `Off` for visibility only. Static sizing is the measured figure on the grid, with nothing added:
 
 - **Requests** come from the 7d time-weighted average of the busiest pod per 5-minute step. Never from a per-series average: it inflates every workload whose pods churned in the window.
-- **Limits** are the smallest grid stop at or above the 7d max. Never below the max, and never a new limit where none existed.
+- **Limits** are the smallest grid stop at or above the 7d max.
 - **No multiplier.** Bursty workloads take the same rule; `rightsize-bursty-list` decides only whether the 7d window held a burst before a limit is lowered to its max.
-- **Sustained throttling raises the CPU limit**, and only for a container steadily throttled by the summed figure. A container throttling in sub-second bursts while its average sits far below the limit — exporters, usually — is the quota working as designed and stays untouched.
-- **Read every HPA before a request moves**, per `rightsize-hpa-anchor`. A Utilization target divides by the request, so a request cut scales the workload out at a fraction of the load: on envoy-gateway this is why its requests were held, and zitadel's `targetCPU: 300` is why its CPU request was held. Re-anchor per the `averageValue = floor(0.8 x limit)` rule only when the resize actually touches the HPA-anchored workload.
 
 Scopes with their own arithmetic:
 
@@ -61,7 +74,7 @@ Scopes with their own arithmetic:
 | Chart repositories in `cluster/charts/*` — one version on every cluster, so the cross-cluster maximum | `rightsize-charts-cross-cluster` |
 | CNPG `walStorage`, a WAL PVC filling up, with its backup-health gate | `rightsize-cnpg-walstorage` |
 | The VPA recommender's own `extraArgs` percentiles | `rightsize-vpa-percentiles` |
-| Applying requests through VPA itself — in-place resize, goldilocks | `rightsize-vpa-inplace` |
+| The VPA policy itself — `RequestsOnly`, the band, in-place resize, goldilocks annotations | `rightsize-vpa-inplace` |
 | A sweep over every database — CNPG and MariaDB CRs are often generated, not source | `rightsize-database-discovery` |
 | A `CPUThrottlingHigh` alert, or a Slack thread carrying one — the alert is the specification | `rightsize-slack-alert`; already-changed limits per `rightsize-throttling-alert` |
 
@@ -123,7 +136,7 @@ State the skips. A list that silently drops two thirds of what it found reads as
 
 1. **VPA opens the case, usage decides it.** A recommendation alone is never grounds for a change.
 2. **OOM and sustained throttling are floors.** Never shrink below what killed or throttled a container, and raise the finding on its own merits.
-3. **Tight, from the right query.** Requests from the busiest-pod time-weighted average, limits at the smallest grid stop at or above the 7d max, no multiplier.
+3. **A VPA band first, static values only where VPA does not fit.** VPA moves requests inside the band, limits stay authored at or above both the 7d max and `maxAllowed`, and static requests come from the busiest-pod time-weighted average.
 4. **Discovery stops at a list.** Turning findings into changes is the user's call.
 5. **ArgoCD resolves ownership.** Never infer the repository from a pod, namespace, or workload name.
 6. **Generic wins.** Test one value across clusters first; only a genuinely deviating cluster earns an override, and an override duplicating the common value is deleted.
