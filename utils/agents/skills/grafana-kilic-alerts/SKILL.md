@@ -6,6 +6,7 @@ argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero
 references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/kilic-monitoring-ownership.md
+  - ../references/kilic/kilic-autoscaling-metrics.md
 ---
 
 ## Alerting
@@ -113,7 +114,7 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 
 ## Process
 
-1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition.
+1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition. For VPA, in-place resize and KEDA, the families that exist, the ones that do not, and what each existing rule means for triage: `kilic-autoscaling-metrics`.
 2. **Decide the owner, then base or cluster.** One workload or system component goes in its own repository or chart; otherwise base for anything every cluster runs, `.deploy/rubik/` for the central stack.
 3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above. Confirm it returns rows now, and reason about when it would not.
 4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.

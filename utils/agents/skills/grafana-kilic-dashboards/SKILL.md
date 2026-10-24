@@ -7,6 +7,7 @@ references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/loki-label-model.md
   - ../references/kilic/kilic-monitoring-ownership.md
+  - ../references/kilic/kilic-autoscaling-metrics.md
 ---
 
 ## Grafana Dashboards
@@ -143,7 +144,7 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 2. **Confirm the query returns rows** against the live instance before shipping a panel or button: `query_prometheus` for a metric and its joins, `query_loki_logs` to prove a selector returns lines.
 3. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
 4. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
-5. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found.
+5. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found. For VPA, resize and KEDA panels, a lazily created series is a third case, and which families exist at all is in `kilic-autoscaling-metrics`.
 
 ## Key Principles
 
