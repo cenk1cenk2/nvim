@@ -63,6 +63,7 @@ Guidelines for the everyday intents, so the covering skill loads before the firs
 | Open, read, comment on, or fix a PR/MR; red CI | the platform's PR/MR or CI skill for that verb |
 | A Linear issue id, Linear URL, or Linear team key | the workspace skill first, then the `linear-*` skill for the verb (read, create, status, update, comment) |
 | A Slack, Notion or Spacelift link | its workspace skill, which auto-invokes |
+| A report, plan, review or investigation that outgrows an inline reply | `report-pdf` |
 | Write or edit code | `code-style` |
 | Hand work to an agent; wait on something external | `agent-delegate`; `agent-background` |
 | Coordinating while open PRs/MRs, a tracker scope or a plan need standing attention | the `*-companion` skill for that domain |
