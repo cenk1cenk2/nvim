@@ -28,7 +28,7 @@ One row per step, in execution order. Core columns always appear. Optional colum
 - **A blocked row stays in place.** Mark it and name the blocker; never drop or reorder it out of sight.
 - **Re-emit when a row moves**, same numbers, same columns, one line above it naming what moved. A turn where nothing moved does not re-emit.
 - **Close with the next row to act on**: `Next: 2 (you) — merge and confirm the apply.` When several rows are ready at once, name each.
-- **A markdown table, never hand-drawn box art.** The renderer draws the borders.
+- **A markdown table, never hand-drawn box art.** The renderer draws the borders. On a surface that renders no tables (Slack), the flow takes the bullet-list form per `identifier-legibility`: one bullet per row in execution order, its step number first.
 - **Live state only.** Re-read each row's source before re-emitting; a row copied from an earlier table is a claim, not a check.
 
 ## Inside a Status Report

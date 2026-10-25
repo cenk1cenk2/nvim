@@ -46,7 +46,7 @@ The delta only, never the standing picture. New findings, completed steps, verdi
 
 **Tables.** The standing picture: every tracked item and its live status, one row per item, concrete values. Anything addressed by an identifier carries its title or a summary beside it and links to its URL, per `identifier-legibility` — a column of bare ids is not a standing picture, it is a lookup list. A reader who reads nothing else should still know where things stand. Keep columns stable across turns so rows compare turn to turn.
 
-Tables rather than bullets, because this section is *scanned* rather than read.
+Tables rather than bullets, because this section is *scanned* rather than read. On a surface that renders no tables (Slack), the same picture is a bullet list instead, one item per bullet with its identifier linked, per `identifier-legibility`.
 
 - **Use `###` subheaders to group** when items fall into distinct sets — one table per group beats one wide table with a discriminator column.
 - **A short summary under a table is welcome** when the rows share something worth stating once (a fleet-wide zero, a common baseline, an exception that applies to all rows). Put it under the table, not inside it.
