@@ -80,19 +80,21 @@ Truncate a long title at a word boundary rather than dropping it; a truncated ti
 
 Fetch it — one call is cheaper than the reader opening every row. If it genuinely cannot be fetched, say so in the column: `| !9001 | (title unavailable - 404) |`.
 
-## Surfaces that render no tables
+## Tables and fenced blocks
 
-Slack has no Markdown tables. A pipe table arrives as literal pipes or gets fenced into monospace, and a
-fenced code block is not clickable and cannot carry a link — so an identifier inside one is as bare as one
-never linked. On Slack, and any surface like it:
+A fenced code block is not clickable and cannot carry a link, so an identifier inside one is as bare as one
+never linked. Columns hand-aligned inside a fence look like a table and lose every link in it.
 
-- **A table becomes a bullet list.** One item per bullet, the identifier first as a link to its full URL
-  in the surface's own syntax, then its title, then the fields the table would have carried. On Slack that
-  syntax depends on the tool: markdown `[title](url)` for the connector, mrkdwn `<url|title>` for the
-  `slack-kilic` server, per `slack`:
+- **Never hand-align columns inside a fenced code block** to imitate a table. Write a real markdown table
+  and let the surface render it — Slack does, with rich formatting enabled — or a bullet list where the
+  surface cannot render tables.
+- **Either way, each identifier carries its title and is a link in the surface's own syntax.** On Slack
+  that syntax depends on the tool: markdown `[title](url)` for the connector, mrkdwn `<url|title>` for the
+  `slack-kilic` server, per `slack`.
+- **The bullet-list fallback** is one item per bullet, the linked identifier first, then its title, then
+  the fields the table would have carried:
   `- [K-219](https://…) — Rotate the JWT signing key: In Progress` or
   `- <https://…|K-219> — Rotate the JWT signing key: In Progress`.
-- **Never hand-align columns inside a code fence** to imitate a table. It strips every link in it.
 - **A fenced block holds only code, commands, and log output** — never an identifier a reader would want
   to click.
 
