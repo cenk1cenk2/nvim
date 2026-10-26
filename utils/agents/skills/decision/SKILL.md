@@ -10,7 +10,7 @@ A thin front for the in-cluster ollama decision API. One tool, `decide`: you pas
 
 - **Transport:** hosted, `https://decision.mcp.kilic.dev/mcp`, Streamable HTTP, bearer auth via `${AI_KILIC_DEV_API_KEY}`. A call without a key gets 401 `api key authentication failure`.
 - **Implementation:** hyprpilot itself, `hyprpilot mcp passthrough --transport http` (server name `hyprpilot-passthrough`). It runs as a Deployment in the `ollama` namespace on `neutrino`, behind the agentgateway Gateway.
-- **Forwarding:** the call arguments are merged over a static body pinned in the ConfigMap `.deploy/neutrino/agentgateway/mcps/decision/configmap.yaml` in `cluster/workloads/ollama`, which adds `model: d1-omni:600m`. The result is POSTed to `http://ollama.ollama.svc.cluster.local:11434/v1/systemone` (ollama's jev-style decision models, https://ollama.com/blog/ollama-now-supports-jev-style-decision-models) and the ollama JSON comes back verbatim as text. A non-2xx or unreachable upstream comes back as an error naming the url. That hostname resolves only inside the cluster, so the MCP route is the only way in from a workstation.
+- **Forwarding:** the call arguments are merged over a static body pinned in the ConfigMap `.deploy/neutrino/agentgateway/mcps/decision/configmap.yaml` in `cluster/workloads/ollama`, which pins the `model`. Each response's `model` field names the model that answered. The result is POSTed to `http://ollama.ollama.svc.cluster.local:11434/v1/systemone` (ollama's jev-style decision models, https://ollama.com/blog/ollama-now-supports-jev-style-decision-models) and the ollama JSON comes back verbatim as text. A non-2xx or unreachable upstream comes back as an error naming the url. That hostname resolves only inside the cluster, so the MCP route is the only way in from a workstation.
 - **Authorization:** agentgateway API-key scope `mcp/decision`. The keys carry the bare `mcp` scope, which satisfies it as a parent prefix.
 - **Monitoring:** the blackbox probe (`probe.yaml`) targets the route and expects 401. A 401 there means the route matches, not that something is broken.
 
@@ -39,7 +39,7 @@ Response shape:
 
 ```json
 {
-  "model": "d1-omni:600m",
+  "model": "<pinned model>",
   "answers": {
     "severity": { "type": "choice", "choice": "page", "probabilities": { "page": 0.71, "ticket": 0.24, "ignore": 0.05 }, "confidence": 0.34 },
     "actionable": { "type": "noul", "noul": 0.91 },
@@ -61,8 +61,7 @@ Validation errors come back as a 400 naming the question: an unknown `type` gets
 
 ## Where It Falls Down
 
-- **`noul` does not confirm true claims.** Against a diff changing `MAX_RETRIES = 3` to `5`, the false "adds a new HTTP endpoint" lands near 0, but the true "MAX_RETRIES is changed from 3 to 5" comes back 0.21 and "increases the maximum number of retries" 0.52. A low `noul` is not a no, and a mid-band one carries no information.
-- **Requests phrased as a polite ask get missed.** A review ending "Please confirm the maintenance window before Saturday" comes back a coin flip on "does it ask a human to act". Check for asks in code or by reading the text yourself.
+- **Capability follows the pinned model.** A weaker model can be confidently wrong on plain facts - reading a changed value backwards, missing an explicit ask, labelling every diff the same kind - with the winner above the bar. When the response's `model` differs from the last one you checked, run a few questions with known answers first and trust it only once they come back right.
 - **Quality judgements.** Rating a vague commit message against a large rewrite splits between the top rubric levels, even with every level described. It cannot grade.
 - **Judgement calls stay undecided.** "Can this diff merge without tests" as a two-option `choice` stays well under the bar with low `confidence`. The `choice` form shows the indecision that `noul` hides.
 - **Holistic verdicts over mixed evidence.** A healthy report that mentions an unrelated earlier crash comes back near a coin flip on its overall verdict, while the narrow "did the deploy cause a crash" on the same text answers clearly. A label word such as `HEALTHY` anywhere in `state` swings the verdict towards it - the model latches on to label words.
@@ -76,7 +75,7 @@ Validation errors come back as a 400 naming the question: an unknown `type` gets
 1. **Check the question fits.** Classification, routing, and triage over clear options fit. Grading, gating, and anything code can compute exactly do not - do those another way.
 2. **Frame the state.** Put only the fields the questions need into `state`, named plainly. Every extra field moves the answers, and any word matching an option key leaks the answer - strip the labels of what the question itself asks (a review's own verdict tag when you ask for its verdict), and keep every other word, because masking evidence ("the earlier stage was HEALTHY") removes what a question needs. Pass the text whole; a truncated write-up loses its closing sections, where the asks usually sit. Name every question neutrally for what it asks (`contains_stuff`, `q1`), never for the answer you expect.
 3. **Decompose a verdict into narrow questions.** Ask the factual parts (did the deploy cause a crash, does a stateful workload restart, what changes in the repository) and combine them in your own logic, rather than asking for the overall verdict in one question.
-4. **Prefer `choice` over `noul` for anything that needs judgement.** A two-option `choice` with described options (`"yes": "needs tests before merge"`, `"no": "safe to merge as is"`) exposes indecision through `confidence`, where `noul` hides it behind a single number. Use `noul` only to rule out a claim that is plainly false, and never as the sole answer for a claim you expect to hold.
+4. **Prefer `choice` over `noul` for anything that needs judgement.** A two-option `choice` with described options (`"yes": "needs tests before merge"`, `"no": "safe to merge as is"`) exposes indecision through `confidence`, where `noul` hides it behind a single number. Keep `noul` for plainly factual, positively phrased claims.
 5. **Write every criterion as a description.** Each `choice` key's value says what the option means (`"page": "needs a human now"`). Order `score` levels lowest first, because `score` is the expected index over that order.
 6. **Batch related questions into one call.** Every question sees the same `state`, and the cost barely moves.
 7. **Read the distribution, then decide.** Act on a `choice` when the winner is at or above 0.85; treat a `noul` as yes at or above 0.85 and no at or below 0.15; anything between is undecided. Report the winner with its probability and `confidence`, and say which threshold you used when it differs.
