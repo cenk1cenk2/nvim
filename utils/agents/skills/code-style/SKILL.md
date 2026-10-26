@@ -40,6 +40,7 @@ Check each axis against the siblings solving the same problem:
 - Start YAML files with `---` unless the directory consistently does otherwise.
 - In multi-statement functions, leave a blank line before the final return when the language and style support it. Single-statement functions and guard returns do not need it.
 - Write the type on every parameter, return value and field, even when neighbours share it: `a string, b string`, never `a, b string`. This holds even where the surrounding code groups them.
+- **Never hard-wrap prose.** Every paragraph, list item and sentence is one flowing line that the viewer wraps — in markdown, prompts, heredocs, docs and any other running text. Never break text at a fixed column. A format with its own mandated wrapping, such as a commit body, follows that format's rule.
 
 ## Comments
 
