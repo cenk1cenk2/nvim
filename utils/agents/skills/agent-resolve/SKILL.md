@@ -32,6 +32,11 @@ On/off mechanics per `mode-toggle`.
 - **Off:** the plan is presented after the final pass, or any stop or park signal.
 - **Survives disengage:** the plan file with its round ledger. Research agents do not — reap each once its answer is in.
 
+## Modes
+
+- **Default — fan-out.** The Process as written: research agents on every open question, reviewers on every round.
+- **Solo — on "yourself", "with yourself", "on your own", "without delegating", "no delegation".** You run every round's research and iteration yourself, with your own reads and tools; nothing is fanned out. Agents only verify your thinking: each round's review in step 2 is the one place they work, and their findings become the next round's open set, which you research yourself. The plan file, its ledger, the round cap, the final pass and the residual all hold. The `plan-mode` "plan with yourself" carve-out does not apply here: a solo run still holds the posture and writes the plan file.
+
 ## Process
 
 1. **Draft.** Load `plan-hard` and run its auto mode to produce the first draft — no interview, and still under this run's plan-mode posture. When given an existing plan path instead, that file is the draft. Write it to the internal plans directory per `provider-paths`.
@@ -39,7 +44,7 @@ On/off mechanics per `mode-toggle`.
 3. **Collect the open set.** Every reviewer FAIL, CONCERN and QUESTION, every branch the draft left as an assumption, and every unknown the draft names, deduplicated. Classify each:
    - **Researchable** — evidence exists somewhere: the codebase, another repo, docs, the live system, the web.
    - **Intent** — only the user can answer it. Park it in the residual; never research a preference.
-4. **Research.** Fan the researchable set out per `agent-fan-out`: one unit per question, independent units in one wave, read-only agents. Dispatch mechanics per `agent-delegate`; fetch `agent-delegate-harness-<provider>` before the first dispatch, and collect every answer the way that reference says the runtime delivers it — diagnose a silent agent before re-dispatching it. Each brief asks for the answer, its evidence with paths or URLs, and a confidence; answers come back to you and you write the plan.
+4. **Research.** Fan the researchable set out per `agent-fan-out`: one unit per question, independent units in one wave, read-only agents. Dispatch mechanics per `agent-delegate`; fetch `agent-delegate-harness-<provider>` before the first dispatch, and collect every answer the way that reference says the runtime delivers it — diagnose a silent agent before re-dispatching it. Each brief asks for the answer, its evidence with paths or URLs, and a confidence; answers come back to you and you write the plan. In solo mode, research each unit yourself instead.
 5. **Fold back.** Revise the plan from the answers. An answer that contradicts a decision re-opens that branch; an answer that raises a new question adds it to the next round's open set. Record the round in the plan's ledger: what was asked, what was found, what changed.
 6. **Loop.** Return to step 2 on the revised plan, reviewing only what this round changed plus anything it touched. The plan has **settled** when a round's review and research change nothing — no new findings, no re-opened branch, an empty researchable set. Report each round's close per `output-status`; mid-round progress is one line.
 7. **Cap the loop.** Three rounds without settling means the plan is oscillating or the question is underspecified. Stop looping, and carry the still-moving items into the residual with what each round found.
