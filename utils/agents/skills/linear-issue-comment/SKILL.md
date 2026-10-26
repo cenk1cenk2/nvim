@@ -4,6 +4,7 @@ description: linear-issue-comment Record findings, deviations, and decisions as 
 argumentHint: '[issue id or URL] [what to record]'
 references:
   - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-comment-style.md
   - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
   - ../references/agent-owned.md
@@ -29,7 +30,7 @@ The current conversation context holds the most recent version of the issue's in
 
 2. **Distill the comment:**
    - Extract only critical findings and deviations from the conversation context.
-   - Strip all filler — no greetings, no "just wanted to note", no restating the issue.
+   - Distill per `linear-comment-style`.
 
 3. **Post the comment:**
    - Write it with the Linear MCP `save_comment` tool from the appropriate workspace, then report it with its link. Markdown normaliser traps per `linear-description-structure`.
@@ -38,24 +39,4 @@ The current conversation context holds the most recent version of the issue's in
 
 ## Comment Style
 
-- **An owned comment is yours to fix** per `agent-owned` — edit it, or delete it while it has no replies, without asking.
-- **Lead with what changed** — "Switched from X to Y because Z."
-- **No filler** — no greetings, no restating the issue, no "just wanted to note".
-- **Facts and decisions only.**
-- **Length matches the finding** — a single deviation is one sentence. A complex research session with multiple findings gets bullets and an appendix.
-
-## Appendix
-
-When the session produced significant research, reasoning, or context worth preserving:
-
-```markdown
-## Findings
-
-- [Bullet list of key deviations and decisions]
-
-## Appendix
-
-[Detailed context: research trail, options considered, reasoning behind decisions, links to relevant code or docs]
-```
-
-Use the appendix when the comment would otherwise lose important context that future readers need to understand _why_ decisions were made.
+Comment shape, ownership, and the findings appendix per `linear-comment-style`.
