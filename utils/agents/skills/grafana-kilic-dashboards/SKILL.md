@@ -8,6 +8,8 @@ references:
   - ../references/kilic/loki-label-model.md
   - ../references/kilic/kilic-monitoring-ownership.md
   - ../references/kilic/kilic-autoscaling-metrics.md
+scripts:
+  - ./scripts/dashboard.py
 ---
 
 ## Grafana Dashboards
@@ -87,23 +89,26 @@ The grid is 24 columns wide. Established widths, in descending use: `12` (half),
 |---|---|---|
 | `stat` pill row | `w: 4, h: 3` | Six across is the standard KPI row |
 | `timeseries` | `w: 12, h: 10` | Two per row; `h: 9` and `h: 8` also in use |
-| `table` | `w: 24, h: 10` | Full width |
+| `table` | `w: 24, h: 10` | Full width; inventory tables close a dashboard or section |
+| issue `table` | `w: 12, h: 7` | Two per row, closing the section whose problems they list |
 | `row` | `h: 1` | Collapsible grouping |
-| `bargauge` | `w: 12` | Top-N distributions |
+| `bargauge` | `w: 8` beside a `w: 16` `timeseries`, or `w: 12` | Current distribution next to its history; top-N |
 
 Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus three narrow exceptions: `status-history` on `core/rancher` and `kubernetes/gateway/blackbox-probe`, one `piechart` on `kubernetes/gateway/envoy-gateway-traffic`, and one `text` markdown note on `backbone/tenants`. No dashboard uses the `statusmap` plugin. Variables are `query`, `datasource` and `constant`; none is `custom`.
 
-**When inserting a panel, shift the `y` of every panel at or below the insertion point**, then check for `gridPos` overlaps and duplicate panel ids.
+**When inserting a panel, put it at its place in the `panels` list and run `dashboard.py reflow`**, which re-stacks every `gridPos` from list order, then `dashboard.py lint` for overlaps and duplicate ids.
 
 **A stat showing several values in one pill uses `orientation: auto` with `wideLayout: true`.** `horizontal` stacks the values in a column, so three values in an `h: 3` pill each get a third of the height and render as bare colour bars with no text. The stat panel does not forward `minVizHeight` or `minVizWidth`, so those settings do nothing. `auto` lays the values side by side, with the name on the left and the value on the right.
 
-## Repeating per Entity
+## Stacking Hosts
 
-- **Repeat a row, not a panel, when an entity owns both pills and charts.** Each row clone gets a single-valued `$<var>`, so everything inside stays scoped to that entity; panel repeat separates an entity's pills from its charts.
-- **Drive the repeat from a hidden query variable on the metric that defines the kind:** `label_values(<metric>{cluster=~"$cluster", <key>=~"$<key>"}, <key>)`, with `hide: 2` and `skipUrlSync: true`. An entity without that metric gets no row, a new one appears without a JSON edit, and the visible `<key>` selector still narrows it.
-- **An empty repeat variable still renders one placeholder titled `All` whose queries match nothing.** No setting hides it; say so in the panel description.
-- **Clone width is 24 / min(count, `maxPerRow`); the stored `w` is ignored.**
-- **A series with no label to match the variable is gated with a constant.** This covers an entity derived from a name pattern rather than a label: `<expr> and on (<key>) label_replace(label_replace(vector(1), "p", "<value>", "", ""), "<key>", "$1", "p", "($<key>)")`. The outer `label_replace` sets `<key>` only when `<value>` is selected. This `on` list omits `cluster`, because `vector(1)` has none.
+**Hosts, nodes, routers and guests stack on shared panels; a section is never repeated per entity.** A multi-select variable on the entity's key (`node`, `pbs`, `router`, `guest`) defaulting to All narrows every panel at once.
+
+- **Every chart carries the entity in its legend** — `{{node}}`, `{{node}} / {{name}}`, `{{router}} {{interface}}` — and every table carries it as its first column, so a stacked series or row is identifiable without a click.
+- **Lay a dashboard out the way the Kubernetes dashboards are** (`kubernetes/cluster-nodes`, `kubernetes/cluster-workloads`): Overview with one or two rows of six pills (counts and utilization, then capacity and headroom); then one row per concern holding an absolute pair (`CPU by Node`, `Memory by Node`) followed by its `%` pair (`CPU Utilization %`, `Memory Utilization %`); the issue tables that list what is wrong close their section; inventory tables come last.
+- **Pair every utilization percentage across resources** — a CPU % panel without its memory % companion is incomplete.
+- **A per-entity drilldown is its own dashboard** (`Proxmox > Guests` beside `Proxmox > Overview`), not a repeated row.
+- **Prefer a friendly identifier over a device name** when another series maps one to the other: join on the shared label (`label_replace` the device first) so the legend reads `WAN`, not `vtnet0`.
 
 ## Thresholds
 
@@ -134,17 +139,31 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 
 - **Never change a dashboard `uid`.** It is the routing identity other dashboards link to.
 - Dashboard JSON serializes at `indent=2`. **Some files escape non-ASCII as `\uXXXX` and some do not** — detect per file by round-tripping before rewriting, or the diff churns hundreds of unrelated lines. Where an edit is a pure string substitution, rewriting the raw file text avoids the question entirely.
-- **Prefer scripted edits that assert the old value** over hand-editing. The files are large and the same URL commonly repeats across four panels.
+- **Prefer scripted edits that assert the old value** over hand-editing. The files are large and the same URL commonly repeats across four panels. A link-title rename is `dashboard.py retitle`, which refuses a mapping that matches nothing.
 - **Report the panel change** — the JSON is large, so show the panel or query that moved, never the whole file.
 - Most rate windows use `$__rate_interval`. `increase()` over `$__range` or `$__interval`, and the deliberate `[30m]` and `[10m]` smoothing windows, are intentional.
 
 ## Verification
 
 1. **`kustomize build .deploy/<cluster>`** in the owning repository is what CI runs and must pass — invalid JSON breaks the deploy, not one panel.
-2. **Confirm the query returns rows** against the live instance before shipping a panel or button: `query_prometheus` for a metric and its joins, `query_loki_logs` to prove a selector returns lines.
-3. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
-4. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
-5. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found. For VPA, resize and KEDA panels, a lazily created series is a third case, and which families exist at all is in `kilic-autoscaling-metrics`.
+2. **Run `dashboard.py lint`** on every changed file; it exits 1 on overlaps, duplicate ids, range-mode tables, repeated rows, percent thresholds on absolute stats and multi-select variables passed without `:queryparam`.
+3. **Confirm the query returns rows** against the live instance before shipping a panel or button: `query_prometheus` for a metric and its joins, `query_loki_logs` to prove a selector returns lines. `dashboard.py queries` prints every target's expression with variables substituted, one JSON line each, for that check; an empty result needs a negative control before it counts.
+4. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
+5. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
+6. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found. For VPA, resize and KEDA panels, a lazily created series is a third case, and which families exist at all is in `kilic-autoscaling-metrics`.
+
+## Scripts
+
+`scripts/dashboard.py` is executed by its path, resolved from this skill's `bundleDir`; its shebang syncs its own uv project, so it is never run through `python3`. A first `dashboard.py --help` in the foreground confirms it launches.
+
+| Subcommand | Does |
+|---|---|
+| `lint PATH...` | Reports layout and convention defects, one line each, then a `RESULT:` line. |
+| `queries PATH... [--set VAR=VALUE]` | Prints each target as JSON (`file`, `panel`, `title`, `refId`, `expr`), unset variables as `.*`, `$__rate_interval` as `5m`, `$__range` as `1h`. |
+| `reflow PATH... [--renumber]` | Re-stacks `gridPos` from list order, keeping each panel's `w` and `h`; `--renumber` also renumbers ids. |
+| `retitle PATH... --map OLD=NEW` | Renames dashboard-link and data-link titles exactly; panel titles are untouched; writes nothing when any mapping is unmatched. |
+
+Exit codes: 0 clean or written, 1 findings or an unmatched mapping, 2 usage error, 3 a file is not dashboard JSON. Files are rewritten at `indent=2` keeping each file's own non-ASCII escaping.
 
 ## Key Principles
 
@@ -153,7 +172,8 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 3. **Two links, not `oneClick`.**
 4. **`merge` by default, `joinByField` only for a real join key** — and then keep copy `1`.
 5. **Never change a uid.**
-6. **Say what is unproven.** Nothing renders until it syncs.
+6. **Stack hosts; never repeat a section per host.**
+7. **Say what is unproven.** Nothing renders until it syncs.
 
 ## Examples
 
