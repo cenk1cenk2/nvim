@@ -5,6 +5,7 @@ argumentHint: '[what you are about to ask Grafana]'
 references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/kilic-workload-resolution.md
+  - ../references/kilic/kilic-core-tenant.md
 ---
 
 ## The grafana-kilic Server
@@ -17,7 +18,7 @@ Datasource inventory, the federated and per-cluster uids, endpoint flakiness, an
 
 Every query tool needs a datasource uid, and picking the wrong one returns a confidently empty answer rather than an error.
 
-1. **A cluster is named** — use it. The six are `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`. `core` is a datasource tenant (`mimir-core`, `loki-core`), not a cluster; it, `rancher` and `gitlab` are VMs managed in `ansible-playbooks`.
+1. **A cluster is named** — use it. The six are `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`. `core` is a datasource tenant (`mimir-core`, `loki-core`), not a cluster: the hosts managed in `ansible-playbooks` (hypervisors, NAS, routers, GitLab, Rancher), labelled per `kilic-core-tenant`.
 2. **A workload, namespace, or repository is named** — resolve which clusters run it per `kilic-workload-resolution`, then select them with a `cluster` matcher.
 3. **Nothing is named** — ask. Do not silently pick one cluster. A fleet question is one query on the federated uid, broken out `by (cluster)`, but it costs the sum over every tenant, so say so before running it.
 

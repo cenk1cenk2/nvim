@@ -1,6 +1,6 @@
 ---
 name: grafana-kilic-dashboards
-description: grafana-kilic-dashboards Author and fix Grafana dashboards in monitoring-view or their owning repo - panel layout, table transforms, drilldown links, thresholds. Links break silently when a transform renames the field they read, so the frame is checked first. Use on "fix this dashboard", "add a panel". Not for reading metrics, writing alert rules, or editing Grafana directly.
+description: grafana-kilic-dashboards Author and fix Grafana dashboards in monitoring-view, monitoring-core or their owning repo - panel layout, table transforms, drilldown links, thresholds. Links break silently when a transform renames the field they read. Use on "fix this dashboard", "add a panel". Not for reading metrics, writing alert rules, or editing Grafana directly.
 disableModelInvocation: true
 argumentHint: '[dashboard or panel] - e.g. ''add a logs button to cluster-workloads'''
 references:
@@ -8,29 +8,30 @@ references:
   - ../references/kilic/loki-label-model.md
   - ../references/kilic/kilic-monitoring-ownership.md
   - ../references/kilic/kilic-autoscaling-metrics.md
+  - ../references/kilic/kilic-core-tenant.md
 scripts:
   - ./scripts/dashboard.py
 ---
 
 ## Grafana Dashboards
 
-Fleet and cross-cutting dashboards live in `cluster/workloads/monitoring-view`, rubik only, namespace `monitoring-backbone`; a dashboard for one workload or system component lives in that repository or chart. Which owner, the folder tree and the workload-side layout: `kilic-monitoring-ownership`. Datasource uids and the per-cluster model: `grafana-kilic-datasources`. The Loki label model behind every log drilldown is in `loki-label-model` — indexed stream label versus structured metadata decides whether a button returns lines or nothing.
+Fleet and cross-cutting dashboards live in `cluster/workloads/monitoring-view`, rubik only, namespace `monitoring-backbone`; the `Core` and `Infrastructure` folders live in `cluster/workloads/monitoring-core`; a dashboard for one workload or system component lives in that repository or chart. Which owner, the folder tree, the grafana-operator folder behaviour and the workload-side layout: `kilic-monitoring-ownership`. The core tenant's labels, podman recipes and log access: `kilic-core-tenant`. Datasource uids and the per-cluster model: `grafana-kilic-datasources`. The Loki label model behind every log drilldown is in `loki-label-model` — indexed stream label versus structured metadata decides whether a button returns lines or nothing.
 
-**monitoring-view's `README.md` is the spec for links and drilldowns, and its `CLAUDE.md` is the operational context, for every dashboard wherever it lives.** Read both before touching anything; a workload repository's own `CLAUDE.md` adds only what is specific to its dashboards. They are load-bearing; correct them when you prove them wrong.
+**monitoring-view's `README.md` is the spec for links and drilldowns, and its `CLAUDE.md` is the operational context, for every dashboard wherever it lives.** Read both before touching anything; monitoring-core's or a workload repository's own `CLAUDE.md` adds only what is specific to its dashboards. They are load-bearing; correct them when you prove them wrong.
 
 ## Datasources
 
-**Dashboards query the federated datasources, not the per-cluster ones.** `mimir` is the Grafana default and spans every cluster except `core`; `mimir-core` is the core tenant's datasource and the only dashboard route to core data. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids stay provisioned for Explore, the Alerting view, Node Exporter Full and Loki live tail. The full spec is in the repo's `CLAUDE.md`:
+**Dashboards query the federated datasources, not the per-cluster ones.** `mimir` is the Grafana default and spans every cluster except `core`; `mimir-core` is the core tenant's datasource and the only dashboard route to core data. The per-cluster `mimir-<cluster>` and `loki-<cluster>` uids stay provisioned for Explore, the Alerting view, Node Exporter Full and Loki live tail. The full spec is in each repo's `CLAUDE.md`:
 
 | Folder | `datasource` variable | `cluster` variable |
 |---|---|---|
-| Fleet landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `kubernetes/gateway/gateway`, `kubernetes/backups/backups`, `kubernetes/databases/databases`, `kubernetes/databases/postgresql`, `backbone/backbone`, `operations/operations`, `fleet/fleet` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
-| `metrics/*` | regex `/^mimir(-core)?$/`, selected `mimir` | multi-select, defaults to All |
-| `core/*` | regex `/^mimir(-core)?$/`, selected `mimir-core` | none |
+| Landing pages: `kubernetes/kubernetes`, `kubernetes/cilium`, `kubernetes/gateway/gateway`, `kubernetes/backups/backups`, `kubernetes/databases/databases`, `kubernetes/databases/postgresql`, `backbone/backbone`, `operations/operations` | none; queries uid `mimir` directly | none; every row broken out by `cluster` |
+| `metrics/*`, `overview/alerts` | regex `/^mimir(-core)?$/`, selected `mimir` | multi-select, defaults to All |
+| monitoring-core: `Core`, `Infrastructure` | regex `/^mimir(-core)?$/`, selected `mimir-core` | none; a multi-select target variable (`node`, `pbs`, `router`, `guest`, `quadlet`) instead |
 | Every other category | regex `/^mimir$/`, selected `mimir` | multi-select, defaults to All |
 
 - **Every `cluster` variable is multi-select and defaults to All**, even where the data lives on one cluster today, so one panel holds rows from several clusters. Every entity-keyed `by` and `on` list carries `cluster`, timeseries quantiles aggregate `by (le, cluster)`, and tables keep a visible `cluster` column. Drilldowns read the row's own value: `var-cluster=${__data.fields["cluster"]}` for a metrics link, `loki-${__data.fields["cluster"]}` for a log link; dashboard-level links pass `${cluster:queryparam}`.
-- **A link carries `var-datasource=${datasource}` only when the target's variable admits more than one option** (`metrics/*`, `core/*`). Everywhere else omit it.
+- **A link carries `var-datasource=${datasource}` only when the target's variable admits more than one option** (`metrics/*`, `overview/alerts`, Core, Infrastructure). Everywhere else omit it.
 - **Federated `mimir` puts `__tenant_id__` on every series.** Never put a bare `or`, `and`, `unless` or other unmatched binary operator between a raw series and an aggregate: the tenant label stops the sides matching and rows vanish or duplicate. Match with `on (...)` and include `cluster` in the list; give every new query a `cluster` matcher and aggregate `__tenant_id__` away.
 - **The federated `loki` spans every cluster**, so the `cluster` matcher in its selector is what scopes the query. Dashboard-level log buttons use `loki` with `cluster=~"${cluster:regex}"`.
 
@@ -45,9 +46,9 @@ In monitoring-view the directories nest like the Grafana folder tree:
 .deploy/rubik/folders/<path>/                      GrafanaFolder CR
 ```
 
-`<path>` is a category or a subfolder of one (`kubernetes/gateway`). The JSON is mounted as a ConfigMap and referenced by a `GrafanaDashboard` CR (`grafana.integreatly.org/v1beta1`) via `configMapRef`, with `instanceSelector` matching `monitoring.kilic.dev/grafana: default`. Each level adds its own `namePrefix`, so CR names read as the path (`kubernetes-gateway-folder`) and `folderRef` names that final CR name. A monitoring-view folder's uid is `folder-<path>` and never changes. A workload-owned dashboard follows `kilic-monitoring-ownership` instead: its own `dashboards/` directory, instance label `monitoring.kilic.dev/instance`, its own folder.
+`<path>` is a category or a subfolder of one (`kubernetes/gateway`). monitoring-core is flatter: `.deploy/rubik/dashboards/` for `Core` and `.deploy/rubik/infrastructure/<group>/` for `Infrastructure`, where the subdirectories only split files and every CR sets `folderRef: infrastructure-folder`. The JSON is mounted as a ConfigMap and referenced by a `GrafanaDashboard` CR (`grafana.integreatly.org/v1beta1`) via `configMapRef`, with `instanceSelector` matching `monitoring.kilic.dev/grafana: default`. Each level adds its own `namePrefix`, so CR names read as the path (`kubernetes-gateway-folder`) and `folderRef` names that final CR name. A monitoring-view folder's uid is `folder-<path>` and never changes. A workload-owned dashboard follows `kilic-monitoring-ownership` instead: its own `dashboards/` directory, instance label `monitoring.kilic.dev/instance`, its own folder.
 
-Adding a dashboard means three edits, not one: the JSON, its CR, and a `configMapGenerator` entry with `disableNameSuffixHash: true`.
+Adding a dashboard means three edits, not one: the JSON, its CR, and a `configMapGenerator` entry with `disableNameSuffixHash: true`. The CR always names its folder; one without lands in a folder named after its namespace.
 
 **Grafana is GitOps-owned.** Never edit a dashboard through the Grafana API or UI, and avoid the write-capable MCP tools entirely. Reads are how you verify.
 
@@ -88,13 +89,13 @@ The grid is 24 columns wide. Established widths, in descending use: `12` (half),
 | Panel | Typical size | Notes |
 |---|---|---|
 | `stat` pill row | `w: 4, h: 3` | Six across is the standard KPI row |
-| `timeseries` | `w: 12, h: 10` | Two per row; `h: 9` and `h: 8` also in use |
-| `table` | `w: 24, h: 10` | Full width; inventory tables close a dashboard or section |
+| `timeseries` | `w: 12, h: 10` | Two per row, as pairs; three status charts at `w: 8` in `Health` |
 | issue `table` | `w: 12, h: 7` | Two per row, closing the section whose problems they list |
+| inventory `table` | `w: 24, h: 10` | Full width, in `Inventory`, always last |
 | `row` | `h: 1` | Collapsible grouping |
 | `bargauge` | `w: 8` beside a `w: 16` `timeseries`, or `w: 12` | Current distribution next to its history; top-N |
 
-Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus three narrow exceptions: `status-history` on `core/rancher` and `kubernetes/gateway/blackbox-probe`, one `piechart` on `kubernetes/gateway/envoy-gateway-traffic`, and one `text` markdown note on `backbone/tenants`. No dashboard uses the `statusmap` plugin. Variables are `query`, `datasource` and `constant`; none is `custom`.
+Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus three narrow exceptions: `status-history` on monitoring-core's `rancher` and `kubernetes/gateway/blackbox-probe`, one `piechart` on `kubernetes/gateway/envoy-gateway-traffic`, and one `text` markdown note on `backbone/tenants`. No dashboard uses the `statusmap` plugin. Variables are `query`, `datasource` and `constant`; none is `custom`.
 
 **When inserting a panel, put it at its place in the `panels` list and run `dashboard.py reflow`**, which re-stacks every `gridPos` from list order, then `dashboard.py lint` for overlaps and duplicate ids.
 
@@ -102,10 +103,13 @@ Panel types in use are `stat`, `timeseries`, `table`, `bargauge` and `row`, plus
 
 ## Stacking Hosts
 
-**Hosts, nodes, routers and guests stack on shared panels; a section is never repeated per entity.** A multi-select variable on the entity's key (`node`, `pbs`, `router`, `guest`) defaulting to All narrows every panel at once.
+**Hosts, nodes, routers and guests stack on shared panels; a section is never repeated per entity.** A multi-select variable on the entity's key (`node`, `pbs`, `router`, `guest`, `quadlet`) defaulting to All narrows every panel at once.
 
 - **Every chart carries the entity in its legend** — `{{node}}`, `{{node}} / {{name}}`, `{{router}} {{interface}}` — and every table carries it as its first column, so a stacked series or row is identifiable without a click.
-- **Lay a dashboard out the way the Kubernetes dashboards are** (`kubernetes/cluster-nodes`, `kubernetes/cluster-workloads`): Overview with one or two rows of six pills (counts and utilization, then capacity and headroom); then one row per concern holding an absolute pair (`CPU by Node`, `Memory by Node`) followed by its `%` pair (`CPU Utilization %`, `Memory Utilization %`); the issue tables that list what is wrong close their section; inventory tables come last.
+- **Lay a dashboard out the way the Kubernetes dashboards are** (`kubernetes/cluster-nodes`, `kubernetes/cluster-workloads`): `Overview` with one or two rows of six pills (counts and health, then capacity and headroom); then one row per concern holding an absolute pair (`CPU by Node`, `Memory by Node`) followed by its `%` pair (`CPU Utilization %`, `Memory Utilization %`); the issue tables that list what is wrong close their section; the inventory table comes last.
+- **Sections come from one vocabulary**: `Overview`, `Compute`, `Network`, `Filesystem`, `Storage`, `Health`, and `Inventory` only when there is an inventory table. A domain section (`Traffic`, `Peers`, `Backups`, `Jobs`) appears only where no generic one fits. Issue tables with no section of their own go in `Health`; there is no `Problems` or `Timeline` section.
+- **Percentages use unit `percent` on a 0-100 scale**, the query multiplied by 100, never `percentunit`; their stat thresholds are 80 orange and 90 red, inverted for headroom.
+- **Timeseries legends are tables** (`displayMode: table`, `placement: bottom`, calcs including `max` and `mean` or `lastNotNull`), so a stacked entity reads with its numbers.
 - **Pair every utilization percentage across resources** — a CPU % panel without its memory % companion is incomplete.
 - **A per-entity drilldown is its own dashboard** (`Proxmox > Guests` beside `Proxmox > Overview`), not a repeated row.
 - **Prefer a friendly identifier over a device name** when another series maps one to the other: join on the shared label (`label_replace` the device first) so the legend reads `WAN`, not `vtnet0`.
@@ -126,7 +130,9 @@ These are dashboard-specific and each was measured, not assumed:
 
 ## Log Drilldowns
 
-Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboard-side rules on top of it.
+Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboard-side rules on top of it. **Logs are reached through Explore drilldown links, never a log dashboard.**
+
+- **The link is `/explore?left=<pane state>`**, the pane state URL-encoded JSON naming the datasource uid (`loki-core` for core, the federated `loki` otherwise), the query and the range. The interpolation tokens inside it stay raw and unencoded — `${__data.fields["node"]}`, `${node:regex}`, `${__from}` — so Grafana substitutes them before the browser decodes the rest. A working core example: `kilic-core-tenant`.
 
 - **A row whose kind is a custom resource cannot drill down on `workload_type`.** Mimir resolves CRD owners (`Cluster` for CloudNativePG, `RenovateJob`, `HelmChart`, plus `staticpod`); Loki collapses all of them to `barepod`. A link built from such a row selects nothing, silently, and `(?i)` does not help because the value is genuinely absent. **Scope those on `namespace` plus the `pod` or `workload` field instead** — `namespace`, `pod` and `container` agree exactly across both sides, including for these rows.
 - **Prefer one `Open workload logs` button** over separate deployment, statefulset, daemonset and job buttons. Select the kind with the indexed `workload_type` and filter the name with the `workload` structured-metadata field. A trailing `(-.*)?` keeps generated Job names matching for CronJob-like workloads.
@@ -145,12 +151,16 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 
 ## Verification
 
-1. **`kustomize build .deploy/<cluster>`** in the owning repository is what CI runs and must pass — invalid JSON breaks the deploy, not one panel.
-2. **Run `dashboard.py lint`** on every changed file; it exits 1 on overlaps, duplicate ids, range-mode tables, repeated rows, percent thresholds on absolute stats and multi-select variables passed without `:queryparam`.
-3. **Confirm the query returns rows** against the live instance before shipping a panel or button: `query_prometheus` for a metric and its joins, `query_loki_logs` to prove a selector returns lines. `dashboard.py queries` prints every target's expression with variables substituted, one JSON line each, for that check; an empty result needs a negative control before it counts.
-4. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
-5. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
-6. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found. For VPA, resize and KEDA panels, a lazily created series is a third case, and which families exist at all is in `kilic-autoscaling-metrics`.
+1. **`kustomize build .deploy/<cluster>`** in the owning repository is what CI runs and must pass before the commit — invalid JSON breaks the deploy, not one panel.
+2. **Run `dashboard.py reflow --renumber`, then `dashboard.py lint`** on every changed file; lint exits 1 on overlaps, duplicate ids, range-mode tables, repeated rows, percent thresholds on absolute stats and multi-select variables passed without `:queryparam`.
+3. **Run every panel query live** before shipping a panel or button: `dashboard.py queries` prints each target's expression with variables substituted, one JSON line each, for `query_prometheus` on the dashboard's datasource; `query_loki_logs` proves a link's selector returns lines. An empty result needs a negative control before it counts.
+4. **Prove an empty issue table works.** A blank "issues" table is indistinguishable from a broken query, so loosen its threshold in the live query until rows appear (or tighten it until a healthy row drops out), then restore it.
+5. **Count links before and after a rework.** Dashboard links, data links and override links per file must match unless a panel was removed, and then its link moved to the panel replacing it.
+6. **Check a link target exists** with `search_dashboards` before "fixing" its uid. Workload repositories and charts own dashboards too, so a target absent from monitoring-view is not automatically dangling.
+7. **Rendering cannot be verified locally.** Dashboards reach the instance only through GitOps, so a change is unproven until merged and synced. Say that rather than implying a fix is confirmed.
+8. **Distinguish a wrong selector from a collection gap.** A corrected selector does not restore data that was never collected — say which you found. For VPA, resize and KEDA panels, a lazily created series is a third case, and which families exist at all is in `kilic-autoscaling-metrics`.
+
+**A rework across several dashboards is spec-driven.** Write one spec file holding the layout, unit, link and verification rules, then dispatch one agent per dashboard, each writing only its own files and reporting its verified query count and lint result; review every diff against the spec before committing.
 
 ## Scripts
 
@@ -159,7 +169,7 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 | Subcommand | Does |
 |---|---|
 | `lint PATH...` | Reports layout and convention defects, one line each, then a `RESULT:` line. |
-| `queries PATH... [--set VAR=VALUE]` | Prints each target as JSON (`file`, `panel`, `title`, `refId`, `expr`), unset variables as `.*`, `$__rate_interval` as `5m`, `$__range` as `1h`. |
+| `queries PATH... [--set VAR=VALUE]` | Prints each target as JSON (`file`, `panel`, `title`, `refId`, `expr`), unset variables as `.*`, `$__rate_interval` as `5m`, `$__interval` as `1m`, `$__range` as `1h`; `datasource` is never substituted. |
 | `reflow PATH... [--renumber]` | Re-stacks `gridPos` from list order, keeping each panel's `w` and `h`; `--renumber` also renumbers ids. |
 | `retitle PATH... --map OLD=NEW` | Renames dashboard-link and data-link titles exactly; panel titles are untouched; writes nothing when any mapping is unmatched. |
 

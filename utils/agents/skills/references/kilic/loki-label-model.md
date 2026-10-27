@@ -11,13 +11,15 @@ Two things still differ, and both bite silently:
 1. **Where a name may be used.** Loki indexes a subset as stream labels; everything else is structured metadata, filtered after the selector.
 2. **What `workload_type` can contain.** Loki knows only built-in Kubernetes kinds; Mimir also knows custom resources. See the value table below.
 
-**Stream labels — the only things allowed inside `{}`:**
+**Stream labels on the Kubernetes tenants — the only things allowed inside `{}`:**
 
 `cluster`, `namespace`, `workload_type`, `deployment`, `statefulset`, `daemonset`, `cronjob`, `job_name`, `service_name`, `__stream_shard__`
 
 **Structured metadata — filtered after the selector with `|`:**
 
 `pod`, `container`, `node`, `workload`, `container_restart_count`, `detected_level`, `log_iostream`, `tenant`, `observed_timestamp`
+
+**The core tenant is labelled differently.** `loki-core` holds podman container logs from the Ansible-managed hosts, and its stream labels are `cluster`, `node`, `quadlet`, `service_name` (the container name), `service_namespace` and `deployment_environment`: `node` and `quadlet` are indexed there by a core-tenant override in monitoring-backbone `.deploy/rubik/loki/values.yaml`. A selector such as `{node="<host>", service_name=~".+"}` is valid on `loki-core` and returns nothing on a Kubernetes tenant.
 
 ## The silent failure
 

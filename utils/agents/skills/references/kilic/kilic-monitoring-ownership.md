@@ -1,12 +1,13 @@
 # Kilic Monitoring Ownership
 
-Where a dashboard or an alert rule lives, and how it reaches the central Grafana at `https://monitoring.kilic.dev` (rubik) and the Mimir Ruler. Two owners, decided by what the thing describes.
+Where a dashboard or an alert rule lives, and how it reaches the central Grafana at `https://monitoring.kilic.dev` (rubik) and the Mimir Ruler. The owner is decided by what the thing describes.
 
 ## Who owns what
 
 | Describes | Dashboards | Alert and recording rules |
 |---|---|---|
 | The fleet, a cross-cutting concern, or the monitoring stack itself | `cluster/workloads/monitoring-view`, rubik, namespace `monitoring-backbone` | `cluster/workloads/monitoring-ruler`, every cluster, namespace `monitoring` |
+| The core tenant: hosts, hypervisors, backup servers, routers and the Ansible-run services | `cluster/workloads/monitoring-core`, rubik, namespace `monitoring-core`, folders `Core` and `Infrastructure` | the same repository, `.deploy/rubik/rules/`, routed to the core tenant by its namespace label |
 | One workload | that workload's repository, beside the component it describes | the same repository, beside its dashboards |
 | One system component | its `cluster/charts/chart-<c>` | the same chart |
 
@@ -35,12 +36,18 @@ Workloads                      uid folder-workloads          monitoring-view
   <App>                        generated uid                 the owning repository
 Operations                     uid folder-operations         monitoring-view
   <App>                        generated uid                 overseer platform repos and charts
-Kubernetes, Core, Fleet, ...   uid folder-<path>             monitoring-view
+Kubernetes                     uid folder-kubernetes         monitoring-view
+  Backups, Databases, Gateway  uid folder-kubernetes-<name>  monitoring-view
+Backbone, Metrics, Overview    uid folder-<path>             monitoring-view
+Core, Infrastructure           uid folder-<path>             monitoring-core
 ```
+
+- **`Overview` holds the cross-cluster `Alerts` dashboard** (uid `alerts`). Its family regexes group alerts by name prefix, so a new prefix lands in `Other` until it is added there.
+- **`Infrastructure` is the machine layer** (hosts, disks, hypervisors, backup servers, routers) and **`Core` the service layer** (Caddy, GitLab, Rancher, the podman runtime). `Node Exporter Full` (uid `rYdddlPWk`) is owned by monitoring-view and filed in `Infrastructure`.
 
 - **Every application gets its own folder**, titled for the product (`AgentGateway`, `GitLab Runner`, `Renovate`), even with a single dashboard. Titles share one parent, so the same app on two clusters needs distinct titles.
 - **An application folder carries no `uid`**; its dashboards reference it with `folderRef: <folder CR name>`. `allowCrossNamespaceImport: true` stays on both.
-- **A fixed uid exists only where something references the folder from outside**: monitoring-view's `folder-<path>` folders, which applications name as `parentFolderUID`. The `folder-` prefix is load-bearing: Grafana's folder browser overflows its stack when a dashboard inside a folder shares the folder's uid. The prefix is reserved for folders: a dashboard uid never starts with `folder-`, and application folders get Grafana-generated UUIDs, so neither can collide with a dashboard.
+- **A fixed uid exists only where something references the folder from outside**: the `folder-<path>` folders, which applications name as `parentFolderUID` and other repositories' dashboards as `folderUID`. The `folder-` prefix is load-bearing: Grafana's folder browser overflows its stack when a dashboard inside a folder shares the folder's uid. The prefix is reserved for folders: a dashboard uid never starts with `folder-`, and application folders get Grafana-generated UUIDs, so neither can collide with a dashboard.
 - **overseer platform apps nest under `Operations`** (`parentFolderUID: folder-operations`); every other app nests under `Workloads` (`parentFolderUID: folder-workloads`).
 
 ## Layout in a workload repository
@@ -78,9 +85,11 @@ rules:
 
 ## How a rule reaches the Ruler
 
-Alloy's `mimir.rules.kubernetes` syncs PrometheusRules from **every namespace** into the cluster's ruler tenant every 5 minutes and appends `cluster`, skipping those labelled `monitoring.kilic.dev/tenant: core`, which belong to the core tenant. A workload or chart rule therefore selects its own scope in `expr` (`cluster="<cluster>", namespace="<ns>"`), aggregates `max by` the object labels, and never sets `cluster` on its output.
+Alloy's `mimir.rules.kubernetes` syncs PrometheusRules from **every namespace** into the cluster's ruler tenant every 5 minutes and appends `cluster`, skipping namespaces labelled `monitoring.kilic.dev/tenant: core`; on rubik a second component syncs those into the core tenant with `cluster="core"`. A workload or chart rule therefore selects its own scope in `expr` (`cluster="<cluster>", namespace="<ns>"`), aggregates `max by` the object labels, and never sets `cluster` on its output.
 
 ## Changing a folder or dashboard in place
+
+- **Every dashboard CR names a folder**, with `folderRef` (a folder CR in the same Application) or `folderUID` (any folder, including one another repository owns, as `Node Exporter Full` names `folder-infrastructure`). A dashboard with neither lands in a folder grafana-operator creates and names after the CR's namespace.
 
 - **A `GrafanaFolder` `spec.uid` is immutable**, including set to unset. Changing it means deleting the CR and letting Argo recreate it.
 - **Changing `parentFolderUID` moves the folder** with its dashboards (grafana-operator v5.25.0 `folder_controller.go` calls `MoveFolder`); no recreate is needed. Renaming the folder CR is a delete and a create, so it takes its dashboards with it.
@@ -89,4 +98,4 @@ Alloy's `mimir.rules.kubernetes` syncs PrometheusRules from **every namespace** 
 
 ## Links
 
-Links between dashboards use `/d/<uid>/<slug>`, which survives folder moves and owner changes, and follow monitoring-view's `README.md` link rules wherever the dashboard lives. Every landing page (Fleet, Operations and the category hubs) links to every dashboard in its scope, workload-owned ones included, and the two halves of a split link to each other.
+Links between dashboards use `/d/<uid>/<slug>`, which survives folder moves and owner changes, and follow monitoring-view's `README.md` link rules wherever the dashboard lives. Every landing page (Operations, Core, Infrastructure and the category hubs) links to every dashboard in its scope, workload-owned ones included, and the two halves of a split link to each other.

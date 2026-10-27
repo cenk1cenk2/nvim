@@ -1,42 +1,43 @@
 ---
 name: grafana-kilic-alerts
-description: grafana-kilic-alerts Author and tune Prometheus alert rules in monitoring-ruler or the repo that owns the workload - expression, for-duration, severity, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
+description: grafana-kilic-alerts Author and tune Prometheus alert rules in monitoring-ruler, monitoring-core or the repo that owns the workload - expression, for-duration, severity, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
 disableModelInvocation: true
 argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero is noisy'''
 references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/kilic-monitoring-ownership.md
   - ../references/kilic/kilic-autoscaling-metrics.md
+  - ../references/kilic/kilic-core-tenant.md
 ---
 
 ## Alerting
 
 Alerts are **`PrometheusRule` CRs evaluated by the Mimir Ruler**, not Grafana-managed alerts — datasource inventory, and why the Grafana alerting API and OnCall are unavailable: `grafana-kilic-datasources`. For writing and validating the expressions themselves, load the `grafana-kilic-read` skill.
 
-Two repositories are involved and both usually change together:
+The rule and its Alertmanager handling live in different repositories and usually change together:
 
 | What | Where |
 |---|---|
 | Fleet and cross-cutting alert and recording rules | `cluster/workloads/monitoring-ruler` |
+| Core-tenant rules: hosts, SMART, podman, hypervisors, routers, Ansible-run services | `cluster/workloads/monitoring-core`, `.deploy/rubik/rules/` |
 | Rules for one workload or system component | that workload's repository or chart, beside its dashboards, per `kilic-monitoring-ownership` |
-| Alertmanager routing and inhibition | `cluster/workloads/monitoring-backbone`, at `.deploy/rubik/mimir/es-alertmanager-slack.yaml` |
+| Alertmanager routing and inhibition | `cluster/workloads/monitoring-backbone`, at `.deploy/rubik/mimir/assets/alertmanager-fallback-config.yaml` |
 
-Alertmanager config is templated inside an ExternalSecret, so Go template braces in it are escaped as `{{ "{{" }}`. Alertmanager is the multi-tenant Mimir Alertmanager, with one `alertmanager-<cluster>` datasource per tenant, `core` included.
+Alertmanager is the multi-tenant Mimir Alertmanager, with one `alertmanager-<cluster>` datasource per tenant, `core` included. Every tenant runs the same fallback config, a plain file mounted from a ConfigMap, so its Go templates are written unescaped and one inhibit rule covers every tenant whose alerts it names. The core tenant's label model and the shapes its pushed metrics need: `kilic-core-tenant`.
 
 ## monitoring-ruler Layout
 
 ```
 .deploy/base/alerts/<category>/     alerting rules, every cluster
 .deploy/base/rules/<category>/      recording rules, every cluster
-.deploy/<cluster>/alerts/<category>/  one cluster only (rubik backbone and operations, overseer operations)
-.deploy/rubik/core/alerts/          the core tenant
+.deploy/<cluster>/alerts/<category>/  one cluster only (rubik backbone, overseer operations)
 ```
 
 Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino, overseer and sun are **edge**. An alert about something only rubik runs belongs in `.deploy/rubik/`, not in base with a cluster matcher. An alert about one workload belongs in that workload's `rules/`, not here: Alloy syncs PrometheusRules from every namespace, so the owning repository ships it with the code it watches, scoped in `expr` to `cluster="<cluster>", namespace="<ns>"`.
 
 ## Rules and the Federated Datasource
 
-**The ruler does not federate.** Each rule evaluates inside the tenant that owns it, and the ruler API rejects federated requests, so rule state is read per tenant through `mimir-<cluster>` or `alertmanager-<cluster>`, never through `mimir`. The federated `mimir` is still where an expression gets validated, and there every raw series carries `__tenant_id__`:
+**The ruler does not federate.** Each rule evaluates inside the tenant that owns it — a core rule inside `core`, validated on `mimir-core` — and the ruler API rejects federated requests, so rule state is read per tenant through `mimir-<cluster>` or `alertmanager-<cluster>`, never through `mimir`. The federated `mimir` is still where an expression gets validated, and there every raw series carries `__tenant_id__`:
 
 - **Scope by `cluster`.** A rule for one cluster selects it literally, `cluster="rubik"`; a base rule carries no matcher because every tenant evaluates it, so add `cluster="<name>"` to the validation query rather than to the rule.
 - **Aggregate `__tenant_id__` away.** Keep `cluster` and the object labels in every `by (...)`, and match binary operators with `on (...)` including `cluster`. A bare `or`, `and` or `unless` between a raw series and an aggregate evaluates correctly in the ruler but returns doubled or missing rows on `mimir`, so a rule validated that way was not validated.
@@ -58,9 +59,10 @@ Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino
     severity: warning
 ```
 
-- **Name** is PascalCase and subsystem-prefixed (`KubeJobFailedTerminal`, `CNPGBackupStale`, `VaultSealed`). The prefix is what inhibition matchers key on, so it is structural, not cosmetic.
+- **Name** is PascalCase and subsystem-prefixed (`KubeJobFailedTerminal`, `CNPGBackupStale`, `VaultSealed`). The prefix is what inhibition matchers and the `Overview` `Alerts` dashboard's family regexes key on, so it is structural, not cosmetic. Core host alerts are `Host*`, SMART alerts `Smart*` and podman alerts `Podman*`; never `Node*`, which the Kubernetes node inhibition (`Node.*`) and the `Nodes` family already match.
+- **One name, one label set.** Two rules with the same name and the same static labels are a duplicate that `promtool check rules` rejects; merge them into one expression with `or`. A warning and critical pair differs in `severity` and stays two rules.
 - **`summary`** is one sentence, no templating. **`description`** carries the templated specifics.
-- **`dashboard_url`** points at the dashboard that shows the problem, with `var-cluster={{ $labels.cluster }}` so the link lands on the right cluster. Never add `var-datasource`: the target dashboards query the federated `mimir` default, and `var-cluster` is what scopes them.
+- **`dashboard_url`** points at the dashboard that shows the problem, with `var-cluster={{ $labels.cluster }}` so the link lands on the right cluster. Never add `var-datasource`: the target dashboards query the federated `mimir` default, and `var-cluster` is what scopes them. A core rule links with its target variable instead (`var-node={{ $labels.node }}`), since core dashboards default to `mimir-core` and have no `cluster` variable.
 - **`replaces`** names the alerts this one supersedes — see below.
 - **`severity` is `critical` or `warning`. Nothing else.** There is no info tier; an alert not worth one of those two is not worth having.
 - **`component`** groups an alert with its subsystem.
@@ -94,6 +96,9 @@ The established families:
 | **Scrape target down** | A down exporter blinds every alert derived from its metrics, so only the target-down alert pages. `equal` carries the labels both sides share — usually `[cluster, namespace]` or `[cluster, namespace, job]`. |
 | **Subsystem root cause** | A root cause suppresses its own downstream symptoms — a failing pod volume backup suppresses the schedule-level partial-failure and stale alerts it causes. |
 | **Warning and critical pair** | The critical page already covers the warning for the same object. `equal` spans every object label used across the pairs; labels absent on a given pair compare as empty on both sides and still match. |
+| **Pushed telemetry missing** | For metrics a host pushes, one collector-missing alert suppresses the per-exporter target-missing ones, and each exporter's down or missing alert suppresses only the alerts derived from it. The core hosts' family keys on `[cluster, node]`. |
+
+The config numbers its families in comments; add a rule to the family it belongs to, or open the next number for a new estate, as the core host exporters are Family 7.
 
 Two rules that keep inhibition honest:
 
@@ -102,26 +107,29 @@ Two rules that keep inhibition honest:
 
 ### 5. Route by severity
 
-Grouping is `[alertname, cluster, severity]`, with per-severity timings:
+Routes are per severity, each grouping per namespace so a newly affected app posts its own message:
 
-| Severity | `group_wait` | `group_interval` | `repeat_interval` |
-|---|---|---|---|
-| critical | 2m | 30m | 12h |
-| warning | 30m | 2h | 48h |
-| default | 1h | 6h | 168h |
+| Route | `group_by` | `group_wait` | `group_interval` | `repeat_interval` |
+|---|---|---|---|---|
+| critical | `alertname, cluster, severity, namespace, tenant` | 30s | 5m | 4h |
+| warning | `alertname, cluster, severity, namespace` | 1m | 10m | 24h |
+| root, no or unknown severity | `alertname, cluster, severity` | 1m | 5m | 4h |
+
+`KubeContainerKilled` and `KubeContainerRestarted` warnings have their own route, grouped per container.
 
 Tune these before adding an inhibit rule for something that is merely repetitive rather than genuinely redundant.
 
 ## Process
 
 1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition. For VPA, in-place resize and KEDA, the families that exist, the ones that do not, and what each existing rule means for triage: `kilic-autoscaling-metrics`.
-2. **Decide the owner, then base or cluster.** One workload or system component goes in its own repository or chart; otherwise base for anything every cluster runs, `.deploy/rubik/` for the central stack.
-3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above. Confirm it returns rows now, and reason about when it would not.
+2. **Decide the owner, then base or cluster.** One workload or system component goes in its own repository or chart; anything outside Kubernetes goes in monitoring-core; otherwise base for anything every cluster runs, `.deploy/rubik/` for the central stack.
+3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above, or on `mimir-core` for a core rule. Confirm it returns rows now, and reason about when it would not.
 4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.
 5. **Check what it will fire alongside.** If a root cause already pages, add an inhibit rule and verify the `equal:` labels appear in **both** expressions.
 6. **Set `dashboard_url`** to the dashboard that shows the problem, templated on cluster.
-7. **Report the rule and any Alertmanager change together** — they are one change even across two repos.
-8. **Moving a rule to another owner keeps its name and labels unchanged**, so Alertmanager deduplicates the overlap: add the new copy, let it sync, then remove the old one.
+7. **Lint through container images**, never a local install. Extract `spec.groups` from the PrometheusRule into a plain `groups:` file, then run `promtool check rules` from `quay.io/prometheus/prometheus` (`--entrypoint promtool`); run `amtool check-config` on the Alertmanager file from `quay.io/prometheus/alertmanager` (`--entrypoint amtool`). Then `kustomize build` each changed repository, with `--enable-helm` for monitoring-backbone.
+8. **Report the rule and any Alertmanager change together** — they are one change even across two repos.
+9. **Moving a rule to another owner keeps its name and labels unchanged**, so Alertmanager deduplicates the overlap: add the new copy, let it sync, then remove the old one.
 
 ## Key Principles
 

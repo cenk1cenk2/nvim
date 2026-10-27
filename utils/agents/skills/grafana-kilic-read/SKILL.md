@@ -7,11 +7,12 @@ references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/loki-label-model.md
   - ../references/kilic/kilic-workload-resolution.md
+  - ../references/kilic/kilic-core-tenant.md
 ---
 
 ## Reading Grafana
 
-Datasource inventory, target resolution, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`. Resolving a workload to the clusters that run it: `kilic-workload-resolution`.
+Datasource inventory, target resolution, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`. Resolving a workload to the clusters that run it: `kilic-workload-resolution`. The core tenant's `job` and target labels, podman recipes and log streams: `kilic-core-tenant`.
 
 Label names, the indexed-versus-structured-metadata split, and the empty-result trap that follows from it: `loki-label-model`. That split is the single most common source of a wrong answer here, because the wrong form returns zero rows without erroring.
 
