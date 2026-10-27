@@ -2,7 +2,7 @@
 name: grafana-kilic-read
 description: grafana-kilic-read Query metrics and logs correctly - Loki splits labels into indexed stream labels and structured metadata, and putting the wrong one inside the braces returns zero rows instead of an error. Use on "check the metrics", "read the logs", "why is this pod restarting". Not for authoring dashboards, writing alert rules, or rightsizing workloads.
 disableModelInvocation: true
-argumentHint: '[what to look at] - e.g. ''logs for mimir-ruler on rubik'', ''memory usage in monitoring'''
+argumentHint: '[what to look at] - e.g. ''logs for a deployment on one cluster'', ''memory usage in a namespace'''
 references:
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/loki-label-model.md
