@@ -1,9 +1,10 @@
 ---
 name: grafana-kilic-alerts
-description: grafana-kilic-alerts Author and tune Prometheus alert rules in monitoring-ruler, monitoring-core or the repo that owns the workload - expression, for-duration, severity, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
+description: grafana-kilic-alerts Author and tune Prometheus alert rules in their owning repo - naming, expression, for-duration, severity, dashboard links, and the inhibition that keeps one root cause from paging ten times. Use on "add an alert", "this alert is noisy", "why did we get paged twice". Not for reading metrics, dashboards, or Grafana-managed alerting.
 disableModelInvocation: true
 argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero is noisy'''
 references:
+  - ./references/alert-construction.md
   - ../references/kilic/grafana-kilic-datasources.md
   - ../references/kilic/kilic-monitoring-ownership.md
   - ../references/kilic/kilic-autoscaling-metrics.md
@@ -12,143 +13,50 @@ references:
 
 ## Alerting
 
-Alerts are **`PrometheusRule` CRs evaluated by the Mimir Ruler**, not Grafana-managed alerts — datasource inventory, and why the Grafana alerting API and OnCall are unavailable: `grafana-kilic-datasources`. For writing and validating the expressions themselves, load the `grafana-kilic-read` skill.
+Alerts are **`PrometheusRule` CRs evaluated by the Mimir Ruler**, not Grafana-managed alerts; why the Grafana alerting API and OnCall are unavailable: `grafana-kilic-datasources`. Load the `grafana-kilic-read` skill before validating an expression against live data.
 
-The rule and its Alertmanager handling live in different repositories and usually change together:
+The rule and its Alertmanager handling live in different repositories and usually change together: the rule in its owner per `kilic-monitoring-ownership`, routing and inhibition in monitoring-backbone's Alertmanager fallback config. **Read the owner's `CLAUDE.md` and the existing rules for that subsystem before writing one**: prefixes, `component`, aggregation shape, `for:` and `dashboard_url` targets are established per subsystem, and an alert that does not match its neighbours is not covered by their inhibition.
 
-| What | Where |
-|---|---|
-| Fleet and cross-cutting alert and recording rules | `cluster/workloads/monitoring-ruler` |
-| Core-tenant rules: hosts, SMART, podman, hypervisors, routers, Ansible-run services | `cluster/workloads/monitoring-core`, `.deploy/rubik/rules/` |
-| Rules for one workload or system component | that workload's repository or chart, beside its dashboards, per `kilic-monitoring-ownership` |
-| Alertmanager routing and inhibition | `cluster/workloads/monitoring-backbone`, at `.deploy/rubik/mimir/assets/alertmanager-fallback-config.yaml` |
-
-Alertmanager is the multi-tenant Mimir Alertmanager, with one `alertmanager-<cluster>` datasource per tenant, `core` included. Every tenant runs the same fallback config, a plain file mounted from a ConfigMap, so its Go templates are written unescaped and one inhibit rule covers every tenant whose alerts it names. The core tenant's label model and the shapes its pushed metrics need: `kilic-core-tenant`.
-
-## monitoring-ruler Layout
-
-```
-.deploy/base/alerts/<category>/     alerting rules, every cluster
-.deploy/base/rules/<category>/      recording rules, every cluster
-.deploy/<cluster>/alerts/<category>/  one cluster only (rubik backbone, overseer operations)
-```
-
-Rubik is the **central** cluster running the full stack; moon, nailbed, neutrino, overseer and sun are **edge**. An alert about something only rubik runs belongs in `.deploy/rubik/`, not in base with a cluster matcher. An alert about one workload belongs in that workload's `rules/`, not here: Alloy syncs PrometheusRules from every namespace, so the owning repository ships it with the code it watches, scoped in `expr` to `cluster="<cluster>", namespace="<ns>"`.
+Anatomy, the `dashboard_url` routing method, inhibition shapes, and the lint and test recipe: `alert-construction`. Core tenant shapes for pushed metrics (target missing versus collector missing, `last_over_time` for sparse gauges): `kilic-core-tenant`. Autoscaling families and what each existing rule means for triage: `kilic-autoscaling-metrics`.
 
 ## Rules and the Federated Datasource
 
-**The ruler does not federate.** Each rule evaluates inside the tenant that owns it — a core rule inside `core`, validated on `mimir-core` — and the ruler API rejects federated requests, so rule state is read per tenant through `mimir-<cluster>` or `alertmanager-<cluster>`, never through `mimir`. The federated `mimir` is still where an expression gets validated, and there every raw series carries `__tenant_id__`:
+**The ruler does not federate.** Each rule evaluates inside the tenant that owns it, and rule state is read per tenant through `mimir-<tenant>` or `alertmanager-<tenant>`. The federated `mimir` is still where an expression gets validated, and there every raw series carries `__tenant_id__`:
 
-- **Scope by `cluster`.** A rule for one cluster selects it literally, `cluster="rubik"`; a base rule carries no matcher because every tenant evaluates it, so add `cluster="<name>"` to the validation query rather than to the rule.
+- **Scope by `cluster`.** A rule for one cluster selects it literally; a base rule every cluster evaluates carries no matcher, so add `cluster="<name>"` to the validation query rather than to the rule. A core rule is validated on `mimir-core`.
 - **Aggregate `__tenant_id__` away.** Keep `cluster` and the object labels in every `by (...)`, and match binary operators with `on (...)` including `cluster`. A bare `or`, `and` or `unless` between a raw series and an aggregate evaluates correctly in the ruler but returns doubled or missing rows on `mimir`, so a rule validated that way was not validated.
-
-## Alert Anatomy
-
-```yaml
-- alert: KubeJobFailedTerminal
-  annotations:
-    summary: Kubernetes job failed without a successful completion.
-    description: Job {{ $labels.namespace }}/{{ $labels.job_name }} in cluster {{ $labels.cluster }} has failed, has no active pods, and has not succeeded.
-    dashboard_url: https://monitoring.kilic.dev/d/<uid>/<slug>?var-cluster={{ $labels.cluster }}
-    replaces: KubeJobFailed
-  expr: |
-    ...
-  for: 30m
-  labels:
-    component: workload-resources
-    severity: warning
-```
-
-- **Name** is PascalCase and subsystem-prefixed (`KubeJobFailedTerminal`, `CNPGBackupStale`, `VaultSealed`). The prefix is what inhibition matchers and the `Overview` `Alerts` dashboard's family regexes key on, so it is structural, not cosmetic. Core host alerts are `Host*`, SMART alerts `Smart*` and podman alerts `Podman*`; never `Node*`, which the Kubernetes node inhibition (`Node.*`) and the `Nodes` family already match.
-- **One name, one label set.** Two rules with the same name and the same static labels are a duplicate that `promtool check rules` rejects; merge them into one expression with `or`. A warning and critical pair differs in `severity` and stays two rules.
-- **`summary`** is one sentence, no templating. **`description`** carries the templated specifics.
-- **`dashboard_url`** points at the dashboard that shows the problem, with `var-cluster={{ $labels.cluster }}` so the link lands on the right cluster. Never add `var-datasource`: the target dashboards query the federated `mimir` default, and `var-cluster` is what scopes them. A core rule links with its target variable instead (`var-node={{ $labels.node }}`), since core dashboards default to `mimir-core` and have no `cluster` variable.
-- **`replaces`** names the alerts this one supersedes — see below.
-- **`severity` is `critical` or `warning`. Nothing else.** There is no info tier; an alert not worth one of those two is not worth having.
-- **`component`** groups an alert with its subsystem.
-
-## Noise Reduction, In Order of Precedence
-
-Every one of these exists because something paged too often. Reach for them in this order.
-
-### 1. Write the expression so it only fires on a real state
-
-Aggregate with `max by (...)` over the labels that identify the object, so replicas of the same workload produce one alert rather than N.
-
-Chain `and on (...)` to describe a genuinely terminal condition rather than a transient one. `KubeJobFailedTerminal` fires only when a job has failed **and** has no active pods **and** has not succeeded — the naive "failed > 0" fires during a retry that then succeeds.
-
-### 2. Pick `for:` deliberately
-
-The dominant durations are `10m`, `15m`, `5m` and `30m`, with `1h` and longer for slow-moving conditions and `2m` reserved for genuinely urgent ones. `for:` is the cheapest noise control there is: a condition that resolves itself inside the window never becomes an alert.
-
-### 3. Consolidate with `replaces:`
-
-When one alert supersedes several upstream ones, name them in a `replaces:` annotation, comma-separated. It records why the originals are gone, so nobody reintroduces them as "missing coverage".
-
-### 4. Inhibit, when one alert makes another meaningless
-
-Inhibition lives in the Alertmanager config, not the rules. **The `equal:` list is the whole correctness of an inhibit rule** — it must name labels that source and target genuinely share, verified against the rule expressions, not assumed.
-
-The established families:
-
-| Family | Shape |
-|---|---|
-| **Scrape target down** | A down exporter blinds every alert derived from its metrics, so only the target-down alert pages. `equal` carries the labels both sides share — usually `[cluster, namespace]` or `[cluster, namespace, job]`. |
-| **Subsystem root cause** | A root cause suppresses its own downstream symptoms — a failing pod volume backup suppresses the schedule-level partial-failure and stale alerts it causes. |
-| **Warning and critical pair** | The critical page already covers the warning for the same object. `equal` spans every object label used across the pairs; labels absent on a given pair compare as empty on both sides and still match. |
-| **Pushed telemetry missing** | For metrics a host pushes, one collector-missing alert suppresses the per-exporter target-missing ones, and each exporter's down or missing alert suppresses only the alerts derived from it. The core hosts' family keys on `[cluster, node]`. |
-
-The config numbers its families in comments; add a rule to the family it belongs to, or open the next number for a new estate, as the core host exporters are Family 7.
-
-Two rules that keep inhibition honest:
-
-- **Only inhibit what the source genuinely blinds.** When an exporter goes down, alerts derived from *other* sources stay valid and must keep paging. The Renovate rule suppresses only the alert reading the operator's own metric; the kube-state-metrics-derived ones are untouched.
-- **Check what the expression actually keeps.** Vault alerts aggregate with `sum()` and `max()` and drop `cluster` and `namespace`, so the only label shared across all of them is the static `component`. An `equal: [cluster, namespace]` there would silently never match, and inhibition that never matches looks identical to inhibition that works.
-
-### 5. Route by severity
-
-Routes are per severity, each grouping per namespace so a newly affected app posts its own message:
-
-| Route | `group_by` | `group_wait` | `group_interval` | `repeat_interval` |
-|---|---|---|---|---|
-| critical | `alertname, cluster, severity, namespace, tenant` | 30s | 5m | 4h |
-| warning | `alertname, cluster, severity, namespace` | 1m | 10m | 24h |
-| root, no or unknown severity | `alertname, cluster, severity` | 1m | 5m | 4h |
-
-`KubeContainerKilled` and `KubeContainerRestarted` warnings have their own route, grouped per container.
-
-Tune these before adding an inhibit rule for something that is merely repetitive rather than genuinely redundant.
+- **Place by scope.** Something every cluster runs goes in the base rules; something only one cluster runs goes in that cluster's overlay rather than base with a cluster matcher; one workload goes in its own repository, scoped in `expr` to its cluster and namespace.
 
 ## Process
 
-1. **Read the existing rules for that subsystem first.** Naming, `component`, aggregation shape and `for:` conventions are established per subsystem, and an alert that does not match its neighbours will not be caught by their inhibition. For VPA, in-place resize and KEDA, the families that exist, the ones that do not, and what each existing rule means for triage: `kilic-autoscaling-metrics`.
-2. **Decide the owner, then base or cluster.** One workload or system component goes in its own repository or chart; anything outside Kubernetes goes in monitoring-core; otherwise base for anything every cluster runs, `.deploy/rubik/` for the central stack.
-3. **Validate the expression against live data**, per `grafana-kilic-read` — on `mimir` with a `cluster` matcher, per the federated-datasource rules above, or on `mimir-core` for a core rule. Confirm it returns rows now, and reason about when it would not.
-4. **Choose `for:` from how long the condition can transiently hold**, not from how urgent it feels.
-5. **Check what it will fire alongside.** If a root cause already pages, add an inhibit rule and verify the `equal:` labels appear in **both** expressions.
-6. **Set `dashboard_url`** to the dashboard that shows the problem, templated on cluster.
-7. **Lint through container images**, never a local install. Extract `spec.groups` from the PrometheusRule into a plain `groups:` file, then run `promtool check rules` from `quay.io/prometheus/prometheus` (`--entrypoint promtool`); run `amtool check-config` on the Alertmanager file from `quay.io/prometheus/alertmanager` (`--entrypoint amtool`). Then `kustomize build` each changed repository, with `--enable-helm` for monitoring-backbone.
-8. **Report the rule and any Alertmanager change together** — they are one change even across two repos.
-9. **Moving a rule to another owner keeps its name and labels unchanged**, so Alertmanager deduplicates the overlap: add the new copy, let it sync, then remove the old one.
+1. **Find the owner and read its rules and `CLAUDE.md`.** Copy the neighbours' prefix, `component`, aggregation and `dashboard_url` shape.
+2. **Write the expression** to fire only on a real state: aggregate to the object, chain `and on (...)` for a terminal condition.
+3. **Validate it live** per `grafana-kilic-read`: confirm it returns rows now, or would under a loosened threshold, and reason about when it would not.
+4. **Choose `for:`** from how long the condition can transiently hold, then the severity.
+5. **Write the annotations**: a static `summary`, a templated `description`, a `dashboard_url` to the dashboard that shows the problem, `replaces:` naming every alert it supersedes, including its own old name on a rename.
+6. **Check what it fires alongside.** If a root cause already pages, add an inhibit rule and prove the `equal:` labels in both expressions.
+7. **Lint and unit-test** through container images, with a negative control in the test.
+8. **Report the rule and any Alertmanager change together**: they are one change even across two repositories.
+9. **Moving a rule to another owner keeps its name and labels**, so Alertmanager deduplicates the overlap: add the new copy, let it sync, then remove the old one.
 
 ## Key Principles
 
-1. **The expression is the first noise filter**, `for:` the second, inhibition the last. Reaching for inhibition to fix a badly written expression hides the bug.
-2. **An inhibit rule's `equal:` labels must exist in both expressions.** Verify against the rules; a non-matching inhibit rule is indistinguishable from a working one until you get paged.
-3. **Inhibit only what is genuinely blinded.** Alerts derived from a different source stay valid when one exporter dies.
-4. **Two severities only.**
-5. **`replaces:` records the consolidation** so removed alerts do not come back as a coverage gap.
-6. **Aggregate to the object, not the replica.**
-7. **Rules and Alertmanager config live in different repos and change together.**
+1. **The expression is the first noise filter, `for:` the second, inhibition the last.** Reaching for inhibition to fix a badly written expression hides the bug.
+2. **The name prefix is structural**: inhibition and the alert-family dashboards key on it.
+3. **An inhibit rule's `equal:` labels must exist in both expressions.** A non-matching inhibit rule is indistinguishable from a working one until you get paged.
+4. **Inhibit only what is genuinely blinded.**
+5. **Two severities only.**
+6. **`replaces:` records the consolidation** so removed alerts do not come back as a coverage gap.
+7. **A test without a negative control proves nothing.**
 
 ## Examples
 
 **User says:** "we got paged eight times when the Velero server went down"
 
-1. Read the Velero rules and note which alerts derive from the Velero server's own metrics.
-2. Those are blinded by the server being down, so only `VeleroServerDown` should page.
-3. Confirm the shared labels by reading the expressions — all Velero alerts carry `namespace=velero`, so `equal: [cluster, namespace]`.
-4. Add the inhibit rule to the Alertmanager config in the `monitoring-backbone` repo.
+1. Read the Velero rules and note which alerts derive from the server's own metrics.
+2. Those are blinded by the server being down, so only the server-down alert should page.
+3. Prove the shared labels from the expressions: every derived alert keeps `cluster` and `namespace` in its `by`, so `equal: [cluster, namespace]`.
+4. Add the inhibit rule to its family in the Alertmanager config in monitoring-backbone, and lint it with `amtool`.
 5. Check nothing derived from a different source got swept in.
 
 **Result:** One page for the root cause, with the derived alerts suppressed only while the source is down.
@@ -157,10 +65,9 @@ Tune these before adding an inhibit rule for something that is merely repetitive
 
 **User says:** "add an alert for jobs that never finish"
 
-1. Read `workload-resources.yaml` for the naming and aggregation conventions.
-2. Expression aggregates `max by (cluster, namespace, job_name)` and tests active start time against a threshold.
-3. Base, since every cluster runs Jobs.
-4. `severity: warning`, `component: workload-resources`, `dashboard_url` to cluster-overview.
-5. Confirm it returns rows against a cluster with long-running jobs before shipping.
+1. Read the workload-resources rules for the prefix, `component` and aggregation.
+2. Aggregate `max by (cluster, namespace, job_name)` and test active start time against a threshold.
+3. Base, since every cluster runs Jobs; `severity: warning`; `dashboard_url` to the workloads dashboard with `var-cluster`.
+4. Validate live, then a `promtool test rules` case with a long-running job that fires and a short one that does not.
 
 **Result:** An alert that matches its neighbours, and is therefore covered by the inhibition they already have.

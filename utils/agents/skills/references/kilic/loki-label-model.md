@@ -19,29 +19,31 @@ Two things still differ, and both bite silently:
 
 `pod`, `container`, `node`, `workload`, `container_restart_count`, `detected_level`, `log_iostream`, `tenant`, `observed_timestamp`
 
-**The core tenant is labelled differently.** `loki-core` holds podman container logs from the Ansible-managed hosts, and its stream labels are `cluster`, `node`, `quadlet`, `service_name` (the container name), `service_namespace` and `deployment_environment`: `node` and `quadlet` are indexed there by a core-tenant override in monitoring-backbone `.deploy/rubik/loki/values.yaml`. A selector such as `{node="<host>", service_name=~".+"}` is valid on `loki-core` and returns nothing on a Kubernetes tenant.
+**Confirm the list before relying on it**: the stream labels are set in monitoring-backbone's Loki values, and `list_loki_label_names` plus a short-lookback selection shows what is indexed now.
+
+**The core tenant is labelled differently.** `loki-core` holds container logs from the hosts outside Kubernetes, and indexes `node`, the service unit and `service_name` (the container name) through a core-tenant override. A selector such as `{node="<host>", service_name=~".+"}` is valid on `loki-core` and returns nothing on a Kubernetes tenant.
 
 ## The silent failure
 
 Correct:
 
 ```logql
-{namespace="monitoring-backbone", deployment="mimir-ruler"} | container="ruler" | detected_level="error"
+{namespace="<ns>", deployment="<deployment>"} | container="<container>" | detected_level="error"
 ```
 
 Wrong, and **returns an empty result rather than an error**:
 
 ```logql
-{namespace="monitoring-backbone", container="ruler"}
+{namespace="<ns>", container="<container>"}
 ```
 
 An empty result is indistinguishable from "there are no logs", which is why this mistake survives repeatedly. **Treat an empty Loki result as a query bug until proven otherwise** — check every name in the selector against the stream-label list, then confirm the stream exists by selecting on namespace alone before narrowing.
 
 ## Why pod and container are not indexed
 
-Not an oversight, and not because they are sometimes missing. **Stream count accumulates over the retention window, not as a snapshot** — a stream exists as long as it has chunks, so 360h of identities are all live at once against a `max_global_streams_per_user` of 15000 per tenant.
+Not an oversight, and not because they are sometimes missing. **Stream count accumulates over the retention window, not as a snapshot**: a stream exists as long as it has chunks, so every identity seen within retention is live at once against the per-tenant stream limit.
 
-Pod names are the most churning identifier in Kubernetes: every rollout mints a new replicaset hash and every Job run mints a whole new name. Indexing `pod` would add streams permanently on each deploy, for fifteen days each. Structured metadata costs bytes per line instead, which is bounded.
+Pod names are the most churning identifier in Kubernetes: every rollout mints a new replicaset hash and every Job run mints a whole new name. Indexing `pod` would add streams on each deploy, for the whole retention window. Structured metadata costs bytes per line instead, which is bounded.
 
 **`job_name` is the exception already in the index**, and Job names commonly carry timestamps or hashes, so it is the one stream label with unbounded value churn. It is the likeliest route to the ceiling in a Job-heavy namespace, and worth watching there.
 
@@ -50,11 +52,11 @@ Pod names are the most churning identifier in Kubernetes: every rollout mints a 
 There is no `pod` stream label, so a pod-scoped query needs a stream label in the braces and the pod after the pipe. `namespace` is always present and always cheap, which makes this the standard shape rather than a workaround:
 
 ```logql
-{namespace="monitoring-backbone", statefulset="loki-write"} | pod="loki-write-1"
-{namespace="sourcebot"} | pod="sourcebot-db-8" | container="postgres"
+{namespace="<ns>", statefulset="<statefulset>"} | pod="<statefulset>-1"
+{namespace="<ns>"} | pod="<pod>" | container="<container>"
 ```
 
-`{pod="loki-write-1"}` alone returns nothing, silently.
+`{pod="<pod>"}` alone returns nothing, silently.
 
 **`namespace`, `pod` and `container` agree exactly between Mimir and Loki**, including for pods where `workload_type` does not. That makes them the reliable cross-side path when a correlation has to hold.
 
@@ -68,7 +70,7 @@ Loki values: `deployment`, `statefulset`, `daemonset`, `cronjob`, `job`, `barepo
 
 | Side | Values |
 |---|---|
-| Mimir | `deployment`, `statefulset`, `daemonset`, `job`, `CronJob`, `Cluster`, `RenovateJob`, `HelmChart`, `barepod`, `staticpod` |
+| Mimir | the built-in kinds in lowercase, every custom-resource owner kind in PascalCase (a CloudNativePG `Cluster`, for one), plus `barepod` and `staticpod` |
 | Loki | `deployment`, `statefulset`, `daemonset`, `job`, `cronjob`, `barepod` |
 
 So a CloudNativePG pod is `Cluster` in Mimir and **`barepod`** in Loki. Every CRD-owned pod collapses to `barepod`, and `staticpod` has no Loki equivalent at all.
@@ -91,6 +93,6 @@ Each `loki-<cluster>` datasource holds exactly one cluster, so the uid already d
 
 ## A label in the listing is not proof anything writes it
 
-`list_loki_label_names` reflects every label present in chunks **within the retention window** (360h), not what is currently ingested. A label that stopped being written days ago still appears until its chunks age out, and it matches only those old chunks.
+`list_loki_label_names` reflects every label present in chunks **within the retention window**, not what is currently ingested. A label that stopped being written days ago still appears until its chunks age out, and it matches only those old chunks.
 
 Confirm recent data carries a name before building on it — select on it with a short lookback and check rows come back.

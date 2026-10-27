@@ -12,7 +12,7 @@ references:
 
 ## Reading Grafana
 
-Datasource inventory, target resolution, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`. Resolving a workload to the clusters that run it: `kilic-workload-resolution`. The core tenant's `job` and target labels, podman recipes and log streams: `kilic-core-tenant`.
+Datasource model, target resolution, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`. Resolving a workload to the clusters that run it: `kilic-workload-resolution`. The core tenant's label contract, selector shapes and pushed-metric patterns: `kilic-core-tenant`; its current exporters and `job` values are in monitoring-core's `CLAUDE.md`.
 
 Label names, the indexed-versus-structured-metadata split, and the empty-result trap that follows from it: `loki-label-model`. That split is the single most common source of a wrong answer here, because the wrong form returns zero rows without erroring.
 
@@ -30,7 +30,7 @@ The kube-prometheus mixin rules are precomputed, far cheaper than the raw cadvis
 | `instance:node_cpu:ratio`, `instance:node_memory_utilisation:ratio` | Node-level utilisation |
 | `workload:pvc_used_bytes`, `workload:pvc_capacity_bytes` | PVC usage, a local rule set rather than mixin |
 
-**Metrics are filtered aggressively at ingestion.** The collector drops everything outside an explicit allowlist, so a metric that exists upstream may simply not be here — `loki_*` internals, most `kubelet_*`, and most `container_*` beyond cpu/memory/fs/network basics are dropped. When a metric returns nothing, check it survives ingestion before assuming the target is down.
+**Metrics are filtered aggressively at ingestion.** The collectors drop everything outside an explicit allowlist, so a metric that exists upstream may simply not be here. When a metric returns nothing, check it survives ingestion (`list_prometheus_metric_names`, then the collector's keep-list in its repository) before assuming the target is down.
 
 **Federated `mimir` puts `__tenant_id__` on every raw series**, and aggregation drops it. Never put a bare `or`, `and`, `unless` or other unmatched binary operator between a raw series and an aggregate: the sides stop matching and rows vanish or come out exactly doubled. Match with `on (...)` including `cluster`, and aggregate `__tenant_id__` away. The per-cluster uids carry the label too, but with one value, so the trap only bites on the federated one.
 
@@ -65,20 +65,20 @@ Use `list_prometheus_metric_names` with a `regex` to discover, and `list_prometh
 
 ## Examples
 
-**User says:** "why did mimir-ruler restart on rubik"
+**User says:** "why did this deployment restart on one cluster"
 
-1. One cluster: `mimir` and `loki`, scoped with `cluster="rubik"`.
-2. Metrics for the shape — restart count and last terminated reason.
-3. Logs for the cause: `{cluster="rubik", namespace="monitoring-backbone", deployment="mimir-ruler"} | container="ruler" | detected_level="error"`.
+1. One cluster: `mimir` and `loki`, scoped with `cluster="<cluster>"`.
+2. Metrics for the shape: restart count and last terminated reason.
+3. Logs for the cause: `{cluster="<cluster>", namespace="<ns>", deployment="<deployment>"} | container="<container>" | detected_level="error"`.
 4. Report both, with the queries.
 
 **Result:** Restart count from Mimir, reason from Loki, and no time lost to an empty result caused by putting `container=` in the selector.
 
 ---
 
-**User says:** "logs for the loki-write-1 pod"
+**User says:** "logs for one statefulset pod"
 
 1. There is no `pod` stream label, so select the workload and filter the pod.
-2. `{cluster="rubik", namespace="monitoring-backbone", statefulset="loki-write"} | pod="loki-write-1"`.
+2. `{cluster="<cluster>", namespace="<ns>", statefulset="<statefulset>"} | pod="<statefulset>-1"`.
 
-**Result:** The right lines, instead of the empty set that `{pod="loki-write-1"}` returns.
+**Result:** The right lines, instead of the empty set that `{pod="<pod>"}` returns.
