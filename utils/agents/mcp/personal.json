@@ -132,6 +132,34 @@
         "autoRejectTools": []
       }
     },
+    "paperless-kilic": {
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}"
+      },
+      "url": "https://documents.mcp.kilic.dev/mcp",
+      "hyprpilot": {
+        "autoAcceptTools": [
+          "paperless_capabilities",
+          "paperless_correspondents_get",
+          "paperless_correspondents_list",
+          "paperless_custom_fields_get",
+          "paperless_custom_fields_list",
+          "paperless_document_types_get",
+          "paperless_document_types_list",
+          "paperless_documents_download",
+          "paperless_documents_get",
+          "paperless_documents_preview",
+          "paperless_documents_search",
+          "paperless_documents_thumbnail",
+          "paperless_ping",
+          "paperless_storage_paths_get",
+          "paperless_storage_paths_list",
+          "paperless_tags_get",
+          "paperless_tags_list"
+        ],
+        "autoRejectTools": []
+      }
+    },
     "playwright": {
       "args": ["-y", "--bun", "@playwright/mcp@latest", "--executable-path", "/usr/bin/brave"],
       "command": "bunx",
