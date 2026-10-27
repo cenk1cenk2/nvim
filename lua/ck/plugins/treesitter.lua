@@ -37,6 +37,18 @@ function M.config()
     on_setup = function(c)
       require("nvim-treesitter").setup(c)
 
+      -- template queries inject the filetype under the template extension, `foo.yaml.j2` gets yaml
+      vim.treesitter.query.add_directive("inject-underlying-filetype!", function(_, _, source, _, metadata)
+        local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(source), ":r")
+        -- shell detection returns nothing while `did_filetype()` is set, which holds during the first parse
+        local ft = vim.filetype.match({ filename = name }) or vim.fn.fnamemodify(name, ":e")
+        local lang = ft ~= "" and vim.treesitter.language.get_lang(ft)
+
+        if lang and vim.treesitter.language.add(lang) then
+          metadata["injection.language"] = lang
+        end
+      end, { force = true })
+
       -- has to be registered before installing, since `install()` drops the parser table and reads it back through this event
       if next(nvim.treesitter.custom_parsers) then
         vim.api.nvim_create_autocmd("User", {
