@@ -25,7 +25,9 @@ function M.setup()
     },
     pattern = {
       [".*%.g?o?tm?pl"] = function(path)
-        if vim.fs.root(M.resolve_path(path), { "Chart.yaml" }) then
+        local chart, file = M.chart_root(path)
+
+        if chart or (not file and path:find("/templates/")) then
           return "helm"
         end
 
@@ -41,11 +43,10 @@ function M.setup()
       [".*%.dockerignore"] = "gitignore",
       ["neomutt-.*"] = "markdown",
       [".*%.ya?ml"] = function(path)
-        path = M.resolve_path(path)
         local name = vim.fs.basename(path)
-        local chart = vim.fs.root(path, { "Chart.yaml" })
+        local chart, file = M.chart_root(path)
 
-        if chart and vim.fs.relpath(chart, path):find("^templates/") then
+        if (chart and vim.fs.relpath(chart, file):find("^templates/")) or (not file and path:find("/templates/")) then
           return "helm"
         elseif name:find("%.gitlab%-ci%.") then
           return "yaml.gitlab-ci"
@@ -71,23 +72,25 @@ function M.setup()
   })
 end
 
---- Maps `diffview://<gitdir>/<rev>/<path>` buffers back to the file in the working tree.
-function M.resolve_path(path)
-  -- detection receives the name made absolute against the cwd, `<cwd>/diffview:/<gitdir>/...`
-  local rest = path:match("diffview:/*(/.*)$")
-  if not rest then
-    return path
+--- Finds the chart a buffer belongs to, returned as `root, path`, where `path` is the file the lookup ran on.
+--- Virtual buffers (`diffview://`, `gitsigns://`) keep the repository-relative path at the end of their name, so the
+--- longest tail of the name whose directory exists in the cwd's repository stands in for it; `path` is nil when no tail does.
+function M.chart_root(path)
+  if vim.uv.fs_stat(vim.fs.dirname(path)) then
+    return vim.fs.root(path, { "Chart.yaml" }), path
   end
 
-  local gitdir, rel = rest:match("^(.-/%.git/worktrees/[^/]+)/[^/]+/(.*)$")
-  if gitdir then
-    return vim.fs.joinpath(vim.fs.dirname(vim.trim(vim.fn.readfile(vim.fs.joinpath(gitdir, "gitdir"))[1])), rel)
+  local repo = vim.fs.root(vim.fn.getcwd(), ".git") or vim.fn.getcwd()
+  local segments = vim.split(path, "/", { trimempty = true })
+
+  for i = 1, #segments - 1 do
+    local tail = vim.fs.joinpath(repo, table.concat(segments, "/", i))
+    local root = vim.uv.fs_stat(vim.fs.dirname(tail)) and vim.fs.root(tail, { "Chart.yaml" })
+
+    if root then
+      return root, tail
+    end
   end
-
-  local toplevel
-  toplevel, rel = rest:match("^(.-)/%.git/[^/]+/(.*)$")
-
-  return toplevel and vim.fs.joinpath(toplevel, rel) or path
 end
 
 return M
