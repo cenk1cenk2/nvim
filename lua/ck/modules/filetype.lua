@@ -8,9 +8,6 @@ function M.setup()
       end,
       ["tf"] = "terraform",
       ["tfvars"] = "terraform",
-      ["gotmpl"] = M.detect_go_template,
-      ["tmpl"] = M.detect_go_template,
-      ["tpl"] = M.detect_go_template,
       ["http"] = "http",
     },
     filename = {
@@ -27,6 +24,13 @@ function M.setup()
       [".gitlab-ci.yml"] = "yaml.gitlab-ci",
     },
     pattern = {
+      [".*%.g?o?tm?pl"] = function(path)
+        if vim.fs.root(path, { "Chart.yaml" }) then
+          return "helm"
+        end
+
+        return "gotmpl"
+      end,
       ["Dockerfile.*"] = function(path)
         if path:find("%.dockerignore$") then
           return "gitignore"
@@ -64,14 +68,6 @@ function M.setup()
       end,
     },
   })
-end
-
-function M.detect_go_template(path)
-  if vim.fs.root(path, { "Chart.yaml" }) then
-    return "helm"
-  end
-
-  return "gotmpl"
 end
 
 return M
