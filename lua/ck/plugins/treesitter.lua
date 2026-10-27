@@ -82,17 +82,19 @@ function M.config()
           local lang = vim.treesitter.language.get_lang(ft)
 
           -- Enable syntax highlighting with the correct language
-          if lang then
-            pcall(vim.treesitter.start, bufnr, vim.treesitter.language.get_lang(ft))
+          if not lang or not pcall(vim.treesitter.start, bufnr, lang) then
+            return
           end
 
           vim.bo[bufnr].indentexpr = function()
             return require("nvim-treesitter").indentexpr()
           end
 
-          vim.wo.foldmethod = "expr"
-          vim.wo.foldexpr = function()
-            return vim.treesitter.foldexpr()
+          for _, win in ipairs(vim.fn.win_findbuf(bufnr)) do
+            vim.wo[win][0].foldmethod = "expr"
+            vim.wo[win][0].foldexpr = function()
+              return vim.treesitter.foldexpr()
+            end
           end
         end,
       })
