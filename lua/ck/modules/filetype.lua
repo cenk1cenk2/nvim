@@ -8,17 +8,10 @@ function M.setup()
       end,
       ["tf"] = "terraform",
       ["tfvars"] = "terraform",
-      ["go.tmpl"] = "gotmpl",
-      ["gotmpl"] = "gotmpl",
-      ["tmpl"] = "gotmpl",
+      ["gotmpl"] = M.detect_go_template,
+      ["tmpl"] = M.detect_go_template,
+      ["tpl"] = M.detect_go_template,
       ["http"] = "http",
-      ["tpl"] = function(path)
-        if path:find("templates/") then
-          return "helm"
-        end
-
-        return "gotmpl"
-      end,
     },
     filename = {
       -- [".editorconfig"] = "toml",
@@ -35,33 +28,50 @@ function M.setup()
     },
     pattern = {
       ["Dockerfile.*"] = function(path)
-        if path:find(".dockerignore*$") then
+        if path:find("%.dockerignore$") then
           return "gitignore"
         end
 
         return "dockerfile"
       end,
-      [".*.dockerignore"] = "gitignore",
+      [".*%.dockerignore"] = "gitignore",
       ["neomutt-.*"] = "markdown",
       [".*%.ya?ml"] = function(path)
-        if path:find(".*%.gitlab-ci%..*$") then
-          return "yaml.gitlab-ci"
-        elseif path:find(".*compose.*$") then
-          return "yaml.compose"
-        elseif
-          vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
-          and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/") or path:find("files/") or path:find("templates/"))
-          and vim.fs.dirname(path) ~= vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
-        then
-          return "yaml.ansible"
-        elseif vim.fs.root(path, { "Chart.yaml" }) and path:find("templates/") then
+        local name = vim.fs.basename(path)
+        local chart = vim.fs.root(path, { "Chart.yaml" })
+
+        if chart and vim.fs.relpath(chart, path):find("^templates/") then
           return "helm"
+        elseif name:find("%.gitlab%-ci%.") then
+          return "yaml.gitlab-ci"
+        elseif name:find("compose") then
+          return "yaml.compose"
+        elseif not chart then
+          local root = vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
+
+          if
+            root
+            and vim.fs.dirname(path) ~= root
+            and not vim.iter(vim.fs.dirname(vim.fs.relpath(root, path)):gmatch("[^/]+")):any(function(dir)
+              return vim.tbl_contains({ "environments", "vars", "group_vars", "host_vars", "files", "templates" }, dir)
+            end)
+          then
+            return "yaml.ansible"
+          end
         end
 
         return "yaml"
       end,
     },
   })
+end
+
+function M.detect_go_template(path)
+  if vim.fs.root(path, { "Chart.yaml" }) then
+    return "helm"
+  end
+
+  return "gotmpl"
 end
 
 return M
