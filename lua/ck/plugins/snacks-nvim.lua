@@ -426,6 +426,15 @@ M.DASHBOARD = {
       icon = nvim.ui.icons.misc.Linux,
     },
     {
+      key = "<localleader>a",
+      desc = "~.agents",
+      action = function()
+        vim.fn.chdir(join_paths(vim.env.HOME, ".agents/"))
+        require("possession").load(require("possession.paths").cwd_session_name())
+      end,
+      icon = nvim.ui.icons.misc.Robot,
+    },
+    {
       key = "SPC w q",
       desc = "Quit",
       action = "<leader>wq",
