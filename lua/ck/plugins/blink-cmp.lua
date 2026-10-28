@@ -114,12 +114,6 @@ function M.config()
             gitcommit = function()
               return { inherit_defaults = true, "git" }
             end,
-            codecompanion = function()
-              return { "codecompanion", "path" }
-            end,
-            AvanteInput = function()
-              return { "avante", "path" }
-            end,
             zsh = function()
               return { inherit_defaults = true, "zsh" }
             end,

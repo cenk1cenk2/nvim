@@ -15,8 +15,6 @@ function M.config()
           "norg",
           "org",
           "vimwiki",
-          "Avante",
-          "codecompanion",
           "hyprpilot",
           "hyprpilot_header",
           "hyprpilot_composer.markdown",
@@ -39,8 +37,6 @@ function M.config()
             "norg",
             "org",
             "vimwiki",
-            "Avante",
-            "codecompanion",
             "hyprpilot",
             "hyprpilot_composer.markdown",
           },
@@ -52,8 +48,6 @@ function M.config()
             if
               bt == "nofile"
               and vim.tbl_contains({
-                "codecompanion",
-                "Avante",
                 "hyprpilot.markdown",
                 "hyprpilot_header.markdown",
                 "hyprpilot_composer.markdown",

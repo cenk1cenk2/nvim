@@ -3,25 +3,6 @@
 
 version: "3"
 
-vars:
-  # Every agent-skill scripts project, each its own uv project with a pyproject
-  # and a test suite. Adding a second skill's scripts is one entry here.
-  PYTHON_PROJECTS: >-
-    utils/agents/skills/hyprpilot-delegate/scripts
-    utils/agents/skills/agent-background/scripts
-    utils/agents/skills/config-skills/scripts
-    utils/agents/skills/project-facts/scripts
-    utils/agents/skills/grafana-kilic-dashboards/scripts
-  # Everything ruff should see. The shared `lib` is a library rather than a
-  # project with its own suite, so it is linted but not tested.
-  PYTHON_PATHS: >-
-    utils/agents/skills/hyprpilot-delegate/scripts
-    utils/agents/skills/agent-background/scripts
-    utils/agents/skills/config-skills/scripts
-    utils/agents/skills/project-facts/scripts
-    utils/agents/skills/grafana-kilic-dashboards/scripts
-    utils/agents/skills/lib
-
 env: {}
 
 tasks:
@@ -30,7 +11,6 @@ tasks:
     deps:
       - format:lua
       - format:sh
-      - format:python
 
   format:lua:
     cmds:
@@ -44,18 +24,10 @@ tasks:
     sources:
       - "utils/**/*.sh"
 
-  format:python:
-    cmds:
-      - for: { var: PYTHON_PATHS }
-        cmd: ruff format {{.ITEM}}
-    sources:
-      - "utils/agents/skills/*/scripts/**/*.py"
-
   lint:
     desc: Lints the repository.
     deps:
       - lint:lua
-      - lint:python
 
   lint:lua:
     cmds:
@@ -67,25 +39,3 @@ tasks:
   lint:sh:
     cmds:
       - shfmt -f . | xargs shellcheck
-
-  lint:python:
-    cmds:
-      - for: { var: PYTHON_PATHS }
-        cmd: ruff check {{.ITEM}}
-      - for: { var: PYTHON_PATHS }
-        cmd: ruff format --check {{.ITEM}}
-    sources:
-      - "utils/agents/skills/*/scripts/**/*.py"
-
-  test:
-    desc: Run the repository's test suites.
-    deps:
-      - test:python
-
-  test:python:
-    desc: Agent skill scripts. Each project pulls its own dev group through uv.
-    cmds:
-      - for: { var: PYTHON_PROJECTS }
-        cmd: uv run --project {{.ITEM}} --group dev pytest -v {{.ITEM}}
-    sources:
-      - "utils/agents/skills/*/scripts/**/*.py"
