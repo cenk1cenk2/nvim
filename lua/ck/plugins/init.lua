@@ -44,8 +44,6 @@ local plugins = {
   "bookmarks-nvim",
   "sidekick-nvim",
   "copilot-lsp",
-  "avante-nvim",
-  "code-companion-nvim",
   "hyprpilot-nvim",
   "aerial-nvim",
   "nvim-treesitter-textobjects",

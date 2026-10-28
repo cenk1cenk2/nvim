@@ -27,10 +27,7 @@ nvim.lsp.features.inlay_hints.enabled = true
 nvim.lsp.features.inlay_hints.toggled = false
 nvim.lsp.features.inlay_hints.mode = "eol"
 
-nvim.lsp.ai.chat.provider = {
-  -- "codecompanion",
-  "hyprpilot",
-}
+nvim.lsp.ai.chat.provider = { "hyprpilot" }
 nvim.lsp.ai.completion.provider = { "inline" }
 nvim.lsp.ai.provider.chat = "claude_code"
 nvim.lsp.ai.model.chat = nil
@@ -53,8 +50,6 @@ nvim.lsp.ai.filetypes.ignored = {
   "Telescope",
   "TelescopePrompt",
   "TelescopeResults",
-  "Avante",
-  "AvanteInput",
 }
 
 ---- language servers

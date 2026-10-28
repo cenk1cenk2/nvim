@@ -6,7 +6,7 @@ This repository is a personal Neovim configuration forked from LunarVim. Startup
 
 - **Language:** Lua for Neovim configuration, plus shell utilities under `utils/`.
 - **Build/Lint:** `Taskfile.yml` provides `task format` and `task lint`; Lua uses `stylua --config-path .stylua.toml`, and linting also runs `selene`.
-- **Key directories:** `lua/ck/config/` for defaults/settings, `lua/ck/keys/` for keybinding helpers, `lua/ck/plugins/` for plugin modules, `after/` for Neovim after-files, `utils/` for scripts and agent tooling.
+- **Key directories:** `lua/ck/config/` for defaults/settings, `lua/ck/keys/` for keybinding helpers, `lua/ck/plugins/` for plugin modules, `after/` for Neovim after-files, `utils/` for scripts and linter configs.
 
 ## Conventions
 
