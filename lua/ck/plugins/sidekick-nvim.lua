@@ -389,6 +389,7 @@ function M.instance_config(args)
   return {
     cmd = vim.list_extend({
       "hyprpilot",
+      "--select-config-profile",
       "--with-config",
       "@" .. vim.json.encode({
         mcps = {
