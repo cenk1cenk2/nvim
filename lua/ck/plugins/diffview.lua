@@ -69,6 +69,16 @@ function M.config()
         enhanced_diff_hl = true, -- Better contrast between diff highlights (fork-recommended)
         use_icons = true, -- Requires nvim-web-devicons
         file_panel = { win_config = { width = nvim.ui.dimensions.cells("width", "sm") } },
+        hooks = {
+          -- `equalalways` is off and edgy resizes the file panel after the layout is built,
+          -- so the diff windows keep their first, narrow render until they are entered.
+          view_post_layout = function()
+            vim.schedule(function()
+              vim.cmd("wincmd =")
+              vim.cmd("redraw!")
+            end)
+          end,
+        },
         view = {
           -- Configure the layout and behavior of different types of views.
           -- Available layouts:
