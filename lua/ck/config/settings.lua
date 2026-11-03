@@ -12,10 +12,15 @@ function M.load_default_options()
   vim.opt.backup = false
   vim.opt.autoread = true
   vim.opt.clipboard = "unnamedplus"
-  -- Over ssh the terminal answers `refresh-client -l` after the 50ms the builtin tmux provider waits, so it pastes the
-  -- previous buffer. Wait for the answer instead, and reuse it for the few reads one put makes.
-  if vim.env.TMUX and not vim.env.WAYLAND_DISPLAY and not vim.env.DISPLAY then
+  -- Inside tmux the attached client decides the clipboard, and it can change while nvim runs: env-sync keeps the server's
+  -- WAYLAND_DISPLAY set for a local client and unset for an ssh one. Over ssh the terminal answers `refresh-client -l`
+  -- after the 50ms the builtin tmux provider waits, so wait for the answer instead, and reuse it for the reads one put makes.
+  if vim.env.TMUX then
     local cache = { lines = nil, at = 0 }
+
+    local function wayland()
+      return (vim.fn.systemlist({ "tmux", "show-environment", "-g", "WAYLAND_DISPLAY" })[1] or ""):match("^WAYLAND_DISPLAY=(.+)$")
+    end
 
     local function newest()
       local index = -1
@@ -28,7 +33,12 @@ function M.load_default_options()
 
     local function copy(lines)
       cache.lines = nil
-      vim.fn.systemlist({ "tmux", "load-buffer", "-w", "-" }, lines, 1)
+      local display = wayland()
+      if display then
+        vim.fn.systemlist({ "env", "WAYLAND_DISPLAY=" .. display, "wl-copy", "--type", "text/plain" }, lines, 1)
+      else
+        vim.fn.systemlist({ "tmux", "load-buffer", "-w", "-" }, lines, 1)
+      end
     end
 
     local function paste()
@@ -36,12 +46,17 @@ function M.load_default_options()
         return cache.lines
       end
 
-      local before = newest()
-      vim.fn.system({ "tmux", "refresh-client", "-l" })
-      vim.wait(1000, function()
-        return newest() ~= before
-      end, 20)
-      cache.lines = vim.fn.systemlist({ "tmux", "save-buffer", "-" }, { "" }, 1)
+      local display = wayland()
+      if display then
+        cache.lines = vim.fn.systemlist({ "env", "WAYLAND_DISPLAY=" .. display, "wl-paste", "--no-newline" }, { "" }, 1)
+      else
+        local before = newest()
+        vim.fn.system({ "tmux", "refresh-client", "-l" })
+        vim.wait(1000, function()
+          return newest() ~= before
+        end, 20)
+        cache.lines = vim.fn.systemlist({ "tmux", "save-buffer", "-" }, { "" }, 1)
+      end
       cache.at = vim.uv.hrtime()
 
       return cache.lines
