@@ -70,12 +70,16 @@ function M.config()
         use_icons = true, -- Requires nvim-web-devicons
         file_panel = { win_config = { width = nvim.ui.dimensions.cells("width", "sm") } },
         hooks = {
-          -- `equalalways` is off and edgy resizes the file panel after the layout is built,
-          -- so the diff windows keep their first, narrow render until they are entered.
-          view_post_layout = function()
+          -- Diff windows first render at a stale narrow width that neither a resize nor `:redraw!` fixes, only entering them does.
+          diff_buf_win_enter = function(_, winid)
             vim.schedule(function()
-              vim.cmd("wincmd =")
-              vim.cmd("redraw!")
+              local current = vim.api.nvim_get_current_win()
+              if winid == current or not vim.api.nvim_win_is_valid(winid) then
+                return
+              end
+
+              vim.api.nvim_set_current_win(winid)
+              vim.api.nvim_set_current_win(current)
             end)
           end,
         },
