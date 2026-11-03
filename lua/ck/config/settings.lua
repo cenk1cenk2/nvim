@@ -12,6 +12,47 @@ function M.load_default_options()
   vim.opt.backup = false
   vim.opt.autoread = true
   vim.opt.clipboard = "unnamedplus"
+  -- Over ssh the terminal answers `refresh-client -l` after the 50ms the builtin tmux provider waits, so it pastes the
+  -- previous buffer. Wait for the answer instead, and reuse it for the few reads one put makes.
+  if vim.env.TMUX and not vim.env.WAYLAND_DISPLAY and not vim.env.DISPLAY then
+    local cache = { lines = nil, at = 0 }
+
+    local function newest()
+      local index = -1
+      for _, name in ipairs(vim.fn.systemlist({ "tmux", "list-buffers", "-F", "#{buffer_name}" })) do
+        index = math.max(index, tonumber(name:match("^buffer(%d+)$")) or -1)
+      end
+
+      return index
+    end
+
+    local function copy(lines)
+      cache.lines = nil
+      vim.fn.systemlist({ "tmux", "load-buffer", "-w", "-" }, lines, 1)
+    end
+
+    local function paste()
+      if cache.lines and vim.uv.hrtime() - cache.at < 300e6 then
+        return cache.lines
+      end
+
+      local before = newest()
+      vim.fn.system({ "tmux", "refresh-client", "-l" })
+      vim.wait(1000, function()
+        return newest() ~= before
+      end, 20)
+      cache.lines = vim.fn.systemlist({ "tmux", "save-buffer", "-" }, { "" }, 1)
+      cache.at = vim.uv.hrtime()
+
+      return cache.lines
+    end
+
+    vim.g.clipboard = {
+      name = "tmux",
+      copy = { ["+"] = copy, ["*"] = copy },
+      paste = { ["+"] = paste, ["*"] = paste },
+    }
+  end
   vim.opt.cmdheight = 2
   vim.opt.completeopt = { "menuone", "noselect" }
   vim.opt.conceallevel = 0
