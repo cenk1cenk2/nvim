@@ -412,6 +412,9 @@ function M.instance_config(args)
       VISUAL = "nvim",
       NVIM_FLATTEN_DISABLE = "1",
       HYPRPILOT_NO_TITLE = "1",
+      -- Agents that see `$TMUX` wrap OSC 52 in tmux passthrough, which the :terminal prints as text instead of copying.
+      -- Only blanked for the default socket, where `tmux` without `$TMUX` still reaches the same server.
+      TMUX = (vim.env.TMUX or ""):match("^[^,]+") == ("%s/tmux-%d/default"):format(vim.env.TMUX_TMPDIR or "/tmp", vim.uv.getuid()) and "" or nil,
     },
     url = "https://github.com/hyprpilot/hyprpilot",
   }
